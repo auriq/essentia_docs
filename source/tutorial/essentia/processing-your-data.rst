@@ -19,7 +19,7 @@ The Processing Commands in Our Example Essentia File
 
     ess udbd start            # Starts communication with worker nodes (or master by default if running a local instance). Starts the database so you can import data into it.
 
-    ess task stream mockdata "*" "*" "aq_pp -f,+1,eok - -d s:column_to_import -evlc f:float_column_to_import '(ToF(column_to_import))' -filt '(float_column_to_import >= 1 && float_column_to_import <= 8)' -evlc s:my_string_column_to_group_by 'ToS(1)' -evlc f:rowcount '\$RowNum' -ddef -udb_imp etl-ess2working:vector1" –debug
+    ess task stream mockdata "*" "*" "aq_pp -f,+1,eok - -d s:column_to_import -evlc f:float_column_to_import '(ToF(column_to_import))' -filt '(float_column_to_import >= 1 && float_column_to_import <= 8)' -evlc s:my_string_column_to_group_by 'ToS(1)' -evlc f:rowcount '\$RowNum' -ddef -udb_imp etl-ess2working:vector1" --debug
 
     ess task exec "aq_udb -exp etl-ess2working:vector1 -pp vector1 -pp_evlc rowcount2 'rowcount' -pp_evlc rowcount 'float_column_to_import / rowcount' > /home/user/etl-ess2working.csv; aq_udb -cnt etl-ess2working:vector1" --debug
 
@@ -113,7 +113,7 @@ There are two main tools you use for Essentia:
 
     **aq_udb**
 
-* ``aq_pp`` is the primary tool used when you’re working with data. It is mainly used to import data, modify some of the input data’s columns or create new ones, and to import the modified data into the table in the database.
+* ``aq_pp`` is the primary tool used when you're working with data. It is mainly used to import data, modify some of the input data's columns or create new ones, and to import the modified data into the table in the database.
 
 * ``aq_udb`` is primarily used to export data from your table in the database into a file or wherever else you want it. During export, the existing columns can be modified further by applying **-pp**, **-pp_filt**, and **-pp_evlc** before saving the result to a file.
 
@@ -256,9 +256,10 @@ etl-ess2working.csv
 
 Picture1
 
- 
+|resultscsv| 
 
- 
+.. |resultscsv| image:: ..\..\..\_static\processingresults.png
+.. image:: ..\..\..\_static\processingresults.png
 
 The columns are:
 
@@ -285,7 +286,7 @@ This is the full Essentia File including the beginning instance and datastore ca
     #ess datastore purge   ### only use if you want to delete any existing categories before proceeding. Not needed here.
     ess datastore scan
     
-    ess datastore rule add "*MOCK_DATA*" "mockdata“
+    ess datastore rule add "*MOCK_DATA*" "mockdata"
     ess datastore probe mockdata --apply
     ess datastore summary
     
@@ -295,7 +296,7 @@ This is the full Essentia File including the beginning instance and datastore ca
     
     ess udbd start            # Starts communication with worker nodes (or master by default if running a local instance). Starts the database so you can import data into it.
     
-    ess task stream mockdata "*" "*" "aq_pp -f,+1,eok - -d s:column_to_import -evlc f:float_column_to_import '(ToF(column_to_import))' -filt '(float_column_to_import >= 1 && float_column_to_import <= 8)' -evlc s:my_string_column_to_group_by 'ToS(1)' -evlc f:rowcount '\$RowNum' -ddef -udb_imp etl-ess2working:vector1" –debug
+    ess task stream mockdata "*" "*" "aq_pp -f,+1,eok - -d s:column_to_import -evlc f:float_column_to_import '(ToF(column_to_import))' -filt '(float_column_to_import >= 1 && float_column_to_import <= 8)' -evlc s:my_string_column_to_group_by 'ToS(1)' -evlc f:rowcount '\$RowNum' -ddef -udb_imp etl-ess2working:vector1" --debug
     
     ess task exec "aq_udb -exp etl-ess2working:vector1 -pp vector1 -pp_evlc rowcount2 'rowcount' -pp_evlc rowcount 'float_column_to_import / rowcount' > /home/user/etl-ess2working.csv; aq_udb -cnt etl-ess2working:vector1" --debug
 
@@ -336,9 +337,9 @@ For this tutorial the data is stored on the publicly available bucket asi-public
 
 * We then put the tutorial data into a category called mockdata by looking for files with filenames that have MOCK_DATA in them.
 
-``ess datastore rule add "*MOCK_DATA" "mockdata“``
+``ess datastore rule add "*MOCK_DATA" "mockdata"``
 
-* Then we probe the datastore to find information about the tutorial files such as their columns specs, compression, and delimiter; and save these values so essentia doesn’t have to repeat this step next time it uses this datastore.
+* Then we probe the datastore to find information about the tutorial files such as their columns specs, compression, and delimiter; and save these values so essentia doesn't have to repeat this step next time it uses this datastore.
 
 ``ess datastore probe mockdata --apply``
 
