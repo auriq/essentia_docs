@@ -1,7 +1,7 @@
 Overview
 ========
 
-Essentia consists of a set of programs that operate on text data (the AQ Tools), a data scanner which catalog and
+Essentia consists of a set of programs that operate on text data (the AQ Tools), a data scanner which catalogs and
 organizes your data, and finally a resource manager to apply processing data at scale. Together, these three components
 allow users to operate on multiple files across multiple computing nodes as easy as processing a single file on
 a single computer.
