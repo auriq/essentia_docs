@@ -11,17 +11,18 @@ How To Approach An Essentia File:
 3.         **Organize these files into categories of your choosing and have essentia examine them to determine their columns specifications or input them manually**. *This step is only required first time you access your bucket*.
 4.         Define a database and what you want to store in it.
 5.         Start udbd so data can be stored in the database you just created.
-6.         Import data from one of your categories into your database using **``ess task stream``**
+6.         Import data from one of your categories into your database using ``ess task stream``.
 7.         Export your modified data from the database and save it to a file.
  
 The categorization step ONLY HAS TO BE RUN ONCE.
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 To start using essentia you need to scan your bucket and categorize your S3 files. This involves steps 2 and 3.
 
-Typically, categories dont change much once you have completed the initial setup so all you have to repeat each time you want to access your data is step 2:
+Typically, categories dont change much once you have completed the initial setup so all you have to repeat each time you want to access your data is step 2::
 
-    ``ess datastore select s3://*YourBucket* --aws_access_key=*YourAccessKey* --aws_secret_access_key=*YourSecretAccessKey*``
-    ``ess datastore scan``
+    ess datastore select s3://*YourBucket* --aws_access_key=*YourAccessKey* --aws_secret_access_key=*YourSecretAccessKey*
+
+    ess datastore scan
 
 Thus you can skip step 3 after your first run.
 
@@ -35,7 +36,7 @@ Essentia Commands
 #   :file: ..\..\..\_static\essentiacommands.csv
 #   :encoding: Excel
 
-.. csv-table:: ess spec: Define your database schema.
+.. csv-table:: **ess spec**: *Define your database schema.*
 
     spec reset,,Wipes schema definitions
     spec create database,dbname --ports,"Adds a database entry. Specifies the number of ports to use, or if the number is between 10010 and 10079, the specific ports to use. Comma separated lists of port numbers is accepted"
@@ -173,12 +174,12 @@ Starting Your Worker Instances
 ----------------------------------------------------------------------------------------
 How To Start Your Worker Instances
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-1. On your master node, run the command **``ess instance ec2 create --number=# --type=NodeType``** where # is the number of worker instances you want to use and NodeType is the ec2 node type you want the instance to be.
-2. After you create any database(s) you need you must run **``ess spec commit``** to upload the databases to your worker nodes.
-3. If you have already created worker instances that you want to reuse you need to run the command **``ess instance ec2 existing``** instead of the **``ess instance ec2 create --number=# --type=NodeType``** command.
+1. On your master node, run the command ``ess instance ec2 create --number=# --type=NodeType`` where # is the number of worker instances you want to use and NodeType is the ec2 node type you want the instance to be.
+2. After you create any database(s) you need you must run ``ess spec commit`` to upload the databases to your worker nodes.
+3. If you have already created worker instances that you want to reuse you need to run the command ``ess instance ec2 existing`` instead of the ``ess instance ec2 create --number=# --type=NodeType`` command.
 
 How To Terminate Your Instances
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-1. When you're done using your worker instances you should terminate them using the command **``ess instance ec2 terminate all``** from the Master Node CLI.
+1. When you're done using your worker instances you should terminate them using the command ``ess instance ec2 terminate all`` from the Master Node CLI.
 2. To Stop the Master Node, press the Stop button from the Instance tab in the Essentia UI.
 3. To Terminate the Master Node, press the Power button on the Essentia UI. This will completely wipe the instance and any files you generated on it. If you plan to use your master node again we recommend you simply stop the node.
