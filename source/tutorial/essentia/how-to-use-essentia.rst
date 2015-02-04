@@ -30,6 +30,26 @@ Learn more about how to Manage Your S3 Bucket.
 ----------------------------------------------------------------------------------------
 Essentia Commands 
 ----------------------------------------------------------------------------------------
+
+#.. csv-table:: Essentia Commands
+#   :file: ..\..\..\_static\essentiacommands.csv
+#   :encoding: Excel
+
+.. csv-table:: ess spec: Define your database schema.
+
+    spec reset,,Wipes schema definitions
+    spec create database,dbname --ports,"Adds a database entry. Specifies the number of ports to use, or if the number is between 10010 and 10079, the specific ports to use. Comma separated lists of port numbers is accepted"
+    spec create table,name colspec,"Adds a table entry to the active database"
+    spec create vector,name colspec,"Adds a vector entry to the active database"
+    spec create variable,colspec,"Adds a variable entry to the active database (only 1 allowed per spec)"
+    spec drop database,name,"Delete a database schema"
+    spec drop table,name,"Delete table from schema"
+    spec drop vector,name,"Delete vector from schema"
+    spec drop variable,,"Delete variable from schema"
+    spec use,dbname,"Sets the active database. Subsequent table/vector/variable commands reference it"
+    spec summary,,"Simply provide a summary of all known spec files"
+    spec commit,,"Upload the schemas to the worker nodes."
+
 ess spec:
 ^^^^^^^^^
 Define your database schema.
