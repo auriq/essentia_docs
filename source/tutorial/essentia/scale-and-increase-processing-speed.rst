@@ -2,6 +2,7 @@ Scale and Increase Processing Speed
 ====================================
 
 An incredibly important feature of Essentia is the ability to spool up as many worker nodes as you want to increase your data processing speed. This speed increases almost linearly with the number of nodes used, allowing your company to analyze more data in less time.
+
 This tutorial is meant to build off of *"Processing Your Data"* and demonstrate how to adapt that tutorial's script to use multiple ec2 worker instances. To understand the processing occurring in this script you should go through that tutorial first. This tutorial will focus on the changes required to run on worker instances instead of one master instance and what this means for essentia.
 
 Step 1 : 
