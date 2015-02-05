@@ -31,6 +31,6 @@ Starting Essentia for the first time
 
 #. Go to your AWS console, where all services are listed.
 #. Click on EC2.  We will provision a virtual machine for use with essentia.
-#. Create on the 'Launch Instance' button.  This will take you to a site where you can select what type of VM you
-will create.
+#. Create on the 'Launch Instance' button.  This will take you to a site where you can
+   select what type of VM you will create.
 #. Select the 'community AMI' tab, and search for 'Essentia'
