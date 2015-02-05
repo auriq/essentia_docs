@@ -41,6 +41,7 @@ understanding the material.
    :maxdepth: 6
    :titlesonly:
 
+   source/install
    source/overview/index
    source/tutorial/index
    source/usecases/index

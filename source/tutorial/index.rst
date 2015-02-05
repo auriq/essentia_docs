@@ -8,7 +8,6 @@ The following tutorials provide a solid background on most of Essentia's capabil
 .. toctree::
    :titlesonly:
 
-   aws/index
    aqtools/index
    essentia/index
 

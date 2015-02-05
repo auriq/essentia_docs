@@ -1,10 +1,6 @@
 Getting Started on AWS
 ======================
 
-
-Although a desktop version is available for training (see our Downloads page),
-the real power of Essentia is harnessed in the AWS Cloud.
-
 If you don't have an account, it is free to sign up.  New accounts get several services for free,
 but with some restrictions.  See `the free tier page <http://aws.amazon.com/free>`_ for more information.
 
@@ -26,11 +22,3 @@ Creating an AWS account
 #. Click “Show User Security Credentials” to see your credentials and then be sure to make a copy/record of them.
    You can also download a credential file to save your keys for future use.
 
-Starting Essentia for the first time
-------------------------------------
-
-#. Go to your AWS console, where all services are listed.
-#. Click on EC2.  We will provision a virtual machine for use with essentia.
-#. Create on the 'Launch Instance' button.  This will take you to a site where you can
-   select what type of VM you will create.
-#. Select the 'community AMI' tab, and search for 'Essentia'
