@@ -5,7 +5,8 @@ relatively straightforward to learn.  This suite of tools can significantly ease
 encountered in a typical data processing workflow.
 
 
-- :doc:`aqpp` : The heart of the package is the preprocessor, ``aq_pp``
+- :doc:`aq_pp tutorial` : The heart of the package is the preprocessor, ``aq_pp``
+- :doc:`aq_udb tutorial` : Essentia's scalability comes from interacting with its database, ``aq_udb``
 - udb : The distributed, in memory, hash based database
 - loginf : File content analyzer.  Determines many useful properties of the data.
 - logconv : Log file converter
