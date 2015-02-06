@@ -1,8 +1,8 @@
-=========
-Tutorial
-=========
+========================
+Introduction To Essentia
+========================
 
-This introduce to Essentia will get you started processing simple data stored on your local machine.
+This tutorial will get you started processing simple data stored on your local machine.
 
 1. You will first be given the full set of processing commands used in our example ETL Essentia file.
 
