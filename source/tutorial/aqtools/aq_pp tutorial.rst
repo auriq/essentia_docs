@@ -9,7 +9,7 @@ aq_pp Tutorial
 
 \ 
 
-This tutorial uses the first five lines of tutorialdata.csv, which is included in full in the local install and on asi-public. To run these commands, copy the following five lines and save them as tutorialdata.csv::
+This tutorial uses the *first five lines* of `tutorialdata.csv <https://s3.amazonaws.com/asi-public/etldata/fivecoltutorial.csv>`_, which is included in full in the local install and on asi-public. To run these commands, copy the following five lines and save them as tutorialdata.csv::
 
     float-col,integer-col,last-name,first-name,country
     99.91,5350,Lawrence,Lois,Philippines

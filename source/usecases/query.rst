@@ -1,6 +1,8 @@
 Query Your Log Files Directly
 =============================
 
+--------------------------------------------------------------------------------    
+
 Once you've scanned your files you can use Essentia's **SQL Indexing** feature to find out more information about them.
 With SQL Indexing its easy to determine and aggregate filesizes and counts so you can ensure that the categories you
 create contain the files you intended them to. 
@@ -12,6 +14,8 @@ files.
 
 .. image:: ../../_static/essdatastoresql.png
 
+--------------------------------------------------------------------------------
+    
 Now that you've categorized your files and gotten an idea of the number and type of files in each category you can
 analyze your data using simple **SQL-like statements**. The "like" is simply because you must use the category name and
 start and end dates of your data instead of the traditional s3://bucket/path notation in the 'from' part of your SQL
