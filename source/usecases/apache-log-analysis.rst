@@ -13,8 +13,8 @@ Easy Integration with Existing Tools for Advanced Analytics
 * You are then free to run whatever analysis you desire in R, utilizing its vast library of statistical and graphical packages. Its easy to analyze and visualize apache logs by whatever segmentation your logs allow. 
 * Counting unique visitors, visits, pages, hits, and bandwidth are just some of the analytics you can accomplish across any size data by using essentia.
 
-.. image:: ../../../_static/dayofmonth.png
-.. image:: ../../../_static/countrycounts.png
+.. image:: ../../_static/dayofmonth.png
+.. image:: ../../_static/countrycounts.png
 
 **Analysis Within Your Reach:**
 
