@@ -42,4 +42,4 @@ Essentia's expert selection, merge, and parallelization abilities make it the pe
 
 Essentia's versatility and experience with big data, combined with the advanced statistical analysis inherent to R, provides exciting opportunities. 
 
-See one such opportunity for yourself with our Apache Log Analysis, or if you want to start using Essentia and R now see Getting Started with the R integrator.
+See one such opportunity for yourself with our `Apache Log Analysis <http://vm146.auriq.net/documentation/source/usecases/apache-log-analysis.html>`_, or if you want to start using Essentia and R now see `Getting Started with the R Integrator <http://vm146.auriq.net/documentation/source/usecases/getting-started-with-the-r-integrator.html>`_.

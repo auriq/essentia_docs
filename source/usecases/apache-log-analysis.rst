@@ -27,4 +27,4 @@ If you have R installed, you can run our Apache Log Analysis Demo by changing in
     R          # and then
     source("runr.R")
     
-If you dont have R installed and want to see our Demo or integration in action, check out Getting Started with the R Integrator.
+If you dont have R installed and want to see our demo or integration in action, check out `Getting Started with the R Integrator <http://vm146.auriq.net/documentation/source/usecases/getting-started-with-the-r-integrator.html>`_.
