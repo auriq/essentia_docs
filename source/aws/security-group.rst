@@ -52,9 +52,8 @@ This security group will be used by both the master node and all workers.
 Setup via the AWS Command Line Interface
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Users with the AWS CLI installed may find the script below to be more
-straightforward.  Simply save it in a file, and execute it using ``sh
-makegroup.sh``
+Users with the AWS CLI installed may find :download:`this script <./security-group.sh>` useful
+Simply save it in a file, and execute it using ``sh security-group.sh``
 
 .. code-block:: sh
 

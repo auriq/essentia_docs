@@ -9,7 +9,7 @@ To demonstrate the utility of ``aq_pp``, lets look at the following problem:
 We have sales data from a fictional store that caters to international clients.  We record the amount spent for each
 purchase and the currency it was purchased with.  We wish to compute the total sales in US Dollars.
 We have 2 files to process.  The first contains the time, currency type, and amount spent, and the second is a lookup
- table that has the country code and USD exchange rate:
+table that has the country code and USD exchange rate:
 
 .. csv-table:: sales data
    :header: "transaction_date","currency","amount"

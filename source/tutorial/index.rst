@@ -14,6 +14,16 @@ In both cases, AWS cloud services are not required for learning the Essentia bas
 can be used easily.  This version cannot showcase the power of Essentia at scale, but the :doc:`../usecases/index`
 section includes examples and scripts that can.
 
+**Resources**
+
+We main a `GitHub repository <https://github.com/auriq/EssentiaPublic>`_ that contains test data and source code for
+the tutorials and usecases you will find in this documentation.
+
+For AWS users, we have a public S3 bucket (s3://asi-public) that stores the larger and more complex datasets used for
+training purposes.
+
+**Available Tutorials**
+
 * :doc:`aqtools/index`: Command line based text processing tools
 * :doc:`essentia/index`: Scaling for "big data"
 

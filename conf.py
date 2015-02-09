@@ -52,7 +52,7 @@ copyright = u'2015, AuriQ Systems Inc.'
 # built documents.
 #
 # The short X.Y version.
-version = '2.1.5'
+version = '2.1.6'
 # The full version, including alpha/beta/rc tags.
 release = version
 
@@ -118,7 +118,7 @@ html_theme_options = {
     'navbar_title': "Essentia",
 
     # Tab name for entire site. (Default: "Site")
-    'navbar_site_name': "Contents",
+    'navbar_site_name': "Topics",
 
     # A list of tuples containing pages or urls to link to.
     # Valid tuples should be in the following forms:
@@ -133,7 +133,7 @@ html_theme_options = {
     #],
 
     # Render the next and previous page links in navbar. (Default: true)
-    'navbar_sidebarrel': False,
+    'navbar_sidebarrel': True,
 
     # Render the current pages TOC in the navbar. (Default: true)
     'navbar_pagenav': False,
