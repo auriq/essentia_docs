@@ -22,3 +22,20 @@ Creating an AWS account
 #. Click “Show User Security Credentials” to see your credentials and then be sure to make a copy/record of them.
    You can also download a credential file to save your keys for future use.
 
+Now What?
+---------
+
+The main AWS resource that Essentia uses is the EC2 instances.  These virtual
+machines act as master and worker nodes in an Essentia cluster, and supply
+the computing and memory required for processing data.  First time users are
+strongly encouraged to read the excellent
+`documentation <http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/concepts.html>`_ provided by Amazon.
+
+Just as vital is the
+`S3 data storage <http://docs.aws.amazon.com/AmazonS3/latest/gsg/GetStartedWithS3.html>`_
+resource.  By providing highly redundant data storage in the cloud, Essentia
+is able to effectively process large volumes of data without being I/O bound.
+
+Although AWS related operations can be performed with the Web-based GUI the
+AWS Console provides, we encourage our users to download and use the
+`AWS Command Line Interface <http://aws.amazon.com/cli/>`_.
