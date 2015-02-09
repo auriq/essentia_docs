@@ -5,8 +5,8 @@
 
 Welcome
 =======
-We wrote Essentia to help solve theÂ 'big data' day-to-day data analysis problems we faced
-when processing different types of logs from different types of users. Â 
+We wrote Essentia to help solve theÂ 'big data' day-to-day data analysis problems we faced
+when processing different types of logs from different types of users. Â 
 Specifically, we needed a framework that would allow us to quickly:
 
 * Determine the data types stored in the data
@@ -46,6 +46,7 @@ understanding the material.
    source/tutorial/index
    source/usecases/index
    source/manpages/index
+   source/samples/index
 
 
 

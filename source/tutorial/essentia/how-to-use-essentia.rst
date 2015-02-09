@@ -1,9 +1,14 @@
 How To Use Essentia
 ===================
 
+----------------------------------------------------------------------------------------
+
 --------------------------------------------------------------------------------------
 Essentia Guidelines
 --------------------------------------------------------------------------------------
+
+----------------------------------------------------------------------------------------
+
 How To Approach An Essentia File:
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 1.         Tell essentia to whether to run on your local machine or on ec2 worker instances.
@@ -26,7 +31,9 @@ Typically, categories dont change much once you have completed the initial setup
 
 Thus you can skip step 3 after your first run.
 
-Learn more about how to Manage Your S3 Bucket.
+Learn more about how to `Manage Your S3 Bucket <http://vm146.auriq.net/documentation/source/tutorial/essentia/manage-your-s3-bucket.html>`_.
+
+----------------------------------------------------------------------------------------
 
 ----------------------------------------------------------------------------------------
 Essentia Commands 
