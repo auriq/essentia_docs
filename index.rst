@@ -5,8 +5,8 @@
 
 Welcome
 =======
-We wrote Essentia to help solve theÂ 'big data' day-to-day data analysis problems we faced
-when processing different types of logs from different types of users. Â 
+We wrote Essentia to help solve the day-to-day 'big data' analysis problems we faced
+when processing different types of logs from different types of users.  
 Specifically, we needed a framework that would allow us to quickly:
 
 * Determine the data types stored in the data
@@ -15,9 +15,9 @@ Specifically, we needed a framework that would allow us to quickly:
 * Clean the data to enable analytics.
 
 
-Essentia can be used to simplify many common problems involved with data engineering and
-data analysis. The documentation in these pages is meant to train users on how to use
-and integrate Essentia into their data analysis workflows.
+Essentia can be used to simplify many common problems encountered by data engineers and
+scientists. The documentation in these pages is meant to train users on how to use
+and integrate Essentia into their data processing workflows.
 
 Intended Audience
 ~~~~~~~~~~~~~~~~~
@@ -41,8 +41,9 @@ understanding the material.
    :maxdepth: 6
    :titlesonly:
 
+   index
+   source/overview
    source/install
-   source/overview/index
    source/tutorial/index
    source/usecases/index
    source/manpages/index

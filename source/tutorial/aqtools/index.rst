@@ -11,5 +11,3 @@ encountered in a typical data processing workflow.
 - loginf : File content analyzer.  Determines many useful properties of the data.
 .. - udb : The distributed, in memory, hash based database
 .. - logconv : Log file converter
-
-.. The heart of the package is the preprocessor, ``aq_pp``
