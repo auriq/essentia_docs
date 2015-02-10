@@ -77,7 +77,7 @@ At this point the decisions available will depend on your account and zone.
 You may have the ability to launch Essentia into 'EC2-Classic' mode, or from
 within a VPC.  The latter is preferred for security.  Whatever you choose,
 you will eventually be asked to configure a security group.  This is important
-enough that we created a separate walkthrough for it here.
+enough that we created a separate walk-though for it: :doc:`aws/security-group`
 
 Once your instance is configured and launched, you should copy your
 license key to it using the following command from a terminal::
