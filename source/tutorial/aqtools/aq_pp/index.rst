@@ -1,4 +1,4 @@
-aq_pp Tutorials
+How to Use aq_pp
 --------------------------
 
 --------------------------------------------------------------------------------
@@ -25,9 +25,13 @@ These tutorials will also use a lookup file to compare values to. If you want to
 
 --------------------------------------------------------------------------------
 
+**Preamble:**
+
+- :doc:`the-benefit-of-using-aq_pp` : A brief use case demonstrating why you should use ``aq_pp``.
+
 **The Primary Processing Options:**
 
-- :doc:`aq_pp tutorial` : A full introduction to the preprocessor, ``aq_pp``
+- :doc:`aq_pp tutorial` : A full introduction to the preprocessor, ``aq_pp``.
 
 **Common Uses for Processing Options:**
 
