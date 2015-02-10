@@ -45,7 +45,7 @@ With these example datasets, this actually makes more sense since both datasets 
     
 This added on the extra two columns from lookup.csv onto the corresponding columns from tutorialdata.csv. The ``-cmb`` option also includes the capability to **overwrite existing columns** in the input dataset with values from columns with the same name in the combined dataset. 
 
-We can adjust our command to utilize this feature by simply chnaging the specification of the combined dataset's columns to match those of the input dataset. 
+We can adjust our command to utilize this feature by simply changing the specification of the combined dataset's columns to match those of the input dataset. 
  
 ``aq_pp -f,+1 tutorialdata.csv -d s:float_col f:integer_col s:last_name s:first_name s:country -cmb,+1 lookup.csv s,cmb:float_col f,cmb:integer_col s,key:last_name s,key:first_name s,key:country``
 

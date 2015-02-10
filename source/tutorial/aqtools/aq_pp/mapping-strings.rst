@@ -5,7 +5,7 @@ Mapping Strings
 
 ``-evlc`` has the capability to create entirely new columns or modify existing ones. To act on columns, you need to to give ``-evlc`` a column name or column specification as its argument.
 
-The difference between a column name and a column specification is that a column name is the name of an existing column whereas a column specification is the type you want the new column to be followed by a : and the name of the new column.
+The difference between a column name and a column specification is that a column name is the name of an existing column whereas a column specification is the type you want the new column to be followed by a ``:`` and the name of the new column.
 
 ``aq_pp -f,+1 tutorialdata.csv -d f:float_col i:integer_col s:last_name s:first_name s:country -evlc last_name 'first_name + " " + last_name' -evlc integer_col 'float_col * integer_col' -evlc s:mixed_col 'country + " : " + ToS(integer_col)' -c last_name mixed_col``
 
@@ -20,7 +20,7 @@ The difference between a column name and a column specification is that a column
     
 --------------------------------------------------------------------------------
     
-``-evlc`` is incredibly powerful when acting on numerical columns and many of its functions can be useful in processing string columns, but a lot of analysis needs more advanced parsing and combination of string type columns than ``-evlc`` can provide. 
+While ``-evlc`` is incredibly powerful when acting on numerical columns and many of its functions can be useful in processing string columns, a lot of analysis needs more advanced parsing and combination of string type columns than ``-evlc`` can provide. 
 
 Thus aq_pp contains a variety of mapping functions to **allow values from certain columns to be extracted and recombined into the same or different columns**. The first two sets of mapping functions are ``-mapf`` and ``-mapc``, and ``-mapfrx`` and ``-mapc``.
 

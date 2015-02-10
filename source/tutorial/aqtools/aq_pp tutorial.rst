@@ -170,7 +170,7 @@ With these example datasets, this actually makes more sense since both datasets 
     
 This added on the extra two columns from lookup.csv onto the corresponding columns from tutorialdata.csv. The ``-cmb`` option also includes the capability to **overwrite existing columns** in the input dataset with values from columns with the same name in the combined dataset. 
 
-We can adjust are command to utilize this feature by simply chnaging the specification of the combined dataset's columns to match those of the input dataset. 
+We can adjust are command to utilize this feature by simply changing the specification of the combined dataset's columns to match those of the input dataset. 
  
 ``aq_pp -f,+1 tutorialdata.csv -d s:float_col f:integer_col s:last_name s:first_name s:country -cmb,+1 lookup.csv s,cmb:float_col f,cmb:integer_col s,key:last_name s,key:first_name s,key:country``
 
@@ -253,9 +253,9 @@ Another useful default variable is ``$FileId``. This allows you to keep track of
     0,0,"Wheeler","Sarah","Portugal","F",89,"This record came from file 6"
     0,0,"Kelley","Jacqueline","Philippines","F",57.600000000000001,"This record came from file 6"
 
-The expression in ``-evlc`` can use much more than existing columns and previously defined variables. There are also a variety of **built-in functions** that can only be used in the -evlc option that allow much more sophisticated analysis of your data. 
+The expression in ``-evlc`` can use much more than existing columns and previously defined variables. There are also a variety of **built-in functions** that can only be used in the ``-evlc`` option that allow much more sophisticated analysis of your data. 
 
-See the aq_pp Documentation for a full list and example of these functions. For now I'll introduce the simpler functions that allow you to find the minumum, maximum, and hash value of variuous columns.
+See the aq_pp Documentation for a full list and example of these functions. For now I'll introduce the simpler functions that allow you to find the minumum, maximum, and hash value of various columns.
     
 ``aq_pp -f,+1 tutorialdata.csv -d f:float_col i:integer_col s:last_name s:first_name s:country -evlc i:minimum 'Min(float_col, integer_col)' -evlc i:maximum 'Max(float_col, integer_col)' -evlc i:hash 'SHash(country)' -c minimum maximum hash``
 
@@ -427,7 +427,7 @@ To learn more about the Essentia Database, please review our aq_udb Tutorial.
 
 **Conditional Option Groups**
 
-A final yet incredibly useful technique for processing your data is to use conditional statements to modify your data based on the results of the conditions. In aq_pp these are conatined in ``-if``, ``-elif``, and ``else`` statements.
+A final yet incredibly useful technique for processing your data is to use conditional statements to modify your data based on the results of the conditions. In aq_pp these are contained in ``-if``, ``-elif``, and ``else`` statements.
 
 ``aq_pp -f,+1 tutorialdata.csv -d f:float_col i:integer_col s:last_name s:first_name s:country -if -filt 'country == "Portugal"' -evlc s:Is_Portugese '"TRUE"' -else -evlc Is_Portugese '"FALSE"' -endif``
 
@@ -449,6 +449,6 @@ A final yet incredibly useful technique for processing your data is to use condi
     45.289999999999999,8356,"Wheeler","Sarah","Portugal","SECOND"
     3.5299999999999998,9678,"Kelley","Jacqueline","Philippines","FIRST"
     
-These conditional statements can be used to set values for only certain subsets of your data or set different values for different subsets of your data and very powerful. 
+These conditional statements can be used to set values for only certain subsets of your data or set different values for different subsets of your data and are very powerful. 
 
 You should now have a better understanding of the main options used in the aq_pp command and how aq_pp commands should be structured. It is highly recommended that you now review our aq_udb tutorial to learn how to utilize the incredible scability of the Essentia Database.
