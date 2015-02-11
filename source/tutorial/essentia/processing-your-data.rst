@@ -206,19 +206,19 @@ Understanding our Filter
 
 | ``-evlc f:float_column_to_import '(ToF(column_to_import))'``   
 |     takes our column_to_import and converts it to a float using the **ToF()** function, and then creates a new float column called float_column_to_import that contains those converted values.
-\ 
+
 
 | ``-filt '(float_column_to_import >= 1 && float_column_to_import <= 8)'``  
 |     applies a filter that checks row-by-row whether the value in float_column_to_import is greater than or equal to 1 AND less then or equal to 8. If the condition is True then the record is kept, if not the record is thrown out and wont be used for any subsequent operations.
-\ 
+
 
 | ``-evlc s:my_string_column_to_group_by 'ToS(1)'``  
 |     uses **ToS()** to convert the numeric value 1 to a string value '1' and then creates a new column of strings that are all set to the value '1'.
-\ 
+
 
 | ``-evlc f:rowcount '\$RowNum'``  
 |     uses the variable **$RowNum** (this is built into essentia) to create a new column of floats called rowcount that keeps track of which row the current information is in (The \ is needed to escape the $ symbol in bash).
-\ 
+
 
 | ``-ddef``  
 |     sets all undefined columns that are present in the database to 0 or an empty string. In this case it is temporarily setting each entry in the rowcount2 column to zero (we will see this definition and its use shortly).
@@ -249,7 +249,7 @@ Picture1
 
 |resultscsv| 
 
-.. |resultscsv| image:: ..\..\..\_static\processingresults.png
+.. |resultscsv| image:: processingresults.png
 .. including the results csv picture
 
 The columns are:

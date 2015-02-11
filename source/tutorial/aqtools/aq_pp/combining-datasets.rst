@@ -1,8 +1,6 @@
 Combining Datasets
 ==================
 
---------------------------------------------------------------------------------
-
 First lets **combine** the two example files **by row** using the ``-cat`` option. 
 
 ``aq_pp -f,+1 tutorialdata.csv -d f:float_col i:integer_col s:last_name s:first_name s:country -cat,+1 lookup.csv s:grade f:float_2 s:last_name s:first_name s:country``

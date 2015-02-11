@@ -37,11 +37,8 @@ understanding the material.
 
 .. toctree::
    :hidden:
-   :glob:
-   :maxdepth: 6
-   :titlesonly:
+   :maxdepth: 3
 
-   index
    source/overview
    source/install
    source/tutorial/index

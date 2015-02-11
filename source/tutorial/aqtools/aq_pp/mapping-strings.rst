@@ -1,8 +1,6 @@
 Mapping Strings
 ==================
 
---------------------------------------------------------------------------------
-
 ``-evlc`` has the capability to create entirely new columns or modify existing ones. To act on columns, you need to to give ``-evlc`` a column name or column specification as its argument.
 
 The difference between a column name and a column specification is that a column name is the name of an existing column whereas a column specification is the type you want the new column to be followed by a ``:`` and the name of the new column.

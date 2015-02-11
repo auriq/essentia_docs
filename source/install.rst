@@ -23,7 +23,8 @@ Installation instructions for the desktop version
 
 The desktop version assumes you are using OSX or Linux as your operating system, and that you have Python 2.7 installed.
 
-1. Fetch the installer (for both Mac and Linux) `here <http://auriq.net/wp-content/uploads/installer/essentia-standalone-2.1.5.zip>`_.
+1. Fetch the installer `installer <http://auriq.net/wp-content/uploads/installer/essentia-standalone-2.1.5.zip>`_
+   (for both Mac and Linux) .
 2. Unpack the zip file.
 3. ``cd`` into the directory it creates
 4. type ``./install`` to start the installation.  Essentia will be installed by default to ``~/.local/essentia``
@@ -58,7 +59,7 @@ private, AWS account specific master node.
 Once active, you can log into the instance and start Essentia.  This version
 of will look for a license key which is needed to run.
 
-This license is also free, and can be obtained `here <../pricing>`_.  It grants
+This license is also free, and can be obtained via an `easy signup <../pricing>`_.  It grants
 the user 30 days of unlimited use.  Note however that standard EC2 rates
 still apply, but during the trial the cost of using Essentia is free.
 

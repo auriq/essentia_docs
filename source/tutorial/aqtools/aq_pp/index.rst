@@ -1,8 +1,6 @@
 How to Use aq_pp
 --------------------------
 
---------------------------------------------------------------------------------
-
 **Required Files**
 
 These tutorials use the *first five lines* of `tutorialdata.csv <https://s3.amazonaws.com/asi-public/etldata/fivecoltutorial.csv>`_. To run these commands, copy the following five lines and save them as tutorialdata.csv::
@@ -59,4 +57,15 @@ These tutorials will also use a lookup file to compare values to. If you want to
 
   * ``-filt`` is the main filtering option and allows you to limit which data continues to be processed based on the results of the condition you define.
   * ``-grep`` compares the values of column from the input dataset against the values of a column in a lookup dataset. It only lets each record continue in the processing chain if the value of the specified column was present in both datasets.
-  * ``-if ... -else ... -endif`` statements allow you to use many of the other options in ``aq_pp`` to create conditional expressions that each record is subject to. 
+  * ``-if ... -else ... -endif`` statements allow you to use many of the other options in ``aq_pp`` to create conditional expressions that each record is subject to.
+
+
+.. toctree::
+   :hidden:
+
+   aq_pp tutorial
+   combining-datasets
+   filtering-data
+   mapping-strings
+   the-benefit-of-using-aq_pp
+   variables-and-operations

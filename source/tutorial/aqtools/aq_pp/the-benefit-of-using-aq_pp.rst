@@ -49,11 +49,12 @@ positional identifiers ($1, $2 etc) makes AWK code more challenging to perfect.
 
   aq_pp -f,+1 sales.csv -d s:date s:currency f:amount -cmb,+1 exchange.csv s:currency f:rate -var f:sum 0.0 -evlc 'sum' 'sum+(amount*rate)' -ovar -
 
-The AuriQ preprocessor is similar in spirit to AWK, but it simplifies many issues that are complex in ``awk``.
+The AuriQ preprocessor is similar in spirit to AWK, but it simplifies many issues.
 We'll detail the specifics in the rest of the documentation, but even without knowing all of the syntax, the
 intent of the command is fairly easy to discern. Instead of positional arguments, columns
 are named, therefore making an ``aq_pp`` command more human readable.
 Additionally, it is very fast, in fact an order of magnitude faster in this example.
 
-In the `aq_pp Tutorial <http://vm146.auriq.net/documentation/source/tutorial/aqtools/aq_pp/aq_pp\ tutorial.html>`_ that follows, we will expand on how this and other Essentia tools can simplify and empower your data
+In the :doc:`aq_pp tutorial`
+that follows, we will expand on how this and other Essentia tools can simplify and empower your data
 processing workflow.

@@ -1,8 +1,6 @@
 Filtering Data
 ============================
 
---------------------------------------------------------------------------------
-
 In order to perform powerful analysis of your data you need to be able to **limit which data continues on to the rest of your analysis**. 
 
 This is where the ``-filt`` option comes in handy. ``-filt`` makes it easy to limit your data based on their values or ranges in values of various columns.
