@@ -1,92 +1,6 @@
 aq_pp Tutorial
 ==============
 
-Preamble
---------
-
-To demonstrate the utility of ``aq_pp``, lets look at the following problem:
-
-We have sales data from a fictional store that caters to international clients.  We record the amount spent for each
-purchase and the currency it was purchased with.  We wish to compute the total sales in US Dollars.
-We have 2 files to process.  The first contains the time, currency type, and amount spent, and the second is a lookup
-table that has the country code and USD exchange rate:
-
-.. csv-table:: sales data
-   :header: "transaction_date","currency","amount"
-   :widths: 30, 10, 10
-
-   2013-08-01T07:50:00,USD,81.39
-   2013-08-01T08:22:00,USD,47.96
-   2013-08-01T08:36:00,CAD,62.59
-
-
-.. csv-table:: Exchange rate
-   :header: "currency","rate"
-   :widths: 10,10
-
-   EUR,1.34392
-   CAD,0.91606
-   USD,1.00000
-
-Lets compare 2 solutions against ``aq_pp``
-
-SQL::
-
-  select ROUND(sum(sales.amount*money.rate),2) AS total from sales INNER JOIN exchange ON sales.currency = exchange.currency;
-
-SQL is straightforward and generally easy to understand.  It will execute this query very quickly,
-but this overlooks the hassle of actually importing it into the database.
-
-AWK::
-
-  awk 'BEGIN {FS=OFS=","} NR==1 { next } FNR==NR { a[$1]=$2; next } $2 in a { $2=a[$2]; sum += $2*$3} END {print sum}' exchange.csv sales.csv
-
-AWK is an extremely powerful text processing language, and has been a part of Unix for about 40 years.  This legacy
-means that it is stress tested and has a large user base.  But it is also not very user friendly in some
-circumstances.  The language
-complexity scales with the difficulty of the problem you are trying to solve.  Also, referencing the columns by
-positional identifiers ($1, $2 etc) makes AWK code more challenging to perfect.
-
-
-AQ_PP::
-
-  aq_pp -f,+1 sales.csv -d s:date s:currency f:amount -cmb,+1 exchange.csv s:currency f:rate -var f:sum 0.0 -evlc 'sum' 'sum+(amount*rate)' -ovar -
-
-The AuriQ preprocessor is similar in spirit to AWK, but it simplifies many issues that are complex in ``awk``.
-We'll detail the specifics in the rest of the documentation, but even without knowing all of the syntax, the
-intent of the command is fairly easy to discern. Instead of positional arguments, columns
-are named, therefore making an ``aq_pp`` command more human readable.
-Additionally, it is very fast, in fact an order of magnitude faster in this example.
-
-In the tutorial that follows, we will expand on how this and other Essentia tools can simplify and empower your data
-processing workflow.
-
-
-
-**Required Files**
-
-This tutorial uses the *first five lines* of `tutorialdata.csv <https://s3.amazonaws.com/asi-public/etldata/fivecoltutorial.csv>`_, which is included in full in the local install and on asi-public. To run these commands, copy the following five lines and save them as tutorialdata.csv::
-
-    float-col,integer-col,last-name,first-name,country
-    99.91,5350,Lawrence,Lois,Philippines
-    73.61,1249,Hamilton,Evelyn,Portugal
-    45.29,8356,Wheeler,Sarah,Portugal
-    3.53,9678,Kelley,Jacqueline,Philippines
-
-This tutorial will also use a lookup file to compare values to. If you want to run these commands, copy the following five lines and save them as lookup.csv::
-
-    grade,float_2,last_name,first-name,country
-    A,12.3,Lawrence,Lois,Philippines
-    C,96.6,Hamilton,Evelyn,Portugal
-    F,89.0,Wheeler,Sarah,Portugal
-    F,57.6,Kelley,Jacqueline,Philippines
-
-\ 
-
--------------------------------------------------------------------------------- 
-
-\ 
-
 **Overview**
 
 \ 
@@ -170,7 +84,7 @@ With these example datasets, this actually makes more sense since both datasets 
     
 This added on the extra two columns from lookup.csv onto the corresponding columns from tutorialdata.csv. The ``-cmb`` option also includes the capability to **overwrite existing columns** in the input dataset with values from columns with the same name in the combined dataset. 
 
-We can adjust are command to utilize this feature by simply chnaging the specification of the combined dataset's columns to match those of the input dataset. 
+We can adjust are command to utilize this feature by simply changing the specification of the combined dataset's columns to match those of the input dataset. 
  
 ``aq_pp -f,+1 tutorialdata.csv -d s:float_col f:integer_col s:last_name s:first_name s:country -cmb,+1 lookup.csv s,cmb:float_col f,cmb:integer_col s,key:last_name s,key:first_name s,key:country``
 
@@ -197,7 +111,7 @@ The **creation** of variables is accomplished using the ``-var`` option and thei
 
 ``aq_pp -f,+1 tutorialdata.csv -d f:float_col i:integer_col s:last_name s:first_name s:country -var 'f:rolling_sum' 0 -var 'f:record_count' 0 -evlc 'rolling_sum' 'rolling_sum + float_col' -evlc 'record_count' 'record_count + 1' -evlc 'f:rolling_average' 'rolling_sum / record_count'``
 
-* This initializes two new variables: a float called rolling_sum set to zero and a float called record_count set to zero. It then adds the value of float_col to rolling_sum, increases record_count by one, and divides rolling_sum by record_count for each record in the input data. 
+* This initializes two new variables: a float called ``rolling_sum`` set to zero and a float called ``record_count`` set to zero. It then adds the value of float_col to rolling_sum, increases record_count by one, and divides rolling_sum by record_count for each record in the input data. 
 * The variables are not included in the standard output, only the columns are included. The output is::
 
     "float_col","integer_col","last_name","first_name","country","rolling_average"
@@ -253,9 +167,9 @@ Another useful default variable is ``$FileId``. This allows you to keep track of
     0,0,"Wheeler","Sarah","Portugal","F",89,"This record came from file 6"
     0,0,"Kelley","Jacqueline","Philippines","F",57.600000000000001,"This record came from file 6"
 
-The expression in ``-evlc`` can use much more than existing columns and previously defined variables. There are also a variety of **built-in functions** that can only be used in the -evlc option that allow much more sophisticated analysis of your data. 
+The expression in ``-evlc`` can use much more than existing columns and previously defined variables. There are also a variety of **built-in functions** that can only be used in the ``-evlc`` option that allow much more sophisticated analysis of your data. 
 
-See the aq_pp Documentation for a full list and example of these functions. For now I'll introduce the simpler functions that allow you to find the minumum, maximum, and hash value of variuous columns.
+See the aq_pp Documentation for a full list and example of these functions. For now I'll introduce the simpler functions that allow you to find the minumum, maximum, and hash value of various columns.
     
 ``aq_pp -f,+1 tutorialdata.csv -d f:float_col i:integer_col s:last_name s:first_name s:country -evlc i:minimum 'Min(float_col, integer_col)' -evlc i:maximum 'Max(float_col, integer_col)' -evlc i:hash 'SHash(country)' -c minimum maximum hash``
 
@@ -427,7 +341,7 @@ To learn more about the Essentia Database, please review our aq_udb Tutorial.
 
 **Conditional Option Groups**
 
-A final yet incredibly useful technique for processing your data is to use conditional statements to modify your data based on the results of the conditions. In aq_pp these are conatined in ``-if``, ``-elif``, and ``else`` statements.
+A final yet incredibly useful technique for processing your data is to use conditional statements to modify your data based on the results of the conditions. In aq_pp these are contained in ``-if``, ``-elif``, and ``else`` statements.
 
 ``aq_pp -f,+1 tutorialdata.csv -d f:float_col i:integer_col s:last_name s:first_name s:country -if -filt 'country == "Portugal"' -evlc s:Is_Portugese '"TRUE"' -else -evlc Is_Portugese '"FALSE"' -endif``
 
@@ -449,6 +363,6 @@ A final yet incredibly useful technique for processing your data is to use condi
     45.289999999999999,8356,"Wheeler","Sarah","Portugal","SECOND"
     3.5299999999999998,9678,"Kelley","Jacqueline","Philippines","FIRST"
     
-These conditional statements can be used to set values for only certain subsets of your data or set different values for different subsets of your data and very powerful. 
+These conditional statements can be used to set values for only certain subsets of your data or set different values for different subsets of your data and are very powerful. 
 
 You should now have a better understanding of the main options used in the aq_pp command and how aq_pp commands should be structured. It is highly recommended that you now review our aq_udb tutorial to learn how to utilize the incredible scability of the Essentia Database.
