@@ -17,3 +17,9 @@ aqtools
 * udb
 * udb_examples
 
+
+.. toctree::
+   :hidden:
+   :titlesonly:
+
+   loginf

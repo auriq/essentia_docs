@@ -2,9 +2,7 @@ Zip To Gzip Conversion
 ======================
 Redshift and other common analytics tools will only load data from compressed files if they have gzip compressed. Thus it requires an extra step in the process to convert existing S3 zip files to gzip files that Redshift can read.
 
-This tutorial provides a script to convert all zip files on your S3 bucket into gzip files using essentia's versatile capabilities. It will also give you examples to help you adapt the script to select only a subset of your zip files.
-
-::
+This tutorial provides a script to convert all zip files on your S3 bucket into gzip files using essentia's versatile capabilities. It will also give you examples to help you adapt the script to select only a subset of your zip files.::
 
     ess datastore select s3://*YourBucket* --aws_access_key=*AccessKey* --aws_secret_access_key=*SecretAccessKey*
     ess datastore scan

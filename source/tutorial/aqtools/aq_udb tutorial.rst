@@ -1,13 +1,7 @@
 aq_udb Tutorial
-==============
-
--------------------------------------------------------------------------------- 
-
-\ 
+===============
 
 **Required Files**
-
-\ 
 
 This tutorial assumes you already imported the following data into udb::
 

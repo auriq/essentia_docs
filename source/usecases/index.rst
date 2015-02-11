@@ -11,3 +11,14 @@ Case Studies
 .. * Redshift
 * media overlap
 
+.. toctree::
+   :hidden:
+
+   essentia-redshift-integration
+   essentia-r-integration
+   apache-log-analysis
+   getting-started-with-the-r-integrator
+   conversion
+   query
+   apache
+   r

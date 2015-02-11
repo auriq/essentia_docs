@@ -1,8 +1,6 @@
 Variables and Operations
 ============================
 
---------------------------------------------------------------------------------
-
 A very useful feature of aq_pp is the ability to **define, store, and modify variables**. 
 
 The **creation** of variables is accomplished using the ``-var`` option and their **modification** is typically handled using the ever-useful ``-evlc`` option with the variable as its argument or its input.

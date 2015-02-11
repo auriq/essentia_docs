@@ -25,7 +25,7 @@ Creating an AWS account
 Now What?
 ---------
 
-The main AWS resource that Essentia uses is the EC2 instances.  These virtual
+The main AWS resource that Essentia uses are the EC2 instances.  These virtual
 machines act as master and worker nodes in an Essentia cluster, and supply
 the computing and memory required for processing data.  First time users are
 strongly encouraged to read the excellent

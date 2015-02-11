@@ -8,11 +8,7 @@ a single computer.
 
 In order to achieve this scalability, Essentia works on the cloud.  Specifically the Amazon Web Services
 infrastructure.  Users not familiar with this cloud based platform may benefit from the brief AWS overview at the
-bottom of this page, but more experienced users could skip directly to the Essentia specific links below.
-
-- :ref:`aqoverview-label`
-- :ref:`scanneroverview-label`
-- :ref:`rmoverview-label`
+in the next section, but more experienced users could skip directly to the Essentia specific topics below.
 
 Essentia on AWS
 ---------------

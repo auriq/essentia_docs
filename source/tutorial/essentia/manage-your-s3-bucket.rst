@@ -1,8 +1,6 @@
 Manage Your S3 Bucket
 ======================
 
----------------------------------------------------------
-
 **Why use the Log Manager:**
 
 Essentia's log manager is a simple way to fetch, store and manage your compressed/uncompressed log files. It allows you to list and organize your files so you can analyze the right data and ignore any irrelevant files.

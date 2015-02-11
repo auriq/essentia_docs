@@ -18,10 +18,8 @@ The benefit of the desktop version is that users do not need an AWS account.
 We've removed the ability to launch worker nodes in the cloud as a consequence,
 but otherwise the features are the same between it and the cloud based versions.
 
-Installation instructions for the desktop version
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-The desktop version assumes you are using OSX or Linux as your operating system, and that you have Python 2.7 installed.
+The desktop version assumes you are using OSX or Linux as your operating system,
+and that you have Python 2.7 installed.
 
 1. Fetch the installer `installer <http://auriq.net/wp-content/uploads/installer/essentia-standalone-2.1.5.zip>`_
    (for both Mac and Linux) .
@@ -51,8 +49,8 @@ The final three ``export`` commands assume you are using a Bourne shell (i.e. ba
 
 Essentia is self contained, and to uninstall, one only needs to execute ``rm -rf ~/.local/essentia``.
 
-Full Featured, 30 day trial on AWS cloud
-----------------------------------------
+AWS 30 day trial
+----------------
 
 We have created a free public AMI which any AWS user can launch to form a
 private, AWS account specific master node.
@@ -87,19 +85,21 @@ license key to it using the following command from a terminal::
 
 The public IP will be listed on your AWS console.
 
-Full Featured, pay by the hour AWS Cloud version
-------------------------------------------------
+AWS full version
+----------------
+
+The full, unlimited version of Essentia is a pay-as-you-go service hosted on AWS.
+The cost per hour ranges on the node type you use, but typically ~ $0.10/hour.
 
 To use this unlimited version, follow the instructions for the trial based version with two exceptions:
 
 1. Instead of 'Community AMIs', select 'AWS Marketplace' when you go to launch an EC2 instance.
 2. No license key needs to be acquired.
 
-The cost per hour ranges on the node type you use, but typically ~ $0.10/hour.
-
+AWS additional notes
+--------------------
 
 .. toctree::
-   :hidden:
 
    aws/aws
    aws/security-group

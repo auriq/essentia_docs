@@ -8,3 +8,14 @@ The following tutorials provide a solid background on most of Essentia's capabil
 - :Doc:`analyze-apache-web-log-data` : Convert and analyze Apache Logs using Essentia and its powerful Log Converter.
 - :Doc:`merge-average-and-sort-web-data` : Merge datasets and get the results you want in the order you need.
 - :Doc:`combine-and-compare-datasets` : Determine the greatest increase in sales between two sets of data.
+
+
+.. toctree::
+   :hidden:
+   :titlesonly:
+
+   calculate-sum-and-maximum
+   obtain-last-first-and-minimum-values
+   analyze-apache-web-log-data
+   merge-average-and-sort-web-data
+   combine-and-compare-datasets

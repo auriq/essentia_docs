@@ -9,5 +9,13 @@ encountered in a typical data processing workflow.
 - :doc:`aq_udb tutorial` : Essentia's scalability comes from interacting with its database, ``aq_udb``
 - :doc:`logcnv tutorial` : Essentia's versatile log file format converter.
 - loginf : File content analyzer.  Determines many useful properties of the data.
-.. - udb : The distributed, in memory, hash based database
+
 .. - logconv : Log file converter
+
+.. toctree::
+   :hidden:
+   :titlesonly:
+
+   aq_pp/index
+   aq_udb tutorial
+   logcnv tutorial
