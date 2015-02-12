@@ -46,8 +46,9 @@ the processing to handle large groups of files.
 .. toctree::
 
    essentia/data_organization
-   essentia/scaling_aq_pp
-   essentia/scaling_aq_udb
+   essentia/ess_on_aws
+   essentia/scaling_aqpp
+   essentia/scaling_udb
    essentia/query
    essentia/redshift
 
