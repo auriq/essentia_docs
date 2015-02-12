@@ -59,6 +59,6 @@ Terminating the cluster when done::
 
   ess instance ec2 terminate all
 
-  
+
 
 
