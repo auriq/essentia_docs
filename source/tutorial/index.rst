@@ -3,14 +3,14 @@ Tutorials
 *********
 
 The following tutorials provide a solid background on most of Essentia's capabilities.  They do not require significant
-computational resources, and therefore the desktop version is sufficient to get started.  The more intensive examples
-are reserved for the :doc:`../usecases/index` section.
+computational resources, and therefore the desktop version or the AWS free tier of instances is sufficient to get
+started.  The more intensive examples are reserved for the :doc:`../usecases/index` section.
 
 We maintain a `GitHub repository <https://github.com/auriq/EssentiaPublic>`_ that contains test data and source code for
 some of the tutorials and usecases you will find in this documentation.
 
-For AWS users, we have a public S3 bucket (s3://asi-public) that stores the larger and more complex datasets used for
-training purposes.
+For AWS users, we also have a public S3 bucket (s3://asi-public) that stores the larger and more complex datasets used
+for training purposes.
 
 AQ Tools
 ========
@@ -20,8 +20,13 @@ Unix users familiar with the raw text processing commands ``sed`` , ``awk``, etc
 relatively straightforward to learn, and we highlight how the aq commands can significantly
 ease the burden of many problems encountered in a typical data processing workflow.
 
+* :doc:`aqtools/aq_pp/index` : the text pre-processor
+* :doc:`aqtools/udb` : the in-memory database
+* :doc:`aqtools/logcnv` : the log file parser/converter
+
 .. toctree::
    :titlesonly:
+   :hidden:
 
    aqtools/aq_pp/index
    aqtools/udb
