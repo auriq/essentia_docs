@@ -59,8 +59,7 @@ Records will be matched based on all the columns that share the same names betwe
 Users familiar with SQL will recognize this as an INNER JOIN.  A slight variant with the attributes allows us to JOIN
 with REPLACEMENT.  Consider the following::
 
-  aq_pp -f,+1 tutorialdata.csv -d s:float_col f:integer_col s:last_name s:first_name s:country -cmb,+1 lookup.csv
-  s,cmb:float_col f,cmb:integer_col s,key:last_name s,key:first_name s,key:country``
+  aq_pp -f,+1 tutorialdata.csv -d s:float_col f:integer_col s:last_name s:first_name s:country -cmb,+1 lookup.csv  s,cmb:float_col f,cmb:integer_col s,key:last_name s,key:first_name s,key:country
 
     "float_col","integer_col","last_name","first_name","country"
     "A",12.300000000000001,"Lawrence","Lois","Philippines"

@@ -1,8 +1,10 @@
-Getting Started on AWS
-======================
+New to  AWS
+===========
 
-If you don't have an account, it is free to sign up.  New accounts get several services for free,
-but with some restrictions.  See `the free tier page <http://aws.amazon.com/free>`_ for more information.
+If you don't have an AWS account, it is free to sign up.  New accounts get several services for free,
+but with some restrictions.  See `the free tier page <http://aws.amazon.com/free>`_ for more information.  Since most
+of the tutorials in this documentation are not computationally expensive, it would be safe to use the 'free tier' of
+instances that AWS provides for new users.
 
 Creating an AWS account
 -----------------------

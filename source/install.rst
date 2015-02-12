@@ -24,7 +24,7 @@ but otherwise the features are the same between it and the cloud based versions.
 The desktop version assumes you are using OSX or Linux as your operating system,
 and that you have Python 2.7 installed.
 
-1. Fetch the installer `installer <http://auriq.net/wp-content/uploads/installer/essentia-standalone-2.1.5.zip>`_
+1. Fetch the `installer <http://auriq.net/wp-content/uploads/installer/essentia-standalone-2.1.5.zip>`_
    (for both Mac and Linux) .
 2. Unpack the zip file.
 3. ``cd`` into the directory it creates
@@ -50,6 +50,8 @@ The final three ``export`` commands assume you are using a Bourne shell (i.e. ba
   setenv PATH $PATH:$HOME/.local/essentia/bin/aq_tools/bin
   setenv PATH $PATH:$HOME/.local/essentia/bin/aq_tools/udb
 
+Once installed and the paths set, Essentia can be invoked from the command line using ``ess``.
+
 Essentia is self contained, and to uninstall, one only needs to execute ``rm -rf ~/.local/essentia``.
 
 AWS 30 day trial
@@ -68,7 +70,7 @@ still apply, but during the trial the cost of using Essentia is free.
 #. Click on EC2.
 #. Create on the 'Launch Instance' button.  This will take you to a site where
    you can select what OS and software you would like to access.
-#. Select the 'community AMI' tab, and search for 'Essentia'
+#. Select the 'community AMI' tab, and search for 'AuriQ'
 #. There may be more than one version listed, but new users should choose the
    most recently created version.
 #. You will be asked to select a node type.  For almost all applications,
