@@ -1,7 +1,9 @@
+***************
 aq_udb Tutorial
-===============
+***************
 
-**Required Files**
+Required Files
+==============
 
 This tutorial assumes you already imported the following data into udb::
 
@@ -25,15 +27,9 @@ This data was imported using aq_pp and the example data provided in the aq_pp do
     aq_pp -f,+1 tutorialdata.csv -d f:float_col i:integer_col s:last_name s:first_name s:country -ddef -udb_imp my_database:country_table
     aq_pp -f,+1 lookup.csv -d s:grade f:float_2 s:last_name s:first_name s:country -ddef -udb_imp my_database:country_table
 
-\ 
 
--------------------------------------------------------------------------------- 
-
-\ 
-
-**Overview**
-
-\ 
+Overview
+========
 
 aq_udb is how Essentia interacts with the Udb database. It specializes in exporting data from the database, providing quick counts or otherwise pre-processing the data, and then outputting the results to wherever you may need them. 
 
@@ -48,15 +44,10 @@ This tutorial will emphasize the most commonly used options for aq_udb and how t
 * **Export Specifications:** -exp, -cnt, -exp_usr, -cnt_usr, -lim_usr, -lim_rec, -var, -pp, -pp_filt, -pp_evlc, -pp_var, -filt, -o, -c, -notitle, and -sort.
 * **Order Specification:** -ord.
 
-\ 
 
--------------------------------------------------------------------------------- 
-
-\ 
 
 **Global Specifications**
 
-\ 
 
 Udb can contain many databases each with its own data being stored in it and its own attributes being applied to that data. The first necessary step when exporting data from Udb is to specify **which specific database you want to export the data from**. 
 

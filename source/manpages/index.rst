@@ -1,25 +1,22 @@
-Unix Man Pages
-==============
-
-aqtools
--------
-
-:doc:`loginf`
+:tocdepth: 1
+*****************
+Reference Manuals
+*****************
 
 
-* essentia
-* essentia_datastore
-* essentia_redshift
-* essentia_task
-* aq_pp
-* aq_pp_examples
-* aq_udb
-* udb
-* udb_examples
-
+AQ Tool Manpages
+================
 
 .. toctree::
-   :hidden:
    :titlesonly:
 
    loginf
+
+
+Essentia
+========
+
+.. toctree::
+   :titlesonly:
+
+   essentia-ref

@@ -1,10 +1,13 @@
+*********************************
 Merge, Average, and Sort Web Data
-=================================
+*********************************
 
-This script imports two datasets, uses the rankings dataset to lookup and replace the destination URL with the corresponding page rank, calculates the average page rank and total ad revenue by unique sourceIP, and outputs the results sorted by total ad revenue.
+This script imports two datasets, uses the rankings dataset to lookup and replace the destination URL with the
+corresponding page rank, calculates the average page rank and total ad revenue by unique sourceIP, and
+outputs the results sorted by total ad revenue.
 
-A Brief Description of What This Script Does:
----------------------------------------------
+A Brief Description of What This Script Does
+============================================
 
 ``ess spec create vector vector1 s,pkey:sourceIP f,+add:avgpageRank f,+add:adRevenue f,+add:row``
 

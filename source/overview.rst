@@ -1,5 +1,8 @@
+:tocdepth: 1
+
+********
 Overview
-========
+********
 
 Essentia consists of a set of programs that operate on text data (the AQ Tools), a data scanner which catalogs and
 organizes your data, and finally a resource manager to apply processing data at scale. Together, these three components
@@ -11,7 +14,7 @@ infrastructure.  Users not familiar with this cloud based platform may benefit f
 in the next section, but more experienced users could skip directly to the Essentia specific topics below.
 
 Essentia on AWS
----------------
+===============
 
 The Amazon cloud is a pay as you need infrastucture, which offers general and specific computing resources,
 as well as reliable data storage.  Essentia primarily uses three key AWS components:
@@ -34,10 +37,8 @@ can integrate with Redshift to clean massive amounts of raw, dirty data and inse
 Getting started with AWS is typically free, and interested users can get more information at `the AWS web page
 <http://aws.amazon.com>`_.
 
-.. _aqoverview-label:
-
 The AQ Tools
-------------
+============
 
 Written in ``C`` to achieve a high level of performance, the AQ tools are able to manipulate and transform raw input
 data into a format more easily handled by other AQ or third party tools.  The key programs include:
@@ -58,10 +59,8 @@ loginf
   float, etc), and also an estimate of the number of unique values in each column.  This tool is particularly handy
   for data exploration, where the format of the data is not known precisely apriori.
 
-.. _scanneroverview-label:
-
 Data Organization
------------------
+=================
 
 Essentia defines a resource that contains data a 'datastore'.  Current datastore types that are supported by Essentia
 include a local disk drive, and an AWS S3 store (cloud based storage).  Regardless of the source,
@@ -84,10 +83,8 @@ and update the category summaries.  These include number of files, combined size
 process.  In particular with log data, the user only needs to provide the date range of interest.  No need to provide
 full filenames.
 
-.. _rmoverview-label:
-
 Resource Management
--------------------
+===================
 
 Essentia leverages the power of the cloud to scale analyses as needed.  One major advantage to using Amazon S3 as a
 datastore is that the data is redundantly stored on multiple disks.  This enables multiple files to be read without
@@ -95,3 +92,4 @@ being I/O bound.
 
 To harness that, Essentia can launch worker nodes based on AWS EC2 instances.  The master node then coordinates which
 files each worker node should process.  This allows for near linear scalability in the processing of many files.
+

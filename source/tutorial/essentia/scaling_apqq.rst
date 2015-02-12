@@ -1,5 +1,5 @@
-Scale and Increase Processing Speed
-====================================
+Scaling AQ Tools
+================
 
 An incredibly important feature of Essentia is the ability to spool up as many worker nodes as you want to increase your data processing speed. This speed increases almost linearly with the number of nodes used, allowing your company to analyze more data in less time.
 

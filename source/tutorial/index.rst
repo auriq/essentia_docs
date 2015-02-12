@@ -1,37 +1,49 @@
+*********
 Tutorials
-=========
+*********
 
-The following tutorials provide a solid background on most of Essentia's capabilities.
-They are meant to be followed in order.
+The following tutorials provide a solid background on most of Essentia's capabilities.  They do not require significant
+computational resources, and therefore the desktop version is sufficient to get started.  The more intensive examples
+are reserved for the :doc:`../usecases/index` section.
 
-The AQ tools, which are the heart of the Essentia suite of tools, are unix command line tools, and we highlight use
-cases where they can be used more efficiently than the common text processing commands already available.
-
-Tutorials under the Essentia classification focus on how these AQ commands are efficiently scaled up to handle large
-numbers of files and volume of data.
-
-In both cases, AWS cloud services are not required for learning the Essentia basics.  Therefore the desktop version
-can be used easily.  This version cannot showcase the power of Essentia at scale, but the :doc:`../usecases/index`
-section includes examples and scripts that can.
-
-**Resources**
-
-We main a `GitHub repository <https://github.com/auriq/EssentiaPublic>`_ that contains test data and source code for
-the tutorials and usecases you will find in this documentation.
+We maintain a `GitHub repository <https://github.com/auriq/EssentiaPublic>`_ that contains test data and source code for
+some of the tutorials and usecases you will find in this documentation.
 
 For AWS users, we have a public S3 bucket (s3://asi-public) that stores the larger and more complex datasets used for
 training purposes.
 
-**Available Tutorials**
+AQ Tools
+========
 
-* :doc:`aqtools/index`: Command line based text processing tools
-* :doc:`essentia/index`: Scaling for "big data"
+The AQ suite of programs, which are the heart of Essentia, are unix command line tools.
+Unix users familiar with the raw text processing commands ``sed`` , ``awk``, etc should find the aq commands to be
+relatively straightforward to learn, and we highlight how the aq commands can significantly
+ease the burden of many problems encountered in a typical data processing workflow.
+
+.. toctree::
+
+   aqtools/aq_pp/index
+   aqtools/udb
+   aqtools/logcnv
+
+
+Essentia
+========
+
+Tutorials under the Essentia classification focus on how these AQ commands are efficiently scaled up to handle large
+numbers of files and volume of data.  The two main components include *data management* and *resource management*.
+By abstracting out classes of data that share the same properties (i.e. log data from a web server with one file per
+day), we can concentrate less on where the data is, and focus on analyzing it.  The resource manager is used to scale
+the processing to handle large groups of files.
 
 
 .. toctree::
-   :hidden:
-   :titlesonly:
 
-   aqtools/index
-   essentia/index
+   essentia/data_organization
+   essentia/scaling_aq_pp
+   essentia/scaling_aq_udb
+   essentia/query
+   essentia/redshift
+
+
 

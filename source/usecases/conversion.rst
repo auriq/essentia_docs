@@ -1,24 +1,30 @@
+*****************************
 Compression Format Conversion
-=============================
+*****************************
 
-Recently we had a client who had thousands of log files in .zip format on an S3 bucket.  They wanted to use EMR
-(Amazon's cloud based implementation of Hadoop), but EMR only natively supports gzip, bzip2, and LZO.  We were able to
-very quickly handle this task, by simply using Essentia's scalability and stream based processing to uncompress, read,
-and recompress all on the fly::
 
-    ess datastore select s3://*YourBucket* --aws_access_key=*AccessKey* --aws_secret_access_key=*SecretAccessKey*
-    ess datastore scan
-    ess datastore rule add "*.zip" "zipfiles" "YYMMDD.zip" ## rule to change, select the patterns that match your files.
-    ess datastore probe zipfiles --apply
-    ess datastore summary
+Amazon's managed services (Redshift, EMR, etc) are able to read compressed data from S3 stores as long as they are
+gzip, bz2, or lzo files.  Zip files however are incredibly common, therefore we built Essentia to handle them.
 
-    ess task stream zipfiles "*" "*" "gzip -3 -c -" --s3out=s3://*YourBucket*/gz/%path/%file.gz --debug
+Although our interest in doing this was to stream data into our analytics backend, the feature also enables users to
+use Essentia for mass conversion of files from one format into another.
 
-This trick is also effective for users who simply want to move their raw data onto Redshift, which also cannot handle
-zip compression natively.  Assuming the steps above were run, one can simply issue the following SQL command to
-Redshift::
-        
-    COPY tablename FROM 's3://*YourBucket*/gz/'
-    WITH CREDENTIALS 'aws_access_key_id=<access-key-id>;aws_secret_access_key=<secret-access-key>'
+The following code block shows how simple this is:
 
-With a few simple lines in Essentia, you can easily convert any .zip compression files to .gz format and load them into your Redshift table.
+.. code-block:: sh
+   :linenos:
+   :emphasize-lines: 3,6
+
+   ess datastore select s3://*YourBucket* --aws_access_key=*AccessKey* --aws_secret_access_key=*SecretAccessKey*
+   ess datastore scan
+   ess datastore rule add "*.zip" "zipfiles" "YYMMDD.zip"
+   ess datastore probe zipfiles --apply
+
+   ess task stream zipfiles "*" "*" "gzip -3 -c -" --s3out=s3://*YourBucket*/gz/%path/%file.gz
+
+
+We have Essentia group all files in an S3 bucket ending with ``.zip`` into a single category (line 3),
+and then use the stream command (line 7) to convert the files one by one.
+
+The list of files to process is broken up and shared amongst each worker node.  The scaling is linear: double your
+cluster size and the conversion time will be cut in half!

@@ -1,10 +1,13 @@
+****************************
 Combine and Compare Datasets
-============================
+****************************
 
-This script imports four datasets, adds a few lines to them to ensure the query will output a result, calculates the increase in store sales from 1999 to 2000 by customer_id, calculates the increase in web sales from 1999 to 2000 by customer_id, and returns the customer_id's that saw a greater increase in web sales than in store sales.
+This script imports four datasets, adds a few lines to them to ensure the query will output a result, calculates the
+increase in store sales from 1999 to 2000 by customer_id, calculates the increase in web sales from 1999 to 2000
+by customer_id, and returns the customer_id's that saw a greater increase in web sales than in store sales.
 
-A Brief Description of What This Script Does:
----------------------------------------------
+A Brief Description of What This Script Does
+============================================
 
 ``ess spec create vector vector1 s,pkey:customer_id s:customer_first_name s:customer_last_name s,+add:year f,+add:ss1999 f,+add:ss2000``
 

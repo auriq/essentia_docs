@@ -1,5 +1,6 @@
+**********************
 Processing Apache Logs
-----------------------
+**********************
 
 A common source of log data are apache server logs. This script pipes the apache log data through a log converter to
 get the logs into a csv format, into the Essentia preprocessor, and then into the udbd database.

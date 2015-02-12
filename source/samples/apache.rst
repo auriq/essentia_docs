@@ -1,5 +1,6 @@
+***************************
 Analyze Apache Web Log Data
-===========================
+***************************
 
 This script pipes the apache log data through a log converter to get the logs into a csv format, into the Essentia preprocessor, and then into the udbd database.
 
@@ -9,8 +10,8 @@ Attributes are applied in the database and the number of records corresponding t
 
 Then the 25 referrers that corresponded to the most records in the web log data are output and the total number of unique referrers is displayed.
 
-A Brief Description of What This Script Does:
----------------------------------------------
+A Brief Description of What This Script Does
+============================================
 
 ``ess spec create vector vector1 s,pkey:referrer i,+add:pagecount`` 
 

@@ -1,10 +1,15 @@
+**************************************
 Obtain Last, First, and Minimum Values
-======================================
+**************************************
 
-This script imports one dataset with five columns. It then takes the last imported string value of the third column and first value of the fourth column, sums the integer values of the second column, and takes the minimum value of the floating-point-type first column for each unique value of the string-type fifth column. This demonstrates the ease with which Essentia can apply attributes to your data and return the results you want in the time-frame you need.
+This script imports one dataset with five columns. It then takes the last imported string value of the third column
+and first value of the fourth column, sums the integer values of the second column, and takes the minimum value
+of the floating-point-type first column for each unique value of the string-type fifth column. This demonstrates
+the ease with which Essentia can apply attributes to your data and return the results you want in the time-frame
+you need.
 
-A Brief Description of What This Script Does:
----------------------------------------------
+A Brief Description of What This Script Does
+============================================
 
 ``ess spec create vector vector1 s,pkey:country s,+last:first_name s,+first:last_name i,+add:integer_col f,+min:float_col``
 

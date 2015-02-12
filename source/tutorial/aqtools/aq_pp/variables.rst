@@ -1,5 +1,5 @@
-Variables and Operations
-============================
+Variables
+=========
 
 A very useful feature of aq_pp is the ability to **define, store, and modify variables**. 
 

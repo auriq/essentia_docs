@@ -1,5 +1,8 @@
+:tocdepth: 1
+
+************
 Installation
-============
+************
 
 Essentia is being distributed in three formats:
 
@@ -12,7 +15,7 @@ If you don't have an AWS account but are interested in using Essentia on the
 cloud, we recommend reading :doc:`aws/aws`.
 
 Desktop version
----------------
+===============
 
 The benefit of the desktop version is that users do not need an AWS account.
 We've removed the ability to launch worker nodes in the cloud as a consequence,
@@ -50,7 +53,7 @@ The final three ``export`` commands assume you are using a Bourne shell (i.e. ba
 Essentia is self contained, and to uninstall, one only needs to execute ``rm -rf ~/.local/essentia``.
 
 AWS 30 day trial
-----------------
+================
 
 We have created a free public AMI which any AWS user can launch to form a
 private, AWS account specific master node.
@@ -86,7 +89,7 @@ license key to it using the following command from a terminal::
 The public IP will be listed on your AWS console.
 
 AWS full version
-----------------
+================
 
 The full, unlimited version of Essentia is a pay-as-you-go service hosted on AWS.
 The cost per hour ranges on the node type you use, but typically ~ $0.10/hour.
@@ -97,7 +100,7 @@ To use this unlimited version, follow the instructions for the trial based versi
 2. No license key needs to be acquired.
 
 AWS additional notes
---------------------
+====================
 
 .. toctree::
 

@@ -1,7 +1,5 @@
-Query Your Log Files Directly
-=============================
-
---------------------------------------------------------------------------------    
+SQL Query
+=========
 
 Once you've scanned your files you can use Essentia's **SQL Indexing** feature to find out more information about them.
 With SQL Indexing its easy to determine and aggregate filesizes and counts so you can ensure that the categories you
@@ -12,7 +10,7 @@ unnecessarily processing excess files. It also makes it easy to compute metrics 
 in filesizes so you can have a better idea of how much data you are processing and catch any extraordinarily large
 files.
 
-.. image:: ../../_static/essdatastoresql.png
+.. image:: essdatastoresql.png
 
 --------------------------------------------------------------------------------
     
@@ -26,4 +24,4 @@ SQL analysis and statistics you want on it. For example, it's extremely easy to 
 or unique users in a marketing log or countryID in other types of logs. This allows you to get quick access to and
 results from your data without having to load everything into a database table.
 
-.. image:: ../../_static/essquery.png
+.. image:: essquery.png

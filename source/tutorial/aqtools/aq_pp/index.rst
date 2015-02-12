@@ -1,35 +1,81 @@
-How to Use aq_pp
---------------------------
+:tocdepth: 3
 
-**Required Files**
+**************
+aq_pp Tutorial
+**************
 
-These tutorials use the *first five lines* of `tutorialdata.csv <https://s3.amazonaws.com/asi-public/etldata/fivecoltutorial.csv>`_. To run these commands, copy the following five lines and save them as tutorialdata.csv::
+The Benefit of Using ``aq_pp``
+==============================
 
-    float-col,integer-col,last-name,first-name,country
-    99.91,5350,Lawrence,Lois,Philippines
-    73.61,1249,Hamilton,Evelyn,Portugal
-    45.29,8356,Wheeler,Sarah,Portugal
-    3.53,9678,Kelley,Jacqueline,Philippines
+To demonstrate the utility of ``aq_pp``, lets look at the following problem:
 
-These tutorials will also use a lookup file to compare values to. If you want to run these commands, copy the following five lines and save them as lookup.csv::
+We have sales data from a fictional store that caters to international clients.  We record the amount spent for each
+purchase and the currency it was purchased with.  We wish to compute the total sales in US Dollars.
+We have 2 files to process.  The first contains the time, currency type, and amount spent, and the second is a lookup
+table that has the country code and USD exchange rate:
 
-    grade,float_2,last_name,first-name,country
-    A,12.3,Lawrence,Lois,Philippines
-    C,96.6,Hamilton,Evelyn,Portugal
-    F,89.0,Wheeler,Sarah,Portugal
-    F,57.6,Kelley,Jacqueline,Philippines
+.. csv-table:: sales data
+   :header: "transaction_date","currency","amount"
+   :widths: 30, 10, 10
 
-\ 
+   2013-08-01T07:50:00,USD,81.39
+   2013-08-01T08:22:00,USD,47.96
+   2013-08-01T08:36:00,CAD,62.59
 
---------------------------------------------------------------------------------
 
-**Preamble:**
+.. csv-table:: Exchange rate
+   :header: "currency","rate"
+   :widths: 10,10
 
-- :doc:`the-benefit-of-using-aq_pp` : A brief use case demonstrating why you should use ``aq_pp``.
+   EUR,1.34392
+   CAD,0.91606
+   USD,1.00000
 
-**The Primary Processing Options:**
+Lets compare 2 solutions against ``aq_pp``
 
-- :doc:`aq_pp tutorial` : A full introduction to the preprocessor, ``aq_pp``.
+**SQL**::
+
+  select ROUND(sum(sales.amount*money.rate),2) AS total from sales INNER JOIN exchange ON sales.currency = exchange.currency;
+
+SQL is straightforward and generally easy to understand.  It will execute this query very quickly,
+but this overlooks the hassle of actually importing it into the database.
+
+**AWK**::
+
+  awk 'BEGIN {FS=","} NR==1 { next } FNR==NR { a[$1]=$2; next } $2 in a { $2=a[$2]; sum += $2*$3} END {print sum}' exchange.csv sales.csv
+
+AWK is an extremely powerful text processing language, and has been a part of Unix for about 40 years.  This legacy
+means that it is stress tested and has a large user base.  But it is also not very user friendly in some
+circumstances.  The language
+complexity scales with the difficulty of the problem you are trying to solve.  Also, referencing the columns by
+positional identifiers ($1, $2 etc) makes AWK code more challenging to develop and maintain.
+
+
+**AQ_PP**::
+
+  aq_pp -f,+1 sales.csv -d s:date s:currency f:amount -cmb,+1 exchange.csv s:currency f:rate -var f:sum 0.0 -evlc 'sum' 'sum+(amount*rate)' -ovar -
+
+The AuriQ preprocessor is similar in spirit to AWK, but it simplifies many issues.
+We'll detail the specifics in the rest of the documentation, but even without knowing all of the syntax, the
+intent of the command is fairly easy to discern. Instead of positional arguments, columns
+are named, therefore making an ``aq_pp`` command more human readable.
+Additionally, it is very fast, in fact an order of magnitude faster in this example.
+
+In the documentation that follows, we will expand on how this and other Essentia tools can simplify and empower your
+data processing workflow.
+
+Required Files
+==============
+
+These tutorials require 2 small files: :download:`tutorialdata.csv` and :download:`lookup.csv`.
+
+
+Tutorials
+---------
+
+
+
+- :doc:`overview` : A full introduction to the preprocessor, ``aq_pp``.
 
 **Common Uses for Processing Options:**
 
@@ -46,7 +92,7 @@ These tutorials will also use a lookup file to compare values to. If you want to
   * ``-mapfrx`` and ``-mapc`` does that same as ``-mapf`` and ``-mapc`` but uses Regular Expression syntax, allowing you to form powerful pattern matching steps that extract a very specific portion or portions of the data. 
   * ``-map`` and ``-maprx`` extract the data similarly to the two sets of map functions above (``-maprx`` uses Regular Expression syntax), but act on only one column at a time. This allows simpler modification of data in a single string column. 
   
-- :doc:`variables-and-operations` : The ``-var``, ``-evlc``, map, and ``-ovar`` options all work with variables.
+- :doc:`variables` : The ``-var``, ``-evlc``, map, and ``-ovar`` options all work with variables.
 
   * ``-var`` allows you to defined new varibles and set their defauult value.
   * ``-evlc`` lets you modify existing variables and use them as part of your processing expression.
@@ -63,9 +109,8 @@ These tutorials will also use a lookup file to compare values to. If you want to
 .. toctree::
    :hidden:
 
-   aq_pp tutorial
+   overview
    combining-datasets
-   filtering-data
    mapping-strings
-   the-benefit-of-using-aq_pp
-   variables-and-operations
+   variables
+   filtering-data

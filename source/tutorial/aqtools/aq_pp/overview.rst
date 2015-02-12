@@ -1,12 +1,6 @@
 aq_pp Tutorial
 ==============
 
-**Overview**
-
-\ 
-
-aq_pp is the Essentia Preprocessor. It is very powerful and is used to modify input data for quick analysis or loading into the Essentia Database (Udb). 
-
 The command structure of aq_pp consists of an input specification specifying which file(s) to take the data from, 
 various processing specifications to determine how data is processed, and output specifications describing how and where to put the results of your preprocessing.
 There are also a variety of global options that modify the environment and default variables used in aq_pp.
@@ -20,12 +14,6 @@ This tutorial will emphasize the most commonly used options for aq_pp and how to
 * **Output Specifications:** -o, -ovar, and -udb_imp.
 
 We will end with using a small portion of these options in conditional option groups (if else statements).
-
-\ 
-
--------------------------------------------------------------------------------- 
-
-\ 
 
 **Input Specifications**
 
@@ -62,8 +50,6 @@ Now we want to **combine** the two example files **by row** using the ``-cat`` o
     0,0,"Hamilton","Evelyn","Portugal","C",96.599999999999994
     0,0,"Wheeler","Sarah","Portugal","F",89
     0,0,"Kelley","Jacqueline","Philippines","F",57.600000000000001
-
-\ 
 
 As you can see this automatically gives values of zero or the empty string ("") to rows from a dataset that is missing the full set of columns. However, what if we wanted just one set of rows with meaningful values in all of the columns? 
 

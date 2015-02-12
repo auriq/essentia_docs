@@ -1,9 +1,15 @@
-Getting Started with the R Integrator
-=====================================
+:tocdepth: 1
+
+*************
+R Integration
+*************
+
+
 It is a good idea to have port 8787 open when using the R integrator and this is necessary when using rstudio-server on an AWS instance.
 
 Installing R and Rstudio-server
---------------------------------
+===============================
+
 First you need to install R and, optionally, Rstudio-server on your machine.
 
 The commands to do this are, for a linux-based Redhat/CentOS 5.4+ system::
@@ -24,7 +30,7 @@ For other types of systems, see
 <http://www.rstudio.com/products/rstudio/download-server/>
 
 Connecting via Rstudio-server (Optional)
-----------------------------------------
+========================================
 
 Make sure you have a user with a username and password so you can login to Rstudio-server.
 If you dont, create one with::
@@ -39,7 +45,8 @@ You can then connect to rstudio by typing in your URL followed by :8787 in your 
 Login with the user and password you created in the previous step.
 
 R Integration Instructions
----------------------------
+==========================
+
 In order to use R with essentia, you must have an 
 
 * ``**any_file_name_1**.sh`` script containing essentia commands that input data into the database (most ess task stream  commands),
@@ -79,14 +86,14 @@ You will see the results of the analysis print to the screen.
 To see the commands involved in getting this analysis, either rerun runr.R  with ``echo=TRUE`` or open the querytimeapache.sh and timeapache.R files.
 
 R Integration Format Requirements
-----------------------------------
+=================================
 
 For each statement that you want to capture the output from, you must follow it with ``; echo 'RSTOPHERE'`` (see the syntax examples below).
 
 You should include all of these statements in the script containing your essentia query commands.
 
 Ess Task Exec Statements
-^^^^^^^^^^^^^^^^^^^^^^^^
+------------------------
 
 By default, the R Integrator captures the output of ``ess task exec`` statements.
 
@@ -97,7 +104,7 @@ Thus you must separate multiple database exports or counts into multiple ``ess t
 To ignore a statement, put ``#Rignore`` at the end of the statement line.
 
 Ess Task Stream Statements
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+--------------------------
 
 To include an `ess task stream`` statement, put ``#Rinclude`` at the end of the statement line.
 
@@ -108,7 +115,7 @@ If you are streaming multiple files from one category and want to include that s
 To separate these files into separate variables in R, include ``#Rseparate`` somewhere in your statement line.
 
 Order of R Variables
-^^^^^^^^^^^^^^^^^^^^
+--------------------
 
 The output you capture from each statement will be saved into R variables labeled command1, command2, …. in order.
 
@@ -123,7 +130,7 @@ in the order that you wrote those six statements.
 You can change the name of the output variable by including ``#R#any_variable_name#R#`` somewhere in your statement line. However, this is NOT compatible with an ``ess task stream`` statement that uses ``#Rseparate``.
 
 Syntax Examples
-^^^^^^^^^^^^^^^
+---------------
 
 ``ess task exec "aq_udb -cnt **database_name**:vector1; echo 'RSTOPHERE'" --debug``
 

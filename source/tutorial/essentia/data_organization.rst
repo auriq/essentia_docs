@@ -1,5 +1,6 @@
-Manage Your S3 Bucket
-======================
+*******************
+Data Classification
+*******************
 
 **Why use the Log Manager:**
 
