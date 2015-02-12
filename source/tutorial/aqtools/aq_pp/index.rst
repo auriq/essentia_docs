@@ -64,7 +64,10 @@ data processing workflow.
 Required Files
 ==============
 
-These tutorials require 2 small files: :download:`tutorialdata.csv` and :download:`lookup.csv`.
+These tutorials require a few small files: :download:`chemistry.csv` and :download:`physics.csv` contain
+fictional grades from two college courses.  We limit the number of students to just a few in order to make the
+tutorial more clear. :download:`grades.csv` contains a lookup table that maps letter grades to a 'PASS/FAIL'
+designation.
 
 
 Tutorials

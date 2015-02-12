@@ -1,81 +1,75 @@
 Combining Datasets
 ==================
 
-First lets **combine** the two example files **by row** using the ``-cat`` option. 
+cat for merging datasets
+------------------------
 
-``aq_pp -f,+1 tutorialdata.csv -d f:float_col i:integer_col s:last_name s:first_name s:country -cat,+1 lookup.csv s:grade f:float_2 s:last_name s:first_name s:country``
-        
-* This tells aq_pp to skip the first line of tutorialdata.csv and import the rest of the data. Then it uses ``-cat,+1`` to add all except for the first line of lookup.csv to the imported records. 
-* The columns last_name, first_name, and country are in both files so they will have values for all eight resulting rows. However, float_col and integer_col only exist in tutorialdata.csv so only the first four records of the result will have values for these columns. Similarly, grade and float_2 only exist in lookup.csv so only the last four rows of the result will have values for these columns. The output is::
+There are a number of scenarios (particularly with log data) where merging two different types of files is useful.
+Lets consider the case where we want to merge our chemistry and physics grades into a single table::
 
-    "float_col","integer_col","last_name","first_name","country","grade","float_2"
-    99.909999999999997,5350,"Lawrence","Lois","Philippines",,0
-    73.609999999999999,1249,"Hamilton","Evelyn","Portugal",,0
-    45.289999999999999,8356,"Wheeler","Sarah","Portugal",,0
-    3.5299999999999998,9678,"Kelley","Jacqueline","Philippines",,0
-    0,0,"Lawrence","Lois","Philippines","A",12.300000000000001
-    0,0,"Hamilton","Evelyn","Portugal","C",96.599999999999994
-    0,0,"Wheeler","Sarah","Portugal","F",89
-    0,0,"Kelley","Jacqueline","Philippines","F",57.600000000000001
+  aq_pp -f,+1 chemistry.csv -d i:id s,up:lastname s:firstname f:chem_mid s:chem_fin \
+        -cat,+1 physics.csv i:id s,up:lastname s:firstname f:phys_mid s:phys_fin
+  "id","lastname","firstname","chem_mid","chem_fin","phys_mid","phys_fin"
+  1,"DAWSON","Leona",76.5,"B-",0,
+  2,"JORDAN","Colin",25.899999999999999,"D",0,
+  3,"MALONE","Peter",97.200000000000003,"A+",0,
+  1,"DAWSON","Leona",88.5,"A",0,
+  3,"MALONE","Peter",77.200000000000003,"B",0,
+  4,"CANNON","Roman",55.799999999999997,"C+",0,
 
-\ 
 
---------------------------------------------------------------------------------
+The ``-cat`` option is used for such a merge, and it is easiest to think of it as the ``aq_pp`` specific version of
+the unix command of the same name.  The difference here is that ``aq_pp`` will create new columns in the output,
+while simply concatenating the two files will result in just the same 5 columns as before.
 
-As you can see this automatically gives values of zero or the empty string ("") to rows from a dataset that is missing the full set of columns. However, what if we wanted just one set of rows with meaningful values in all of the columns? 
+cmb for joining datasets
+------------------------
 
-With these example datasets, this actually makes more sense since both datasets contain some identical columns with identical values in those columns. Thus we want to **combine** these two datasets **by column** using the ``-cmb`` option.
+However most users will want to JOIN datasets based on common values between two files.  In this case, the first and
+last name, as well as the country, are the common columns between the two files.  The ``-cmb`` option is similar to
+``-f`` and ``-d`` since it defines the number of lines to skip and the column specification for the second file.
+Records will be matched based on all the columns that share the same names between the two files.  For example::
 
-``aq_pp -f,+1 tutorialdata.csv -d f:float_col i:integer_col s:last_name s:first_name s:country -cmb,+1 lookup.csv s:grade f:float_2 s:last_name s:first_name s:country``
-        
-* This command tells aq_pp to skip the first line of tutorialdata.csv and import the rest of the data. It then combines all except for the first line of lookup.csv with the imported records by the datasets' shared columns using ``-cmb,+1``. 
-* The columns last_name, first_name, and country are in both files so they are used to combine the datasets. The columns float_col, integer_col, grade, and float_2 are added to the resulting dataset by their unique values in the last_name, first_name, and country columns. The resulting data set will contain columns float_col, integer_col, last_name, first_name, country, grade, and float_2. The output is::
+  aq_pp -f,+1 chemistry.csv -d i:id s,up:lastname s:firstname f:chem_mid s:chem_fin \
+        -cmb,+1 physics.csv i:id X X f:phys_mid s:phys_fin
+  "id","lastname","firstname","chem_mid","chem_fin","phys_mid","phys_fin"
+  1,"DAWSON","Leona",76.5,"B-",88.5,"A"
+  2,"JORDAN","Colin",25.899999999999999,"D",0,
+  3,"MALONE","Peter",97.200000000000003,"A+",77.200000000000003,"B"
 
-    "float_col","integer_col","last_name","first_name","country","grade","float_2"
-    99.909999999999997,5350,"Lawrence","Lois","Philippines","A",12.300000000000001
-    73.609999999999999,1249,"Hamilton","Evelyn","Portugal","C",96.599999999999994
-    45.289999999999999,8356,"Wheeler","Sarah","Portugal","F",89
-    3.5299999999999998,9678,"Kelley","Jacqueline","Philippines","F",57.600000000000001
-    
-\ 
-    
---------------------------------------------------------------------------------
-    
-This added on the extra two columns from lookup.csv onto the corresponding columns from tutorialdata.csv. The ``-cmb`` option also includes the capability to **overwrite existing columns** in the input dataset with values from columns with the same name in the combined dataset. 
 
-We can adjust our command to utilize this feature by simply changing the specification of the combined dataset's columns to match those of the input dataset. 
- 
-``aq_pp -f,+1 tutorialdata.csv -d s:float_col f:integer_col s:last_name s:first_name s:country -cmb,+1 lookup.csv s,cmb:float_col f,cmb:integer_col s,key:last_name s,key:first_name s,key:country``
+Users familiar with SQL will recognize this as a LEFT OUTER JOIN. All the data from the first file is preserved,
+while data from the second file is included when there is a match.  Where there is no match,
+the value is 0 for numeric columns, or the empty string for string columns.  In this case,
+since the label ``i:id`` is common between both file specifications, that is the join key.
+We could also have joined based off multiple keys as well: For example matching first AND last
+names will achieve the same result::
 
-* This command tells aq_pp to skip the first line of tutorialdata.csv and import the rest of the data just as before. It also still combines all except for the first line of lookup.csv with the imported records by the datasets' shared columns. However, the first two columns in the combine statement are given the attribute 'cmb'. 
-* This attribute tells aq_pp to replace any existing values of the attributed columns with the values in the combining file. In this case, the first two columns in tutorialdata.csv are replaced by the first two columns in lookup.csv. The output is::
+  aq_pp -f,+1 chemistry.csv -d i:id s,up:lastname s:firstname f:chem_mid s:chem_fin \
+  -cmb,+1 physics.csv X s,up:lastname s:firstname f:phys_mid s:phys_fin
 
-    "float_col","integer_col","last_name","first_name","country"
-    "A",12.300000000000001,"Lawrence","Lois","Philippines"
-    "C",96.599999999999994,"Hamilton","Evelyn","Portugal"
-    "F",89,"Wheeler","Sarah","Portugal"
-    "F",57.600000000000001,"Kelley","Jacqueline","Philippines"
 
-\ 
+sub for lookup tables
+---------------------
 
---------------------------------------------------------------------------------
+An important type of dataset joining is replacing some value in a file with a matching entry in a lookup table.
+In the following example, we wish to convert a students letter grade from 'A,B,C...' etc into a simple PASS/FAIL::
 
-What if you just want to **replace** values of **one of the columns** in your dataset **with values from another dataset**?
+  aq_pp -f,+1 chemistry.csv -d i:id s,up:lastname s:firstname f:chem_mid s:chem_fin \
+  -sub,+1,pat chem_fin grades.csv
 
-This is where you would use ``-sub``. By simply specifying which file contains the values you want to compare your data to and which values you want to replace your data with, you can easily overwrite an existing column with new values. 
+  "id","lastname","firstname","chem_mid","chem_fin"
+  1,"DAWSON","Leona",76.5,"PASS"
+  2,"JORDAN","Colin",25.899999999999999,"FAIL"
+  3,"MALONE","Peter",97.200000000000003,"PASS"
 
-``aq_pp -f,+1 tutorialdata.csv -d f:float_col i:integer_col s:last_name s:first_name s:country -sub last_name lookup.csv TO X FROM X X``
+Note the use of the ``pat`` attribute when we designate the lookup table.  This means that column 1 of the lookup
+table can have a pattern instead of a static value.  In our case, we can cover grades 'A+,A,
+and A-' by the pattern 'A*'.
 
-* This checks whether any values in last_name match any of the values in the third column of lookup.csv and, if they do, replaces those values with the value in the first column of lookup.csv. The output is::
- 
-    "float_col","integer_col","last_name","first_name","country"
-    99.909999999999997,5350,"A","Lois","Philippines"
-    73.609999999999999,1249,"C","Evelyn","Portugal"
-    45.289999999999999,8356,"F","Sarah","Portugal"
-    3.5299999999999998,9678,"F","Jacqueline","Philippines"
-    
-While this offers similar behavior to ``-cmb`` when it tries to overwrite existing columns it differs in three ways:
 
-1. ``-sub`` acts compares and replaces only one column in the input dataset, whereas ``-cmb`` must by definition have a key column used to compare and a separate column where the values are placed into. 
-2. ``-sub`` can match reular expressions and patterns between the datasets, whereas ``-cmb`` will only match values that are identical.
+The ``-cmb`` can be used substituting data, but for situations similar to the one above, ``-sub`` is perferred because:
+
+1. It does not create additional columns like ``-cmb`` does.  Values are modified in place.
+2. ``-sub`` can match regular expressions and patterns, while ``-cmb`` is limited to exact matches.
 3. ``-sub`` is faster.
