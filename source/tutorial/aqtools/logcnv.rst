@@ -1,5 +1,5 @@
-Logcnv Tutorial
-===============
+logcnv
+======
 
 This tutorial uses Apache Log data in Extended Apache Log Format from the 125-access_log files included in the local install and on asi-public. The top 10 lines of the data are given below for reference::
 

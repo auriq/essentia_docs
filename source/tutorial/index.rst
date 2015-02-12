@@ -21,6 +21,7 @@ relatively straightforward to learn, and we highlight how the aq commands can si
 ease the burden of many problems encountered in a typical data processing workflow.
 
 .. toctree::
+   :titlesonly:
 
    aqtools/aq_pp/index
    aqtools/udb

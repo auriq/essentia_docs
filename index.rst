@@ -36,6 +36,7 @@ understanding the material.
 
 .. toctree::
    :hidden:
+   :maxdepth: 3
 
    source/overview
    source/install

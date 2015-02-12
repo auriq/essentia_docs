@@ -1,8 +1,8 @@
 :tocdepth: 3
 
-**************
-aq_pp Tutorial
-**************
+*****
+aq_pp
+*****
 
 The Benefit of Using ``aq_pp``
 ==============================
@@ -14,19 +14,16 @@ purchase and the currency it was purchased with.  We wish to compute the total s
 We have 2 files to process.  The first contains the time, currency type, and amount spent, and the second is a lookup
 table that has the country code and USD exchange rate:
 
-.. csv-table:: sales data
-   :header: "transaction_date","currency","amount"
-   :widths: 30, 10, 10
+sales data::
 
+   transaction_date,currency,amount
    2013-08-01T07:50:00,USD,81.39
    2013-08-01T08:22:00,USD,47.96
    2013-08-01T08:36:00,CAD,62.59
 
+exchange data::
 
-.. csv-table:: Exchange rate
-   :header: "currency","rate"
-   :widths: 10,10
-
+   currency,rate
    EUR,1.34392
    CAD,0.91606
    USD,1.00000
@@ -75,35 +72,45 @@ Tutorials
 
 
 
-- :doc:`overview` : A full introduction to the preprocessor, ``aq_pp``.
-
-**Common Uses for Processing Options:**
-
-- :doc:`combining-datasets` : The main options used to combine datasets in Essentia are ``-cat``, ``-cmb``, and ``-sub``.
+- :doc:`overview` : Getting acquainted with ``aq_pp``.
+- :doc:`combining-datasets` : Joins and lookup tables with ``aq_pp``.
 
   * ``-cat`` combines two datasets by **row**, resulting in a dataset with the every record of its constituent datasets.
-  * ``-cmb`` combines two datasets by **column**. The resulting dataset will have all of the columns that were in the input datasets and they will be joined by the columns that they had in common.
-  * ``-sub`` combines two datasets by **one column**. The values in that column are compared to the value in a column in the lookup dataset and, if the values match, they are replaced by the values in another column of the lookup dataset.
+  * ``-cmb`` combines two datasets by **column**. The resulting dataset will have all of the columns that were in the
+    input datasets and they will be joined by the columns that they had in common.
+  * ``-sub`` combines two datasets by **one column**. The values in that column are compared to the value in a column
+    in the lookup dataset and, if the values match, they are replaced by the values in another column of the lookup
+    dataset.
   
-- :doc:`mapping-strings` : ``aq_pp`` provides ``-evlc``, ``-mapf``, ``-mapfrx``, ``-mapc``, ``-map``, and ``maprx`` to help you rearrange any string data. 
+- :doc:`data-transform` : Math and string operations on input data.
 
-  * ``-evlc`` can create or modify entire columns or even change the type of a column (say if a string actually just contained a quoted number and you wanted to extract that number as a float). 
-  * ``-mapf`` and ``-mapc`` allow you to extract some or all of the data from one or more columns and put that data into another column or columns. 
-  * ``-mapfrx`` and ``-mapc`` does that same as ``-mapf`` and ``-mapc`` but uses Regular Expression syntax, allowing you to form powerful pattern matching steps that extract a very specific portion or portions of the data. 
-  * ``-map`` and ``-maprx`` extract the data similarly to the two sets of map functions above (``-maprx`` uses Regular Expression syntax), but act on only one column at a time. This allows simpler modification of data in a single string column. 
+  * ``-evlc`` can create or modify entire columns or even change the type of a column (say if a string actually just
+    contained a quoted number and you wanted to extract that number as a float).
+  * ``-mapf`` and ``-mapc`` allow you to extract some or all of the data from one or more columns and put that data
+    into another column or columns.
+  * ``-mapfrx`` and ``-mapc`` does that same as ``-mapf`` and ``-mapc`` but uses Regular Expression syntax, allowing
+    you to form powerful pattern matching steps that extract a very specific portion or portions of the data.
+  * ``-map`` and ``-maprx`` extract the data similarly to the two sets of map functions above (``-maprx`` uses Regular
+    Expression syntax), but act on only one column at a time. This allows simpler modification of data in a single
+    string column.
   
-- :doc:`variables` : The ``-var``, ``-evlc``, map, and ``-ovar`` options all work with variables.
+- :doc:`variables` : Create and use new variables during processing.
 
-  * ``-var`` allows you to defined new varibles and set their defauult value.
-  * ``-evlc`` lets you modify existing variables and use them as part of your processing expression.
-  * The map options contain variables in their extraction pattern strings that can be used to insert the values they contain into another column or columns.
-  * ``-ovar`` limits the output to only include the variables you've defined and not the columns from the data.
+  * ``-var`` allows you to define new global variables and set their default value.
+  * ``-evlc`` lets you create or modified record based variables and use them as part of your processing expression.
+  * ``-map*`` handles string manipulation
+  * ``-ovar`` limits the output to only include the global variables you've defined and not the columns from the data.
   
-- :doc:`filtering-data` : ``-filt``, ``-grep``, and ``-if ... -else ... -endif`` statements all let you control which data is processed.
+- :doc:`conditionals` : ``-filt``, ``-grep``, and ``-if ... -else ... -endif`` statements all let you control which
+  datais processed.
 
-  * ``-filt`` is the main filtering option and allows you to limit which data continues to be processed based on the results of the condition you define.
-  * ``-grep`` compares the values of column from the input dataset against the values of a column in a lookup dataset. It only lets each record continue in the processing chain if the value of the specified column was present in both datasets.
-  * ``-if ... -else ... -endif`` statements allow you to use many of the other options in ``aq_pp`` to create conditional expressions that each record is subject to.
+  * ``-filt`` is the main filtering option and allows you to limit which data continues to be processed based on the
+    results of the condition you define.
+  * ``-grep`` compares the values of column from the input dataset against the values of a column in a lookup dataset.
+    It only lets each record continue in the processing chain if the value of the specified column was present in both
+    datasets.
+  * ``-if ... -else ... -endif`` statements allow you to use many of the other options in ``aq_pp`` to create
+    conditional expressions that each record is subject to.
 
 
 .. toctree::
@@ -111,6 +118,6 @@ Tutorials
 
    overview
    combining-datasets
-   mapping-strings
+   data-transform
    variables
-   filtering-data
+   conditionals

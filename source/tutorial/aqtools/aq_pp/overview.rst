@@ -1,30 +1,30 @@
-aq_pp Tutorial
-==============
+********
+Overview
+********
 
-The command structure of aq_pp consists of an input specification specifying which file(s) to take the data from, 
-various processing specifications to determine how data is processed, and output specifications describing how and where to put the results of your preprocessing.
-There are also a variety of global options that modify the environment and default variables used in aq_pp.
+The command structure of aq_pp consists of an **input specification** specifying which file(s) to take the data from,
+various **processing specifications** to determine how data is processed, and **output specifications** describing how
+and where to put the results of your command.
+There are also a variety of global options that modify the environment and default variables used in ``aq_pp``.
 
-For a full list and description of the available options, see the aq_pp Documentation.
 
-This tutorial will emphasize the most commonly used options for aq_pp and how to use them to provide a simple modification or analysis of the two input files, tutorialdata.csv and lookup.csv. These options are:
+This tutorial will emphasize the most commonly used options for aq_pp and how to use them to provide a simple
+modification or analysis of the two input files, tutorialdata.csv and lookup.csv.
 
-* **Input Specifications:** -f, -d, -cat, -cmb, and -var.
-* **Process Specifications:** -evlc, all -map options, -filt, -sub, and -grep.
-* **Output Specifications:** -o, -ovar, and -udb_imp.
-
-We will end with using a small portion of these options in conditional option groups (if else statements).
-
-**Input Specifications**
-
-\ 
+Input Specifications
+====================
 
 First let's create a simple command that **imports** our example file tutorialdata.csv and **defines** its columns.  
 
 ``aq_pp -f,+1 tutorialdata.csv -d f:float_col X s,up:last_name s:first_name X``
 
-* This command uses a ``-f`` statement to skip the header line of tutorialdata.csv and then reads in the rest of the data. It then says it will defined the data's columns with the ``-d`` option. 
-* It then imports the first column as a float, skips the second column (integer_col), imports last_name as a string and capitalize every letter in it, imports first_name as a string, and ignores the last column (country). The output is::
+* ``-f`` specifies the file to operate on (tutorialdata.csv).  It accepts an optional ATTRIBUTE in ``,+1``, which
+  means to skip the first line (header in this case)
+* ``-d`` defines the column names and types.  The format is t,attribute:name with 't' being the type.  An 'X' means to
+  ignore a column.  In this example, we load in a float, force the last name to be an upper case string, and finally
+  load in the first_name as is.
+
+Since there are no processing or output specifications given, the the output is simply::
 
     "float_col","last_name","first_name"
     99.909999999999997,"LAWRENCE","Lois"
@@ -32,50 +32,35 @@ First let's create a simple command that **imports** our example file tutorialda
     45.289999999999999,"WHEELER","Sarah"
     3.5299999999999998,"KELLEY","Jacqueline"
 
-\ 
+By default, ``aq_pp`` will validate the input against the type you defined it as.  For instance if a string is seen
+in the 'float_col', the program will exit with an error.  By specifying the optional ``eok`` attribute along with
+``-f,+1``, the program will simply ignore the input row.  This feature makes it easy to produce validated outout.
 
-Now we want to **combine** the two example files **by row** using the ``-cat`` option. 
 
-``aq_pp -f,+1 tutorialdata.csv -d f:float_col i:integer_col s:last_name s:first_name s:country -cat,+1 lookup.csv s:grade f:float_2 s:last_name s:first_name s:country``
-        
-* This tells aq_pp to skip the first line of tutorialdata.csv and import the rest of the data. Then it uses ``-cat,+1`` to add all except for the first line of lookup.csv to the imported records. 
-* The columns last_name, first_name, and country are in both files so they will have values for all eight resulting rows. However, float_col and integer_col only exist in tutorialdata.csv so only the first four records of the result will have values for these columns. Similarly, grade and float_2 only exist in lookup.csv so only the last four rows of the result will have values for these columns. The output is::
+There are a number of scenarios (particularly with log data) where merging two different types of files is useful.
+If file 1 contains 10 records and two string columns 'A','B' , and file 2 contains 5 records and columns labelled 'B',
+'C', we can use ``-cat`` to form a table with 15 records and 3 columns 'A','B','C'.  Columns not existing in the
+input data will be assigned with 0 (for numerical) or "" for string data.
 
-    "float_col","integer_col","last_name","first_name","country","grade","float_2"
-    99.909999999999997,5350,"Lawrence","Lois","Philippines",,0
-    73.609999999999999,1249,"Hamilton","Evelyn","Portugal",,0
-    45.289999999999999,8356,"Wheeler","Sarah","Portugal",,0
-    3.5299999999999998,9678,"Kelley","Jacqueline","Philippines",,0
-    0,0,"Lawrence","Lois","Philippines","A",12.300000000000001
-    0,0,"Hamilton","Evelyn","Portugal","C",96.599999999999994
-    0,0,"Wheeler","Sarah","Portugal","F",89
-    0,0,"Kelley","Jacqueline","Philippines","F",57.600000000000001
+However most users will want to JOIN datasets based on common values between two files.  In this case, the first and
+last name, as well as the country, are the common columns between the two files.  The ``-cmb`` option is similar to
+``-f`` and ``-d`` since it defines the number of lines to skip and the column specification for the second file.
+Records will be matched based on all the columns that share the same names between the two files.  For example::
 
-As you can see this automatically gives values of zero or the empty string ("") to rows from a dataset that is missing the full set of columns. However, what if we wanted just one set of rows with meaningful values in all of the columns? 
-
-With these example datasets, this actually makes more sense since both datasets contain some identical columns with identical values in those columns. Thus we want to **combine** these two datasets **by column** using the ``-cmb`` option.
-
-``aq_pp -f,+1 tutorialdata.csv -d f:float_col i:integer_col s:last_name s:first_name s:country -cmb,+1 lookup.csv s:grade f:float_2 s:last_name s:first_name s:country``
-        
-* This command tells aq_pp to skip the first line of tutorialdata.csv and import the rest of the data. It then combines all except for the first line of lookup.csv with the imported records by the datasets' shared columns using ``-cmb,+1``. 
-* The columns last_name, first_name, and country are in both files so they are used to combine the datasets. The columns float_col, integer_col, grade, and float_2 are added to the resulting dataset by their unique values in the last_name, first_name, and country columns. The resulting data set will contain columns float_col, integer_col, last_name, first_name, country, grade, and float_2. The output is::
+  aq_pp -f,+1 tutorialdata.csv -d f:float_col i:integer_col s:last_name s:first_name s:country -cmb,+1 lookup.csv
+  s:grade f:float_2 s:last_name s:first_name s:country``
 
     "float_col","integer_col","last_name","first_name","country","grade","float_2"
     99.909999999999997,5350,"Lawrence","Lois","Philippines","A",12.300000000000001
     73.609999999999999,1249,"Hamilton","Evelyn","Portugal","C",96.599999999999994
     45.289999999999999,8356,"Wheeler","Sarah","Portugal","F",89
     3.5299999999999998,9678,"Kelley","Jacqueline","Philippines","F",57.600000000000001
-    
-\ 
-    
-This added on the extra two columns from lookup.csv onto the corresponding columns from tutorialdata.csv. The ``-cmb`` option also includes the capability to **overwrite existing columns** in the input dataset with values from columns with the same name in the combined dataset. 
 
-We can adjust are command to utilize this feature by simply changing the specification of the combined dataset's columns to match those of the input dataset. 
- 
-``aq_pp -f,+1 tutorialdata.csv -d s:float_col f:integer_col s:last_name s:first_name s:country -cmb,+1 lookup.csv s,cmb:float_col f,cmb:integer_col s,key:last_name s,key:first_name s,key:country``
+Users familiar with SQL will recognize this as an INNER JOIN.  A slight variant with the attributes allows us to JOIN
+with REPLACEMENT.  Consider the following::
 
-* This command tells aq_pp to skip the first line of tutorialdata.csv and import the rest of the data just as before. It also still combines all except for the first line of lookup.csv with the imported records by the datasets' shared columns. However, the first two columns in the combine statement are given the attribute 'cmb'. 
-* This attribute tells aq_pp to replace any existing values of the attributed columns with the values in the combining file. In this case, the first two columns in tutorialdata.csv are replaced by the first two columns in lookup.csv. The output is::
+  aq_pp -f,+1 tutorialdata.csv -d s:float_col f:integer_col s:last_name s:first_name s:country -cmb,+1 lookup.csv
+  s,cmb:float_col f,cmb:integer_col s,key:last_name s,key:first_name s,key:country``
 
     "float_col","integer_col","last_name","first_name","country"
     "A",12.300000000000001,"Lawrence","Lois","Philippines"
@@ -83,21 +68,23 @@ We can adjust are command to utilize this feature by simply changing the specifi
     "F",89,"Wheeler","Sarah","Portugal"
     "F",57.600000000000001,"Kelley","Jacqueline","Philippines"
 
-\ 
+This is similar to the original JOIN but in this case we replace the columns in the input file with values in
+the same columns from the second file designated by the ``,cmb`` attribute.
 
--------------------------------------------------------------------------------- 
+Process Specifications
+======================
 
-\ 
+The input specification defines all the input columns we have to work with.  The goal of the process spec is to
+modify these data according to various rules.
 
-**Process Specifications**
-
-Now that we know how to input datasets and combine multiple datasets together, lets focus on how to go about processing datasets. A very useful feature of aq_pp is the ability to **define, store, and modify variables**. 
-
-The **creation** of variables is accomplished using the ``-var`` option and their **modification** is typically handled using the ever-useful ``-evlc`` option with the variable as its argument or its input.
+The **creation** of variables is accomplished using the ``-var`` option and their **modification** is typically
+handled using the ever-useful ``-evlc`` option with the variable as its argument or its input.
 
 ``aq_pp -f,+1 tutorialdata.csv -d f:float_col i:integer_col s:last_name s:first_name s:country -var 'f:rolling_sum' 0 -var 'f:record_count' 0 -evlc 'rolling_sum' 'rolling_sum + float_col' -evlc 'record_count' 'record_count + 1' -evlc 'f:rolling_average' 'rolling_sum / record_count'``
 
-* This initializes two new variables: a float called ``rolling_sum`` set to zero and a float called ``record_count`` set to zero. It then adds the value of float_col to rolling_sum, increases record_count by one, and divides rolling_sum by record_count for each record in the input data. 
+* This initializes two new variables: a float called ``rolling_sum`` set to zero and a float called ``record_count``
+  set to zero. It then adds the value of float_col to rolling_sum, increases record_count by one, and divides
+  rolling_sum by record_count for each record in the input data.
 * The variables are not included in the standard output, only the columns are included. The output is::
 
     "float_col","integer_col","last_name","first_name","country","rolling_average"
@@ -106,16 +93,19 @@ The **creation** of variables is accomplished using the ``-var`` option and thei
     45.289999999999999,8356,"Wheeler","Sarah","Portugal",72.936666666666653
     3.5299999999999998,9678,"Kelley","Jacqueline","Philippines",55.584999999999994
 
-\ 
+While defining variables is incredibly useful, ``-evlc`` also has the capability to **create entirely new columns**
+or **modify existing ones**. The only change necessary to act on columns is to give ``-evlc`` a column name or column
+specification as its argument.
 
-While defining variables is incredibly useful, ``-evlc`` also has the capability to **create entirely new columns** or **modify existing ones**. The only change necessary to act on columns is to give ``-evlc`` a column name or column specification as its argument. 
-
-The difference between a column name and a column specification is that a column name is the name of an existing column whereas a column specification is the type you want the new column to be followed by a ``:`` and the name of the new column.
 
 ``aq_pp -f,+1 tutorialdata.csv -d f:float_col i:integer_col s:last_name s:first_name s:country -evlc last_name 'first_name + " " + last_name' -evlc integer_col 'float_col * integer_col' -evlc s:mixed_col 'country + " : " + ToS(integer_col)' -c last_name mixed_col``
 
-* This command adds the value of first_name and last_name separated by a space and saves this combined string into last_name, overriding the existing value for that record in that column. It then multiplies the float_col by the integer_col and saves this product into integer_col, overriding the existing value. 
-* Finally, it creates a new column called mixed_col that contains the value of country followed by ' : ' and the string-converted value of the modified integer_col. It then limits the columns that are output to just the last_name and mixed_col columns (see the -o option further on in this documentation). The output is::
+* This command adds the value of first_name and last_name separated by a space and saves this combined string into
+  last_name, overriding the existing value for that record in that column. It then multiplies the float_col by the
+  integer_col and saves this product into integer_col, overriding the existing value.
+* Finally, it creates a new column called mixed_col that contains the value of country followed by ' : ' and the
+  string-converted value of the modified integer_col. It then limits the columns that are output to just the last_name
+  and mixed_col columns (see the -o option further on in this documentation). The output is::
  
     "last_name","mixed_col"
     "Lois Lawrence","Philippines : 534518"
@@ -123,13 +113,19 @@ The difference between a column name and a column specification is that a column
     "Sarah Wheeler","Portugal : 378443"
     "Jacqueline Kelley","Philippines : 34163"
 
-As you can see, the ``-evlc`` option is incredibly useful since it allows you to create or modify columns based on the results of an expression. This expression can reference literal values (such as 1 or "a string"), existing columns or variables, or any of the **default variables** that are built into aq_pp. 
+As you can see, the ``-evlc`` option is incredibly useful since it allows you to create or modify columns based on the
+results of an expression. This expression can reference literal values (such as 1 or "a string"), existing columns or
+variables, or any of the **default variables** that are built into aq_pp.
 
-One such default variable is ``$RowNum`` which simply keeps track of which record you are streaming from your input data file. This can be a useful value to add on to your exported data if you might need to reference your input data later in your analysis.
+One such default variable is ``$RowNum`` which simply keeps track of which record you are streaming from your input
+data file. This can be a useful value to add on to your exported data if you might need to reference your input data
+later in your analysis.
     
 ``aq_pp -f,+1 tutorialdata.csv -d f:float_col i:integer_col s:last_name s:first_name s:country -evlc i:actual_row_number '$RowNum + 1'``
 
-* This creates a new integer column called actual_row_number that adds 1 to the value of $RowNum for each record of the file. This corrects for the fact that we skipped the header line and thus represents the actual row number from tutorialdata.csv. The output is::
+* This creates a new integer column called actual_row_number that adds 1 to the value of $RowNum for each record of the
+  file. This corrects for the fact that we skipped the header line and thus represents the actual row number from
+  tutorialdata.csv. The output is::
 
     "float_col","integer_col","last_name","first_name","country","actual_row_number"
     99.909999999999997,5350,"Lawrence","Lois","Philippines",2
@@ -137,11 +133,14 @@ One such default variable is ``$RowNum`` which simply keeps track of which recor
     45.289999999999999,8356,"Wheeler","Sarah","Portugal",4
     3.5299999999999998,9678,"Kelley","Jacqueline","Philippines",5
     
-Another useful default variable is ``$FileId``. This allows you to keep track of which files your records are coming from so you can reference those files or group similar records at a later time. 
+Another useful default variable is ``$FileId``. This allows you to keep track of which files your records are coming
+from so you can reference those files or group similar records at a later time.
 
 ``aq_pp -fileid 5 -f,+1 tutorialdata.csv -d f:float_col i:integer_col s:last_name s:first_name s:country -fileid 6 -cat,+1 lookup.csv s:grade f:float_2 s:last_name s:first_name s:country -evlc s:File_ID '"This record came from file " + ToS($FileId)'``
 
-* This command gives tutorialdata.csv a fileid of 5 and lookup.csv a fileid of 6. It then concatenates tutorialdata.csv and lookup.csv together, skipping the top line (header) in each file, and including a column describing which file the record came from. The output is::
+* This command gives tutorialdata.csv a fileid of 5 and lookup.csv a fileid of 6. It then concatenates
+  tutorialdata.csv and lookup.csv together, skipping the top line (header) in each file, and including a column
+  describing which file the record came from. The output is::
 
     "float_col","integer_col","last_name","first_name","country","grade","float_2","File_ID"
     99.909999999999997,5350,"Lawrence","Lois","Philippines",,0,"This record came from file 5"
@@ -153,13 +152,17 @@ Another useful default variable is ``$FileId``. This allows you to keep track of
     0,0,"Wheeler","Sarah","Portugal","F",89,"This record came from file 6"
     0,0,"Kelley","Jacqueline","Philippines","F",57.600000000000001,"This record came from file 6"
 
-The expression in ``-evlc`` can use much more than existing columns and previously defined variables. There are also a variety of **built-in functions** that can only be used in the ``-evlc`` option that allow much more sophisticated analysis of your data. 
+The expression in ``-evlc`` can use much more than existing columns and previously defined variables. There are also
+a variety of **built-in functions** that can only be used in the ``-evlc`` option that allow much more sophisticated
+analysis of your data.
 
-See the aq_pp Documentation for a full list and example of these functions. For now I'll introduce the simpler functions that allow you to find the minumum, maximum, and hash value of various columns.
+See the aq_pp Documentation for a full list and example of these functions. For now I'll introduce the simpler
+functions that allow you to find the minumum, maximum, and hash value of various columns.
     
 ``aq_pp -f,+1 tutorialdata.csv -d f:float_col i:integer_col s:last_name s:first_name s:country -evlc i:minimum 'Min(float_col, integer_col)' -evlc i:maximum 'Max(float_col, integer_col)' -evlc i:hash 'SHash(country)' -c minimum maximum hash``
 
-* This stores the minimum and maximum values of float_col and integer_col into columns minimum and maximum, respectively. It then calculates the integer hash value of country and stores it in a column called hash. 
+* This stores the minimum and maximum values of float_col and integer_col into columns minimum and maximum,
+  respectively. It then calculates the integer hash value of country and stores it in a column called hash.
 * The output columns are then limited to minimum, maximum, and hash. The output is::
 
     "minimum","maximum","hash"
@@ -168,22 +171,31 @@ See the aq_pp Documentation for a full list and example of these functions. For 
     45,8356,1264705971
     3,9678,4213117258
 
-While the ``-evlc`` option is useful when modifying your existing data or creating new data off of it, it does not easily allow you to **limit which data continues on to the rest of your analysis**. 
+While the ``-evlc`` option is useful when modifying your existing data or creating new data off of it, it does not
+easily allow you to **limit which data continues on to the rest of your analysis**.
 
-This is where the ``-filt`` option comes in handy. ``-filt`` makes it easy to limit your data based on their values or ranges in values of various columns.
+This is where the ``-filt`` option comes in handy. ``-filt`` makes it easy to limit your data based on their values or
+ranges in values of various columns.
 
 ``aq_pp -f,+1 tutorialdata.csv -d f:float_col i:integer_col s:last_name s:first_name s:country -filt '(country == "Portugal") && (integer_col >= 4000)'``
 
-* This command filters the data so that only records where the country column has a value of "Portugal" and the integer_col column is at least 4000 will continue to be analyzed. In this case, only one record passes the filter. The output is::
+* This command filters the data so that only records where the country column has a value of "Portugal" and the
+  integer_col column is at least 4000 will continue to be analyzed. In this case, only one record passes the filter.
+  The output is::
  
     "float_col","integer_col","last_name","first_name","country"
     45.289999999999999,8356,"Wheeler","Sarah","Portugal"
 
-``-evlc`` is incredibly powerful when acting on numerical columns and many of its functions can be useful in processing string columns, but a lot of analysis needs more advanced parsing and combination of string type columns than ``-evlc`` can provide. 
+``-evlc`` is incredibly powerful when acting on numerical columns and many of its functions can be useful in processing
+string columns, but a lot of analysis needs more advanced parsing and combination of string type columns than ``-evlc`` can provide.
 
-Thus aq_pp contains a variety of mapping functions to **allow values from certain columns to be extracted and recombined into the same or different columns**. The first two sets of mapping functions are ``-mapf`` and ``-mapc``, and ``-mapfrx`` and ``-mapc``.
+Thus aq_pp contains a variety of mapping functions to **allow values from certain columns to be extracted and
+recombined into the same or different columns**. The first two sets of mapping functions are ``-mapf`` and ``-mapc``,
+and ``-mapfrx`` and ``-mapc``.
 
-The diffference between these two sets of mapping functions is that the first one uses RT mapping syntax and matches the entire string everytime, whereas the second uses Regular Expression Syntax and can match either the entire string or subsets of the string.
+The diffference between these two sets of mapping functions is that the first one uses RT mapping syntax and matches
+the entire string everytime, whereas the second uses Regular Expression Syntax and can match either the entire string
+or subsets of the string.
 
 ``aq_pp -f,+1 tutorialdata.csv -d X X s:last_name s:first_name X -mapf last_name '%%last%%' -mapf first_name '%%first%%' -mapc s:full_name '%%first%% %%last%%'``
 
@@ -262,11 +274,9 @@ You can accomplish this with the ``-grep`` option, which only requires the file 
     45.289999999999999,8356,"Wheeler","Sarah","Portugal"
     3.5299999999999998,9678,"Kelley","Jacqueline","Philippines"
 
--------------------------------------------------------------------------------- 
 
-\ 
-
-**Output Specifications**
+Output Specifications
+=====================
 
 Now that you've completed your preprocessing of the data, its time to output your results. The output goes to **standout output** by default.
 
@@ -323,9 +333,10 @@ Say you have a **database** called my_database that contains a vector called cou
     
 To learn more about the Essentia Database, please review our aq_udb Tutorial.
 
--------------------------------------------------------------------------
 
-**Conditional Option Groups**
+
+Conditional Option Groups
+=========================
 
 A final yet incredibly useful technique for processing your data is to use conditional statements to modify your data based on the results of the conditions. In aq_pp these are contained in ``-if``, ``-elif``, and ``else`` statements.
 

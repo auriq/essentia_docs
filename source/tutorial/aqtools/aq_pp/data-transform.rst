@@ -1,5 +1,6 @@
-Mapping Strings
-==================
+***************
+Data Transforms
+***************
 
 ``-evlc`` has the capability to create entirely new columns or modify existing ones. To act on columns, you need to to give ``-evlc`` a column name or column specification as its argument.
 
