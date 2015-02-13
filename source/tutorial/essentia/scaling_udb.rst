@@ -4,7 +4,7 @@ Scaling UDB
 
 This tutorial will get you started processing simple data stored on your local machine.
 
-1. You will first be given the full set of processing commands used in our example ETL Essentia file.
+1. You will first be given the full set of processing commands used in our example ETL Essentia file. This file was written in the Bash scripting language and we highly recommend you follow this practice. Please note that in order to use the AQ Tools with Essentia, all double quotes and ``$``'s must be escaped.
 
 2. We will then show you step-by-step how to take 10000 rows of example data containing a single column of numeric values and import them into Essentia, apply a filter to narrow down the desired values, return their sum and average, and export these metrics to a csv file.
 

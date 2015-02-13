@@ -10,6 +10,8 @@ We maintain a `GitHub repository <https://github.com/auriq/EssentiaPublic>`_ tha
 some of the tutorials and usecases you will find in this documentation.  For AWS users, we also have a public S3
 bucket (s3://asi-public) that stores the larger and more complex datasets used for training purposes.
 
+Both the Essentia and AQ Tool commands can be run sequentially on the command line. However, we recommend using the Bash scripting language so that you can execute entire sets of commands in order and in quick succession.
+
 AQ Tools
 ========
 
