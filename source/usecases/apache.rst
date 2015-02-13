@@ -1,47 +1,33 @@
 **********************
 Processing Apache Logs
 **********************
+Easy Integration with Existing Tools for Advanced Analytics
 
-A common source of log data are apache server logs. This script pipes the apache log data through a log converter to
-get the logs into a csv format, into the Essentia preprocessor, and then into the udbd database.
+**Analyze any Apache Log**
 
-The preprocessor allows more efficient loading of data by ignoring the irrelevant columns in the web logs and creates
-a column to keep track of the number of records.
+* Essentia utilizes a log converter that can take any log format and turn it into a format that is readable by the essentia preprocessor. It only requires one, easy step to specify which format the log is in and then the setup is complete. 
+* Essentia's powerful scanner means that you can take any number or combination of your apache logs and run your analysis on them, all in a matter of lines.
 
-Attributes are applied in the database and the number of records corresponding to each unique referrer is counted.
+**Stream into R for Advanced Analysis:**
 
-Then the 25 referrers that corresponded to the most records in the web log data are output and the total number of
-unique referrers is displayed.
+* A single integration script runs the essentia code across however many instances you use and captures the output as R data frames.
+* You are then free to run whatever analysis you desire in R, utilizing its vast library of statistical and graphical packages. Its easy to analyze and visualize apache logs by whatever segmentation your logs allow. 
+* Counting unique visitors, visits, pages, hits, and bandwidth are just some of the analytics you can accomplish across any size data by using essentia.
 
-script::
+.. image:: ../../_static/dayofmonth.png
+.. image:: ../../_static/countrycounts.png
 
-  ess instance local
-  ess spec drop database apache
-  ess spec create database apache --ports=1
-  ess spec create vector vector1 s,pkey:referrer i,+add:pagecount
-  ess udbd start
-  ess datastore select s3://*Bucket*/data/openid/ --aws_access_key=*AccessKey* --aws_secret_access_key=*SecretAccessKey*
-  ess datastore scan
-  ess datastore rule add "*/2014*/2014*" "2014logs" "/YYYYMMDD"
-  ess datastore probe 2014logs --apply
-  ess datastore summary
-  ess task stream 2014logs "2014-04-01" "2014-04-05" "logcnv -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' ['
- i,tim:time sep:'] \"' s,clf,hl1:req_line1 sep:'\" ' i:res_status sep:' ' i:res_size sep:' \"' s,clf:cookie sep:'\" \"' s,clf:referrer sep:'\" \"' s,clf:user_agent sep:'\" ' i:dt sep:' ' s:url_base sep:' ' s:con_status sep:' ' x | aq_pp -f,qui,eok - -d X X X X X X X X X X s:referrer X X X X -evlc i:pagecount "1" -ddef -udb_imp apache:vector1" --debug
-  ess task exec "aq_udb -exp apache:vector1 -sort pagecount -dec -top 25; aq_udb -cnt apache:vector1" --debug
-  ess udbd stop
+**Analysis Within Your Reach:**
 
-:Line 4: Store a vector in the database apache&nbsp;that aggregates the values in the pagecount column for each
-    unique referrer. The pagecount column only contains the number '1' so this serves to count the number of times
-    any one referrer was seen in the web logs.
+* Essentia is preset to analyze the combined or extended apache log format and is easily adapted to additional formats.
+* We provide counts by Hour, Day, Month, Country, OS, Browser, Referrer URL, Search Phrase, HTTP Error Code, and Duration of Visit.
+* Get started with Essentia and gain valuable insights today. 
 
-:Line 8: Create a new rule to take any files with ‘/2014’ followed by another '/2014' in their name, and put them in
-    the 2014logs category.
+If you have R installed, you can run our Apache Log Analysis Demo by changing into the Rintegration-and-ApacheDemo/ folder included in the Github Repository or on the ami and then running::
 
-:Line 11: Pipe the files in the category 2014logs that were created between April 1st and 5th, 2014 to the aq_pp
-    command. In the aq_pp command, tell the preprocessor to take data from stdin, ignoring errors and not outputting
-    any error messages. Then define the incoming data’s columns, skipping all of the columns except referrer, and
-    create a column called pagecount that always contains the value 1. Then import the data to the vector in the
-    apache database so the attributes listed there can be applied.
+    R          # and then
+    source("runr.R")
+    
+If you dont have R installed and want to see our demo or integration in action, check out `Getting Started with the R Integrator <http://www.auriq.net/documentation/source/usecases/r-format-requirements.html>`_.
 
-:Line 12: Export the aggregated data from the database, sorting by pagecount and limiting to the 25 most common
-    referrers. Also export the total number of unique referrers.
+To see how to convert your apache logs into a format readable by the preprocessing tools, see the example in `<http://www.auriq.net/documentation/source/tutorial/aqtools/logcnv.html>`_.

@@ -1,26 +1,20 @@
 logcnv
 ======
 
-This tutorial uses Apache Log data in Extended Apache Log Format from the 125-access_log files included in the local install and on asi-public. The top 10 lines of the data are given below for reference::
+This tutorial uses Apache Log data in Extended Apache Log Format from the 125-access_log files located in the Github Repository and on asi-public. The top 10 lines of the data are given below for reference:
+
+..  code-block:: sh
+    :linenos:
 
     54.248.98.72 - - [23/Nov/2014:03:07:23 -0800] "GET / HTTP/1.0" 301 - "-" "Mozilla/5.0 (compatible; monitis - premium monitoring service; http://www.monitis.com)"
-    
     46.23.67.107 - - [23/Nov/2014:03:07:33 -0800] "GET / HTTP/1.0" 301 - "-" "Mozilla/5.0 (compatible; monitis - premium monitoring service; http://www.monitis.com)"
-    
     85.17.156.99 - - [23/Nov/2014:03:07:43 -0800] "GET / HTTP/1.1" 200 30003 "-" "Pingdom.com_bot_version_1.4_(http://www.pingdom.com)"
-    
     173.193.219.173 - - [23/Nov/2014:03:08:05 -0800] "GET / HTTP/1.0" 301 - "-" "Mozilla/5.0 (compatible; monitis - premium monitoring service; http://www.monitis.com)"
-    
     54.248.98.72 - - [23/Nov/2014:03:08:23 -0800] "GET / HTTP/1.0" 301 - "-" "Mozilla/5.0 (compatible; monitis - premium monitoring service; http://www.monitis.com)"
-    
     93.174.93.117 - - [23/Nov/2014:03:08:24 -0800] "POST /xmlrpc.php HTTP/1.0" 200 370 "-" "Mozilla/4.0 (compatible: MSIE 7.0; Windows NT 6.0)"
-    
     46.23.67.107 - - [23/Nov/2014:03:08:33 -0800] "GET / HTTP/1.0" 301 - "-" "Mozilla/5.0 (compatible; monitis - premium monitoring service; http://www.monitis.com)"
-    
     93.174.93.117 - - [23/Nov/2014:03:08:39 -0800] "POST /xmlrpc.php HTTP/1.0" 200 370 "-" "Mozilla/4.0 (compatible: MSIE 7.0; Windows NT 6.0)"
-    
     174.34.156.130 - - [23/Nov/2014:03:08:43 -0800] "GET / HTTP/1.1" 200 30003 "-" "Pingdom.com_bot_version_1.4_(http://www.pingdom.com)"
-    
     173.193.219.173 - - [23/Nov/2014:03:09:05 -0800] "GET / HTTP/1.0" 301 - "-" "Mozilla/5.0 (compatible; monitis - premium monitoring service; http://www.monitis.com)"
 
 **Example Command:**
@@ -43,7 +37,10 @@ The sep:'**separation**' statements contain the literal specification of what th
 * ``'" "'`` **= double quotation mark then sppace then double quotation mark**
 * ``'"'`` **= double quotation mark**
 
-Essentia's log converter parses the file according to this specification and outputs it in csv format to standard output. The top 11 lines of the output are::
+Essentia's log converter parses the file according to this specification and outputs it in csv format to standard output. The top 11 lines of the output are:
+
+..  code-block:: sh
+    :linenos:
 
     "ip","rlog","rusr","time","req_line1_f1","req_line1_f2","req_line1_f3","res_status","res_size","referrer","user_agent"
     54.248.98.72,"-","-",1416740843,"GET","/","HTTP/1.0",301,0,"-","Mozilla/5.0 (compatible; monitis - premium monitoring service; http://www.monitis.com)"
@@ -67,7 +64,10 @@ You can limit which columns are output in the final result by using the '-c' opt
 
 ``logcnv -f,eok apachelogs -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' i,tim:time sep:'] "' s,clf,hl1:req_line1 sep:'" ' i:res_status sep:' ' i:res_size sep:' "' s,clf:referrer sep:'" "' s,clf:user_agent sep:'"' -c time req_line1_f2 res_status res_size``
 
-This will limit the output columns to just time, req_line1_f2, res_status, and res_size; which are the only columns necessary for the time (daily counts) part of apache analysis. The top 11 lines of the output are::
+This will limit the output columns to just time, req_line1_f2, res_status, and res_size; which are the only columns necessary for the time (daily counts) part of apache analysis. The top 11 lines of the output are:
+
+..  code-block:: sh
+    :linenos:
 
     "time","req_line1_f2","res_status","res_size"
     1416740843,"/",301,0
@@ -83,4 +83,4 @@ This will limit the output columns to just time, req_line1_f2, res_status, and r
 
 \ 
 
-See our sample Apache Analysis and R Integration scripts to see how to put this to use analyzing apache logs.
+See our sample `Analyze Apache Web Log Data <http://www.auriq.net/documentation/source/samples/apache.html>`_ script to see how to put this to use analyzing apache logs.
