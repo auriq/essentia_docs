@@ -4,15 +4,15 @@ Scaling AQ Tools
 
 An incredibly important feature of Essentia is the ability to spool up as many worker nodes as you want to increase your data processing speed. This speed increases almost linearly with the number of nodes used, allowing your company to analyze more data in less time.
 
-This tutorial is meant to build off of *"Processing Your Data"* and demonstrate how to adapt that tutorial's script to use multiple ec2 worker instances. To understand the processing occurring in this script you should go through that tutorial first. This tutorial will focus on the changes required to run on worker instances instead of one master instance and what this means for essentia.
+This tutorial is meant to build off of `<http://www.auriq.net/documentation/source/tutorial/essentia/scaling_udb.html>`_ and demonstrate how to adapt that tutorial's script to use multiple ec2 worker instances. To understand the processing occurring in this script you should go through that tutorial first. This tutorial will focus on the changes required to run on worker instances instead of one master instance and what this means for essentia.
 
 Step 1 : 
 --------
-    Follow the *"Getting Started"* tutorial to connect your access keys and repository to the essentia platform and to connect to a master instance.
+    Follow the `<http://www.auriq.net/documentation/source/tutorial/essentia/ess_on_aws.html>`_ tutorial to connect your access keys and repository to the essentia platform and connect to a master instance.
 
 Step 2 : 
 --------
-    Follow *"Processing Your Data"* to understand the processing in this script.
+    Follow `<http://www.auriq.net/documentation/source/tutorial/essentia/scaling_udb.html>`_ to understand the processing in this script.
 
 Step 3 :
 --------
