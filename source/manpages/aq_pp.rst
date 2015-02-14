@@ -1408,6 +1408,6 @@ See Also
 ========
 
 * `udbd <udbd.html>`_ - User (Bucket) Database server
-* `udb.spec <udb.spec.html>`_ - Udb spec file.
+* `udb.spec <udb-spec.html>`_ - Udb spec file.
 * `aq_udb <aq_udb.html>`_ - Interface to Udb server
 

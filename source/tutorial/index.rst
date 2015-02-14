@@ -10,6 +10,10 @@ We maintain a `GitHub repository <https://github.com/auriq/EssentiaPublic>`_ tha
 some of the tutorials and usecases you will find in this documentation.  For AWS users, we also have a public S3
 bucket (s3://asi-public) that stores the larger and more complex datasets used for training purposes.
 
+.. note::
+
+  These tutorials assume you are using the ``bash`` shell.
+
 AQ Tools
 ========
 
@@ -19,17 +23,18 @@ relatively straightforward to learn, and we highlight how the aq commands can si
 ease the burden of many problems encountered in a typical data processing workflow.
 
 * :doc:`aqtools/aq_pp/index` : the text pre-processor
-* :doc:`aqtools/udb` : the in-memory database
-* :doc:`aqtools/logcnv` : the log file parser/converter
+* :doc:`aqtools/udb/index` : the in-memory database
+* :doc:`aqtools/logcnv/index` : the log file parser/converter
+* :doc:`aqtools/loginf/index` : Log file analyzer
 
 .. toctree::
    :titlesonly:
    :hidden:
 
    aqtools/aq_pp/index
-   aqtools/udb
-   aqtools/logcnv
-
+   aqtools/udb/index
+   aqtools/logcnv/index
+   aqtools/loginf/index
 
 Essentia
 ========

@@ -1,4 +1,5 @@
 :tocdepth: 1
+
 *****************
 Reference Manuals
 *****************
@@ -11,7 +12,8 @@ AQ Tool Manpages
    :titlesonly:
 
    aq_pp
-   udb
+   udbd
+   udb-spec
    aq_udb
    logcnv
    loginf
@@ -22,7 +24,6 @@ AQ Tool Manpages
    prtrng
    smon
    tmon
-   udbd
    udb-size
 
 

@@ -151,7 +151,7 @@ This simply restricts the output to the two designate columns::
 Similar, but the output is to a file named ``newtable.csv`` instead of the stdout.
 
 Instead of the output being routed into the stdout or a file, it can also be directly imported into the UDB, which is
-an extremely powerful part of the Essentia toolkit.  We expand on this more in the :doc:`../udb` tutorial.
+an extremely powerful part of the Essentia toolkit.  We expand on this more in the :doc:`../udb/index` tutorial.
 
 Combining Datasets
 ==================
@@ -297,7 +297,7 @@ command would be::
 
 ``aq_pp`` has a number of options related to pattern matching.  First and formost, it supports regular expressions
 and a format developed for another product called RT metrics.  Regex is more widespread, but the RT format has
-certain advantages for parsing log based data.  Full details can be found in the :doc:`../../manpages/aq_pp` manual.
+certain advantages for parsing log based data.  Full details can be found in the :doc:`../../../manpages/aq_pp` manual.
 
 Back to the example above, we use a global option to specify the type of regex we want to use, and then the
 ``-maprx`` switch to identify the column to work with and the regex.  Finally, the captured value (in this case the
