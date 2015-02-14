@@ -40,6 +40,10 @@ Finally, :download:`users.csv` is a lookup table that matches user names to thei
 Spec files
 ==========
 
+.. note::
+   Essentia simplifies the use of UDB, therefore some of the following is not directly applicable.  In the Essentia
+   tutorials we highlight where the differences are.
+
 UDB requires a schema so it knows how to treat data sent to it.  An SQL analogy would be the 'CREATE TABLE' command.
 UDB supports tables as well, in addition to 'vectors' and 'variables', the use of which will be clear as you proceed
 through this tutorial.  First we present the spec file that will be used for this tutorial::

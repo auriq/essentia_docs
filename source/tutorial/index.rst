@@ -40,13 +40,12 @@ Essentia
 ========
 
 Tutorials under the Essentia classification focus on how these AQ commands are efficiently scaled up to handle large
-numbers of files and volume of data.  The two main components include *data management* and *resource management*.
-By abstracting out classes of data that share the same properties (i.e. log data from a web server with one file per
-day), we can concentrate less on where the data is, and focus on analyzing it.  The resource manager is used to scale
-the processing to handle large groups of files.
-
+numbers of files and higher volumes of data.  The two main components include *data management* and *resource
+management*.  By abstracting out classes of data that share the same properties (i.e. log data from a web server with
+one file per day), we can concentrate less on where the data is, and focus on analyzing it.
 
 .. toctree::
+   :maxdepth: 2
 
    essentia/data_organization
    essentia/ess_on_aws

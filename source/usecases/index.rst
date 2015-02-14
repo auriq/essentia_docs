@@ -1,3 +1,5 @@
+:tocdepth: 1
+
 ************
 Case Studies
 ************
@@ -9,4 +11,6 @@ Case Studies
    apache
    conversion
    r-integration
+   r-format-requirements
+   redshift-integration
 
