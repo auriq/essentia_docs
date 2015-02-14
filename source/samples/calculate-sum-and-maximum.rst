@@ -11,50 +11,51 @@ of your analysis.
 Primary Lines in this Script
 ============================
 
-``ess spec create vector vector1 s,pkey:string_col i,+max:integer_col f,+add:float_col``
+**Line 5**
 
 * Store a vector in the database fivecoltutorial that keeps track of the maximum value of the integer column and aggregates the values in the float column for each unique value of the string column.
 
-``ess datastore select s3://asi-public --aws_access_key=*AccessKey* --aws_secret_access_key=*SecretAccessKey*``
+**Line 9**
 
 * Tells Essentia to look for data in the publicly available bucket asi-public, which you must enter still enter your AWS credentials to access.
 
-``ess datastore rule add "*fivecoltutorial*" "tutorialdata" "YYMMDD"``
+**Line 13**
 
 * Create a new rule to take any files with 'fivecoltutorial' in their name and put them in the tutorialdata category.
 
-``ess task stream tutorialdata "*" "*" "aq_pp -f,+1,eok - -d f:float_col i:integer_col s:string_col X X -ddef -udb_imp fivecoltutorial:vector1" --debug``
+**Line 18**
 
 * Pipe all files in the category tutorialdata to the aq_pp command. 
 * In the aq_pp command, tell the preprocessor to take data from stdin, ignoring errors and skipping the first line (the header). 
 * Then define the incoming data's columns, skipping the fourth and fifth columns, and import the data to the vector in the fivecoltutorial database so the attributes listed there can be applied.
 
-``ess task exec "aq_udb -exp fivecoltutorial:vector1 -o /home/ec2-user/corescripts/results/ess2testresults/``
-``simplescripts/fivecoltutorialresults.csv" --debug``
+**Line 20**
 
 * Export the modified and aggregated data from the database and save the results to a csv file.
 
-::
+.. code-block:: sh
+   :linenos:
+   :emphasize-lines: 5,9,13,18,20
     
-  ess instance local
-  ess spec drop database fivecoltutorial
-  ess spec create database fivecoltutorial --ports=1
+   ess instance local
+   ess spec drop database fivecoltutorial
+   ess spec create database fivecoltutorial --ports=1
     
-  ess spec create vector vector1 s,pkey:string_col i,+max:integer_col f,+add:float_col
+   ess spec create vector vector1 s,pkey:string_col i,+max:integer_col f,+add:float_col
     
-  ess udbd start
+   ess udbd start
     
-  ess datastore select s3://asi-public --aws_access_key=*AccessKey* --aws_secret_access_key=*SecretAccessKey*
+   ess datastore select s3://asi-public --aws_access_key=*AccessKey* --aws_secret_access_key=*SecretAccessKey*
     
-  ess datastore scan
+   ess datastore scan
     
-  ess datastore rule add "*fivecoltutorial*" "tutorialdata" "YYMMDD"
+   ess datastore rule add "*fivecoltutorial*" "tutorialdata" "YYMMDD"
     
-  ess datastore probe tutorialdata --apply
-  ess datastore summary
+   ess datastore probe tutorialdata --apply
+   ess datastore summary
     
-  ess task stream tutorialdata "*" "*" "aq_pp -f,+1,eok - -d f:float_col i:integer_col s:string_col X X -ddef -udb_imp fivecoltutorial:vector1" --debug
+   ess task stream tutorialdata "*" "*" "aq_pp -f,+1,eok - -d f:float_col i:integer_col s:string_col X X -ddef -udb_imp fivecoltutorial:vector1" --debug
     
-  ess task exec "aq_udb -exp fivecoltutorial:vector1 -o /home/ec2-user/corescripts/results/ess2testresults/simplescripts/fivecoltutorialresults.csv" --debug
+   ess task exec "aq_udb -exp fivecoltutorial:vector1 -o /home/ec2-user/corescripts/results/ess2testresults/simplescripts/fivecoltutorialresults.csv" --debug
     
-  ess udbd stop
+   ess udbd stop
