@@ -2,7 +2,9 @@
 Running on AWS
 **************
 
-This tutorial will walk you through how to launch worker nodes in the AWS Cloud to scale up your processing.  If you
+Scanning and categorizing your data does not require anything other than a single master node.  But the rest of
+Essentia benefits greatly when worker nodes are added. This tutorial will walk you through how to launch worker
+nodes in the AWS Cloud to scale up your processing.  If you
 are using the desktop installer, or simply wish to use just your master node for the the remainder of the tutorials,
 that is fine.  Worker nodes are not required for any of the training tutorials here.
 

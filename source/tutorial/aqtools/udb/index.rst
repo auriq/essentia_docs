@@ -1,8 +1,8 @@
 :tocdepth: 3
 
-**********
-udb/aq_udb
-**********
+********************
+In-memory Map/Reduce
+********************
 
 Overview
 ========

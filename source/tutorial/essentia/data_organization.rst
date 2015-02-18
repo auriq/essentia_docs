@@ -19,126 +19,162 @@ set of plans over a 1 month period (prices range from 1 to 6 dollars).
 
 There are two sets of log files.  The first have a filename in the form of ``browse_YYYYMMDD.csv.gz`` and contain the
 browsing records of all users who visited the site on a given day.  The files have three columns of data:
-:eventDate: is a timestamp of when the user visited a page.
-:userID: is a numerical ID matched to a unique user.
-:articleID: is a unique identifier for each of the articles offered
+
+:eventDate:
+    is a timestamp of when the user visited a page.
+:userID:
+    is a numerical ID matched to a unique user.
+:articleID:
+    is a unique identifier for each of the articles offered
 
 
+The second set of logs record all purchases, and have 5 columns of data:
+
+:purchaseDate:
+    time and date article was purchased
+:userID:
+    User that purchased article
+:articleID:
+    ID of the article purchased
+:price:
+    price user paid for the article
+:refID:
+    ID of the article seen just prior to the one being purchased.
 
 
+Tutorial
+========
 
-**Pick the bucket containing the data you want to analyze and scan it for files:**
+The first thing Essentia needs to know is where to look for the data.  Assuming we dumped all the files on our hard
+drive in the ``/data`` directory, the command to register the store with Essentia is::
 
-Its extremely easy to tell essentia which bucket you want to select data from and to scan that bucket.
+  $ ess datastore select /data
 
-* Simply run ``ess datastore select s3://*YourBucket* --aws_access_key=*YourAccessKey* --aws_secret_access_key=*YourSecretAccessKey*`` where the only changes you need to make are to enter your S3 **bucket name** and **access keys**.
-* Then scan your bucket by running ``ess datastore scan``
- 
-**Organize these files into categories of your choosing and have essentia examine them to determine their columns specifications or input them manually.**
+For the version of the files on our public S3 bucket, you would enter::
 
-We then need to put our data into one or more categories. This is accomplished using
+  $ ess datastore select s3://asi-public/diy_woodworking --credentials=~/mycredentials.csv
 
-``ess datastore rule add pattern CategoryName DateFormat``
+The ``credentials`` flag can be replace with ``aws_access_key`` and ``aws_secret_access_key`` to directly enter
+credentials, though we recommend the use of credential files if possible.
 
-* Pattern is the **linux style glob pattern** that matches the filenames you want to select. Thus you need to enter a linux command line pattern to **match part or all of each filename** you want to be included in your rule. This tends to be accomplished by using **wildcards ( "*" )** at the start and end of whatever phrase or pattern your files share in common. For example if you wanted to select all files with 'FindMe' in them then the pattern you would use is "*FindMe*".
+Next we will scan the contents of the datastore::
 
-* CategoryName is simply whatever you want your category to be called; however, each category name must be different from those of the other categories or there will be a conflict.
+  $ ess datastore scan
+  Essentia (INFO)	 : Cross referencing current index with file list at source.
+  Essentia (INFO)	 : - Adding 60 entries to fileindex.
+  Essentia (INFO)	 : Applying 2 rules to 60 files.
 
-* For DateFormat you need to enter **the pattern of the date in your filenames**, if they have one. Including surrounding characters common to your filenames such as "_" or an extension like ".zip" is recommended to avoid matching other runs of numbers in your filenames. **Year is "Y", Month is "M", and Day is "D"**. You must enter one of these characters for each number in the Date. Thus 2014-11-05 is "YYYY-MM-DD" and 13-10-29 is "YY-MM-DD".    
+'Rules' are what Essentia uses to classify data.  There are two system rules: 'default' matches a file if no other
+other rule catches it, and 'ignore' is a special rule that can be used to exclude files.  For the rest,
+we need to define rules based on file patterns.
 
-A few examples of creating rules:
 
-:Filename: 
+In this case, a glob pattern of ``*browse*`` would match all of our browsing logs.  We can tell Essentia to classify
+these files as follows::
 
-    "s3://bucket/path/I_am-not_significant-20140322-I-am_significant.csv"
+  $ ess datastore rule add "*browse*" browse YYYYMMDD
 
-    ``ess datastore rule add "*I-am_significant*" significantfiles "YYYYMMDD"``
 
-    where I called my category 'significantfiles' and told essentia that the files have a date in them in the format 'YYYYMMDD'.
+The glob pattern is given, matching files are assigned to a new category we label as 'browse',
+and finally we supply a pattern that can be used to extract a date from the filename.  It is regex based,
+but uses Y M D to designate year, month, and day fields.  Some examples:
 
-:Filename: 
+:file_2014-06-09_out.zip:
 
-    "s3://bucket/I_am_significant/I_am-not_significant-131030-I-am-also-significant.zip"
+  ``YYYY-MM-DD``
 
-    ``ess datastore rule add "*I_am_significant*I-am-also-significant*" splitsignificance "YYMMDD"``
+:account12345678_20140609.csv:
 
-    where I called my category 'splitsignificance' and told essentia that the files have a date in them in the format 'YYMMDD'.
+  ``YYYYMMDD.csv``
+  Here 'YYYYMMDD' alone won't work since there is another 8 digit number, therefore we add the '.csv'.  In fact, just '.' would have been sufficient.
 
-The next step is to probe the datastore to find information about the categories we've created such as their columns specs, compression, and delimiter. Then we save these values so essentia doesn't have to repeat this step next time it uses this datastore.
+.. tip::
+  ``ess datastore ls "*browse*"`` can be used to list all the files that match a glob pattern.  That same pattern can
+  then
+  be used as a rule pattern.
 
-``ess datastore probe CategoryName --apply``
+A future version of Essentia will automatically determine the date from the filename (if present),
+but for now it must be explicitly given.
 
-Finally we output a summary of the existing categories in our bucket
+With some files now categorized, we can introduce the summary command to get an overview of our data::
 
-``ess datastore summary``
+  $ ess datastore summary
+  ========================================================================
+  ============================= Local://data =============================
+  ========================================================================
 
----------------------------------------------------------
- 
-**A Script Showing the General Format of a First Time Scan:**
+  Name       Count    Size (MB)    Comp.    Delim.    dateCol    dateFmt    TZ  first       last
+  -------  -------  -----------  -------  --------  ---------  ---------  ----  ----------  ----------
+  default       30            0
+  ignore         0
+  browse        30            1                                                 2014-09-01  2014-09-30
 
-::
+  Name      columnSpec
+  ------  ------------
+  browse
 
-    ess datastore select s3://*YourBucket* --aws_access_key=*YourAccessKey* --aws_secret_access_key=*YourSecretAccessKey*
-    # enter your bucket and keys
-    ess datatstore scan
-    ess datastore rule add pattern1 CategoryName1 DateFormat1
-    # enter the pattern and dateformat for the files you want in your category and give your category a name.
-    ess datastore rule add pattern2 CategoryName2 DateFormat2
-    ... # for as many categories as you need to make
-    ess datastore probe CategoryName1 --apply
-    ess datastore probe CategoryName2 --apply
-    ... # for as many categories as you made
-    ess datastore summary
-        # this lets you see information about each of your categories including total number of files and total size.
- 
----------------------------------------------------------
+  Name    Example file
+  ------  ----------------------------
+  browse  /data/browse_20140930.csv.gz
 
-**How To List Files in Your Datastore or Category:**
+    priority  filePattern    categoryName    dateFormat
+  ----------  -------------  --------------  ------------
+           1  *browse*       browse          YYYYMMDD
 
-This can be accomplished by running
 
-``ess datastore ls pattern``
+We can see that our 'browse' category has files covering the month of September, but a lot of the other information
+is blank.  In particular, Essentia needs to know the compression format, how the data is delimited,
+and the column specification as explained in the AQ tutorials.  Optional but highly useful for log based data are
+knowing which column stores the time stamp, and the format of the timestamp.
 
-* where pattern is again the linux style glob pattern. 
+This information can be all be gleaned manually, but we prove a 'probe' which will scan one of the log files to
+determine the information::
 
-* Thus to list all the files in your datastore you just need to enter a **wildcard** character ( **"*"** ) for your pattern. That is, you would run
+  $ ess datastore probe browse --apply
+  Essentia (INFO)	 : scanning /data/browse_20140924.csv.gz
+  Essentia (INFO)	 : scan complete. 25 records found
+  Essentia (INFO)	 : examining file
+  S:eventDate I:userID I:articleID
+  Essentia (INFO)	 : file examination complete.
+  Summary for /data/browse_20140924.csv.gz
+  compression  : gzip
+  delimiter    : csv
+  dateColumn   : eventDate
+  example date : 2014-09-24T00:00:04
+  tz           : None
+  column spec  : S:eventDate I:userID I:articleID
 
-  ``ess datastore ls "*"``
 
-* If you wanted to list all files that had the words "please", "find", and "me" in them (in that order) then you would enter the command
+The ``--apply`` switch tells Essentia to update the database with the information it found.
 
-  ``ess datastore ls "*please*find*me*"``
- 
-**How To Modify Your Category:**
+Elements of a category can be modified.  For example, we can override the column spec to treat the userID as a string
+by using::
 
-You can modify your category by running
+  $ ess datastore category change columnSpec "S:eventDate S:userID I:articleID"
 
-``ess datastore rule change priority field newValue``
 
-* where field can be any one of **filePattern, categoryName, dateFormat, or priority**. FilePattern is the linux style glob pattern and priority is the order in which your category was made and can be found at the bottom of the printout from ``ess datastore summary``.
+Databases
+---------
 
-* For example, if you wanted to change the priority of rule 1 to 2 then you would run
+Essentia keeps track of your files, categories, and rules using a database. It is a simple sqlite3 database stored in
+a file called ``.auriq.db``.  For datastores on your local disk, the index file is stored in the directory where the
+data is stored.  For S3 based stores, the index is initially cached in your ``.conf`` subdirectory (relative to your
+working directory).  It can be pushed on the S3 store by using::
 
-  ``ess datastore rule change 1 priority 2``
+  $ ess datastore push
 
-You can also run
+The next time you select this datastore (i.e. in a future session), this index file will be pulled from S3 into your
+``.conf`` directory.  You can make changes and optionally push it back.
 
-``ess datastore category change CategoryName field newValue``
-    
-* to change any one of the following fields: **compression, delimiter, columnSpec, dateColumn, dateFormat, TZ**. ColumnSpec is the type specification of your columns; i.e. whether they are strings, integers, or another data type; and the column names. DateColumn is the column in your dataset that contains the date you want to order the data by, if it has one. TZ is the timezone that dates and times in your dataset are specified in.
+To completely delete the index file, use::
 
-* For example, if you wanted to change the delimiter from csv to tsv for a category called 'changeme' then you would run
+ $ ess datastore purge
 
-  ``ess datastore category change changeme delimiter tsv``
 
----------------------------------------------------------
- 
-**How To Completely Start Over:**
+Future sessions
+---------------
 
-Its simple! Just run ``ess datastore purge``  and you will delete the .auriq.db file that stores your file information and you can start anew.
- 
-**How To Save Your Categories Onto S3:**
+A typical scenario, particularly with log data, is that new files are placed on the data store on a regular basis.
+After the initial setup, all future sessions with Essentia need only select the datastore and scan it to index new
+files (and remove from the index any that may have been deleted).  The rules are automatically applied.
 
-This is also simple. After you have created or modified your categories, simply run ``ess datastore push``  and you will upload a copy of your .auriq.db file onto your S3 bucket. You must have write access to your S3 bucket to upload the database file.
-
-This is beneficial since it streamlines essentia's workflow the next time you want to work with your bucket. The next time you use your bucket in a script, essentia will only have to scan your bucket for new or modified files and apply your rules to them to update your categories. Thus you can skip the rule creation step in future runs.

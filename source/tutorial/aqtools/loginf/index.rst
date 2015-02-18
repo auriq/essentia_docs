@@ -1,6 +1,6 @@
-******
-loginf
-******
+*************
+File Analyzer
+*************
 
 It is not uncommon for data scientists to spend a significant amount of time determining properties about a data set.
 ``loginf`` was developed to assist in the process.  It scans a file and determines:

@@ -49,7 +49,7 @@ one file per day), we can concentrate less on where the data is, and focus on an
 
    essentia/data_organization
    essentia/ess_on_aws
-   essentia/scaling_aqpp
+   essentia/scaling_analysis
    essentia/scaling_udb
    essentia/query
    essentia/redshift

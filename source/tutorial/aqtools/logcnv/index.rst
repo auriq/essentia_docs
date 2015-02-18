@@ -1,6 +1,6 @@
-******
-logcnv
-******
+*********************
+Log Format Conversion
+*********************
 
 Raw data, particularly log data, is often not delimited cleanly but can be made to be so using some simple pattern
 matching rules.  ``logcnv`` was developed to help with this process, with the intent that the parsed output be fed
