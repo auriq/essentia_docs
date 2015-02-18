@@ -2,16 +2,31 @@
 Data Classification
 *******************
 
-**Why use the Log Manager:**
+While the AQ tools provide efficient processing of files, they alone are insufficient for dealing with *many* files.
+In large part this is due simply to data accounting. i.e. what files contain what data and where?
 
-Essentia's log manager is a simple way to fetch, store and manage your compressed/uncompressed log files. It allows you to list and organize your files so you can analyze the right data and ignore any irrelevant files.
- 
-**How the Log Manager Works:**
+Essentia provides a framework for data classification that when configured, can automatically add new files as they
+are placed in your data store.  It is particularly handy for log data, where new files are created daily or even hourly.
 
-Essentia creates a .auriq.db file on your local machine that stores the list of files that are in your S3 bucket. You can then create and apply rules to put these files into categories.
+Description of Tutorial Data
+============================
 
----------------------------------------------------------
- 
+In this and the remaining Essentia tutorials, we will be using a synthetic set of log files collected from a
+fictional DIY woodworking web site.  This web site offers detailed construction plans for many items.  Users can
+browse part of the article for free, but must pay to obtain the full plan. It is a new service,
+and in order to determine how best to price the items, the site randomized the prices for each
+set of plans over a 1 month period (prices range from 1 to 6 dollars).
+
+There are two sets of log files.  The first have a filename in the form of ``browse_YYYYMMDD.csv.gz`` and contain the
+browsing records of all users who visited the site on a given day.  The files have three columns of data:
+:eventDate: is a timestamp of when the user visited a page.
+:userID: is a numerical ID matched to a unique user.
+:articleID: is a unique identifier for each of the articles offered
+
+
+
+
+
 **Pick the bucket containing the data you want to analyze and scan it for files:**
 
 Its extremely easy to tell essentia which bucket you want to select data from and to scan that bucket.
