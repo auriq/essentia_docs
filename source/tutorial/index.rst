@@ -14,6 +14,20 @@ bucket (s3://asi-public) that stores the larger and more complex datasets used f
 
   These tutorials assume you are using the ``bash`` shell.
 
+The tutorials are meant to be run in order.
+
+.. toctree::
+   :maxdepth: 2
+
+   data_organization
+   aq_pp/index
+   udb/index
+   logcnv/index
+   loginf/index
+   query
+   redshift
+   ess_on_aws
+
 AQ Tools
 ========
 
@@ -22,19 +36,8 @@ Unix users familiar with the raw text processing commands ``sed`` , ``awk``, etc
 relatively straightforward to learn, and we highlight how the aq commands can significantly
 ease the burden of many problems encountered in a typical data processing workflow.
 
-* :doc:`aqtools/aq_pp/index` : the text pre-processor
-* :doc:`aqtools/udb/index` : the in-memory database
-* :doc:`aqtools/logcnv/index` : the log file parser/converter
-* :doc:`aqtools/loginf/index` : Log file analyzer
 
-.. toctree::
-   :titlesonly:
-   :hidden:
 
-   aqtools/aq_pp/index
-   aqtools/udb/index
-   aqtools/logcnv/index
-   aqtools/loginf/index
 
 Essentia
 ========
@@ -44,15 +47,6 @@ numbers of files and higher volumes of data.  The two main components include *d
 management*.  By abstracting out classes of data that share the same properties (i.e. log data from a web server with
 one file per day), we can concentrate less on where the data is, and focus on analyzing it.
 
-.. toctree::
-   :maxdepth: 2
-
-   essentia/data_organization
-   essentia/ess_on_aws
-   essentia/scaling_analysis
-   essentia/scaling_udb
-   essentia/query
-   essentia/redshift
 
 
 

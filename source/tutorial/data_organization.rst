@@ -2,16 +2,14 @@
 Data Classification
 *******************
 
-While the AQ tools provide efficient processing of files, they alone are insufficient for dealing with *many* files.
-In large part this is due simply to data accounting. i.e. what files contain what data and where?
-
-Essentia provides a framework for data classification that when configured, can automatically add new files as they
+One common theme when performing data analysis is simple accounting. i.e. what files contain what data and where?
+Essentia provides a framework for data classification that when, configured, can automatically handle new files as they
 are placed in your data store.  It is particularly handy for log data, where new files are created daily or even hourly.
 
 Description of Tutorial Data
 ============================
 
-In this and the remaining Essentia tutorials, we will be using a synthetic set of log files collected from a
+In this tutorial, we will be using a synthetic set of log files collected from a
 fictional DIY woodworking web site.  This web site offers detailed construction plans for many items.  Users can
 browse part of the article for free, but must pay to obtain the full plan. It is a new service,
 and in order to determine how best to price the items, the site randomized the prices for each
