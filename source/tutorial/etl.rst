@@ -466,13 +466,13 @@ ways to achieve this, but the most robust is the following:
    :linenos:
    :emphasize-lines: 3,4,5,6,7
 
-    $ ess task stream browse 2014-09-01 2014-09-30 \
+    $ ess task stream purchase 2014-09-01 2014-09-30 \
     "aq_pp -f,+1,eok - -d %cols \
     -evlc is:t 'DateToTime(%date_col,\"%date_fmt\") - DateToTime(\"2014-09-15\",\"Y.m.d\")' \
     -if -filt 't>0' \
       -evlc articleID 'articleID+1' \
     -endif \
-    -c eventDate userID articleID
+    -c purchaseDate userID articleID price refID
     -notitle \
     | bzip2 - -c > /data/%file.bz2"
 

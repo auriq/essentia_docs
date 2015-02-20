@@ -45,8 +45,8 @@ September 15 are off by one, and we need to add this back to the reported ID.  T
 but will serve to illustrate some of the ETL power of Essentia.
 
 To demonstrate the ``aq_pp`` ETL command, we will also use a set of smaller files that help illustrate its usage.
-:download:`../data/chemistry.csv` and :download:`../data/physics.csv` contain
+:download:`chemistry.csv <../data/chemistry.csv>` and :download:`physics.csv <../data/physics.csv>` contain
 fictional grades from two college courses.  We limit the number of students to just a few in order to make the
-tutorial more clear. :download:`../data/grades.csv` contains a lookup table that maps letter grades to a 'PASS/FAIL'
-designation, and finally :download:`../data/whitelist.csv` stores a list of students we want to single out for various
-reasons.
+tutorial more clear. :download:`grades.csv <../data/grades.csv>` contains a lookup table that maps letter grades to a
+'PASS/FAIL' designation, and finally :download:`whitelist.csv <../data/whitelist.csv>` stores a list of students we
+want to single out for various reasons.

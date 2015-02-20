@@ -1,4 +1,4 @@
-:tocdepth: 1
+:tocdepth: 2
 
 ******************
 Reference Material
@@ -6,8 +6,25 @@ Reference Material
 
 This section provides additional tutorials, tables, and a copy of the man pages for the Essentia toolkit.
 
+Manuals
+=======
+.. toctree::
+
+   manpages/index
+
+
+Additional guides
+=================
+.. toctree::
+
+   loginf
+   logcnv
+
+Tables
+======
 
 **Table 1 :** Substitution strings for the Essentia 'stream' or 'exec' command.
+
 ============   =======================================
 string         provides
 ============   =======================================
@@ -18,6 +35,7 @@ string         provides
 ============   =======================================
 
 **Table 2:** Substitution strings for the Essentia 'stream' command.
+
 =========   =======================
 string      provides
 =========   =======================
@@ -32,6 +50,7 @@ string      provides
 =========   =======================
 
 **Table 3:** UDB attribute flags for tables and vectors
+
 =========  =============================================
 attribute  use
 =========  =============================================
@@ -47,10 +66,4 @@ tkey       integer sorting key
 +nozero    Ignore values of 0 or an empty string
 =========  =============================================
 
-.. toctree::
-   :hidden:
 
-
-   manpages/index
-   loginf
-   logcnv

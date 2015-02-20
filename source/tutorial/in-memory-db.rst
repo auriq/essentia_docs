@@ -19,83 +19,93 @@ provided. After processing is completed, the data for each key is available in s
 very quickly queried.
 
 
+Getting Started
+===============
+As with many database systems, we need to create a database and define schemas to store the data.  We concentrate
+first on the sales data::
+
+  $ ess spec create database wood
+  $ ess spec create table allsales s,hash:userid i,tkey:ptime i:articleid f:price i:refid
+  $ ess spec create vector usersales s,hash:userid i,+last:articleid f,+add:total
 
 
-Starting UDB
-============
-The UDB communicates with network ports 10010-10079, with a unique UDB server daemon running for each port in use.
-How many ports to use depends on the circumstance, but you want at least 1 port for each 'primary key'.  For
-instance, in our woodworking example we are interested in user behavior so we will be storing data in UDB based
-on the hash of the userID.  We assign one UDB server to manage that hash key.
-If we wanted for some reason to maintain a set of tables that had a different primary key (say
-articleID), we'd want another port for that.
+The first line defines a database called 'wood', and within that we create two things.
+
+Tables
+------
+
+The first is a table, which is completely analagous to a TABLE in MySQL (for example).  This table will store all of the sales data.  The
+schema for this uses a variant of the column specification we saw in the ETL tutorial.
+
+``s,hash:userid`` indicates that the first column has the label 'userid', that it stores string data,
+and will be the data we hash on.  This means that the UDB will store the data in such a way that all entries for a
+given user are grouped together.
+
+``i,tkey:ptime`` will store the POSIX time as an integer.  The 'tkey' attributed tells UDB that this column stores
+time data, which it can then use to sort user data in time order.
 
 
-Since this example is simple and we are using only userID as a primary key, we can start the server using the default
-port via::
+The final 3 columns are more straightforward, simply defining articles as integers and the sales price as a float.
 
-  $ udbd start
-  Starting udbd-10010.
-  udbd-10010 (9785) started.
+Vectors
+-------
 
-
-
-Defining Schemas
-================
-UDB requires a schema so it knows how to treat data sent to it.  An SQL analogy would be the 'CREATE TABLE' command.
-UDB supports tables as well, in addition to 'vectors' and 'variables', the use of which will be clear as you proceed
-through this tutorial.
+Vectors are a bit different.  For each unique hash key, there is one vector of data.  This is commonly used to store
+summary information about a key.  In this example, we want to know the total amount of money each user spent,
+and we want to know the last article we imported.  The attributes '+last and +sum' accomplish this. There are many
+other attributes that can be used. See the :doc:`../reference/index`.
 
 
-Populate the database
+Importing data
+==============
+
+The database servers are not running by default.  We can fire them up using::
+
+  $ ess udbd start
+
+
+We can now populate the 'allsales' table using::
+
+  $ ess task stream purchase 2014-09-01 2014-09-30 \
+  "aq_pp -f,+1,eok - -d %cols \
+  -evlc i:ptime 'DateToTime(%date_col,\"%date_fmt\")'
+  -evlc is:t 'ptime - DateToTime(\"2014-09-15\",\"Y.m.d\")' \
+  -if -filt 't>0' \
+    -evlc articleID 'articleID+1' \
+  -endif \
+  -imp wood:allsales
+
+This is basically the same as the ETL example in the previous tutorial, with the addition of the
+``-imp wood:allsales`` directive.
+
+Querying the database
 =====================
+After executing the following, you will see a text dump of the contents of the 'allsales' table::
 
-We now integrate lessons learned from the ``aq_pp`` tutorial with UDB specific flags.
+  $ ess task exec "aq_udb -exp wood:allsales"
 
-.. code-block:: sh
-  :linenos:
+.. note ::
+    In 'local' mode, users can execute the aq_udb commands directly without using Essentia (``ess task exec``). However
+    we recommend using the full command since it can be used immediately if worker nodes are added to the cluster.
 
-  aq_pp -f,+1 viewer_logs.csv -d s:date s:userid i:movieid i:viewtime \
-        -evlc i:time 'DateToTime(date,"m.d.Y.H.M.S")' \
-        -cmb+1 top20.csv i:movieid s:moviename i:year i:runningtime \
-        -evlc f:viewfraction 'ToF(viewtime)/ToF(runningtime)' \
-        -udb -spec movies.spec -imp viewlog -imp userstat
+You can note that the userids are output in groups, which is how UDB has stored the data.  However it is not in time
+order per user.  Than can be done via::
 
-Line 2 uses a date to time function to convert the timestamp to a unix time.  We then use the top20 file to fetch the
-movie id and movie length.  Line 4 computes the fractional viewing time, and finally the ``-udb`` switches tell
-``aq_pp`` to move the records to the UDB.
+  $ ess task exec "aq_udb -ord wood:allsales"
 
-Query the database
-==================
+With the data sorted in time order, we can take advantage of our vector that summarizes each user::
 
-We can query the contents of the UDB via the ``aq_udb`` command::
+  $ ess task exec "aq_udb -exp wood:allsales -notitle | \
+                   aq_pp -f - -d s:userid X i:articleid f:total X -imp wood:usersales"
 
-  aq_udb -spec movies.spec -exp userstat
+What we've done is pipe the output to another UDB import command.  Since the data is grouped by user and in time
+order per user, the 'last article read' will be accurately reflected.  Take a look at the summary with another export::
 
-  "time","userid","moviename","viewfraction"
-  1400944370,"1003","The Wizard of Oz",0.29411764705882354
-  1400937437,"1006","A Hard Day's Night",0.96551724137931039
-  1400930661,"1026","The Third Man",0.967741935483871
-  1400921743,"1029","The Wizard of Oz",0.58823529411764708
-  1400952852,"1039","All About Eve",0.63043478260869568
-  1400967558,"1049","The Adventures of Robin Hood",0.97058823529411764
-  1400998502,"1049","Seven Samurai",0.98550724637681164
-  1400960821,"1050","The Maltese Falcon",0.97999999999999998
+  $ ess task exec "aq_udb -exp wood:usersales"
 
 
-  aq_udb -spec movies.spec -exp viewlog
+If you wish to delete the contents of a single table/vector or the entire database you can execute::
 
-  "userid","viewtime","moviename"
-  "1003",30,"The Wizard of Oz"
-  "1006",84,"A Hard Day's Night"
-  "1026",90,"The Third Man"
-  "1029",60,"The Wizard of Oz"
-  "1039",87,"All About Eve"
-  "1049",303,"Seven Samurai"
-  "1050",98,"The Maltese Falcon"
-
-Although we are not importing a lot of data in this tutorial, it should be noted that the table export provides
-output user by user, where each user's records are in time order.
-
-
+  $ ess task exec "aq_udb -clr wood:usersales"
+  $ ess task exec "aq_udb -clr_all"
 

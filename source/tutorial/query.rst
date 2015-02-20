@@ -19,4 +19,5 @@ We can filter using the WHERE clause::
 
 
 This is much simpler than loading data into a database or other system and obtaining the result. The price for this
-convenience is that the query command does not support many SQL keywords beyond.
+convenience is that the query command does not support many SQL keywords.  A future update will expand the
+functionality of this interface.

@@ -1,4 +1,4 @@
-:tocdepth: 1
+:tocdepth: 2
 
 *****************
 Reference Manuals
@@ -34,6 +34,5 @@ Essentia
 ========
 
 .. toctree::
-   :titlesonly:
 
    essentia-ref

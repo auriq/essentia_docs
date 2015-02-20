@@ -12,5 +12,4 @@ Case Studies
    conversion
    r-integration
    r-format-requirements
-   redshift-integration
 
