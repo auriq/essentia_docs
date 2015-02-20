@@ -52,7 +52,7 @@ copyright = u'2015, AuriQ Systems Inc.'
 # built documents.
 #
 # The short X.Y version.
-version = '2.1.6'
+version = '2.1.7'
 # The full version, including alpha/beta/rc tags.
 release = version
 
@@ -143,7 +143,7 @@ html_theme_options = {
 
     # Global TOC depth for "site" navbar tab. (Default: 1)
     # Switching to -1 shows all levels.
-    'globaltoc_depth': 3,
+    'globaltoc_depth': 2,
 
     # Include hidden TOCs in Site navbar?
     #

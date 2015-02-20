@@ -38,12 +38,12 @@ understanding the material.
    :hidden:
    :maxdepth: 3
 
-   source/overview
    source/install
    source/tutorial/index
+   source/tutorial2/index
    source/usecases/index
    source/samples/index
-   source/manpages/index
+   source/reference/index
 
 
 

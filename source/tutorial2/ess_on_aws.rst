@@ -1,6 +1,29 @@
+:tocdepth: 1
+
 **************
 Running on AWS
 **************
+
+The Amazon cloud is a pay as you need infrastucture, which offers general and specific computing resources,
+as well as reliable data storage.  Essentia primarily uses three key AWS components:
+
+1. Elastic Cloud Computing (EC2).  These are 'virtual machines' running on AWS servers that users can provision for
+computing.  Once launched, users can log into the machines via the command line (typically `ssh`) and begin their
+tasks.  The operating system Essentia uses is a form of Linux that AWS maintains.
+
+2. Simple, Secure Storage (S3).  Essentially this is a place to store your files.  The 'simple' part of S3 is that
+for most users, you can think of this as basically a hard drive that is on the cloud.  Data is secure because behind
+the scenes, any files uploaded are copied to multiple drives on site in order to prevent data loss due to any failure.
+It is this redundancy which also allows for scalability in reading data.  For instance, on your desktop or laptop,
+if two files are trying to be read from disk at the same time, the drive has to go back and forth to where the data
+is stored.  This slows down the read.  But with multiple disks, this competition can be avoided.
+
+3. Redshift.  This is one of a few types of databases that AWS offers.  It is common in many applications,
+including data warehousing.  Data stored in Redshift can be efficiently queried by standard SQL commands.   Essentia
+can integrate with Redshift to clean massive amounts of raw, dirty data and insert it directly into SQL tables.
+
+Getting started with AWS is typically free, and interested users can get more information at `the AWS web page
+<http://aws.amazon.com>`_.
 
 Scanning and categorizing your data does not require anything other than a single master node.  But the rest of
 Essentia benefits greatly when worker nodes are added. This tutorial will walk you through how to launch worker
@@ -50,7 +73,7 @@ Your master node needs a few things in order to spin up workers to build your Es
    * The pem file entry only does not require the extension (i.e. you should use ``mykey`` instead of ``mykey.pem``)
    * Instance type and count can be overriden by essentia command line options (``--type``, ``--number``)
    * Private IP is appropriate for when you use a VPN
-   * More information on setting up a security group can be found in :doc:`../../aws/security-group`
+   * More information on setting up a security group can be found in :doc:`../aws/security-group`
 
 
 Once that is configured, launching worker nodes is done via the following command::

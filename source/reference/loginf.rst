@@ -15,7 +15,8 @@ algorithm which results in an answer that is accurate to within a few percent.
 Usage
 =====
 
-We will look at a simple 3 column file (:download:`donations.csv`) that record the last name, city, and amount donated
+We will look at a simple 3 column file (:download:`../data/donations.csv`) that record the last name, city,
+and amount donated
 to a fictional charity.  In the rawest form, one can execute the following to get the full output::
 
   loginf -f donations_1.csv

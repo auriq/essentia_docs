@@ -4,22 +4,13 @@
 Installation
 ************
 
-Essentia is being distributed in three formats:
+Essentia is available as either a desktop download, or via a cloud based service.  The tutorials on this site will
+work with either, though for evaluating performance on larger or more complex data sets,
+users should consider the cloud version which allows the creation of an Essentia cluster.
 
-1. Feature limited, desktop download.
-2. Full featured, 30 day free trial on the AWS cloud.
-3. Full featured, pay by the hour, AWS cloud version.
-
-Two are based on the AWS cloud, and the other can be run on your desktop.
-If you don't have an AWS account but are interested in using Essentia on the
-cloud, we recommend reading :doc:`aws/aws`.
 
 Desktop version
 ===============
-
-The benefit of the desktop version is that users do not need an AWS account.
-We've removed the ability to launch worker nodes in the cloud as a consequence,
-but otherwise the features are the same between it and the cloud based versions.
 
 The desktop version assumes you are using OSX or Linux as your operating system,
 and that you have Python 2.7 installed.
@@ -54,15 +45,17 @@ Once installed and the paths set, Essentia can be invoked from the command line 
 
 Essentia is self contained, and to uninstall, one only needs to execute ``rm -rf ~/.local/essentia``.
 
-AWS 30 day trial
-================
+Cloud version
+=============
+The cloud version requires that the user has an Amazon Web Services account.  New users can get more information from
+our :doc:`aws/aws` guide.
 
-We have created a free public AMI which any AWS user can launch to form a
+We have created AMIs which any AWS user can launch to form a
 private, AWS account specific master node.
-Once active, you can log into the instance and start Essentia.  This version
-of will look for a license key which is needed to run.
+Once active, you can log into the instance and start Essentia.  There is a version that requires a
+license key to run, and a paid version which doesn't need a key but instead charges by the hour.
 
-This license is also free, and can be obtained via an `easy signup <../pricing>`_.  It grants
+A trial license key is free, and can be obtained via an `easy signup <../pricing>`_.  It grants
 the user 30 days of unlimited use.  Note however that standard EC2 rates
 still apply, but during the trial the cost of using Essentia is free.
 
@@ -71,8 +64,8 @@ still apply, but during the trial the cost of using Essentia is free.
 #. Create on the 'Launch Instance' button.  This will take you to a site where
    you can select what OS and software you would like to access.
 #. Select the 'community AMI' tab, and search for 'AuriQ'
-#. There may be more than one version listed, but new users should choose the
-   most recently created version.
+#. The list of results will include the free version, as well as a link
+   to the paid 'marketplace' version.  Select one to continue.
 #. You will be asked to select a node type.  For almost all applications,
    an ``m3.medium`` is the safest choice, but the ``t2`` line is OK for
    testing or other work that does not require high performance.
@@ -84,22 +77,12 @@ you will eventually be asked to configure a security group.  This is important
 enough that we created a separate walk-though for it: :doc:`aws/security-group`
 
 Once your instance is configured and launched, you should copy your
-license key to it using the following command from a terminal::
+license key (if using the free version) to it using the following command from a terminal::
 
   scp -i myinstance.pem essentia_license ec2-user@public.ip.add:.
 
 The public IP will be listed on your AWS console.
 
-AWS full version
-================
-
-The full, unlimited version of Essentia is a pay-as-you-go service hosted on AWS.
-The cost per hour ranges on the node type you use, but typically ~ $0.10/hour.
-
-To use this unlimited version, follow the instructions for the trial based version with two exceptions:
-
-1. Instead of 'Community AMIs', select 'AWS Marketplace' when you go to launch an EC2 instance.
-2. No license key needs to be acquired.
 
 AWS additional notes
 ====================

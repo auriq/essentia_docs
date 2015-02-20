@@ -1,6 +1,6 @@
-**********************************
+*************************************
 Getting Started with the R Integrator
-**********************************
+*************************************
 
 It is a good idea to have port 8787 open when using the R integrator and this is necessary when using rstudio-server on an AWS instance.
 

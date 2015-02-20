@@ -5,45 +5,16 @@ Data Classification
 One common theme when performing data analysis is simple accounting. i.e. what files contain what data and where?
 Essentia provides a framework for data classification that when, configured, can automatically handle new files as they
 are placed in your data store.  It is particularly handy for log data, where new files are created daily or even hourly.
-
-Description of Tutorial Data
-============================
-
-In this tutorial, we will be using a synthetic set of log files collected from a
-fictional DIY woodworking web site.  This web site offers detailed construction plans for many items.  Users can
-browse part of the article for free, but must pay to obtain the full plan. It is a new service,
-and in order to determine how best to price the items, the site randomized the prices for each
-set of plans over a 1 month period (prices range from 1 to 6 dollars).
-
-There are two sets of log files.  The first have a filename in the form of ``browse_YYYYMMDD.csv.gz`` and contain the
-browsing records of all users who visited the site on a given day.  The files have three columns of data:
-
-:eventDate:
-    is a timestamp of when the user visited a page.
-:userID:
-    is a numerical ID matched to a unique user.
-:articleID:
-    is a unique identifier for each of the articles offered
+By abstracting out classes of data that share the same properties (i.e. log data from a web server with
+one file per day), we can concentrate less on where the data is, and focus on analyzing it.
 
 
-The second set of logs record all purchases, and have 5 columns of data:
 
-:purchaseDate:
-    time and date article was purchased
-:userID:
-    User that purchased article
-:articleID:
-    ID of the article purchased
-:price:
-    price user paid for the article
-:refID:
-    ID of the article seen just prior to the one being purchased.
+Getting Started
+===============
 
-
-Tutorial
-========
-
-The first thing Essentia needs to know is where to look for the data.  Assuming we dumped all the files on our hard
+Essentia defines a resource that contains data a 'datastore'.  Current datastore types that are supported by Essentia
+include a local disk drive, and an AWS S3 store (cloud based storage).  Assuming we dumped all the files on our hard
 drive in the ``/data`` directory, the command to register the store with Essentia is::
 
   $ ess datastore select /data
@@ -61,6 +32,10 @@ Next we will scan the contents of the datastore::
   Essentia (INFO)	 : Cross referencing current index with file list at source.
   Essentia (INFO)	 : - Adding 60 entries to fileindex.
   Essentia (INFO)	 : Applying 2 rules to 60 files.
+
+
+Categorization of Data
+======================
 
 'Rules' are what Essentia uses to classify data.  There are two system rules: 'default' matches a file if no other
 other rule catches it, and 'ignore' is a special rule that can be used to exclude files.  For the rest,
@@ -152,7 +127,7 @@ by using::
 
 
 Databases
----------
+=========
 
 Essentia keeps track of your files, categories, and rules using a database. It is a simple sqlite3 database stored in
 a file called ``.auriq.db``.  For datastores on your local disk, the index file is stored in the directory where the
@@ -170,7 +145,7 @@ To completely delete the index file, use::
 
 
 Future sessions
----------------
+===============
 
 A typical scenario, particularly with log data, is that new files are placed on the data store on a regular basis.
 After the initial setup, all future sessions with Essentia need only select the datastore and scan it to index new

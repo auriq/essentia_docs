@@ -1,6 +1,6 @@
-**************************
+****************************
 Essentia Redshift Integrator
-**************************
+****************************
 
 Categorize, Explore, and Preprocess Your Data for Easy Loading and Analysis in Redshift
 
