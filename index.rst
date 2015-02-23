@@ -42,7 +42,6 @@ understanding the material.
    source/tutorial/index
    source/tutorial2/index
    source/usecases/index
-   source/samples/index
    source/reference/index
 
 

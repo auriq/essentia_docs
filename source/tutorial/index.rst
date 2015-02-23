@@ -22,5 +22,5 @@ Users are encouraged to go through the tutorials in order.
    etl
    in-memory-db
    query
-
+   r
 

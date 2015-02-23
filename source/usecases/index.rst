@@ -11,5 +11,8 @@ Case Studies
    apache
    conversion
    r-integration
-   r-format-requirements
-
+   apache-sample
+   sum-max
+   first-last-min
+   merge-average-and-sort-web-data
+   combine-and-compare-datasets

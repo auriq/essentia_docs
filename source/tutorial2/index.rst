@@ -13,3 +13,4 @@ construct an Essentia cluster.
 
    ess_on_aws
    redshift
+   r-scaled
