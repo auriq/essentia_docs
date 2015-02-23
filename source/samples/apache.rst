@@ -60,4 +60,6 @@ A Brief Description of What This Script Does
     
     ess udbd stop
     
-This script provided a very simple analysis of Apache Log Data using Essentia. To run the complete version of our Apache Log Demo, including more advanced analysis using Essentia and R, please follow the steps in `Getting Started with the R Integrator <http://www.auriq.net/documentation/source/usecases/r-format-requirements.html>`_.
+This script provided a very simple analysis of Apache Log Data using Essentia. To run the complete version of our
+Apache Log Demo, including more advanced analysis using Essentia and R, please follow the steps in
+`Getting Started with the R Integrator <http://www.auriq.net/documentation/source/usecases/r-format-requirements.html>`_.
