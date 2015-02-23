@@ -1,5 +1,5 @@
-New to  AWS
-===========
+Getting Started on AWS
+======================
 
 If you don't have an AWS account, it is free to sign up.  New accounts get several services for free,
 but with some restrictions.  See `the free tier page <http://aws.amazon.com/free>`_ for more information.  Since most

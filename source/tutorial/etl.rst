@@ -1,11 +1,54 @@
-:tocdepth: 3
+**********
+ETL Engine
+**********
 
-*****
-aq_pp
-*****
+The goal of this tutorial is to highlight how to perform complex data transformation and validation operations,
+and output the results to either to disk or a database.  This is commonly referred to as 'ETL' for
+Extract-Transform-Load.
+
+
+Getting Started
+===============
+
+Since we are not using any worker nodes in this demo, we configure Essentia to be in 'local' mode using::
+
+  $ ess instance local
+
+
+Essentia treats data as a 'stream', similar to Unix pipes.  As an example, let's simply count the lines in one week of
+the log files that we classified in the previous tutorial::
+
+  $ for i in {1..7}; do funzip /data/browse_2014090${i}.csv.gz | wc -l ; done
+
+
+On some systems, you may use ``zcat`` instead of ``funzip``.
+
+The Essentia equivalent is::
+
+  $ ess task stream 2014-09-01 2014-09-07 'wc -l'
+
+Some notes here.  The ``bash`` version is fairly straightforward in this case, but gets much more complicated if you
+want to traverse dates that span weeks, months, or years.  Essentia handles the decompression of the data and
+piping it to the command you specify.  All you need to do is specify the category and date range to process.
+
+Since we are in local mode, each file is processed sequentially.  If we had worker nodes (i.e. the cloud version),
+the processing would be done in parallel, with each node responsible for a subset of the files.
+
+Essentia ETL tools
+==================
+
+The above is a rather trivial ETL example.  More typical cases involve validating the data, filtering data, and
+deriving entirely new columns based on some math operations or string processing. For that,
+we developed a set of command line programs called the "AQ tools", which are part of the Essentia distribution.
+
+Written in ``C`` to achieve a high level of performance, the AQ tools are able to manipulate and transform raw input
+data into a format more easily handled by other AQ or third party tools.  In particular,
+the ``aq_pp`` program does the heavy lifting for all ETL operations.
+
+
 
 The Benefit of Using ``aq_pp``
-==============================
+------------------------------
 
 To demonstrate the utility of ``aq_pp``, let's look at the following problem:
 
@@ -58,22 +101,14 @@ intent of the command is fairly easy to discern. Instead of positional arguments
 are named, therefore making an ``aq_pp`` command more human readable.
 Additionally, it is very fast, in fact an order of magnitude faster in this example.
 
-In the documentation that follows, we will expand on how this and other Essentia tools can simplify and empower your
-data processing workflow.
 
-Required Files
+
+
+AQ_PP tutorial
 ==============
 
-These tutorials require a few small files: :download:`chemistry.csv` and :download:`physics.csv` contain
-fictional grades from two college courses.  We limit the number of students to just a few in order to make the
-tutorial more clear. :download:`grades.csv` contains a lookup table that maps letter grades to a 'PASS/FAIL'
-designation, and finally :download:`whitelist.csv` stores a list of students we want to single out for various
-reasons.
-
-Overview
-========
-
-The command structure of aq_pp consists of an **input specification** specifying which file(s) to take the data from,
+The command structure of ``aq_pp`` consists of an **input specification** specifying which file(s) to take the data
+from,
 various **processing specifications** to determine how data is processed, and **output specifications** describing how
 and where to put the results of your command.
 There are also a variety of global options that modify the environment and default variables used in ``aq_pp``.
@@ -151,13 +186,13 @@ This simply restricts the output to the two designate columns::
 Similar, but the output is to a file named ``newtable.csv`` instead of the stdout.
 
 Instead of the output being routed into the stdout or a file, it can also be directly imported into the UDB, which is
-an extremely powerful part of the Essentia toolkit.  We expand on this more in the :doc:`../udb` tutorial.
+an extremely powerful part of the Essentia toolkit.  We expand on this more in the :doc:`in-memory-db` tutorial.
 
 Combining Datasets
-==================
+------------------
 
 cat for merging datasets
-------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 There are a number of scenarios (particularly with log data) where merging two different types of files is useful.
 Lets consider the case where we want to merge our chemistry and physics grades into a single table::
@@ -178,7 +213,7 @@ the unix command of the same name.  The difference here is that ``aq_pp`` will c
 while simply concatenating the two files will result in just the same 5 columns as before.
 
 cmb for joining datasets
-------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 However most users will want to JOIN datasets based on common values between two files.  In this case, the first and
 last name, as well as the country, are the common columns between the two files.  The ``-cmb`` option is similar to
@@ -205,7 +240,7 @@ names will achieve the same result::
 
 
 sub for lookup tables
----------------------
+^^^^^^^^^^^^^^^^^^^^^
 
 An important type of dataset joining is replacing some value in a file with a matching entry in a lookup table.
 In the following example, we wish to convert a students letter grade from 'A,B,C...' etc into a simple PASS/FAIL::
@@ -231,13 +266,13 @@ The ``-cmb`` can be used substituting data, but for situations similar to the on
 
 
 Data Transforms
-===============
+---------------
 
 The input specification defines all the input columns we have to work with.  The goal of the process spec is to
 modify these data according to various rules.
 
 evlc
-----
+^^^^
 
 The ``-evlc`` switch allows users to overwrite or create entirely new columns based on some operation with existing
 columns or built-in variables.  The types of operations are broad, covering both string and numerical data.
@@ -259,7 +294,7 @@ column, we had to provide the 'column spec', which in this case is ``s:fullname`
 "fullname".
 
 Built in Variables
-------------------
+^^^^^^^^^^^^^^^^^^
 
 It may be useful to note the the record number or file ID in the output table.  The ``aq_pp`` handles this via
 built-in variables.  In the example below, we augment the output with a row number.  We add 1 to it to compensate for
@@ -276,7 +311,7 @@ skipping the header via the ``-f,+1`` flag ::
 Other built-ins are ``$Random`` for random number generation, and ``$FileId`` to reference the file being processed.
 
 String Manipulation
--------------------
+^^^^^^^^^^^^^^^^^^^
 
 With raw string data, it is often necessary to extract information based on a a pattern or regular expression.
 Consider the simple case of extracting a 5 digit zip code from data which looks like this ::
@@ -297,7 +332,8 @@ command would be::
 
 ``aq_pp`` has a number of options related to pattern matching.  First and formost, it supports regular expressions
 and a format developed for another product called RT metrics.  Regex is more widespread, but the RT format has
-certain advantages for parsing log based data.  Full details can be found in the :doc:`../../manpages/aq_pp` manual.
+certain advantages for parsing log based data.  Full details can be found in the :doc:`../reference/manpages/aq_pp`
+manual.
 
 Back to the example above, we use a global option to specify the type of regex we want to use, and then the
 ``-maprx`` switch to identify the column to work with and the regex.  Finally, the captured value (in this case the
@@ -320,7 +356,7 @@ column.
 
 
 Variables
----------
+^^^^^^^^^
 
 Often it is necessary to use a global variable that is not output as a column but rather acts as an aid to calculation.
 
@@ -336,7 +372,7 @@ to output our variables to the stdout (instead of the columns).
 
 
 Conditionals
-============
+------------
 
 Filters and if/else statements are used by ``aq_pp`` to help clean and process raw data.
 
@@ -379,3 +415,84 @@ leaving the others untouched::
   1,"Dawson","Leona",76.5,"B-"
   2,"Jordan","Colin",51.799999999999997,"D"
   3,"Malone","Peter",97.200000000000003,"A+"
+
+
+ETL at Scale
+============
+
+At the start of this tutorial, we demonstrated how we can use Essentia to select a set of log files and pipe the
+contents to the unix ``wc`` command.  In a similar manner, we can do with with ``aq_pp``,
+enabling us to apply more complex ETL operations on a large set of files.
+
+Cleaning the 'browse' data
+--------------------------
+For our first example, we are tasked with generating a cleaned version of each file,
+and saving it as a comma separated file with bz2 compression::
+
+  $ ess task stream browse 2014-09-01 2014-09-30 "aq_pp -f,+1,eok - -d %cols -notitle | bzip2 - -c > /data/%file.bz2"
+
+We can break down the command (everything within the double quotes) as follows:
+
+f,+1,eok -
+    This tells ``aq_pp`` that the first line should be skipped **(+1)**, that errors are OK  **(eok)**
+    and that the input is being piped in via stdin.
+    With ``eok`` set, whenever ``aq_pp`` sees
+    an articleID (which we defined as an integer) with a string value, it will reject it. This takes care of the 'TBD'
+    entries.  Normally ``aq_pp`` would halt upon seeing an error.  This allows users to use ``aq_pp`` as both a data
+    validator and a data cleaner.
+
+d %cols
+    Tells ``aq_pp`` what the column specification is.  We determined this in the previous tutorial where we setup our
+    datastore and categorized our files.  The ``%cols`` is a substitution string.  Instead of having to enter the
+    columns each time by hand, Essentia will lookup the column spec from your datastore settings and place it here.
+    There are several substitution strings that can be used, and they are listed in the section:
+    :doc:`../reference/index`
+
+notitle
+    A switch to turn off the header line when generating output
+
+bzip2 - -c > /data/%file.bz2
+    Finally pipe the output of the command to the ``bzip`` utility.  We use the substitution string ``%file`` to
+    generate the same filename as the input, except with a ``bz2`` extension.
+
+
+Cleaning the 'purchase' data
+----------------------------
+
+The purchase data needs the articleID corrected for all dates on and after the 15th of September.  There are a few
+ways to achieve this, but the most robust is the following:
+
+.. code-block:: sh
+   :linenos:
+   :emphasize-lines: 3,4,5,6,7
+
+    $ ess task stream purchase 2014-09-01 2014-09-30 \
+    "aq_pp -f,+1,eok - -d %cols \
+    -evlc is:t 'DateToTime(%date_col,\"%date_fmt\") - DateToTime(\"2014-09-15\",\"Y.m.d\")' \
+    -if -filt 't>0' \
+      -evlc articleID 'articleID+1' \
+    -endif \
+    -c purchaseDate userID articleID price refID
+    -notitle \
+    | bzip2 - -c > /data/%file.bz2"
+
+
+Line 3 creates a new column 't', which is a signed integer, and it is assigned a value equal to the difference between
+the time of the current record and the cutoff time of September 15.  Positive values of 't' indicate that the record
+was collected after the 15th.
+
+Line 4 creates a filter condition, which is triggered for all records on or after the 15th.
+
+Line 5 adjusts the articleID to correct for the website error.
+
+Line 6 ends the block
+
+Line 7 specifies the output columns.  If not provided, it would also output our new 't' column which we used only for
+temporary purposes.
+
+We could have just issued 2 essentia commands, one with dates selected before the 15th and another for dates after.
+In this case it would have been easy, but there are other scenarios where it becomes more problematic.
+
+
+One final note. The use of quotations in Unix commands invariably leads to a need to ``escape`` characters in order
+for them to be recognized.

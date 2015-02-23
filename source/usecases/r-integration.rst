@@ -1,8 +1,8 @@
 :tocdepth: 1
 
-********************
+**********************
 Essentia R Integration
-********************
+**********************
 
 Explore, Preprocess, and Shrink Your Big Data for Easy Loading and Analysis in R
 
