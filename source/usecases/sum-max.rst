@@ -17,7 +17,7 @@ Primary Lines in this Script
 
 **Line 9**
 
-* Tells Essentia to look for data in the publicly available bucket asi-public, which you must enter still enter your AWS credentials to access.
+* Tells Essentia to look for data on your current machine under the directory ../../data.
 
 **Line 13**
 
@@ -45,7 +45,7 @@ Primary Lines in this Script
 
    ess udbd start
 
-   ess datastore select s3://asi-public --aws_access_key=*AccessKey* --aws_secret_access_key=*SecretAccessKey*
+   ess datastore select ../../data
 
    ess datastore scan
 
@@ -56,6 +56,6 @@ Primary Lines in this Script
 
    ess task stream tutorialdata "*" "*" "aq_pp -f,+1,eok - -d f:float_col i:integer_col s:string_col X X -ddef -udb_imp fivecoltutorial:vector1" --debug
 
-   ess task exec "aq_udb -exp fivecoltutorial:vector1 -o /home/ec2-user/corescripts/results/ess2testresults/simplescripts/fivecoltutorialresults.csv" --debug
+   ess task exec "aq_udb -exp fivecoltutorial:vector1 -o fivecoltutorialresults.csv" --debug
 
    ess udbd stop

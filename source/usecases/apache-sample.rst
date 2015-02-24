@@ -20,22 +20,22 @@ A Brief Description of What This Script Does
 
 **Line 13** 
 
-* Create a new rule to take any files with '/2014' followed by another '/2014' in their name and put them in the 2014logs category.
+* Create a new rule to take any files with '125-access_log' in their name and put them in the 125accesslogs category.
 
-**Line 18** 
+**Line 19** 
 
-* Pipe the files in the category 2014logs that were created between April 1st and 5th, 2014 to the aq_pp command. 
+* Pipe the files in the category 125accesslogs that were created between November 30th and December 7th, 2014 to the aq_pp command. 
 * In the aq_pp command, tell the preprocessor to take data from stdin, ignoring errors and not outputting any error messages. 
 * Then define the incoming data's columns, skipping all of the columns except referrer, and create a column called pagecount that always contains the value 1. 
 * Then import the data to the vector in the apache database so the attributes listed there can be applied.
 
-**Line 20** 
+**Line 21** 
 
 * Export the aggregated data from the database, sorting by pagecount and limiting to the 25 most common referrers. Also export the total number of unique referrers.
 
 ..  code-block:: sh
     :linenos:
-    :emphasize-lines: 5,13,18,20
+    :emphasize-lines: 5,13,19,21
 
     ess instance local
     ess spec drop database apache
@@ -45,16 +45,17 @@ A Brief Description of What This Script Does
     
     ess udbd start
     
-    ess datastore select s3://*Bucket*/data/openid/ --aws_access_key=*AccessKey* --aws_secret_access_key=*SecretAccessKey*
+    ess datastore select ../../data
     
     ess datastore scan
     
-    ess datastore rule add "*/2014*/2014*" "2014logs" "/YYYYMMDD"
+    ess datastore rule add "*125-access_log*" "125accesslogs" "YYYYMMDD"
     
-    ess datastore probe 2014logs --apply
+    ess datastore probe 125accesslogs --apply
+    ess datastore category change 125accesslogs compression none
     ess datastore summary
     
-    ess task stream 2014logs "2014-04-01" "2014-04-05" "logcnv -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' i,tim:time sep:'] \"' s,clf,hl1:req_line1 sep:'\" ' i:res_status sep:' ' i:res_size sep:' \"' s,clf:cookie sep:'\" \"' s,clf:referrer sep:'\" \"' s,clf:user_agent sep:'\" ' i:dt sep:' ' s:url_base sep:' ' s:con_status sep:' ' x | aq_pp -f,qui,eok - -d X X X X X X X X X X s:referrer X X X X -evlc i:pagecount "1" -ddef -udb_imp apache:vector1" --debug
+    ess task stream 125accesslogs "2014-11-30" "2014-12-07" "logcnv -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' i,tim:time sep:'] \"' s,clf,hl1:req_line1 sep:'\" ' i:res_status sep:' ' i:res_size sep:' \"' s,clf:referrer sep:'\" \"' s,clf:user_agent sep:'\"' X | aq_pp -f,qui,eok - -d X X X X X X X X X s:referrer X -evlc i:pagecount \"1\" -ddef -udb_imp apache:vector1" --debug
     
     ess task exec "aq_udb -exp apache:vector1 -sort pagecount -dec -top 25; aq_udb -cnt apache:vector1" --debug
     
