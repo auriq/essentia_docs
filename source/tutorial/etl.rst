@@ -34,8 +34,8 @@ piping it to the command you specify.  All you need to do is specify the categor
 Since we are in local mode, each file is processed sequentially.  If we had worker nodes (i.e. the cloud version),
 the processing would be done in parallel, with each node responsible for a subset of the files.
 
-Essentia ETL tools
-==================
+Essentia ETL and the ``aq_pp`` command
+======================================
 
 The above is a rather trivial ETL example.  More typical cases involve validating the data, filtering data, and
 deriving entirely new columns based on some math operations or string processing. For that,
@@ -45,67 +45,6 @@ Written in ``C`` to achieve a high level of performance, the AQ tools are able t
 data into a format more easily handled by other AQ or third party tools.  In particular,
 the ``aq_pp`` program does the heavy lifting for all ETL operations.
 
-
-
-The Benefit of Using ``aq_pp``
-------------------------------
-
-To demonstrate the utility of ``aq_pp``, let's look at the following problem:
-
-We have sales data from a fictional store that caters to international clients.  We record the amount spent for each
-purchase and the currency it was purchased with.  We wish to compute the total sales in US Dollars.
-We have 2 files to process.  The first contains the time, currency type, and amount spent, and the second is a lookup
-table that has the country code and USD exchange rate:
-
-sales data::
-
-   transaction_date,currency,amount
-   2013-08-01T07:50:00,USD,81.39
-   2013-08-01T08:22:00,USD,47.96
-   2013-08-01T08:36:00,CAD,62.59
-
-exchange data::
-
-   currency,rate
-   EUR,1.34392
-   CAD,0.91606
-   USD,1.00000
-
-Lets compare 2 solutions against ``aq_pp``
-
-**SQL**::
-
-  select ROUND(sum(sales.amount*money.rate),2) AS total from sales INNER JOIN exchange ON sales.currency = exchange.currency;
-
-SQL is straightforward and generally easy to understand.  It will execute this query very quickly,
-but this overlooks the hassle of actually importing it into the database.
-
-**AWK**::
-
-  awk 'BEGIN {FS=","} NR==1 { next } FNR==NR { a[$1]=$2; next } $2 in a { $2=a[$2]; sum += $2*$3} END {print sum}' exchange.csv sales.csv
-
-AWK is an extremely powerful text processing language, and has been a part of Unix for about 40 years.  This legacy
-means that it is stress tested and has a large user base.  But it is also not very user friendly in some
-circumstances.  The language
-complexity scales with the difficulty of the problem you are trying to solve.  Also, referencing the columns by
-positional identifiers ($1, $2 etc) makes AWK code more challenging to develop and maintain.
-
-
-**AQ_PP**::
-
-  aq_pp -f,+1 sales.csv -d s:date s:currency f:amount -cmb,+1 exchange.csv s:currency f:rate -var f:sum 0.0 -evlc 'sum' 'sum+(amount*rate)' -ovar -
-
-The AuriQ preprocessor is similar in spirit to AWK, but it simplifies many issues.
-We'll detail the specifics in the rest of the documentation, but even without knowing all of the syntax, the
-intent of the command is fairly easy to discern. Instead of positional arguments, columns
-are named, therefore making an ``aq_pp`` command more human readable.
-Additionally, it is very fast, in fact an order of magnitude faster in this example.
-
-
-
-
-AQ_PP tutorial
-==============
 
 The command structure of ``aq_pp`` consists of an **input specification** specifying which file(s) to take the data
 from,
@@ -371,8 +310,8 @@ We defined a 'sum' global variable and for each validated record we added a valu
 to output our variables to the stdout (instead of the columns).
 
 
-Conditionals
-------------
+Filters and Conditionals
+------------------------
 
 Filters and if/else statements are used by ``aq_pp`` to help clean and process raw data.
 
@@ -422,10 +361,16 @@ ETL at Scale
 
 At the start of this tutorial, we demonstrated how we can use Essentia to select a set of log files and pipe the
 contents to the unix ``wc`` command.  In a similar manner, we can do with with ``aq_pp``,
-enabling us to apply more complex ETL operations on a large set of files.
+enabling us to apply more complex ETL operations on a large set of files.  In this tutorial we will focus on
+'extract and transform', and detail how to load the data onto other platforms in other sections.
 
 Cleaning the 'browse' data
 --------------------------
+If you haven't done this already, let Essentia know that the cluster consists of just a node (your computer)::
+
+  $ ess instance local
+
+
 For our first example, we are tasked with generating a cleaned version of each file,
 and saving it as a comma separated file with bz2 compression::
 
@@ -496,3 +441,61 @@ In this case it would have been easy, but there are other scenarios where it bec
 
 One final note. The use of quotations in Unix commands invariably leads to a need to ``escape`` characters in order
 for them to be recognized.
+
+Final Notes
+===========
+
+This tutorial was designed to teach users how to use ``aq_pp``, but did not compare it against other possible solutions.
+To demonstrate the utility of ``aq_pp``, let's look at the following problem:
+
+We have sales data from a fictional store that caters to international clients.  We record the amount spent for each
+purchase and the currency it was purchased with.  We wish to compute the total sales in US Dollars.
+We have 2 files to process.  The first contains the time, currency type, and amount spent, and the second is a lookup
+table that has the country code and USD exchange rate:
+
+sales data::
+
+   transaction_date,currency,amount
+   2013-08-01T07:50:00,USD,81.39
+   2013-08-01T08:22:00,USD,47.96
+   2013-08-01T08:36:00,CAD,62.59
+
+exchange data::
+
+   currency,rate
+   EUR,1.34392
+   CAD,0.91606
+   USD,1.00000
+
+Lets compare 2 solutions against ``aq_pp``
+
+**SQL**::
+
+  select ROUND(sum(sales.amount*money.rate),2) AS total from sales INNER JOIN exchange ON sales.currency = exchange.currency;
+
+SQL is straightforward and generally easy to understand.  It will execute this query very quickly,
+but this overlooks the hassle of actually importing it into the database.
+
+**AWK**::
+
+  awk 'BEGIN {FS=","} NR==1 { next } FNR==NR { a[$1]=$2; next } $2 in a { $2=a[$2]; sum += $2*$3} END {print sum}' exchange.csv sales.csv
+
+AWK is an extremely powerful text processing language, and has been a part of Unix for about 40 years.  This legacy
+means that it is stress tested and has a large user base.  But it is also not very user friendly in some
+circumstances.  The language
+complexity scales with the difficulty of the problem you are trying to solve.  Also, referencing the columns by
+positional identifiers ($1, $2 etc) makes AWK code more challenging to develop and maintain.
+
+
+**AQ_PP**::
+
+  aq_pp -f,+1 sales.csv -d s:date s:currency f:amount -cmb,+1 exchange.csv s:currency f:rate -var f:sum 0.0 -evlc 'sum' 'sum+(amount*rate)' -ovar -
+
+The AuriQ preprocessor is similar in spirit to AWK, but it simplifies many issues.
+We'll detail the specifics in the rest of the documentation, but even without knowing all of the syntax, the
+intent of the command is fairly easy to discern. Instead of positional arguments, columns
+are named, therefore making an ``aq_pp`` command more human readable.
+Additionally, it is very fast, in fact an order of magnitude faster in this example.
+
+
+

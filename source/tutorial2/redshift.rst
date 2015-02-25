@@ -1,15 +1,17 @@
-********
-Redshift
-********
+******************************************************
+Empowering Data Integration with Redshift and Essentia
+******************************************************
 
 AWS provides a scalable SQL service called 'redshift'.  It is commonly used in data warehousing,
 and can scale to store PB of data. But going from raw data into a properly formatted table suitable for Redshift (or
 any other database for that matter) is often problematic.
 
 We added a module to Essentia to address issues that include:
-1. Redshift can read files that are compressed under gz, bz2, and lzo (or not compressed at all).  A lot of our
-clients had zip files which they wanted to load into Redshift.
-2. Raw log data often requires filtering and transformation to produce the data that is actually desired.
+
+* File format: Redshift can read files that are compressed under gz, bz2, and lzo (or not compressed at all).  A lot
+  of our clients had zip files which they wanted to load into Redshift.
+
+* Data quality: Raw log data often requires filtering and transformation to produce the data that is actually desired.
 
 Requirements
 ============

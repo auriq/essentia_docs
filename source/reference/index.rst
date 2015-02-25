@@ -9,9 +9,10 @@ This section provides additional tutorials, tables, and a copy of the man pages 
 Manuals
 =======
 .. toctree::
+   :maxdepth: 1
 
    manpages/index
-
+   essentia-ref
 
 Additional guides
 =================

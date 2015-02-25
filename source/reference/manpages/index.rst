@@ -1,12 +1,9 @@
 :tocdepth: 2
 
 *****************
-Reference Manuals
+AQ Tool Manpages
 *****************
 
-
-AQ Tool Manpages
-================
 
 .. toctree::
    :titlesonly:
@@ -25,14 +22,3 @@ AQ Tool Manpages
    smon
    tmon
    udb-size
-
-
-
-
-
-Essentia
-========
-
-.. toctree::
-
-   essentia-ref
