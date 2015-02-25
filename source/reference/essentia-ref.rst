@@ -1,6 +1,6 @@
-******************
-Essentia Reference
-******************
+*****************
+Essentia Commands
+*****************
 
 
 ess spec

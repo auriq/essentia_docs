@@ -1,6 +1,6 @@
-********************
-In-memory Map/Reduce
-********************
+******************
+In-memory Database
+******************
 
 Overview
 ========
@@ -18,6 +18,8 @@ The data for each unique key is stored using linked lists, and can be sorted on 
 provided. After processing is completed, the data for each key is available in sorted order, in memory, and can be
 very quickly queried.
 
+Additionally, the database can be thought of and used as a map/reduce engine. We include an example at the end of
+this tutorial.
 
 Getting Started
 ===============
@@ -109,3 +111,63 @@ If you wish to delete the contents of a single table/vector or the entire databa
   $ ess task exec "aq_udb -clr wood:usersales"
   $ ess task exec "aq_udb -clr_all"
 
+
+Map/Reduce, Essentia Style
+==========================
+
+The intent of this section is not teach how the Map/Reduce algorithm works, but rather demonstrate how Essentia can
+be used in a manner similar to it.  Beginner tutorials on Map/Reduce almost always demonstrate the 'Word Count'
+problem, so it should be conceptually familiar to many.  But if not, the problem is as follows:
+We have a large number of files containing text, and wish to count the occurrence words in this collection of documents.
+
+In a Hadoop implemenation of Map/Reduce, the files are moved onto the Hadoop cluster.  Then a JAVA program is written
+to provide 'map' and 'reduce' classes.  The MAP task scans a file (or part of a file) and EMITS a key-value pair of
+``{word:1}``.  This key in this pair is mapped to a particular node on the cluster,
+meaning that any given node will be responsible for a unique set of keys.  Since the data and MAP tasks are
+distributed across the cluster, processing will be fast.
+
+
+At the end of the MAP phase, dictionaries of the form ``{word:[1,1,1,1]}`` will exist. In the REDUCE phase,
+each node goes through the list of keys it is responsible for and outputs a new key-value pair in the form of
+``{word:sum}``, which is the result we want.
+
+Essentia is not dissimilar in how it would approach this problem, except we leverage common UNIX tools rather write
+JAVA code to handle the task.  Here is a fully worded example, using the text from the book "A Tale of Two Cities" by
+Charles Dickens.  You will find in our github tutorial distribution under its
+original (albeit obscure) name of 'pg98.txt'.
+
+
+.. code-block:: sh
+   :linenos:
+   :emphasize-lines: 2,4,5
+
+   ess spec create database mapreduce
+   ess spec create vector wordcount s,hash:word i,+add:count
+   ess udbd restart
+   cat pg98.txt | tr -s '[[:punct:][:space:]]' '\n' | \
+                  aq_pp -d s:word -evlc i:count 1 -imp mapreduce:wordcount
+   aq_udb -exp mapreduce:wordcount -sort count -dec -top 10
+
+
+Since this is just a single file, we have elected to use the raw ``aq_pp`` rather than wrapping inside of an
+Essentia statement (``task stream``).  The first 2 lines simply setup the schema, with the vector really acting as
+an on the fly 'REDUCER'.  We then restart the UDB to wipe out any previous content from earlier tutorials.
+
+At this point UDB is ready to accept input.  We use a very common UNIX tool ``tr`` to tokenize input data based on
+spaces or punctuation, and then pipe it to ``aq_pp`` which emits a ``{word:1}`` to UDB.
+
+The vector takes care of counting the occurrence of each word on the fly.  Finally, we use aq_udb to output the top 10
+most common words.
+
+Advantages over HADOOP
+----------------------
+
+For certain applications, Essentia can be much faster than Hadoop when a map/reduce algorithm is called for.  In
+particular:
+
+1. Data can be dealt with in its raw form.  No need to move it onto the Hadoop filesystem.
+2. Fast. Because it is in-memory, Essentia can perform some operations much more quickly.
+3. Low dev time.  No need for lengthy JAVA code.
+
+Altogether, a user can go from raw data to results much more quickly using Essentia for many applications where
+Hadoop would normally be used.
