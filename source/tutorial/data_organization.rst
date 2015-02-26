@@ -12,12 +12,14 @@ one file per day), we can concentrate less on where the data is, and focus on an
 
 Getting Started
 ===============
+This tutorial is found under ``tutorial/2-data-classification/datastore.sh`` of the git repository,
+and should be run from that same directory.
 
 Essentia defines a resource that contains data a 'datastore'.  Current datastore types that are supported by Essentia
-include a local disk drive, and an AWS S3 store (cloud based storage).  Assuming we dumped all the files on our hard
-drive in the ``/data`` directory, the command to register the store with Essentia is::
+include a local disk drive, and an AWS S3 store (cloud based storage).  The data for this tutorial are stored in the
+same directory as the tutorial script, so the command to register the store with Essentia is::
 
-  $ ess datastore select /data
+  $ ess datastore select ./diy_woodworking
 
 For the version of the files on our public S3 bucket, you would enter::
 
@@ -100,16 +102,16 @@ is blank.  In particular, Essentia needs to know the compression format, how the
 and the column specification as explained in the AQ tutorials.  Optional but highly useful for log based data are
 knowing which column stores the time stamp, and the format of the timestamp.
 
-This information can be all be gleaned manually, but we prove a 'probe' which will scan one of the log files to
+This information can be all be gleaned manually, but we provide a 'probe' which will scan one of the log files to
 determine the information::
 
   $ ess datastore probe browse --apply
-  Essentia (INFO)	 : scanning /data/browse_20140924.csv.gz
+  Essentia (INFO)	 : scanning ./diy_woodworking/browse_20140924.csv.gz
   Essentia (INFO)	 : scan complete. 25 records found
   Essentia (INFO)	 : examining file
   S:eventDate I:userID I:articleID
   Essentia (INFO)	 : file examination complete.
-  Summary for /data/browse_20140924.csv.gz
+  Summary for ./diy_woodworking/browse_20140924.csv.gz
   compression  : gzip
   delimiter    : csv
   dateColumn   : eventDate
@@ -123,31 +125,20 @@ The ``--apply`` switch tells Essentia to update the database with the informatio
 Elements of a category can be modified.  For example, we can override the column spec to treat the userID as a string
 by using::
 
-  $ ess datastore category change columnSpec "S:eventDate S:userID I:articleID"
+  $ ess datastore category change browse columnSpec "S:eventDate S:userID I:articleID"
 
 
-Databases
-=========
-
-Essentia keeps track of your files, categories, and rules using a database. It is a simple sqlite3 database stored in
-a file called ``.auriq.db``.  For datastores on your local disk, the index file is stored in the directory where the
-data is stored.  For S3 based stores, the index is initially cached in your ``.conf`` subdirectory (relative to your
-working directory).  It can be pushed on the S3 store by using::
-
-  $ ess datastore push
-
-The next time you select this datastore (i.e. in a future session), this index file will be pulled from S3 into your
-``.conf`` directory.  You can make changes and optionally push it back.
-
-To completely delete the index file, use::
-
- $ ess datastore purge
-
+The full tutorial script goes on to group 'purchase' files.  In the next tutorial (ETL) we show how to apply
+operations to files within a group en masse.
 
 Future sessions
 ===============
+Essentia keeps track of your files, categories, and rules using a database. It is a simple sqlite3 database stored in
+a file called ``.auriq.db``.  For datastores on your local disk, the index file is stored in the directory where the
+data is stored.  For S3 based stores, the index is initially cached in your ``.conf`` subdirectory (relative to your
+working directory), and can be optionally pushed back to S3 for later use.
 
 A typical scenario, particularly with log data, is that new files are placed on the data store on a regular basis.
-After the initial setup, all future sessions with Essentia need only select the datastore and scan it to index new
+After the initial rules setup, all future sessions with Essentia need only select the datastore and scan it to index new
 files (and remove from the index any that may have been deleted).  The rules are automatically applied.
 

@@ -1,13 +1,22 @@
-****************************
-Description of Tutorial Data
-****************************
+*************
+Tutorial Data
+*************
 
 We maintain a `GitHub repository <https://github.com/auriq/EssentiaPublic>`_ that contains test data and source code for
 some of the tutorials and usecases you will find in this documentation.  For AWS users, we also have a public S3
 bucket (s3://asi-public) that stores the larger and more complex datasets used for training purposes.
 
+To get started, pull the tutorial repository via::
 
-In this tutorial, we will be using a synthetic set of log files collected from a
+  $ git clone https://github.com/auriq/EssentiaPublic.git
+
+The repo has three directories:
+
+
+Description of Data
+===================
+
+For much of the tutorial, we will be using a synthetic set of log files collected from a
 fictional DIY woodworking web site.  This web site offers detailed construction plans for many items.  Users can
 browse part of the article for free, but must pay to obtain the full plan. It is a new service,
 and in order to determine how best to price the items, the site randomized the prices for each
@@ -17,11 +26,11 @@ There are two sets of log files.  The first have a filename in the form of ``bro
 browsing records of all users who visited the site on a given day.  The files have three columns of data:
 
 :eventDate:
-    is a timestamp of when the user visited a page.
+    timestamp of when the user visited a page.
 :userID:
-    is a numerical ID matched to a unique user.
+    numerical ID matched to a unique user.
 :articleID:
-    is a unique identifier for each of the articles offered
+    a unique identifier for each of the articles offered
 
 The data is not clean.  Unfinished articles that are (accidentally) accessible to users yield an articleID of "TBD"
 (in other words, a string instead of a number).
@@ -45,8 +54,4 @@ September 15 are off by one, and we need to add this back to the reported ID.  T
 but will serve to illustrate some of the ETL power of Essentia.
 
 To demonstrate the ``aq_pp`` ETL command, we will also use a set of smaller files that help illustrate its usage.
-:download:`chemistry.csv <../data/chemistry.csv>` and :download:`physics.csv <../data/physics.csv>` contain
-fictional grades from two college courses.  We limit the number of students to just a few in order to make the
-tutorial more clear. :download:`grades.csv <../data/grades.csv>` contains a lookup table that maps letter grades to a
-'PASS/FAIL' designation, and finally :download:`whitelist.csv <../data/whitelist.csv>` stores a list of students we
-want to single out for various reasons.
+These are found in the ``tutorial/3-etl-engine`` directory

@@ -23,7 +23,9 @@ this tutorial.
 
 Getting Started
 ===============
-As with many database systems, we need to create a database and define schemas to store the data.  We concentrate
+If you are not already in the ``tutorials/woodworking`` directory used in the previous tutorials, switch into it now.
+Our first step is to setup the database to store our data.
+As with many database systems, we need to create a database and define schemas.  We concentrate
 first on the sales data::
 
   $ ess spec create database wood
@@ -70,12 +72,12 @@ We can now populate the 'allsales' table using::
 
   $ ess task stream purchase 2014-09-01 2014-09-30 \
   "aq_pp -f,+1,eok - -d %cols \
-  -evlc i:ptime 'DateToTime(%date_col,\"%date_fmt\")'
+  -evlc i:ptime 'DateToTime(%date_col,\"%date_fmt\")' \
   -evlc is:t 'ptime - DateToTime(\"2014-09-15\",\"Y.m.d\")' \
   -if -filt 't>0' \
     -evlc articleID 'articleID+1' \
   -endif \
-  -imp wood:allsales
+  -imp wood:allsales"
 
 This is basically the same as the ETL example in the previous tutorial, with the addition of the
 ``-imp wood:allsales`` directive.
@@ -103,8 +105,10 @@ With the data sorted in time order, we can take advantage of our vector that sum
 What we've done is pipe the output to another UDB import command.  Since the data is grouped by user and in time
 order per user, the 'last article read' will be accurately reflected.  Take a look at the summary with another export::
 
-  $ ess task exec "aq_udb -exp wood:usersales"
+  $ ess task exec "aq_udb -exp wood:usersales -sort total -dec -top 10"
 
+Here we have added additional options to sort the output by decending total money spent,
+and limiting to the top 10 users.
 
 If you wish to delete the contents of a single table/vector or the entire database you can execute::
 
@@ -132,9 +136,8 @@ each node goes through the list of keys it is responsible for and outputs a new 
 ``{word:sum}``, which is the result we want.
 
 Essentia is not dissimilar in how it would approach this problem, except we leverage common UNIX tools rather write
-JAVA code to handle the task.  Here is a fully worded example, using the text from the book "A Tale of Two Cities" by
-Charles Dickens.  You will find in our github tutorial distribution under its
-original (albeit obscure) name of 'pg98.txt'.
+JAVA code to handle the task.  Here is a fully worked example, using the text from the book "A Tale of Two Cities" by
+Charles Dickens.  You will find it under ``tutorials\map-reduce`` in the git repository.
 
 
 .. code-block:: sh
