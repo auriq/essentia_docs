@@ -29,8 +29,8 @@ As with many database systems, we need to create a database and define schemas. 
 first on the sales data::
 
   $ ess spec create database wood
-  $ ess spec create table allsales s,hash:userid i,tkey:ptime i:articleid f:price i:refid
-  $ ess spec create vector usersales s,hash:userid i,+last:articleid f,+add:total
+  $ ess spec create table allsales s,pkey:userid i,tkey:ptime i:articleid f:price i:refid
+  $ ess spec create vector usersales s,pkey:userid i,+last:articleid f,+add:total
 
 
 The first line defines a database called 'wood', and within that we create two things.
@@ -41,7 +41,7 @@ Tables
 The first is a table, which is completely analagous to a TABLE in MySQL (for example).  This table will store all of the sales data.  The
 schema for this uses a variant of the column specification we saw in the ETL tutorial.
 
-``s,hash:userid`` indicates that the first column has the label 'userid', that it stores string data,
+``s,pkey:userid`` indicates that the first column has the label 'userid', that it stores string data,
 and will be the data we hash on.  This means that the UDB will store the data in such a way that all entries for a
 given user are grouped together.
 
@@ -145,7 +145,7 @@ Charles Dickens.  You will find it under ``tutorials\map-reduce`` in the git rep
    :emphasize-lines: 2,4,5
 
    ess spec create database mapreduce
-   ess spec create vector wordcount s,hash:word i,+add:count
+   ess spec create vector wordcount s,pkey:word i,+add:count
    ess udbd restart
    cat pg98.txt | tr -s '[[:punct:][:space:]]' '\n' | \
                   aq_pp -d s:word -evlc i:count 1 -imp mapreduce:wordcount
