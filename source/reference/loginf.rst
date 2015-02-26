@@ -15,11 +15,12 @@ algorithm which results in an answer that is accurate to within a few percent.
 Usage
 =====
 
-We will look at a simple 3 column file (:download:`../data/donations.csv`) that record the last name, city,
+We will look at a simple 3 column file (:download:`donations.csv<data/donations.csv>`) that records the last
+name, city,
 and amount donated
 to a fictional charity.  In the rawest form, one can execute the following to get the full output::
 
-  loginf -f donations_1.csv
+  loginf -f donations.csv
 
   Sources = 1
   Process Time = 0.000
@@ -74,7 +75,7 @@ not know if there is a header line, it identifies that 1/11 entries are strings,
 
 This is used for determining the column specification used in other AQ commands::
 
-  loginf -f donations_1.csv -o_pp_col -
+  loginf -f donations.csv -o_pp_col -
 
   S:lastname
   S:city

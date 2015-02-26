@@ -26,7 +26,7 @@ On some systems, you may use ``zcat`` instead of ``funzip``.
 
 The Essentia equivalent is::
 
-  $ ess task stream 2014-09-01 2014-09-07 'wc -l'
+  $ ess task stream browse 2014-09-01 2014-09-07 'wc -l'
 
 Some notes here.  The ``bash`` version is fairly straightforward in this case, but gets much more complicated if you
 want to traverse dates that span weeks, months, or years.  Essentia handles the decompression of the data and
@@ -54,7 +54,7 @@ and where to put the results of your command.
 There are also a variety of global options that modify the environment and default variables used in ``aq_pp``.
 
 The following provides some working examples of ``aq_pp`` commands.  Data and scripts are found under
-``tutorials/3-etl-engine`` in the git repository.
+``tutorials/etl-engine`` in the git repository.
 
 Input Specifications
 --------------------

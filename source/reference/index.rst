@@ -17,6 +17,7 @@ Manuals
 Additional guides
 =================
 .. toctree::
+   :maxdepth: 1
 
    loginf
    logcnv

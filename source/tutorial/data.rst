@@ -10,7 +10,7 @@ To get started, pull the tutorial repository via::
 
   $ git clone https://github.com/auriq/EssentiaPublic.git
 
-The repo has three directories:
+The data and scripts relevant for most of the documentation is under ``tutorials``.
 
 
 Description of Data
@@ -54,4 +54,4 @@ September 15 are off by one, and we need to add this back to the reported ID.  T
 but will serve to illustrate some of the ETL power of Essentia.
 
 To demonstrate the ``aq_pp`` ETL command, we will also use a set of smaller files that help illustrate its usage.
-These are found in the ``tutorial/3-etl-engine`` directory
+These are found in the ``tutorials/etl-engine`` directory

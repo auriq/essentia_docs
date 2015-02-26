@@ -12,7 +12,7 @@ one file per day), we can concentrate less on where the data is, and focus on an
 
 Getting Started
 ===============
-This tutorial is found under ``tutorial/2-data-classification/datastore.sh`` of the git repository,
+This tutorial is found under ``tutorials/woodworking/1-datastore.sh`` of the git repository,
 and should be run from that same directory.
 
 Essentia defines a resource that contains data a 'datastore'.  Current datastore types that are supported by Essentia
