@@ -10,6 +10,7 @@ Extract-Transform-Load.
 Getting Started
 ===============
 
+Again we'll use the ``tutorials/woodworking`` directory from the git repository.
 Since we are not using any worker nodes in this demo, we configure Essentia to be in 'local' mode using::
 
   $ ess instance local
@@ -18,14 +19,14 @@ Since we are not using any worker nodes in this demo, we configure Essentia to b
 Essentia treats data as a 'stream', similar to Unix pipes.  As an example, let's simply count the lines in one week of
 the log files that we classified in the previous tutorial::
 
-  $ for i in {1..7}; do funzip /data/browse_2014090${i}.csv.gz | wc -l ; done
+  $ for i in {1..7}; do funzip ./diy_woodworking/browse_2014090${i}.gz | wc -l ; done
 
 
 On some systems, you may use ``zcat`` instead of ``funzip``.
 
 The Essentia equivalent is::
 
-  $ ess task stream 2014-09-01 2014-09-07 'wc -l'
+  $ ess task stream browse 2014-09-01 2014-09-07 'wc -l'
 
 Some notes here.  The ``bash`` version is fairly straightforward in this case, but gets much more complicated if you
 want to traverse dates that span weeks, months, or years.  Essentia handles the decompression of the data and
@@ -52,6 +53,8 @@ various **processing specifications** to determine how data is processed, and **
 and where to put the results of your command.
 There are also a variety of global options that modify the environment and default variables used in ``aq_pp``.
 
+The following provides some working examples of ``aq_pp`` commands.  Data and scripts are found under
+``tutorials/etl-engine`` in the git repository.
 
 Input Specifications
 --------------------
@@ -142,9 +145,9 @@ Lets consider the case where we want to merge our chemistry and physics grades i
   1,"DAWSON","Leona",76.5,"B-",0,
   2,"JORDAN","Colin",25.899999999999999,"D",0,
   3,"MALONE","Peter",97.200000000000003,"A+",0,
-  1,"DAWSON","Leona",88.5,"A",0,
-  3,"MALONE","Peter",77.200000000000003,"B",0,
-  4,"CANNON","Roman",55.799999999999997,"C+",0,
+  1,"DAWSON","Leona",0,,88.5,"A"
+  3,"MALONE","Peter",0,,77.200000000000003,"B"
+  4,"CANNON","Roman",0,,55.799999999999997,"C+"
 
 
 The ``-cat`` option is used for such a merge, and it is easiest to think of it as the ``aq_pp`` specific version of
@@ -197,7 +200,7 @@ table can have a pattern instead of a static value.  In our case, we can cover g
 and A-' by the pattern 'A*'.
 
 
-The ``-cmb`` can be used substituting data, but for situations similar to the one above, ``-sub`` is perferred because:
+The ``-cmb`` can be used substituting data, but for situations similar to the one above, ``-sub`` is preferred because:
 
 1. It does not create additional columns like ``-cmb`` does.  Values are modified in place.
 2. ``-sub`` can match regular expressions and patterns, while ``-cmb`` is limited to exact matches.
@@ -366,15 +369,13 @@ enabling us to apply more complex ETL operations on a large set of files.  In th
 
 Cleaning the 'browse' data
 --------------------------
-If you haven't done this already, let Essentia know that the cluster consists of just a node (your computer)::
 
-  $ ess instance local
-
-
+First, lets switch back to the ``tutorials/woodworking`` directory.
 For our first example, we are tasked with generating a cleaned version of each file,
 and saving it as a comma separated file with bz2 compression::
 
-  $ ess task stream browse 2014-09-01 2014-09-30 "aq_pp -f,+1,eok - -d %cols -notitle | bzip2 - -c > /data/%file.bz2"
+  $ mkdir bz2
+  $ ess task stream browse 2014-09-01 2014-09-30 "aq_pp -f,+1,eok - -d %cols -notitle | bzip2 - -c > ./bz2/%file.bz2"
 
 We can break down the command (everything within the double quotes) as follows:
 
@@ -401,6 +402,18 @@ bzip2 - -c > /data/%file.bz2
     generate the same filename as the input, except with a ``bz2`` extension.
 
 
+You will probably see a lot of output in the form of::
+
+  <stdin>: Bad field value: byte=164727+30 line=5734+1 field=articleID
+
+This is natural, and tells you about problems in your data.  The above indicates that many records were rejected
+because the 'articleID' could not be created as an integer.  If you recall from our :doc:`data` documentation,
+this was expected and desired behavior, since some articles were dead links that returned a string "TBD".  To turn
+off error reporting, add the attribute ``,qui`` right after the ``eok`` in the command.
+
+If instead you wish import the "TBD" record anyways, you would need to cast the entire column as a string.
+
+
 Cleaning the 'purchase' data
 ----------------------------
 
@@ -412,15 +425,19 @@ ways to achieve this, but the most robust is the following:
    :emphasize-lines: 3,4,5,6,7
 
     $ ess task stream purchase 2014-09-01 2014-09-30 \
-    "aq_pp -f,+1,eok - -d %cols \
+    "aq_pp -f,+1,eok,qui - -d %cols \
     -evlc is:t 'DateToTime(%date_col,\"%date_fmt\") - DateToTime(\"2014-09-15\",\"Y.m.d\")' \
     -if -filt 't>0' \
       -evlc articleID 'articleID+1' \
     -endif \
-    -c purchaseDate userID articleID price refID
+    -c purchaseDate userID articleID price refID \
     -notitle \
     | bzip2 - -c > /data/%file.bz2"
 
+.. note::
+
+  The use of quotations in Unix commands invariably leads to a need to ``escape`` characters in order
+  for them to be recognized.
 
 Line 3 creates a new column 't', which is a signed integer, and it is assigned a value equal to the difference between
 the time of the current record and the cutoff time of September 15.  Positive values of 't' indicate that the record
@@ -435,12 +452,10 @@ Line 6 ends the block
 Line 7 specifies the output columns.  If not provided, it would also output our new 't' column which we used only for
 temporary purposes.
 
-We could have just issued 2 essentia commands, one with dates selected before the 15th and another for dates after.
+We could have just issued 2 Essentia commands, one with dates selected before the 15th and another for dates after.
 In this case it would have been easy, but there are other scenarios where it becomes more problematic.
 
 
-One final note. The use of quotations in Unix commands invariably leads to a need to ``escape`` characters in order
-for them to be recognized.
 
 Final Notes
 ===========
@@ -451,7 +466,7 @@ To demonstrate the utility of ``aq_pp``, let's look at the following problem:
 We have sales data from a fictional store that caters to international clients.  We record the amount spent for each
 purchase and the currency it was purchased with.  We wish to compute the total sales in US Dollars.
 We have 2 files to process.  The first contains the time, currency type, and amount spent, and the second is a lookup
-table that has the country code and USD exchange rate:
+table that has the country code and USD exchange rate.
 
 sales data::
 
@@ -467,11 +482,13 @@ exchange data::
    CAD,0.91606
    USD,1.00000
 
-Lets compare 2 solutions against ``aq_pp``
+Let's compare 2 solutions against ``aq_pp``.  If you wish to execute the commands to see for yourself,
+the data are in the ``tutorial/etl-engine`` directory.
 
 **SQL**::
 
-  select ROUND(sum(sales.amount*money.rate),2) AS total from sales INNER JOIN exchange ON sales.currency = exchange.currency;
+  select ROUND(sum(sales.amount*exchange.rate),2) AS total from sales INNER JOIN exchange ON sales.currency = exchange
+  .currency;
 
 SQL is straightforward and generally easy to understand.  It will execute this query very quickly,
 but this overlooks the hassle of actually importing it into the database.
