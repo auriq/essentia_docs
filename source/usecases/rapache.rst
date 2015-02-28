@@ -18,7 +18,7 @@ Essentia's Environment
 Both functions require an Essentia Bash script to be executed that sets up the Essentia environment and optionally loads data into the UDB database. 
 
 In this case study we need to setup an Essentia environment on our local computer, preprocess our Apache log data with Essentia's etl tools, and then send the data into R for more advanced analysis. 
-We save the following commands to apache_setup.sh::
+We save the following commands to setupapache.sh::
 
     ess instance local    # Tell essentia to work on your local machine.
     ess udbd stop
@@ -45,7 +45,7 @@ We save the following commands to apache_setup.sh::
     
     ess udbd start
     
-    ess datastore select ../../data
+    ess datastore select ./accesslogs
     ess datastore scan
     ess datastore rule add "*125-access_log*" "125accesslogs" "YYYYMMDD"
     # Create a category called 125accesslogs that matches any file with 125-access_log in its filename. Tell essentia that these files have a date in their filenames and that this date has in sequence a 4 digit year, 2 digit month, and 2 digit day.
@@ -67,7 +67,7 @@ We save the following commands to apache_setup.sh::
     # a page. Convert the time column to a date and extract the day ("01"...), dayoftheweek ("Sun"...), and hour ("00" to "23") into their respective columns. Import the modified and reduced data into the four vectors in the databases you defined above so that the
     # attributes defined there can be applied.
 
-and then run ``bash apache_setup.sh``.
+and then run ``bash setupapache.sh``.
 
 Now we use the functions in the RESS package to query the database and output the results to R. 
 
@@ -87,16 +87,16 @@ read.udb
 
 Since these are all ``ess task exec`` statements and there's no ``#Rignore`` flag in any of the statment lines, read.udb will automatically store their output into R dataframes entitled 
 command1, command2, command3, and command4. All we need to do now is run the following R script telling R to use the RESS package, use read.udb on queryapache.sh to load the statements' output into 
-R dataframes, and run the additional analysis written in the r script apache.R ::
+R dataframes, and run the additional analysis written in the r script analyzeapache.R ::
 
     file <- "queryapache.sh"            # store queryapache.sh as file
-    rscriptfile <- "apache.R"           # store apache.R as rscriptfile
+    rscriptfile <- "analyzeapache.R"    # store apache.R as rscriptfile
     library("RESS")                     # load Essentia's R Integration package
     
     read.udb(file)                      # call read.udb to execute the essentia statements written in queryapache.sh and save them to R dataframes command1 through command4
     
-    source(rscriptfile, echo=FALSE)     # run the R commands written in apache.R to analyze the data in the dataframes we just created.
-    # Turn echo to TRUE to make the output less results-oriented and easier to debug.
+    source(rscriptfile, echo=FALSE)     # run the R commands written in analyzeapache.R to analyze the data in the dataframes we just created.
+                                        # Turn echo to TRUE to make the output less results-oriented and easier to debug.
     remove(file, rscriptfile)
 
 essQuery
@@ -105,8 +105,8 @@ essQuery
 We could also have chosen to run these queries using the essQuery function. In this case, there is no need for a separate queryapache.sh file. 
 You can simply call essQuery on each statement we want to run. Thus the commands we need to run in R are ::    
     
-    rscriptfile <- "apache.R"           # store apache.R as rscriptfile
-    library(RESS)                       # store apache.R as rscriptfile
+    rscriptfile <- "analyzeapache.R"    # store analyzeapache.R as rscriptfile
+    library(RESS)                       # load Essentia's R Integration package
     
     # This first query exports the data from a vector in the database that contains the counts over the entire month so that it can be read into R. 
     # We save the result in R as a dataframe called command1. However, you can use this output however you want for your own analysis, 
@@ -119,14 +119,14 @@ You can simply call essQuery on each statement we want to run. Thus the commands
     command3 <- essQuery("ess task exec", "aq_udb -exp logsapache4:vector4 -sort pagecount -dec", "--debug")
     command4 <- essQuery("ess task exec", "aq_udb -exp logsapache2:vector2 -sort pagecount -dec", "--debug")
     
-    source(rscriptfile, echo=FALSE)     # run the R commands written in apache.R to analyze the data in the dataframes we just created.
-    # Turn echo to TRUE to make the output less results-oriented and easier to debug.
+    source(rscriptfile, echo=FALSE)     # run the R commands written in analyzeapache.R to analyze the data in the dataframes we just created.
+                                        # Turn echo to TRUE to make the output less results-oriented and easier to debug.
     remove(rscriptfile)
     
 Results
 _______
 
-The additional analysis described in apache.R ordered the data by their time segmentation (month,  day of month, day of week, and hour), 
+The additional analysis described in analyzeapache.R ordered the data by their time segmentation (month,  day of month, day of week, and hour), 
 converted each count to a percent of its max value to put everything on a graphable scale of 0-100, and then graphed each column of counts in a dataframe on the same graph. 
 The results are three graphs that contain the number of pages, hits, and bandwidth by each time segmentation.
 
