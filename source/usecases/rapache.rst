@@ -126,7 +126,7 @@ You can simply call essQuery on each statement we want to run. Thus the commands
 Results
 _______
 
-The additional analysis described in analyzeapache.R ordered the data by their time segmentation (month,  day of month, day of week, and hour), 
-converted each count to a percent of its max value to put everything on a graphable scale of 0-100, and then graphed each column of counts in a dataframe on the same graph. 
-The results are three graphs that contain the number of pages, hits, and bandwidth by each time segmentation.
+The additional analysis described in analyzeapache.R ordered the data by their time segmentation (month,  day of month, day of week, and hour) 
+and then graphed each column of counts for each dataframe. The results are three graphs per dataframe: number of pages, hits, and bandwidth by each time segmentation.
+..converted each count to a percent of its max value to put everything on a graphable scale of 0-100, and then graphed each column of counts in a dataframe on the same graph. 
 
