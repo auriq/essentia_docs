@@ -2,16 +2,6 @@
 udb-size
 ========
 
---------------------------------
-Udb server storage size estimate
---------------------------------
-
-:Copyright: AuriQ Systems Inc.
-:Manual group: Udb
-:Manual section: 5
-:Date: 2015-01-28
-:Version: 1.2.1
-
 
 Description
 ===========
@@ -43,13 +33,13 @@ Parameters needed for the estimate:
 ``ptr_z``
   The *pointer size*, an intrinsic software overhead.
 
-   * ptr_z = 4 on a 32 bit platform
-   * ptr_z = 8 on a 64 bit platform
+  * ptr_z = 4 on a 32 bit platform
+  * ptr_z = 8 on a 64 bit platform
 
 .. _`Num_server`:
 
 ``Num_server``
-   The number of servers in the pool, one or more.
+  The number of servers in the pool, one or more.
 
 .. _`Num_row`:
 
@@ -114,137 +104,107 @@ Estimation
 ==========
 
 The amount of memory needed by each server in a pool is the sum of
-these constributions:
+these constributions.
 
-1) Table rows
+Table rows:
 
-   * Per_column_size:
+* Per_column_size:
 
-     * I, IS = 4
-     * F, L, LS = 8
-     * IP = 20
-     * S = ptr_z (strings are stored in a hash table, only pointers to the hash
-       entries are stored in a row)
+  * I, IS = 4
+  * F, L, LS = 8
+  * IP = 20
+  * S = ptr_z (strings are stored in a hash table, only pointers to the hash
+    entries are stored in a row)
 
-   * Total_column_size =
+* Total_column_size =
 
-      ::
+    | Sum_over_columns(Per_column_size)
 
-       Sum_over_columns(Per_column_size)
+* Per_row_padding:
 
-     excluding PKEY column.
+  * Up to 8 bytes on a 32 bit platform.
+  * Up to 4 bytes on a 64 bit platform.
 
-   * Per_row_padding:
+* Per_table_size_per_server =
 
-     * Up to 8 bytes on a 32 bit platform.
-     * Up to 4 bytes on a 64 bit platform.
+    | Num_row * (Total_column_size + Per_row_padding) / Num_server
 
-   * Per_table_size_per_server =
+* **Total_row_size_per_server** =
 
-      ::
+    | Sum_over_tables(Per_table_size_per_server)
 
-       Num_row * (Total_column_size + Per_row_padding) / Num_server
+Strings:
 
-   * **Total_row_size_per_server** =
+* Hash_size_per_server:
 
-      ::
+  * (2M * ptr_z) for up to (2M * 12) Num_string_per_server
+  * (16M * ptr_z) for up to (16M * 12) Num_string_per_server
+  * (128M * ptr_z) max
 
-       Sum_over_tables(Per_table_size_per_server)
+* Per_string_size =
 
-2) Strings
+    | ptr_z + 6 + Avg_string_length (rounded up to multiple of ptr_z)
 
-   * Hash_size_per_server:
+* **Total_string_size_per_server** =
 
-     * (2M * ptr_z) for up to (2M * 12) Num_string_per_server
-     * (16M * ptr_z) for up to (16M * 12) Num_string_per_server
-     * (128M * ptr_z) max
+    | Hash_size_per_server + (Num_string_per_server * Per_string_size)
 
-   * Per_string_size =
+User buckets:
 
-      ::
+* Num_bucket_per_server =
 
-       ptr_z + 6 + Avg_string_length
+    | Num_bucket / Num_server
 
-     rounded up to nearest multiple of ptr_z.
+* Hash_size_per_server:
 
-   * **Total_string_size_per_server** =
+  * (2M * ptr_z) for up to (2M * 12) Num_bucket_per_server
+  * (16M * ptr_z) for up to (16M * 12) Num_bucket_per_server
+  * (128M * ptr_z) max
 
-      ::
+* Vector_flag_size =
 
-       Hash_size_per_server + (Num_string_per_server * Per_string_size)
+    | Num_vector * 1 (rounded up to multiple of ptr_z)
 
-3) User buckets
+* Per_bucket_size =
 
-   * Num_bucket_per_server =
+    | ptr_z + 6 + Avg_pkey_length +
+    | Vector_flag_size +
+    | Num_table_with_pluskey * (8 + ptr_z) +
+    | Num_table * ptr_z +
+    | Num_vector_and_table * ptr_z
 
-      ::
+* **Total_bucket_size_per_server** =
 
-       Num_bucket / Num_server
+    | Hash_size_per_server + (Num_bucket_per_server * Per_bucket_size)
 
-   * Hash_size_per_server:
+Pluskey (+KEY) overhead:
 
-     * (2M * ptr_z) for up to (2M * 12) Num_bucket_per_server
-     * (16M * ptr_z) for up to (16M * 12) Num_bucket_per_server
-     * (128M * ptr_z) max
+* Hash_size_per_table (per bucket):
 
-   * Vector_flag_size =
+  * 0 for up to (1 * 16) Avg_num_pluskey
+  * (8 * ptr_z) for up to (8 * 16) Avg_num_pluskey
+  * (8^n * ptr_z) for up to (8^n * 16) Avg_num_pluskey
+  * (16M * ptr_z) max
 
-      ::
+* Per_pluskey_overhead =
 
-       Num_vector * 1
+  * 8 on a 32 bit platform
+  * 16 on a 64 bit platform
 
-     rounded up to nearest multiple of ptr_z.
+* Per_pluskey_table_overhead (per bucket) =
 
-   * Per_bucket_size =
+    | Hash_size_per_table + (Avg_num_pluskey * Per_pluskey_overhead)
 
-      ::
+* **Total_pluskey_overhead_per_server** =
 
-       ptr_z + 6 + Avg_pkey_length +
-       Vector_flag_size +
-       Num_table_with_pluskey * (8 + ptr_z) +
-       Num_table * ptr_z +
-       Num_vector_and_table * ptr_z
-
-   * **Total_bucket_size_per_server** =
-
-      ::
-
-       Hash_size_per_server + (Num_bucket_per_server * Per_bucket_size)
-
-4) Pluskey (+KEY) overhead
-
-   * Hash_size_per_table (per bucket):
-
-     * 0 for up to (1 * 16) Avg_num_pluskey
-     * (8 * ptr_z) for up to (8 * 16) Avg_num_pluskey
-     * (8^n * ptr_z) for up to (8^n * 16) Avg_num_pluskey
-     * (16M * ptr_z) max
-
-   * Per_pluskey_overhead =
-
-     * 8 on a 32 bit platform
-     * 16 on a 64 bit platform
-
-   * Per_pluskey_table_overhead (per bucket) =
-
-      ::
-
-       Hash_size_per_table + (Avg_num_pluskey * Per_pluskey_overhead)
-
-   * **Total_pluskey_overhead_per_server** =
-
-      ::
-
-       Num_bucket_per_server * Sum_over_pluskey_tables(Per_pluskey_table_overhead)
+    | Num_bucket_per_server * Sum_over_pluskey_tables(Per_pluskey_table_overhead)
 
 **Total_storage_per_server** =
 
- ::
-
-  Total_row_size_per_server +
-  Total_string_size_per_server +
-  Total_bucket_size_per_server +
-  Total_pluskey_overhead_per_server
+  | Total_row_size_per_server +
+  | Total_string_size_per_server +
+  | Total_bucket_size_per_server +
+  | Total_pluskey_overhead_per_server
 
 
 See Also

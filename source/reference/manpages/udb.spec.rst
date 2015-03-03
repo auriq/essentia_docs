@@ -2,16 +2,6 @@
 udb.spec
 ========
 
--------------
-Udb spec file
--------------
-
-:Copyright: AuriQ Systems Inc.
-:Manual group: Udb
-:Manual section: 5
-:Date: 2015-01-28
-:Version: 1.2.1
-
 
 Description
 ===========
@@ -19,32 +9,36 @@ Description
 A Udb spec file holds a Udb database specification.
 It contains target server specs that form the server pool and
 table/vector/variable specs that form the data definition.
-It is used by the Udb client programs `aq_udb <aq_udb.html>`_ and `aq_pp <aq_pp.html>`_ to determine 
-which servers to send requests to and what data definition to pass to them.
+It is used by the Udb client programs `aq_pp <aq_pp.html>`_ and
+`aq_udb <aq_udb.html>`_ to determine which servers to send requests to and
+what data definition to pass to them.
 Recall that an Udb server is not tied to any particular data definition
 until instructed by a client; after which the definition remains until
 the its database is cleared.
 
 The spec file contains multiple sections.
-Each section starts with a keyword (e.g., ``@Server:``)
-followed by the relevant spec. The spec can be a single value,
-multiple lines, or both. The spec ends when another keyword is encountered
+Each section starts with a keyword followed by the relevant spec.
+For example, ``@Server:`` starts a Udb server address section and
+``@Table:`` start a table definition section.
+A spec section ends when another keyword is encountered
 or at the end-of-file.
 
 Basic file format is:
 
 * Line oriented text file.
+  The maximum length of a line is 1022 bytes.
 * Leading spaces on each line are ignored.
   Interpretation starts at the first non-blank character.
 * Blank lines are ignored.
 * A line starting with a '#' character is a Comment line.
   A comment must be on a line by itself.
-* Keywords are case insensitive.
+* Keywords and names are case insensitive.
 
 See the sample below for a complete description.
+Note that the indentation and blank lines in the sample are optional.
 
 
-SAMPLE SPEC
+Sample Spec
 ===========
 
 ::
@@ -56,12 +50,10 @@ SAMPLE SPEC
   # o Each server spec has the form:
   #     IP_or_Domain[|IP_or_Domain_Alt][:Port]
   # o Port is needed when a non-default port is used (see "@Port" below).
-  # o The first "IP_or_Domain" is normally used to communicate with the
-  #   target server. The "IP_or_Domain_Alt" address is only used if the
-  #   "-local" option is set in aq_udb and that "IP_or_Domain_Alt" matches
-  #   an local IP.
-  #
-  # Note: The indentation is optional.
+  # o "IP_or_Domain" is the address used by client programs (aq_pp and
+  #   aq_udb) to communicate with the server. "IP_or_Domain_Alt" is the
+  #   server's local/private IP; it is only needed if it is different
+  #   from the first one.
   #
   @Server:
     127.0.0.1
@@ -72,22 +64,18 @@ SAMPLE SPEC
     99.1.2.3|10.0.0.2:10013
 
   #
-  # "@Port:port" set the port number for any servers without a port spec.
+  # "@Port:Port" sets the port number for any servers without a port spec.
   # o Optional, default is 10010.
-  # o The port number must follow the keyword immediately.
   #
   @Port:10010
 
   #
   # "@Table:TabName" starts a table spec:
-  # o TabName is the name of the table being defined. It must follow the
-  #   keyword immediately.
-  # o TabName restrictions:
-  #   o Case insensitive.
-  #   o Up to 31 bytes long.
-  #   o Can contain alphanumeric and '_' characters only. The first
-  #     character cannot be a digit.
+  # o TabName is the name of the table (case insensitive). It can contain
+  #   up to 31 alphanumeric and '_' characters. The first character cannot
+  #   be a digit.
   # o Subsequent lines are column specs in the form "Type[,Atr]:ColName".
+  #   Up to 255 columns can be specified.
   # o Column Types are:
   #   o S - String.
   #   o F - Double precision floating point.
@@ -116,14 +104,9 @@ SAMPLE SPEC
   #   o +MAX - Use the greater (numeric) of pending and existing value.
   #   o +NOZERO - Do not use pending value if it is 0 (numeric) or blank
   #            (string). Use in conjunction with the above "+*" attributes.
-  # o ColName restrictions:
-  #   o Case insensitive.
-  #   o Up to 31 bytes long.
-  #   o Can contain alphanumeric and '_' characters only. The first
-  #     character cannot be a digit.
-  # o Up to 256 columns can be specified.
-  #
-  # Note: Indentation in the spec is optional.
+  # o ColName is the name of the column (case insensitive). It can contain
+  #   up to 31 alphanumeric and '_' characters. The first character cannot
+  #   be a digit.
   #
   @Table:MyTable
     i,tkey:t
@@ -151,11 +134,11 @@ SAMPLE SPEC
   # o Vectors are automatically created when a user bucket is created.
   #   Their columns are initialized to either 0/blank depending on the
   #   data type.
-  # o Column spec is identical to that of a table except that
-  #   "+KEY" is not supported nor necessary since the "merge" operation is
-  #   implicit (there is only one data row).
-  #
-  # Note: Indentation in the spec is optional.
+  # o Vector spec is identical to that of a table except that "+KEY" is
+  #   not supported nor necessary - the "merge" operation is implicit
+  #   since there is only one data row.
+  # o The name of the "PKEY" column must be the same as in previously
+  #   defined tables/vectors.
   #
   @Vector:Profile
     s,pkey:user_cookie
@@ -165,26 +148,22 @@ SAMPLE SPEC
     l,+add:sum_2
 
   #
-  # "@Var:" starts the Var table spec.
-  # o A var table holds a single row of data. The columns (or vars) are
+  # "@Var:" starts the Var vector spec.
+  # o A Var vector holds a single row of data. The columns (or vars) are
   #   global and NOT bucket specific.
-  # o It does not need a name since there can only be one Var table spec.
+  # o It does not need a name since there can only be one Var vector spec.
+  #   However, it does have the implicit name "var".
   # o Var columns can be used in most "aq_udb" operations. See the "aq_udb"
   #   manual for details.
-  # o Even though there is no table name in the spec, the Var table can be
-  #   referenced using the pseudo table name "var".
-  # o Columns in this table are initialized to 0/blank. They can also be
+  # o Columns in this vector are initialized to 0/blank. They can also be
   #   reset to 0/blank at any time using "aq_udb -clr var".
-  # o Columns in this table can be set using
+  # o Columns in this vector can be set using
   #   "aq_udb -scn var -var ColName ColVal -var ColName ColVal ...".
-  # o Columns in this table can be exported using "aq_udb -exp var"
-  # o Column spec is identical to that of a table except that
-  #   "+KEY" is not supported nor necessary. Also, the "merge" operation
-  #   is only done during an export to combine data rows from
-  #   multiple Udb servers. There is no "merge" operation on import since
-  #   data cannot be imported to this table.
-  #
-  # Note: Indentation in the spec is optional.
+  # o Columns in this vector can be exported using "aq_udb -exp var"
+  # o Vector spec is identical to that of a regular vector.
+  # o The "merge" operation is done differently from that of a regular
+  #   vector - it is done during an export to combine data from separate
+  #   Udb servers.
   #
   @Var:
     s:g_str_1
@@ -195,8 +174,71 @@ SAMPLE SPEC
 
   #
   # Specify more tables/vectors as needed. But there can only be one Var
-  # table. The order of the definitions is not important.
+  # vector. The order of the definitions is not important.
   #
+
+
+Udb Data Arrangement
+====================
+
+An Udb server constructs its database according to the spec in this manner:
+
+ ::
+
+  +------------+------+
+  | Var vector | cols |
+  +------------+------+
+
+  +=================+=======+
+  | User key (PKEY) | key1  |
+  +=================+=======+
+  | +--------+-----------+  |
+  | | Table1 | row1 cols |  |
+  | |        | row2 cols |  |
+  | |        | ...       |  |
+  | +--------+-----------+  |
+  | | Table2 | row1 cols |  |
+  | |        | row2 cols |  |
+  | |        | ...       |  |
+  | +--------+-----------+  |
+  | | ...                |  |
+  | +--------+-----------+  |
+  | +---------+------+      |
+  | | Vector1 | cols |      |
+  | +---------+------+      |
+  | | Vector2 | cols |      |
+  | +---------+------+      |
+  | | ...            |      |
+  | +---------+------+      |
+  |                         |
+  +=================+=======+
+  | User key (PKEY) | key2  |
+  +=================+=======+
+  | +--------+-----------+  |
+  | | Table1 | row1 cols |  |
+  | |        | row2 cols |  |
+  | |        | ...       |  |
+  | +--------+-----------+  |
+  | | Table2 | row1 cols |  |
+  | |        | row2 cols |  |
+  | |        | ...       |  |
+  | +--------+-----------+  |
+  | | ...                |  |
+  | +--------+-----------+  |
+  | +---------+------+      |
+  | | Vector1 | cols |      |
+  | +---------+------+      |
+  | | Vector2 | cols |      |
+  | +---------+------+      |
+  | | ...            |      |
+  | +---------+------+      |
+  |                         |
+  +=================+=======+
+  | User key (PKEY) | key3  |
+  +=================+=======+
+  | ...                     |
+  |                         |
+  +-------------------------+
 
 
 See Also

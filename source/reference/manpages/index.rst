@@ -10,7 +10,7 @@ AQ Tool Manpages
 
    aq_pp
    udbd
-   udb-spec
+   udb.spec
    aq_udb
    logcnv
    loginf

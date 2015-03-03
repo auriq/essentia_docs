@@ -2,16 +2,6 @@
 prtrng
 ======
 
----------------------
-Data file/stream dump
----------------------
-
-:Copyright: AuriQ Systems Inc.
-:Manual group: Utility Command
-:Manual section: 1
-:Date: 2015-01-28
-:Version: 1.2.1
-
 
 Synopsis
 ========
@@ -94,7 +84,7 @@ Options
 
    ::
 
-    sh# prtrng ... -f file1 -b 100+20 1000+10 ...
+    $ prtrng ... -f file1 -b 100+20 1000+10 ...
 
   * Print bytes 100 to 119 and 1000 to 1009 (inclusive) of file1.
 

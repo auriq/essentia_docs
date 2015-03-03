@@ -2,16 +2,6 @@
 aq_cnt
 ======
 
-------------------
-Data row/key count
-------------------
-
-:Copyright: AuriQ Systems Inc.
-:Manual group: Data Processing Command
-:Manual section: 1
-:Date: 2015-01-28
-:Version: 1.2.1
-
 
 Synopsis
 ========
@@ -110,7 +100,7 @@ Options
 
    ::
 
-    sh# aq_cnt ... -f,+1l,eok file1 -f file2 ...
+    $ aq_cnt ... -f,+1l,eok file1 -f file2 ...
 
   * File1 and file2 can have different attributes.
 
@@ -159,7 +149,7 @@ Options
 
    ::
 
-    sh# aq_cnt ... -d s:Col1 s,lo:Col2 i,trm:Col3 ...
+    $ aq_cnt ... -d s:Col1 s,lo:Col2 i,trm:Col3 ...
 
   * Col1 is a string. Col2 also a string, but the input value will be converted
     to lower case. Col3 is an unsigned integer, the ``trm`` attribute removes
@@ -237,9 +227,9 @@ Options
 
    ::
 
-    sh# aq_cnt ... -d s:Col1 s:Col2 ip:Col3 ...
-          -k Key1 Col1 -kX File2 Key2 Col3 Col2 ...
-          -o -
+    $ aq_cnt ... -d s:Col1 s:Col2 ip:Col3 ...
+        -k Key1 Col1 -kX File2 Key2 Col3 Col2 ...
+        -o -
 
   * Define two keys. Key1 is a single column key. Key2 is a composite key.
     Summary counts of Key1 and Key2 go to stdout.

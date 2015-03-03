@@ -2,16 +2,6 @@
 smon
 ====
 
---------------
-System monitor
---------------
-
-:Copyright: AuriQ Systems Inc.
-:Manual group: Utility Command
-:Manual section: 1
-:Date: 2015-01-28
-:Version: 1.2.1
-
 
 Synopsis
 ========

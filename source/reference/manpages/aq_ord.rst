@@ -2,16 +2,6 @@
 aq_ord
 ======
 
----------------------
-In-memory record sort
----------------------
-
-:Copyright: AuriQ Systems Inc.
-:Manual group: Data Processing Command
-:Manual section: 1
-:Date: 2015-01-28
-:Version: 1.2.1
-
 
 Synopsis
 ========
@@ -160,7 +150,7 @@ Options
 
    ::
 
-    sh# aq_ord ... -f,+1l,eok file1 -f file2 ...
+    $ aq_ord ... -f,+1l,eok file1 -f file2 ...
 
   * File1 and file2 can have different attributes.
 
@@ -210,7 +200,7 @@ Options
 
    ::
 
-    sh# aq_ord ... -d s:Col1 s,lo:Col2 i,trm:Col3 ...
+    $ aq_ord ... -d s:Col1 s,lo:Col2 i,trm:Col3 ...
 
   * Col1 is a string. Col2 also a string, but the input value will be converted
     to lower case. Col3 is an unsigned integer, the ``trm`` attribute removes
@@ -230,7 +220,7 @@ Options
 
    ::
 
-    sh# aq_ord ... -sort s:2
+    $ aq_ord ... -sort s:2
 
   * Sort records according to the string value of the 2nd column in ascending
     order.
@@ -245,7 +235,7 @@ Options
 
    ::
 
-    sh# aq_ord ... -d i:Col1 s:Col2 ... -sort Col2 Col1
+    $ aq_ord ... -d i:Col1 s:Col2 ... -sort Col2 Col1
 
   * Sort records according to the string value of the 2nd column and the
     numeric value of the 1st column in ascending order.
@@ -291,7 +281,7 @@ Options
 
    ::
 
-    sh# aq_ord ... -d s:Col1 s:Col2 s:Col3 ... -o,esc,noq - -c Col2 Col1
+    $ aq_ord ... -d s:Col1 s:Col2 s:Col3 ... -o,esc,noq - -c Col2 Col1
 
   * Output Col2 and Col1 (in that order) to stdout in a format suitable for
     Amazon Cloud.

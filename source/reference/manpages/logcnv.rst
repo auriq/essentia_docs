@@ -2,16 +2,6 @@
 logcnv
 ======
 
---------------------
-Log format converter
---------------------
-
-:Copyright: AuriQ Systems Inc.
-:Manual group: Data Processing Command
-:Manual section: 1
-:Date: 2015-01-28
-:Version: 1.2.1
-
 
 Synopsis
 ========
@@ -94,7 +84,7 @@ Options
 
    ::
 
-    sh# logcnv ... -f,+1l,eok file1 -f file2 ...
+    $ logcnv ... -f,+1l,eok file1 -f file2 ...
 
   * File1 and file2 can have different attributes.
 
@@ -172,9 +162,9 @@ Options
 
    ::
 
-    sh# logcnv ... -d
-          IP:h SEP:' ' S:l SEP:' ' S:u SEP:' [' I,tim:t SEP:'] "'
-          S,clf,hl1:r SEP:'" ' I:s SEP:' ' I:b ...
+    $ logcnv ... -d
+        IP:h SEP:' ' S:l SEP:' ' S:u SEP:' [' I,tim:t SEP:'] "'
+        S,clf,hl1:r SEP:'" ' I:s SEP:' ' I:b ...
 
   * Process records in the default common log columns.
 
@@ -204,7 +194,7 @@ Options
 
    ::
 
-    sh# logcnv ... -d s:Col1 s:Col2 s:Col3 ... -o,esc,noq - -c Col2 Col1
+    $ logcnv ... -d s:Col1 s:Col2 s:Col3 ... -o,esc,noq - -c Col2 Col1
 
   * Output Col2 and Col1 (in that order) to stdout in a format suitable for
     Amazon Cloud.

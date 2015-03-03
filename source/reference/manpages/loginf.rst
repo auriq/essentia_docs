@@ -2,16 +2,6 @@
 loginf
 ======
 
-------------
-Log analyzer
-------------
-
-:Copyright: AuriQ Systems Inc.
-:Manual group: Data Processing Command
-:Manual section: 1
-:Date: 2015-01-28
-:Version: 1.2.1
-
 
 Synopsis
 ========
@@ -92,7 +82,7 @@ Options
 
    ::
 
-    sh# loginf ... -f file1 file2 ...
+    $ loginf ... -f file1 file2 ...
 
   * Load and analyze logs file1 and file2.
 
@@ -109,13 +99,13 @@ Options
 
    ::
 
-    sh# loginf ... -f_raw file1.raw file2.raw ...
+    $ loginf ... -f_raw file1.raw file2.raw ...
 
   * Load and combine file1.raw and file2.raw.
 
    ::
 
-    sh# loginf ... -f file3 file4 -f_raw file1.raw file2.raw ...
+    $ loginf ... -f file3 file4 -f_raw file1.raw file2.raw ...
 
   * Load and combine file1.raw and file2.raw, then further load and analyze logs
     file3 and file4 and combine all the results together.
@@ -135,7 +125,7 @@ Options
 
    ::
 
-    sh# loginf ... -f file1 ... -o file1.report
+    $ loginf ... -f file1 ... -o file1.report
 
   * Save the JSON report to file1.report.
 
@@ -151,7 +141,7 @@ Options
 
    ::
 
-    sh# loginf ... -f file1 ... -o_raw file1.raw -o file1.report
+    $ loginf ... -f file1 ... -o_raw file1.raw -o file1.report
 
   * Save raw result to file1.raw and a report of the same result to
     file1.report.
@@ -168,7 +158,7 @@ Options
 
    ::
 
-    sh# loginf ... -f file1 -lim 1000 ... -o_pp_col file1.col
+    $ loginf ... -f file1 -lim 1000 ... -o_pp_col file1.col
 
   * Analyze the first 1000 records in file1 and output aq_pp column spec to
     file1.col.

@@ -2,16 +2,6 @@
 aq_pp
 =====
 
--------------------
-Record preprocessor
--------------------
-
-:Copyright: AuriQ Systems Inc.
-:Manual group: Data Processing Command
-:Manual section: 1
-:Date: 2015-01-28
-:Version: 1.2.1
-
 
 Synopsis
 ========
@@ -164,7 +154,7 @@ Options
 
   * Instead of (or in addition to) this option, `-var`_ and/or `-evlc`_
     can be used to add the required columns to the data set.
-  * The "PKEY" column in a Udb table cannot be implicit.
+  * The "PKEY" column cannot be implicit.
   * This option applies to all Udb imports.
 
 
@@ -187,9 +177,9 @@ Options
 
    ::
 
-    sh# aq_pp ...Operation_0...
-          -rx_syntax extended ...Operation_1...
-          -rx_syntax none ...Operation_2...
+    $ aq_pp ...Operation_0...
+        -rx_syntax extended ...Operation_1...
+        -rx_syntax none ...Operation_2...
 
   * Operation_0 will not use any particular syntax.
     Operation_1 will use "grep" syntax.
@@ -206,7 +196,7 @@ Options
 .. _`-rownum`:
 
 ``-rownum StartNum``
-  Set the starting value for the ``$RowNum`` ``evlc `` builtin variable.
+  Set the starting value for the ``$RowNum`` evaluation builtin variable.
   ``StartNum`` is the index of the first row.
   Default starting row index is 1.
   See `-evlc`_ for an usage example.
@@ -258,7 +248,7 @@ Options
 
    ::
 
-    sh# aq_pp ... -f,+1l,eok file1 -f file2 ...
+    $ aq_pp ... -f,+1l,eok file1 -f file2 ...
 
   * File1 and file2 can have different attributes.
 
@@ -310,7 +300,7 @@ Options
 
    ::
 
-    sh# aq_pp ... -d s:Col1 s,lo:Col2 i,trm:Col3 ...
+    $ aq_pp ... -d s:Col1 s,lo:Col2 i,trm:Col3 ...
 
   * Col1 is a string. Col2 also a string, but the input value will be converted
     to lower case. Col3 is an unsigned integer, the ``trm`` attribute removes
@@ -333,9 +323,9 @@ Options
 
    ::
 
-    sh# aq_pp ... -d s:Col1 s:Col2 i:Col3 s:Col4 ...
-          -cat more.csv i:Col3 s:Col1 s:Col5 s:Col6
-          ...
+    $ aq_pp ... -d s:Col1 s:Col2 i:Col3 s:Col4 ...
+        -cat more.csv i:Col3 s:Col1 s:Col5 s:Col6
+        ...
 
   * Add data from more.csv. Column Col3 and Col1 are common. The original data
     set does not have Col5 and Col6, so they are set to blank in rows from the
@@ -361,9 +351,9 @@ Options
 
    ::
 
-    sh# aq_pp ... -d i:Col1 ...
-          -var 'i:Sum' 0 ...
-          -evlc 'Sum' 'Sum + Col1' ...
+    $ aq_pp ... -d i:Col1 ...
+        -var 'i:Sum' 0 ...
+        -evlc 'Sum' 'Sum + Col1' ...
 
   * Initialize variable Sum to 0, then update the rolling sum for each row.
 
@@ -385,7 +375,7 @@ Options
   the target column. For example, string result for a string column and
   numeric result for a numeric column.
   Operands in the expression can be the names of previously defined columns or
-  variables, numeric/string constants, builtin variables and functions.
+  variables, constants, builtin variables and functions.
 
   * Use '(' and ')' to group operations as appropriate.
   * For a numeric type evaluation, supported operators are
@@ -541,29 +531,29 @@ Options
 
    ::
 
-    sh# aq_pp ... -d i:Col1 ... -evlc l:Col_evl 'Col1 * 10' ...
+    $ aq_pp ... -d i:Col1 ... -evlc l:Col_evl 'Col1 * 10' ...
 
   * Set new column Col_evl to 10 times the value of Col1.
 
    ::
 
-    sh# aq_pp -rownum 101 ... -d i:Col1 ... -evlc i:Seq '$RowNum' ...
+    $ aq_pp -rownum 101 ... -d i:Col1 ... -evlc i:Seq '$RowNum' ...
 
   * Set starting row index to 101 and set new column Seq to the row index.
 
    ::
 
-    sh# aq_pp -fileid 1 -f file1 -d i:Col1 ... -evlc i:Id '$FileId'
-          -fileid 2 -cat file2 ...
+    $ aq_pp -fileid 1 -f file1 -d i:Col1 ... -evlc i:Id '$FileId'
+        -fileid 2 -cat file2 ...
 
   * After file1 and file2 are concatenated together, the new "Id" column will
     have a value of 1 or 2 depending on which input file the record came from.
 
    ::
 
-    sh# aq_pp ... -d s:Col1 s:Col2 ...
-          -evlc is:Dt 'DateToTime(Col2, "Y.m.d.H.M.S.p") - DateToTime(Col1, "Y.m.d.H.M.S.p")'
-          ...
+    $ aq_pp ... -d s:Col1 s:Col2 ...
+        -evlc is:Dt 'DateToTime(Col2, "Y.m.d.H.M.S.p") - DateToTime(Col1, "Y.m.d.H.M.S.p")'
+        ...
 
   * Col1 and Col2 are date strings of the form "Year/Month/day Hour:Min:Sec AM".
     Dt will contain the time difference in seconds.
@@ -584,11 +574,11 @@ Options
 
    ::
 
-    sh# aq_pp ... -d s:Col1 ...
-          -mapf Col1 '%%v1_beg%%.%%v1_end%%'
-          -mapc s:Col_beg '%%v1_beg%%'
-          -mapc s:Col_end '%%v1_end%%'
-          ...
+    $ aq_pp ... -d s:Col1 ...
+        -mapf Col1 '%%v1_beg%%.%%v1_end%%'
+        -mapc s:Col_beg '%%v1_beg%%'
+        -mapc s:Col_end '%%v1_end%%'
+        ...
 
   * Extract data from Col1, then put "parts" of this columns in 2 new columns.
 
@@ -608,12 +598,12 @@ Options
 
    ::
 
-    sh# aq_pp ... -d s:Col2 s:Col3 ...
-          -mapfrx Col2 '\(.*\)-\(.*\)'
-          -mapfrx Col3 '\(.*\)_\(.*\)'
-          -mapc s:Col_beg '%%1%%,%%4%%'
-          -mapc s:Col_end '%%2%%,%%5%%'
-          ...
+    $ aq_pp ... -d s:Col2 s:Col3 ...
+        -mapfrx Col2 '\(.*\)-\(.*\)'
+        -mapfrx Col3 '\(.*\)_\(.*\)'
+        -mapc s:Col_beg '%%1%%,%%4%%'
+        -mapc s:Col_end '%%2%%,%%5%%'
+        ...
 
   * Extract data from Col2 and Col3, then put "parts" of those columns in 2
     new columns. Note that the RegEx based MapFrom's do not have named
@@ -644,13 +634,13 @@ Options
 
    ::
 
-    sh# aq_pp ... -d s:Col1 s:Col2 s:Col3 ...
-          -mapf Col1 '%%v1_beg%%.%%v1_end%%'
-          -mapfrx Col2 '\(.*\)-\(.*\)'
-          -mapfrx Col3 '\(.*\)_\(.*\)'
-          -mapc s:Col_beg '%%v1_beg%%,%%1%%,%%4%%'
-          -mapc s:Col_end '%%v1_end%%,%%2%%,%%5%%'
-          ...
+    $ aq_pp ... -d s:Col1 s:Col2 s:Col3 ...
+        -mapf Col1 '%%v1_beg%%.%%v1_end%%'
+        -mapfrx Col2 '\(.*\)-\(.*\)'
+        -mapfrx Col3 '\(.*\)_\(.*\)'
+        -mapc s:Col_beg '%%v1_beg%%,%%1%%,%%4%%'
+        -mapc s:Col_end '%%v1_end%%,%%2%%,%%5%%'
+        ...
 
   * Extract data from Col1, Col2 and Col3, then put "parts" of those columns
     in 2 new columns. Note that the RegEx based MapFrom's do not have named
@@ -682,9 +672,9 @@ Options
 
    ::
 
-    sh# aq_pp ... -d s:Col1 i:Col2 ip:Col3 ...
-          -kenc s:Key1 Col1 Col2 Col3
-          ...
+    $ aq_pp ... -d s:Col1 i:Col2 ip:Col3 ...
+        -kenc s:Key1 Col1 Col2 Col3
+        ...
 
   * Compose a new "composite" column Key1 from Col1, Col2 and Col3.
 
@@ -720,27 +710,27 @@ Options
 
    ::
 
-    sh# aq_pp ... -d s:Key1 ...
-          -kdec Key1 s:Col1 i:Col2 ip:Col3
-          ...
+    $ aq_pp ... -d s:Key1 ...
+        -kdec Key1 s:Col1 i:Col2 ip:Col3
+        ...
 
   * Extract Col1, Col2 and Col3 from Key1.
 
    ::
 
-    sh# aq_pp ... -d s:Key1 ...
-          -kdec Key1 s: i:Col2 ip:
-          ...
+    $ aq_pp ... -d s:Key1 ...
+        -kdec Key1 s: i:Col2 ip:
+        ...
 
   * Extract only Col2 from Key1. Since there is no '+' in the extract-to spec,
     the value of Key1 is NOT altered.
 
    ::
 
-    sh# aq_pp ... -d s:Key1 ...
-          -kdec Key1 s: i:Col2+ ip:+
-          -kdec Key1 i: ip:Col3
-          ...
+    $ aq_pp ... -d s:Key1 ...
+        -kdec Key1 s: i:Col2+ ip:+
+        -kdec Key1 i: ip:Col3
+        ...
 
   * In the first rule, Col2 is extracted from Key1. At the same time,
     the 2nd and 3rd fields are encoded back into Key1.
@@ -761,10 +751,11 @@ Options
   * Evaluation has the form ``Eval(Expr)`` where ``Expr`` is the expression
     to evaluate as in `-evlc`_.
 
-  RHS can be a column/variable name or a literal value:
+  RHS can be a column/variable name or a constant:
 
   * Column/variable name is case insensitive.
-  * Literal string must be quoted with double quotes.
+  * A constant can be a string, a number or an IP address.
+    A string constant must be quoted with double quotes.
 
   Supported comparison operators are:
 
@@ -783,7 +774,7 @@ Options
   * ``!~``, ``!~~`` -
     Negation of the above.
   * ``##`` -
-    LHS value matches RHS pattern. LHS must be a string column and
+    LHS value matches RHS regex. LHS must be a string column and
     RHS must be a literal GNU RegEx.
   * ``~##`` -
     Same as ``##`` but does case insensitive match.
@@ -800,7 +791,9 @@ Options
 
   More complex expression can be constructed by using ``(...)`` (grouping),
   ``!`` (negation), ``||`` (or) and ``&&`` (and).
-  For example::
+  For example:
+
+   ::
 
     LHS_1 == RHS_1 && !(LHS_2 == RHS_2 || LHS_3 == RHS_3)
 
@@ -812,9 +805,9 @@ Options
 
    ::
 
-    sh# aq_pp ... -d s:Col1 s:Col2 i:Col3 s:Col4 ...
-          -filt 'Col1 === Col4 && Col2 != "" && Col3 >= 100'
-          ...
+    $ aq_pp ... -d s:Col1 s:Col2 i:Col3 s:Col4 ...
+        -filt 'Col1 === Col4 && Col2 != "" && Col3 >= 100'
+        ...
 
   * Only keep records whose Col1 and Col4 are the same (case insensitive) and
     Col2 is not blank and Col3's value is greater than or equal to 100.
@@ -845,12 +838,12 @@ Options
 
    ::
 
-    sh# aq_pp ... -d s:Col1 ...
-          -map Col1 '%%v1_beg%%-%*' 'beg=%%v1_beg%%'
-          ...
-    sh# aq_pp ... -d s:Col1 ...
-          -maprx Col1 '\(.*\)-*' 'beg=%%1%%'
-          ...
+    $ aq_pp ... -d s:Col1 ...
+        -map Col1 '%%v1_beg%%-%*' 'beg=%%v1_beg%%'
+        ...
+    $ aq_pp ... -d s:Col1 ...
+        -maprx Col1 '\(.*\)-*' 'beg=%%1%%'
+        ...
 
   * Both commands rewrite Col1 in the same way.
 
@@ -891,8 +884,8 @@ Options
   files. Match stops when the first match is found. If the files contain both
   exact value and pattern, then:
 
-  1) Exact values are matched first, skipping over any interleaving patterns.
-  2) Patterns are matched next, skipping over any interleaving fixed values.
+  * Exact values are matched first, skipping over any interleaving patterns.
+  * Patterns are matched next, skipping over any interleaving fixed values.
 
   **Note**: If a file name happens to be one of ``FROM``, ``TO`` or ``X``
   (case insensitive), prepend the name with a path (e.g., "./X")
@@ -902,7 +895,7 @@ Options
 
    ::
 
-    sh# aq_pp ... -d s:Col1 ... -sub Col1 lookup.csv ...
+    $ aq_pp ... -d s:Col1 ... -sub Col1 lookup.csv ...
 
   * Substitute Col1 according to lookup table.
 
@@ -941,8 +934,8 @@ Options
   files. Match stops when the first match is found. If the files contain both
   exact value and pattern, then:
 
-  1) Exact values are matched first, skipping over any interleaving patterns.
-  2) Patterns are matched next, skipping over any interleaving fixed values.
+  * Exact values are matched first, skipping over any interleaving patterns.
+  * Patterns are matched next, skipping over any interleaving fixed values.
 
   **Note**: If a file name happens to be one of ``FROM`` or ``X``
   (case insensitive), prepend the name with a path (e.g., "./X")
@@ -952,7 +945,7 @@ Options
 
    ::
 
-    sh# aq_pp ... -d s:Col1 ... -grep,rev Col1 lookup.csv ...
+    $ aq_pp ... -d s:Col1 ... -grep,rev Col1 lookup.csv ...
 
   * Select (or retain) only records whose Col1 values are not in lookup table.
 
@@ -988,9 +981,9 @@ Options
 
    ::
 
-    sh# aq_pp ... -d s:Col1 s:Col2 i:Col3 s:Col4 ...
-          -cmb lookup.csv i:Col3 s:Col1 s:Col5 s:Col6
-          ...
+    $ aq_pp ... -d s:Col1 s:Col2 i:Col3 s:Col4 ...
+        -cmb lookup.csv i:Col3 s:Col1 s:Col5 s:Col6
+        ...
 
   * Combine lookup.csv into the data set according to composite key
     <Col3, Col1>.
@@ -999,12 +992,12 @@ Options
 
    ::
 
-    sh# aq_pp ... -d s:Col1 s:Col2 i:Col3 s:Col4 ...
-          -cmb lookup.csv i:Col3 s:Col1 s:Col5 s:Col6 s,cmb:Col2
-          ...
-    sh# aq_pp ... -d s:Col1 s:Col2 i:Col3 s:Col4 ...
-          -cmb lookup.csv i,key:Col3 s,key:Col1 s,cmb:Col5 s,cmb:Col6 s,cmb:Col2
-          ...
+    $ aq_pp ... -d s:Col1 s:Col2 i:Col3 s:Col4 ...
+        -cmb lookup.csv i:Col3 s:Col1 s:Col5 s:Col6 s,cmb:Col2
+        ...
+    $ aq_pp ... -d s:Col1 s:Col2 i:Col3 s:Col4 ...
+        -cmb lookup.csv i,key:Col3 s,key:Col1 s,cmb:Col5 s,cmb:Col6 s,cmb:Col2
+        ...
 
   * Both are the same as the previous example, except that Col2 is explicitly
     set as a combine column. That is, its value will originally come from the
@@ -1057,7 +1050,7 @@ Options
 
    ::
 
-    sh# aq_pp ... -d s:Col1 s:Col2 s:Col3 ... -o,esc,noq - -c Col2 Col1
+    $ aq_pp ... -d s:Col1 s:Col2 s:Col3 ... -o,esc,noq - -c Col2 Col1
 
   * Output Col2 and Col1 (in that order) to stdout in a format suitable for
     Amazon Cloud.
@@ -1129,9 +1122,9 @@ Options
 
    ::
 
-    sh# aq_pp ... -d i:Col1 i:Col2 ... -var i:Sum1 0 -var i:Sum2 0 ...
-          -evlc Sum1 'Sum1 + Col1' -evlc Sum2 'Sum2 + (Col2 * Col2)' ...
-          -ovar - -c Sum1 Sum2
+    $ aq_pp ... -d i:Col1 i:Col2 ... -var i:Sum1 0 -var i:Sum2 0 ...
+        -evlc Sum1 'Sum1 + Col1' -evlc Sum2 'Sum2 + (Col2 * Col2)' ...
+        -ovar - -c Sum1 Sum2
 
   * Calculate sums and output their evaluates at the end of processing.
 
@@ -1376,28 +1369,28 @@ Example:
 
  ::
 
-  sh# aq_pp ... -d i:Col1 ...
-        -if -filt 'Col1 == 1'
-          -evlc s:Col2 '"Is-1"'
-        -elif -filt 'Col1 == 2'
-          -false
-        -else
-          -evlc Col2 '"Others"'
-        -endif
-        ...
+  $ aq_pp ... -d i:Col1 ...
+      -if -filt 'Col1 == 1'
+        -evlc s:Col2 '"Is-1"'
+      -elif -filt 'Col1 == 2'
+        -false
+      -else
+        -evlc Col2 '"Others"'
+      -endif
+      ...
 
 * Set Col2's value based on Col1's.
   In addition, discard any record with Col1==2.
 
  ::
 
-  sh# aq_pp ... -d i:Col1 s:Col2 ...
-        -if -filt 'Col1 == 1'
-          -o Out1
-        -elif -filt 'Col1 == 2'
-          -o Out2 -c Col2
-        -endif
-        ...
+  $ aq_pp ... -d i:Col1 s:Col2 ...
+      -if -filt 'Col1 == 1'
+        -o Out1
+      -elif -filt 'Col1 == 2'
+        -o Out2 -c Col2
+      -endif
+      ...
 
 * Output rows where Col1 equals 1 to Out1. Out1 will have all the input columns.
   Output rows where Col1 equals 2 to Out2. Out2 will have Col2 only.
@@ -1408,6 +1401,6 @@ See Also
 ========
 
 * `udbd <udbd.html>`_ - User (Bucket) Database server
-* `udb.spec <udb-spec.html>`_ - Udb spec file.
+* `udb.spec <udb.spec.html>`_ - Udb spec file.
 * `aq_udb <aq_udb.html>`_ - Interface to Udb server
 

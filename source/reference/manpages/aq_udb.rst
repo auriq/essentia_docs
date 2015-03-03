@@ -2,16 +2,6 @@
 aq_udb
 ======
 
------------------------
-Interface to Udb server
------------------------
-
-:Copyright: AuriQ Systems Inc.
-:Manual group: Udb Client
-:Manual section: 1
-:Date: 2015-01-28
-:Version: 1.2.1
-
 
 Synopsis
 ========
@@ -32,13 +22,15 @@ Synopsis
       [-seed RandSeed]
       [-lim_usr Num] [-lim_rec Num]
       [-var ColName Val]
-      [-pp TabName
-        [-pp_var ColName Val] ...
-        [-pp_evlc ColName Expr] ...
-        [-pp_filt FilterSpec] ...
-      ]
       [-filt FilterSpec]
       [-mod ModSpec]
+      [-pp TabName
+        [-pp_var ColName Val]
+        [-pp_evlc ColName Expr]
+        [-pp_filt FilterSpec]
+        [-pp_goto DestSpec]
+        [-pp_end_of_scan DestSpec]
+      ]
       [-o[,AtrLst] File] [-c ColName [ColName ...]] [-notitle]
       [-sort [ColName ...] [-dec] [-top Num]]
 
@@ -120,10 +112,9 @@ Options
   If no spec file is given at all, "udb.spec" in the current work directory
   is assumed.
 
-  The spec file contains server IPs (or domain names) and table/vector/variable
+  The spec file contains server IPs (or domain names) and table/vector
   definitions.
-  Specs are line-based. Blank lines or lines starting with a "#" are ignored.
-  See the "udb.spec" manual page for details.
+  See `udb.spec <udb.spec.html>`_ for details.
 
 
 .. _`-server`:
@@ -132,7 +123,7 @@ Options
   Set the target servers.
   If given, server spec in the Udb spec file will be ignored.
   ``AdrSpec`` has the form ``IP_or_Domain[|IP_or_Domain_Alt][:Port]``.
-  See the "udb.spec" manual page for details.
+  See `udb.spec <udb.spec.html>`_ for details.
 
 
 .. _`-local`:
@@ -173,17 +164,21 @@ Options
   ``TabName`` is case insensitive. It must not exceed 31 bytes long.
   Optional ``DbName`` sets the Udb spec file as in the `-db`_ option.
 
+  This option should be used with a module (see `-mod`_) that operates on the
+  table being scanned. Otherwise, use `-scn_usr`_ instead. `-pp`_ rules can
+  also be used besides the module.
+
 
 .. _`-exp_usr`:
 
 ``-exp_usr``
-  Export the unique user names (the common "PKEY" column).
+  Export the user keys (the common "PKEY" column).
 
 
 .. _`-cnt_usr`:
 
 ``-cnt_usr``
-  Retrieve the unique user count.
+  Retrieve the user count.
 
 
 .. _`-scn_usr`:
@@ -193,6 +188,9 @@ Options
   There is no default output.
   However, if used with a module (see `-mod`_),
   the module can optionally output custom data.
+
+  This option should be used with `-pp`_ rules and/or a module (see `-mod`_)
+  to operate on the data in each bucket.
 
 
 .. _`-seed`:
@@ -217,11 +215,11 @@ Options
 .. _`-var`:
 
 ``-var ColName Val``
-  Set the value of column ``ColName`` in the Var table to ``Val``.
-  A Var table must be defined in the Udb spec file and ``ColName``
+  Set the value of Var vector column ``ColName`` to ``Val``.
+  A Var vector must be defined in the Udb spec file and ``ColName``
   must be a column in that table.
-  See the "udb.spec" manual page for details.
-  ``Val`` is the literal value to initialize the variable to
+  See `udb.spec <udb.spec.html>`_ for details.
+  ``Val`` is the literal value to initialize the column to
   (``Val`` is not an expression, there is no need to enclose
   a string value in double quotes).
 
@@ -234,14 +232,117 @@ Options
 
    ::
 
-    sh# aq_udb ... -var Var1 0 ...
+    $ aq_udb ... -var Var1 0 ...
 
-  * Initialize Var1 in Var table to 0.
+  * Initialize Var1 in Var vector to 0 before any buctet is processed.
+
+
+.. _`-filt`:
+
+``-filt FilterSpec``
+  For each row in the table being exported/counted/scanned,
+  evaluate ``FilterSpec`` and use the result to determine whether to
+  keep the data row. 
+  The result can also be used in a ``-if/-elif/-endif`` for
+  `Rule Execution Controls`_.
+
+  ``FilterSpec`` is the filter to evaluate.
+  It is evaluated on each data row in the target table according to the
+  `Data Processing Steps`_.
+  It has the basic form ``LHS <compare> RHS``.
+  LHS can be a column name or an expression to evaluate:
+
+  * The column can be part of the target table or the Var vector.
+    The name is case insensitive.
+  * Evaluation has the form ``Eval(Expr)`` where ``Expr`` is the expression
+    to evaluate as in `-pp_evlc`_.
+
+  RHS can be a column name or a constant:
+
+  * The column can be part of the target table or the Var vector.
+    The name is case insensitive.
+  * A constant can be a string, a number or an IP address.
+    A string constant must be quoted with double quotes.
+
+  Supported comparison operators are:
+
+  * ``==``, ``>``, ``<``, ``>=``, ``<=`` -
+    LHS and RHS comparison.
+  * ``~==``, ``~>``, ``~<``, ``~>=``, ``~<=`` -
+    LHS and RHS case insensitive comparison; string type only.
+  * ``!=``, ``!~=`` -
+    Negation of the above equal operators.
+  * ``~~`` -
+    LHS value matches RHS pattern. LHS must be a string column and
+    RHS must be a literal pattern spec containing '*' (any number of bytes)
+    and '?' (any 1 byte).
+  * ``~~~`` -
+    Same as ``~~`` but does case insensitive match.
+  * ``!~``, ``!~~`` -
+    Negation of the above.
+  * ``##`` -
+    LHS value matches RHS regex. LHS must be a string column and
+    RHS must be a literal GNU RegEx.
+  * ``~##`` -
+    Same as ``##`` but does case insensitive match.
+  * ``!#``, ``!~#`` -
+    Negation of the above.
+  * ``&=`` -
+    Perform a "(LHS & RHS) == RHS" check; numeric types only.
+  * ``!&=`` -
+    Negation of the above.
+  * ``&`` -
+    Perform a "(LHS & RHS) != 0" check; numeric types only.
+  * ``!&`` -
+    Negation of the above.
+
+  More complex expression can be constructed by using ``(...)`` (grouping),
+  ``!`` (negation), ``||`` (or) and ``&&`` (and).
+  For example:
+
+   ::
+
+    LHS_1 == RHS_1 && !(LHS_2 == RHS_2 || LHS_3 == RHS_3)
+
+  In a quoted string literal, '\\' and double quotes must be '\\' escaped.
+  In addition, if the RHS is a pattern (``~~`` and ``!~`` operators)
+  literal '*' and '?' in the pattern must also be '\\' escaped.
+
+  Example:
+
+   ::
+
+    $ aq_udb -exp Test
+        -filt 't > 123456789'
+
+  * Export only rows of Test with 't > 123456789'.
+
+   ::
+
+    $ aq_udb -exp Test
+        -filt 'Eval($Random % 100) == 0'
+
+  * Randomly select roughly 1/100th of the rows for export.
+
+
+.. _`-mod`:
+
+``-mod ModSpec``
+  Specify a module to load on the server side during an export/count/scan
+  operation.
+  ``ModSpec`` has the form ``ModName[:argument]`` where ``ModName``
+  is the logical module name and ``argument`` is a module specific
+  parameter string. Udb server will try to load "mod/``ModName``.so"
+  in the server directory.
+  Module functions are called in each user bucket according to the
+  `Data Processing Steps`_.
+
+  Only one such module can be specified.
 
 
 .. _`-pp`:
 
-``-pp TabName [-pp_var ... -pp_evlc ... -pp_filt ...]``
+``-pp TabName [-pp_var ... -pp_evlc ... -pp_filt ... -pp_goto ... -pp_end_of_scan ...]``
   ``-pp`` groups one or more `-pp_var`_, `-pp_evlc`_ and/or `-pp_filt`_
   actions together.
   Each group performs pre-processing at the user bucket level before
@@ -250,16 +351,13 @@ Options
 
   ``TabName`` is the table whose data is to be processed by the
   `-pp_evlc`_ and `-pp_filt`_ actions in the group.
-  To target the user bucket itself, set ``TabName`` to "Bucket";
+  To target the user bucket itself, set ``TabName`` to "bucket".
   The only column in this pseudo table is "name" (the "PKEY").
 
-  Multiple ``-pp`` group can be specified. They are processed according to the
-  `Data Processing Steps`_.
-
-  The list of `-pp_evlc`_ and `-pp_filt`_ rules are generally executed in
-  order.
+  The list of `-pp_evlc`_, `-pp_filt`_ and `-pp_goto`_ rules are generally
+  executed in order. See `Data Processing Steps`_ for details.
   Rule executions can also be made conditional by adding "if-else" controls.
-  See `-pp Execution Controls`_ for details.
+  See `Rule Execution Controls`_ for details.
 
 
 .. _`-pp_var`:
@@ -269,23 +367,29 @@ Options
   Same as `-var`_, but the assignment is done at the beginning of a `-pp`_
   group in each user bucket.
 
-  See `-pp_evlc`_ for a usage example.
+  Example:
+
+   ::
+
+    $ aq_udb ... -pp -pp_var Var1 0 ...
+
+  * Initialize Var1 in Var vector to 0 before *each* bucket is processed.
 
 
 .. _`-pp_evlc`:
 
 ``-pp_evlc ColName Expr``
   Part of a `-pp`_ group.
-  For each row in the ``-pp`` table, evaluate expression ``Expr`` and
-  place the result in a column identified by ``ColName``.
-  The column can be part of the ``-pp`` table row or part of the Var table.
+  For each row in the ``-pp`` table,
+  evaluate expression ``Expr`` and place the result in a column identified
+  by ``ColName``. The column can be part of the ``-pp`` table or the Var vector.
 
   ``Expr`` is the expression to evaluate.
   Data type of the evaluated result must be compatible with the data type of
   the target column. For example, string result for a string column and
   numeric result for a numeric column.
   Operands in the expression can be columns in the ``-pp`` table, columns in
-  the Var table, numeric/string constants, builtin variables and functions.
+  the Var vector, constants, builtin variables and functions.
 
   * Use '(' and ')' to group operations as appropriate.
   * For a numeric type evaluation, supported operators are
@@ -361,96 +465,93 @@ Options
 
    ::
 
-    sh# aq_udb -exp Test
-          -pp Test
-            -pp_var Var1 0
-            -pp_evlc Var1 'Var1 + 1'
-            -pp_evlc c3 'Var1'
+    $ aq_udb -exp Test
+        -pp Test
+          -pp_var Var1 0
+          -pp_evlc Var1 'Var1 + 1'
+          -pp_evlc c3 'Var1'
 
   * Assign a per bucket sequence number to column c3 of table Test before
-    exporting it. Var1 must be a (numeric) column defined in the Var table in
+    exporting it. Var1 must be a (numeric) column defined in the Var vector in
     the Udb spec file. Note that it is set to 0 at the beginning of each user
     bucket before Test is scanned.
-
-   ::
-
-    sh# aq_udb -exp Test
-          -filt 'Eval($Random % 10) == 0'
-
-  * Randomly select roughly one tenth of the rows for export.
-
-   ::
-
-    sh# aq_udb -exp Test
-          -pp bucket
-            -if -pp_filt 'Eval($Random % 10) != 0'
-              -pp_goto next_bucket
-            -endif
-
-  * Randomly select roughly one tenth of the buckets for export.
-    See `-pp Execution Controls`_ regarding the ``-if/-endif`` usage.
 
 
 .. _`-pp_filt`:
 
 ``-pp_filt FilterSpec``
   Part of a `-pp`_ group.
-  ``FilterSpec`` is the filter to evaluate. See `Filter Spec`_ for details.
-  It may refer to columns in the ``-pp`` table and columns in the Var table.
-  It is evaluated on each data row being scanned in the relevant ``-pp`` table.
-  The result, true/false, determines what to do with the row.
-  By default, a row is discarded if the result is false.
-  The result can also be used in a ``-if/-elif`` for `-pp Execution Controls`_.
+  Like `-filt`_, but the filter is applied to ``-pp`` table.
 
   Example:
 
    ::
 
-    sh# aq_udb -exp Test
-          -pp 'Bucket'
-            -pp_filt 'Eval(SHash(name) % 100) == 0'
+    $ aq_udb -exp Test
+        -pp bucket
+          -pp_filt 'Eval(SHash(name) % 100) == 0'
 
   * This is a way to select a subset of users. Assuming that the user name hash
     is uniformly distributed, this example selects 1/100th of the user pool.
 
 
-.. _`-filt`:
+.. _`-pp_goto`:
 
-``-filt FilterSpec``
-  Filter (or select) records from the target table (the table being
-  exported/counted/scanned) base on ``FilterSpec``.
-  ``FilterSpec`` is the filter to evaluate. See `Filter Spec`_ for details.
-  It may refer to columns in the target table and columns in the Var table.
-  It is evaluated on each data row in the target table according to the
-  `Data Processing Steps`_.
-  If the filter result is True, the row is exported/counted/scanned;
-  otherwise, it is skipped.
+``-pp_goto DestSpec``
+  Part of a `-pp`_ group.
+  Go to ``DestSpec``. This is uaually done conditionally within a
+  ``-if/-elif/-endif`` block (see `Rule Execution Controls`_ for details).
 
-  Only one such filter can be specified.
+  ``DestSpec`` is the destination to go to. It is one of:
+
+  * ``next_bucket`` - Skip the current user bucket entirely.cw
+    The export/count/scan processing on this bucket will also be skipped.
+  * ``next_row`` - Skip the current data row and start over on the next row.
+  * ``proc_bucket`` - Terminate all ``-pp`` processings (i.e.,
+    stop the current ``-pp`` group and skip all pending ``-pp`` groups)
+    and start the export/count/scan operation in the current user bucket.
+  * ``next_pp`` - Stop the current ``-pp`` group and start the next one.
+  * ``+Num`` - Jump over Num `-pp_evlc`_, `-pp_filt`_ and `-pp_goto`_ rules.
+    ``Num=0`` means the next rule, ``Num=1`` means skip over one rule, and so.
+
+
+.. _`-pp_end_of_scan`:
+
+``-pp_end_of_scan DestSpec``
+  Part of a `-pp`_ group.
+  This is a special rule that defines the
+  action to take after all the rows in the ``-pp`` table has been exhausted.
+  The default action is to start the next ``-pp`` group.
+  Use ``DestSpec`` to control the exact behavior:
+
+  * ``next_bucket`` - Skip the current user bucket entirely.
+    The export/count/scan processing on this bucket will also be skipped.
+  * ``proc_bucket`` - Skip all pending ``-pp`` groups
+    and start the export/count/scan operation in the current user bucket.
+  * ``next_pp`` - Start the next ``-pp`` group. This is the default behavior
+    at the end of a ``-pp`` table scan.
+  * ``+Num`` - Jump over Num ``-pp`` groups. ``Num=0`` is equivalent to
+    ``next_pp``,
+    ``Num=1`` means skip over the next ``-pp`` group as well, and so.
+
+  This option is not position dependent - it can be specified anywhere
+  within a ``-pp`` group.
 
   Example:
 
    ::
 
-    sh# aq_udb -exp Test
-          -filt 't > 123456789'
+    $ aq_udb -exp Test1
+        -pp 'Test2'
+          -pp_goto proc_bucket
+          -pp_end_of_scan next_bucket
 
-  * Only export rows of Test with 't > 123456789'.
+  * Only export Test1 from buckets whose Test2 table is not empty. If Test2 is
+    not empty, the ``-goto`` rule will be executed on the first row, causing
+    execution to jump to export processing; in this way, the end-of-scan
+    condition is not triggered. However, if Test2 is empty, ``-goto``
+    is not executed and end-of-scan is triggered.
 
-
-.. _`-mod`:
-
-``-mod ModSpec``
-  Specify a module to load on the server side during an export/count/scan
-  operation.
-  ``ModSpec`` has the form ``ModName[:argument]`` where ``ModName``
-  is the logical module name and ``argument`` is a module specific
-  parameter string. Udb server will try to load "mod/``ModName``.so"
-  in the server directory.
-  Module functions are called in each user bucket according to the
-  `Data Processing Steps`_.
-
-  Only one such module can be specified.
 
 .. _`-o`:
 
@@ -466,7 +567,7 @@ Options
 
    ::
 
-    sh# aq_udb -exp Test ... -o,esc,noq -
+    $ aq_udb -exp Test ... -o,esc,noq -
 
   * Output to stdout in a format suitable for Amazon Cloud.
 
@@ -474,19 +575,18 @@ Options
 .. _`-c`:
 
 ``-c ColName [ColName ...]``
-  Export output option.
-  Select the columns from the table/vector being exported to output.
-  Var table columns can also be selected.
-  Without this, all columns in the table/vector being exported will be
-  selected.
+  Select columns to output during an export.
+  Available selections are columns from the table/vector being exported and/or
+  columns from the Var vector.
+  Default output includes all columns in the table/vector being exported.
 
   Example:
 
    ::
 
-    sh# aq_udb -exp Test ... -c Test_Col1 ... Test_ColN Var_Col1 ... Var_ColN
+    $ aq_udb -exp Test ... -c Test_Col1 ... Test_ColN Var_Col1 ... Var_ColN
 
-  * Output Var table columns along with columns from Test.
+  * Output Var vector columns along with columns from Test.
     Even though Test_Col* are normally exported by default, they must be
     listed explicitly in order to include any Var_Col*.
 
@@ -514,7 +614,7 @@ Options
   Use ``-dec`` to sort in descending order.
   ``-top`` limits the output to the top Num records in the result.
 
-  **Note**: Sort should not be used if the output contains Var table columns.
+  **Note**: Sort should not be used if the output contains Var vector columns.
 
 
 .. _`-ord`:
@@ -546,19 +646,19 @@ Options
 
   * For a table, the records are removed.
   * For a vector, the columns are reset to 0/blank.
-  * For the Var table (i.e., when ``TabName`` is "var"), the columns are reset
+  * For the Var vector (i.e., when ``TabName`` is "var"), the columns are reset
     to 0/blank.
 
 
 .. _`-clr_all`:
 
 ``-clr_all``
-  Remove/reset data from all tables/vectors/variables in the database.
+  Remove/reset data from all tables/vectors in the database.
   All user buckets will be removed as well.
 
   * For a table, the records are removed.
   * For a vector, the columns are reset to 0/blank.
-  * For the Var table (i.e., when ``TabName`` is "var"), the columns are reset
+  * For the Var vector (i.e., when ``TabName`` is "var"), the columns are reset
     to 0/blank.
 
 
@@ -603,124 +703,8 @@ By default, output is in CSV format. Use the ``esc`` and ``noq`` attributes to
 set output characteristics as needed.
 
 
-Filter Spec
-===========
-
-Filter (or select) records based on ``FilterSpec``.
-``FilterSpec`` is a logical expression that evaluates to either true or false
-for each record - if true, the record or user is selected; otherwise, the
-record or user is skipped.
-It has the basic form ``LHS <compare> RHS``.
-LHS can be a column name or an expression to evaluate:
-
-* Column name is case insensitive.
-* Evaluation has the form ``Eval(Expr)`` where ``Expr`` is the expression
-  to evaluate as in `-pp_evlc`_.
-
-RHS can be a column name or a literal value:
-
-* Column name is case insensitive.
-* Literal string must be quoted with double quotes.
-
-Supported comparison operators are:
-
-* ``==``, ``>``, ``<``, ``>=``, ``<=`` -
-  LHS and RHS comparison.
-* ``~==``, ``~>``, ``~<``, ``~>=``, ``~<=`` -
-  LHS and RHS case insensitive comparison; string type only.
-* ``!=``, ``!~=`` -
-  Negation of the above equal operators.
-* ``~~`` -
-  LHS value matches RHS pattern. LHS must be a string column and
-  RHS must be a literal pattern spec containing '*' (any number of bytes)
-  and '?' (any 1 byte).
-* ``~~~`` -
-  Same as ``~~`` but does case insensitive match.
-* ``!~``, ``!~~`` -
-  Negation of the above.
-* ``##`` -
-  LHS value matches RHS pattern. LHS must be a string column and
-  RHS must be a literal GNU RegEx.
-* ``~##`` -
-  Same as ``##`` but does case insensitive match.
-* ``!#``, ``!~#`` -
-  Negation of the above.
-* ``&=`` -
-  Perform a "(LHS & RHS) == RHS" check; numeric types only.
-* ``!&=`` -
-  Negation of the above.
-* ``&`` -
-  Perform a "(LHS & RHS) != 0" check; numeric types only.
-* ``!&`` -
-  Negation of the above.
-
-More complex expression can be constructed by using ``(...)`` (grouping),
-``!`` (negation), ``||`` (or) and ``&&`` (and).
-For example::
-
-  LHS_1 == RHS_1 && !(LHS_2 == RHS_2 || LHS_3 == RHS_3)
-
-In a quoted string literal, '\\' and double quotes must be '\\' escaped.
-In addition, if the RHS is a pattern (``~~`` and ``!~`` operators)
-literal '*' and '?' in the pattern must also be '\\' escaped.
-
-
-``-pp`` Execution Controls
-==========================
-
-`-pp`_ supports two *goto* rules.
-
-.. _`-pp_goto`:
-
-``-pp_goto ActSpec`` - follow ``ActSpec`` whenever this rule is encountered.
-``ActSpecs`` is one of:
-
-* ``next_bucket`` - Skip the current user bucket entirely.cw
-  The export/count/scan processing on this bucket will also be skipped.
-* ``next_row`` - Skip the current data row and start
-  over on the next row.
-* ``proc_bucket`` - Terminate ``-pp`` processing in the current user bucket
-  and start the export/count/scan operation.
-* ``next_pp`` - Terminate the current ``-pp`` group and start the next one.
-  The remaining rows in the current ``-pp`` table will be skipped.
-* ``+Num`` - Jump over Num `-pp_evlc`_, `-pp_filt`_ and `-pp_goto`_ rules
-  within the current group. ``Num=0`` means the next ``-pp_*`` rule,
-  ``Num=1`` means skip over the next ``-pp_*`` rule, and so.
-
-.. _`-pp_end_of_scan`:
-
-``-pp_end_of_scan ActSpec`` - a special rule that defines
-action to take after all the rows in the ``-pp`` table has been exhausted.
-By default, the action is to go to the next ``-pp`` group.
-Use this rule to change the default behavior.
-This option is not position dependent; it can be specified anywhere
-within a ``-pp`` group.
-``ActSpecs`` is one of`:
-
-* ``next_bucket`` - Skip the current user bucket entirely.
-  The export/count/scan processing on this bucket will also be skipped.
-* ``proc_bucket`` - Terminate ``-pp`` processing in the current user bucket
-  and start the export/count/scan operation.
-* ``next_pp`` - Terminate the current ``-pp`` group and start the next one.
-  The remaining rows in the current ``-pp`` table will be skipped.
-* ``+Num`` - Jump over Num ``-pp`` groups. ``Num=0`` is equivalent to
-  ``next_pp``,
-  ``Num=1`` means skip over the next ``-pp`` group as well, and so.
-
-Example:
-
- ::
-
-  sh# aq_udb -exp Test1
-        -pp 'Test2'
-          -pp_goto proc_bucket
-          -pp_end_of_scan next_bucket
-
-* Only export Test1 from buckets whose Test2 table is not empty. If Test2 is
-  not empty, the ``-pp_goto`` rule will be executed on the first row, causing
-  execution to jump to export processing; in this way, the end-of-scan condition
-  is not triggered. However, if Test2 is empty, ``-pp_goto`` is not executed
-  and end-of-scan is triggered.
+Rule Execution Controls
+=======================
 
 `-pp`_ also supports conditional actions using the
 ``-if[not]``, ``-elif[not]``, ``-else`` and ``-endif`` construction:
@@ -745,15 +729,15 @@ Example:
 
  ::
 
-  sh# aq_udb -exp Test
-        -pp Test
-          -pp_var v_seq 0
-          -if -pp_filt 'flag == "yes"'
-            -pp_evlc v_seq 'v_seq + 1'
-            -pp_evlc c3 'v_seq'
-          -else
-            -pp_evlc c3 '0'
-          -endif
+  $ aq_udb -exp Test
+      -pp Test
+        -pp_var v_seq 0
+        -if -pp_filt 'flag == "yes"'
+          -pp_evlc v_seq 'v_seq + 1'
+          -pp_evlc c3 'v_seq'
+        -else
+          -pp_evlc c3 '0'
+        -endif
 
 * Before exporting Test, assign a per bucket sequence number to column c3 if
   the "flag" column is "yes" or just 0 otherwise.
@@ -765,34 +749,39 @@ Data Processing Steps
 =====================
 
 For each export/count/scan operation,
-data is generally processd by first scanning user buckets, then tables and
-rows within each bucket.
-To be specific, for each user bucket in the database:
+data is processed according to the commandline options in this way:
 
-* The `-pp`_ (pre-processing) groups are executed in the order they are
-  specified on the commandline. For each ``-pp`` group:
+* Var columns are initialized according the `-var`_ options.
 
-  * The `-pp_var`_ rules are executed first.
-  * Then the ``-pp`` table is scanned. For each row in the table:
+* Then the user buctets are scanned. For each user bucket in the database:
 
-    * The list of `-pp_evlc`_, `-pp_filt`_ and `-pp_goto`_ rules
-      (including any "-if-elif-else-endif" controls) are executed in order.
+  * The `-pp`_ groups are executed in the order they are specified on the
+    commandline. For each ``-pp`` group:
 
-* Then, if a module is specified (see `-mod`_), its user bucket processing
-  function (if any) is called.
-  This function can inspect and/or modify arbitrary data in the bucket.
-  It can also tell the server to skip the current bucket so that it will
-  not be exported/counted/scanned.
-* Then export/count/scan processing on the target table begins. For each
-  data row in the target table:
+    * Var columns are initialized according the `-pp_var`_ rules.
+    * Then the ``-pp`` table is scanned. For each row in the table:
 
-  * The ``-filt`` rule is processed.
-  * Then, if a module is specified (see `-mod`_), its row processing
+      * The list of `-pp_evlc`_, `-pp_filt`_ and `-pp_goto`_ rules
+        (including any "-if-elif-else-endif" controls) are executed in order.
+
+    * When all the rows are exhausted, the `-pp_end_of_scan`_ rule is executed.
+
+  * Then, if a module is specified (see `-mod`_), its user bucket processing
     function (if any) is called.
-    This function can inspect and/or modify the current data row.
-    It can also tell the server to skip the current row so that it will
+    This function can inspect and/or modify arbitrary data in the bucket.
+    It can also tell the server to skip the current bucket so that it will
     not be exported/counted/scanned.
-  * Finally, export/count on the data row is carried out.
+
+  * Then export/count/scan processing on the target table begins. For each
+    data row in the target table:
+
+    * The ``-filt`` rule is processed.
+    * Then, if a module is specified (see `-mod`_), its row processing
+      function (if any) is called.
+      This function can inspect and/or modify the current data row.
+      It can also tell the server to skip the current row so that it will
+      not be exported/counted/scanned.
+    * Finally, the data row is exported/counted.
 
 
 See Also

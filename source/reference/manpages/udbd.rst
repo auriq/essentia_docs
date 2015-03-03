@@ -2,16 +2,6 @@
 udbd
 ====
 
-----------
-Udb server
-----------
-
-:Copyright: AuriQ Systems Inc.
-:Manual group: Udb
-:Manual section: 1
-:Date: 2015-01-28
-:Version: 1.2.1
-
 
 Synopsis
 ========
@@ -42,21 +32,82 @@ About Udb Server
 ================
 
 A Udb server is an in-memory database server.
-It is designed for *keyed* data such as those associated with an user ID.
+It is designed for *keyed* data such as those associated with an *user key*.
 For this reason, Udb is known as the *User (Bucket) Database*.
 Udb servers usually work together in a pool to distribute data storage
 as well as facilitate parallel processing.
- 
-Each server pool can hold and process a single database at a time.
+
+Each server pool holds and processes a single database at a time.
 An Udb database is one that contains user buckets with tables and vectors
 in each bucket. Technically, all relevant data sharing the same *key* can be
-placed in the same database. But if data using a different key is needed
-at the same time, it must be placed in another pool of Udb servers.
+placed in the same database. On the other hand, data that are keyed differently
+must be managed by separate pools of Udb servers.
+A typical database is stored in this way:
+
+ ::
+
+  Server1                         ...     ServerN
+
+  +------------+------+                   +------------+------+
+  | Var vector | cols |           ...     | Var vector | cols |
+  +------------+------+                   +------------+------+
+
+  +=================+=======+             +=================+=======+
+  | User key (PKEY) | key11 |     ...     | User key (PKEY) | keyN1 |
+  +=================+=======+             +=================+=======+
+  | +--------+-----------+  |             | +--------+-----------+  |
+  | | Table1 | row1 cols |  |             | | Table1 | row1 cols |  |
+  | |        | row2 cols |  |             | |        | row2 cols |  |
+  | |        | ...       |  |             | |        | ...       |  |
+  | +--------+-----------+  |             | +--------+-----------+  |
+  | | Table2 | row1 cols |  |             | | Table2 | row1 cols |  |
+  | |        | row2 cols |  |             | |        | row2 cols |  |
+  | |        | ...       |  |             | |        | ...       |  |
+  | +--------+-----------+  |             | +--------+-----------+  |
+  | | ...                |  |             | | ...                |  |
+  | +--------+-----------+  |             | +--------+-----------+  |
+  | +---------+------+      |             | +---------+------+      |
+  | | Vector1 | cols |      |             | | Vector1 | cols |      |
+  | +---------+------+      |             | +---------+------+      |
+  | | Vector2 | cols |      |             | | Vector2 | cols |      |
+  | +---------+------+      |             | +---------+------+      |
+  | | ...            |      |             | | ...            |      |
+  | +---------+------+      |             | +---------+------+      |
+  |                         |             |                         |
+  +=================+=======+             +=================+=======+
+  | User key (PKEY) | key12 |             | User key (PKEY) | keyN2 |
+  +=================+=======+             +=================+=======+
+  | +--------+-----------+  |             | +--------+-----------+  |
+  | | Table1 | row1 cols |  |             | | Table1 | row1 cols |  |
+  | |        | row2 cols |  |             | |        | row2 cols |  |
+  | |        | ...       |  |             | |        | ...       |  |
+  | +--------+-----------+  |             | +--------+-----------+  |
+  | | Table2 | row1 cols |  |             | | Table2 | row1 cols |  |
+  | |        | row2 cols |  |             | |        | row2 cols |  |
+  | |        | ...       |  |             | |        | ...       |  |
+  | +--------+-----------+  |             | +--------+-----------+  |
+  | | ...                |  |             | | ...                |  |
+  | +--------+-----------+  |             | +--------+-----------+  |
+  | +---------+------+      |             | +---------+------+      |
+  | | Vector1 | cols |      |             | | Vector1 | cols |      |
+  | +---------+------+      |             | +---------+------+      |
+  | | Vector2 | cols |      |             | | Vector2 | cols |      |
+  | +---------+------+      |             | +---------+------+      |
+  | | ...            |      |             | | ...            |      |
+  | +---------+------+      |             | +---------+------+      |
+  |                         |             |                         |
+  +=================+=======+             +=================+=======+
+  | User key (PKEY) | key13 |             | User key (PKEY) | keyN3 |
+  +=================+=======+             +=================+=======+
+  | ...                     |             | ...                     |
+  |                         |             |                         |
+  +-------------------------+             +-------------------------+
 
 In general, data is first imported into the database via client program
-`aq_pp <aq_pp.html>`_. If there are multiple data sources and that data order in the
-database is not important, import can be done in parallel. To maximize
-throughput, one or more parallel imports per Udb server can be used. 
+`aq_pp <aq_pp.html>`_. If there are multiple data sources and that data
+order in the database is not important, import can be done in parallel.
+One or more parallel imports per Udb server can often be used
+to maximize throughput.
 
 Then the data can be manipulated via client program `aq_udb <aq_udb.html>`_.
 Manipulations are usually done sequentially since they involve data
@@ -78,7 +129,7 @@ loaded on-demand. After processing, the database can simply be destroyed,
 releasing memory back to the operating system. Once a server is cleared,
 it can be used to handle another database.
 
-Note that the server does not require any configuration to operate.
+The server does not require any configuration to operate.
 Its actions are completely controlled by the client programs
 `aq_pp <aq_pp.html>`_ and `aq_udb <aq_udb.html>`_.
 Even the data definition (table defs) comes from the client.
@@ -205,4 +256,5 @@ See Also
 
 * `aq_pp <aq_pp.html>`_ - Record preprocessor
 * `aq_udb <aq_udb.html>`_ - Interface to Udb server
+* `udb.spec <udb.spec.html>`_ - Udb spec file.
 

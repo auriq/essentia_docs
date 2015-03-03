@@ -2,16 +2,6 @@
 aq_sess
 =======
 
--------------
-Session count
--------------
-
-:Copyright: AuriQ Systems Inc.
-:Manual group: Data Processing Command
-:Manual section: 1
-:Date: 2015-01-28
-:Version: 1.2.1
-
 
 Synopsis
 ========
@@ -123,7 +113,7 @@ Options
 
    ::
 
-    sh# aq_sess ... -f,+1l,eok file1 -f file2 ...
+    $ aq_sess ... -f,+1l,eok file1 -f file2 ...
 
   * File1 and file2 can have different attributes.
 
@@ -172,7 +162,7 @@ Options
 
    ::
 
-    sh# aq_sess ... -d s:Col1 s,lo:Col2 i,trm:Col3 ...
+    $ aq_sess ... -d s:Col1 s,lo:Col2 i,trm:Col3 ...
 
   * Col1 is a string. Col2 also a string, but the input value will be converted
     to lower case. Col3 is an unsigned integer, the ``trm`` attribute removes
@@ -207,8 +197,8 @@ Options
 
    ::
 
-    sh# aq_sess ... -d i:Time s:Col2 ip:Col3 ...
-          -t Time -k Col2 Col3 -tout 1800 ...
+    $ aq_sess ... -d i:Time s:Col2 ip:Col3 ...
+        -t Time -k Col2 Col3 -tout 1800 ...
 
   * Set the *time* column to Time, *key* columns (composite) to Col2 and Col3,
     and session expiration to half an hour.
@@ -264,7 +254,7 @@ Options
 
    ::
 
-    sh# aq_sess ... -o,esc,noq -
+    $ aq_sess ... -o,esc,noq -
 
   * Output to stdout in a format suitable for Amazon Cloud.
 

@@ -2,16 +2,6 @@
 rt.so
 =====
 
--------------------
-RT module for aq_pp
--------------------
-
-:Copyright: AuriQ Systems Inc.
-:Manual group: aq_pp emod
-:Manual section: 1
-:Date: 2015-01-28
-:Version: 1.2.1
-
 
 Description
 ===========
