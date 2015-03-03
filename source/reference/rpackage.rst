@@ -94,6 +94,37 @@ If you are streaming multiple files from one category and want to include that s
 To separate these files into separate variables in R, include ``#Rseparate`` somewhere in your statement line. 
 You can also then use the ``#filelist`` flag to store an extra dataframe in R that saves the list of files you streamed into R.
 
+Flags for RIntegration
+-----------------------
+
+The flags added to the essentia commands in the essQuery call or query script can include:
+
+*    ``#Rignore`` : Ignore an ``ess task exec`` statement. Do not capture
+     the output of the statement into R.
+
+*    ``#Rinclude`` : Include an ``ess task stream`` statement. Capture the
+     output of the statement into R.
+
+*    ``#-notitle`` : Tell R not to use the first line of the output as
+     the header.
+
+*    ``#Rseparate`` : Can be used when saving multiple files into an R
+     dataframe using an ``ess task stream`` command. Saves each file into
+     a different R dataframe.
+
+*    ``#filelist`` : Causes an extra dataframe to be stored in R that
+     saves the list of files streamed into R when streaming multiple
+     files.
+
+*    ``#R#name#R#`` : Allows any automatically saved dataframe to be
+     renamed to whatever is entered in place of ``name``. When used with
+     ``#Rseparate``, saves the files as name1 to nameN, where N is the
+     number of files.  Since this still counts as a statement, the next
+     default dataframe saved will be stored as command followed by the
+     number of previous statements run plus one. This only
+     applies in **essQuery** when streaming multiple files with ``#Rseparate``.
+
+
 Output of essQuery
 -------------------
 
@@ -280,32 +311,3 @@ These next examples work on the diy_workshop purchase data available in the samp
     "head -10 | aq_pp -notitle -f,+1,eok - -d %cols", \
     "#Rinclude")
     
-Flags for RIntegration
------------------------
-
-The flags added to the essentia commands in file can include:
-
-*    ``#Rignore`` : Ignore an ``ess task exec`` statement. Do not capture
-     the output of the statement into R.
-
-*    ``#Rinclude`` : Include an ``ess task stream`` statement. Capture the
-     output of the statement into R.
-
-*    ``#-notitle`` : Tell R not to use the first line of the output as
-     the header.
-
-*    ``#Rseparate`` : Can be used when saving multiple files into an R
-     dataframe using an ``ess task stream`` command. Saves each file into
-     a different R dataframe.
-
-*    ``#filelist`` : Causes an extra dataframe to be stored in R that
-     saves the list of files streamed into R when streaming multiple
-     files.
-
-*    ``#R#name#R#`` : Allows any automatically saved dataframe to be
-     renamed to whatever is entered in place of ``name``. When used with
-     ``#Rseparate``, saves the files as name1 to nameN, where N is the
-     number of files.  Since this still counts as a statement, the next
-     default dataframe saved will be stored as command followed by the
-     number of previous statements run plus one. This only
-     applies in **essQuery** when streaming multiple files with ``#Rseparate``.
