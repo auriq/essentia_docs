@@ -89,10 +89,10 @@ After executing the following, you will see a text dump of the contents of the '
   $ ess task exec "aq_udb -exp wood:allsales"
 
 .. note ::
-    In 'local' mode, users can execute the aq_udb commands directly without using Essentia (``ess task exec``). However
+    In 'local' mode, users can execute the aq_udb commands directly without using Essentia (``ess task exec``). However,
     we recommend using the full command since it can be used immediately if worker nodes are added to the cluster.
 
-You can note that the userids are output in groups, which is how UDB has stored the data.  However it is not in time
+You can note that the userids are output in groups, which is how UDB has stored the data.  However, it is not in time
 order per user.  Than can be done via::
 
   $ ess task exec "aq_udb -ord wood:allsales"
@@ -142,8 +142,10 @@ Charles Dickens.  You will find it under ``tutorials\map-reduce`` in the git rep
 
 .. code-block:: sh
    :linenos:
-   :emphasize-lines: 2,4,5
+   :emphasize-lines: 4,6,7
 
+   ess instance local
+   ess spec reset
    ess spec create database mapreduce
    ess spec create vector wordcount s,pkey:word i,+add:count
    ess udbd restart
@@ -153,8 +155,9 @@ Charles Dickens.  You will find it under ``tutorials\map-reduce`` in the git rep
 
 
 Since this is just a single file, we have elected to use the raw ``aq_pp`` rather than wrapping inside of an
-Essentia statement (``task stream``).  The first 2 lines simply setup the schema, with the vector really acting as
-an on the fly 'REDUCER'.  We then restart the UDB to wipe out any previous content from earlier tutorials.
+Essentia statement (``task stream``).  The first 2 lines setup the cluster and clean out any old schemas (if they
+existed).  The next 2 lines simply setup the schema, with the vector really acting as
+an on-the-fly 'REDUCER'.  We then restart the UDB to wipe out any previous content from earlier tutorials.
 
 At this point UDB is ready to accept input.  We use a very common UNIX tool ``tr`` to tokenize input data based on
 spaces or punctuation, and then pipe it to ``aq_pp`` which emits a ``{word:1}`` to UDB.

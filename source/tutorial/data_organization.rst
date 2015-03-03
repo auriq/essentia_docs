@@ -128,8 +128,15 @@ by using::
   $ ess datastore category change browse columnSpec "S:eventDate S:userID I:articleID"
 
 
-The full tutorial script goes on to group 'purchase' files.  In the next tutorial (ETL) we show how to apply
-operations to files within a group en masse.
+Organizing the 'purchase' data is handled in a similar manner::
+
+  ess datastore rule add "*purchase*" purchase YYYYMMDD
+  ess datastore probe purchase --apply
+  ess datastore category change purchase columnSpec "S:purchaseDate S:userID I:articleID f:price I:refID"
+  ess datastore category change purchase dateFormat "Y.m.d.H.M.S"
+  ess datastore category change purchase TZ "GMT"
+
+In the next tutorial (ETL) we show how to apply operations to files within a group en masse.
 
 Future sessions
 ===============

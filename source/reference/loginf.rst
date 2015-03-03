@@ -4,6 +4,7 @@ File Analyzer
 
 It is not uncommon for data scientists to spend a significant amount of time determining properties about a data set.
 ``loginf`` was developed to assist in the process.  It scans a file and determines:
+
 * column names
 * type of each column (string, int, etc)
 * number of records
@@ -15,7 +16,8 @@ algorithm which results in an answer that is accurate to within a few percent.
 Usage
 =====
 
-We will look at a simple 3 column file (:download:`donations.csv<data/donations.csv>`) that records the last
+We will look at a simple 3 column file ( click to download :download:`donations.csv<data/donations.csv>`) that records
+the last
 name, city,
 and amount donated
 to a fictional charity.  In the rawest form, one can execute the following to get the full output::
@@ -72,6 +74,8 @@ to a fictional charity.  In the rawest form, one can execute the following to ge
 
 ``logcnv`` breaks down each column.  Note column three which is the numerical column.  Since at first ``logcnv`` does
 not know if there is a header line, it identifies that 1/11 entries are strings, while the other 10/11 are integers.
+If you know in advance how many lines to skip at the start of a file, can can use the `-f,
++n` attribute to skip the first n lines.
 
 This is used for determining the column specification used in other AQ commands::
 

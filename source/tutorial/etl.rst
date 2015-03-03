@@ -487,8 +487,7 @@ the data are in the ``tutorial/etl-engine`` directory.
 
 **SQL**::
 
-  select ROUND(sum(sales.amount*exchange.rate),2) AS total from sales INNER JOIN exchange ON sales.currency = exchange
-  .currency;
+  select ROUND(sum(sales.amount*exchange.rate),2) AS total from sales INNER JOIN exchange ON sales.currency = exchange.currency;
 
 SQL is straightforward and generally easy to understand.  It will execute this query very quickly,
 but this overlooks the hassle of actually importing it into the database.

@@ -32,7 +32,7 @@ and then provide the ETL operation which is in a format very similar to the 'str
 :doc:`ETL tutorial <../tutorial/etl>`::
 
   $ ess redshift register redshift_cluster_name
-  $ ess redshift stream Standard 2014-12-01 2014-12-10 “command” -U username -d table -p password
+  $ ess redshift stream Standard 2014-12-01 2014-12-10 "command" -U username -d table -p password
 
 Here, 'command' is typically ``aq_pp``, but it can also be any other program that accepts text data from the stdin
 and outputs the results to stdout.
