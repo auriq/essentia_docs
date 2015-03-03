@@ -17,10 +17,12 @@ This package contains two R functions that can be used to capture the output of 
 
 Both functions require an Essentia Bash script to be executed that sets up the Essentia environment and optionally loads data into the UDB database. Thus they require you to run ::
 
-    bash **load_script_name**.sh
+    sh **load_script_name**.sh
 
-In this tutorial we just want to setup a simple Essentia environment, one that runs on our local computer and scans our local filesystem for the browse and purchase data. 
-Thus we save the following commands to my_setup_script.sh::
+In this tutorial we just want to setup a simple Essentia environment, one that runs on our local computer and scans our local 
+filesystem for the browse and purchase data located in the ``tutorials/woodworking`` directory. 
+If you are not already in the ``tutorials/woodworking`` directory used in the previous tutorials, switch into it now.
+We save the following commands to my_setup_script.sh::
 
     ess instance local
     
@@ -37,6 +39,10 @@ Thus we save the following commands to my_setup_script.sh::
     ess datastore category change purchase dateFormat "Y.m.d.H.M.S"
     ess datastore category change purchase TZ GMT
     
+and then run ::
+
+    sh my_setup_script.sh
+
 6.3 essQuery
 ------------    
     
