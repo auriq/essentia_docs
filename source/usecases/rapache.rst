@@ -5,7 +5,7 @@ R Apache Analysis
 The R Package
 -----------------
 
-In order to use R with Essentia, you must install the RESS package from C-RAN (see installation instructions). 
+In order to use R with Essentia, you must install the RESS package from C-RAN (open R and then run ``install.packages("RESS")``). 
 This package contains two R functions that can be used to capture the output of essentia commands into R, **essQuery** and **read.udb**.
 
 * **essQuery** is used to directly query the database using a single statement. You can call essQuery multiple times to run different statements.
