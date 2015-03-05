@@ -1,5 +1,6 @@
-aq_pp Tutorial
-==============
+**********************
+Example aq_pp commands
+**********************
 
 **Required Files**
 
@@ -288,7 +289,7 @@ You can accomplish this with the ``-grep`` option, which only requires the file 
 
 **Output Specifications**
 
-Now that you've completed your preprocessing of the data, its time to output your results. The output goes to **standout output** by default.
+Now that you've completed your preprocessing of the data, its time to output your results. The output goes to **standard output** by default.
 
 ``aq_pp -f,+1 tutorialdata.csv -d f:float_col i:integer_col s:last_name s:first_name s:country -o -``
 

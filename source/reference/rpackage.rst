@@ -14,7 +14,7 @@ This package contains two R functions that can be used to capture the output of 
 
 Both functions require an Essentia Bash script to be executed that sets up the Essentia environment and optionally loads data into the UDB database. Thus they require you to run ::
 
-    bash **load_script_name**.sh
+    sh **load_script_name**.sh
 
 You can call either function in an R script. We use an R script called runr.R for demonstration purposes and to provide you with a template for your own use of the RESS package. 
 
@@ -47,21 +47,21 @@ at the command prompt. Then run the R command::
     
 **Running the Apache Example with essQuery**
 
-1. Run ``bash loadtimeapache.sh``  on the command line.
-2. Open 'runr.R' and enter "timeapache.R" for ``rscriptfile``. # This is the default but you will normally have to do this step.
+1. Run ``sh setupapache.sh``  on the command line.
+2. Open 'runr.R' and enter "analyzeapache.R" for ``rscriptfile``. # This is the default but you will normally have to do this step.
 3. Run ``R`` on the command line.
 4. In the R prompt that appears, run ``source("runr.R", echo=FALSE)``
     
 **Running the Apache Example with read.udb**
 
-1. Run ``bash loadtimeapache.sh``  on the command line.
-2. Open 'runr.R' and enter "querytimeapache.sh" for ``file`` and "timeapache.R" for ``rscriptfile``. # These are the defaults but you will normally have to do this step.
+1. Run ``sh setupapache.sh``  on the command line.
+2. Open 'runr.R' and enter "queryapache.sh" for ``file`` and "analyzeapache.R" for ``rscriptfile``. # These are the defaults but you will normally have to do this step.
 3. Run ``R`` on the command line.
 4. In the R prompt that appears, run ``source("runr.R", echo=FALSE)``
 
 You will see the results of the analysis print to the screen.
 
-To see the commands involved in getting this analysis, open runr.R  and timeapache.R for **essQuery** or querytimeapache.sh and timeapache.R for **read.udb**.
+To see the commands involved in getting this analysis, open runr.R  and analyzeapache.R for **essQuery** or queryapache.sh and analyzeapache.R for **read.udb**.
 
 R Integration Format Requirements
 =================================
@@ -94,6 +94,15 @@ If you are streaming multiple files from one category and want to include that s
 To separate these files into separate variables in R, include ``#Rseparate`` somewhere in your statement line. 
 You can also then use the ``#filelist`` flag to store an extra dataframe in R that saves the list of files you streamed into R.
 
+Ess Query Statements
+--------------------
+
+To include an ``ess query`` statement, put ``#Rinclude`` at the end of the statement line.
+
+You can stream a single file or multiple files from one category into R using ``ess query``; however, you cannot separate these files into separate R variables with the ``#Rseparate`` flag.
+
+The benefits gained from using ``ess query`` are the sql-like commands and a small speed advantage when streaming a moderate amount of data.
+
 Flags for RIntegration
 -----------------------
 
@@ -102,7 +111,7 @@ The flags added to the essentia commands in the essQuery call or query script ca
 *    ``#Rignore`` : Ignore an ``ess task exec`` statement. Do not capture
      the output of the statement into R.
 
-*    ``#Rinclude`` : Include an ``ess task stream`` statement. Capture the
+*    ``#Rinclude`` : Include an ``ess task stream`` or ``ess query`` statement. Capture the
      output of the statement into R.
 
 *    ``#-notitle`` : Tell R not to use the first line of the output as
@@ -134,7 +143,7 @@ The value returned by **essQuery** is the output from querying the database. Thi
 
 or directly analyzed in R.
 
-If you use **essQuery** to save multiple files into separate R dataframes using a single stream command, the files are stored automatically in R dataframes called command1 to commandN
+If you use **essQuery** to save multiple files into separate R dataframes using a single ``ess task stream`` command, the files are stored automatically in R dataframes called command1 to commandN
 (where N is the number of files) and no value is returned. 
 
 To change the names of the stored dataframes, use the ``#R#any_name#R#`` flag. The dataframes will then be stored as any_name1 to any_nameN.
@@ -196,11 +205,17 @@ or on a series of lines in the file ::
 
 A command such as ``head -30`` will work with the R integrator. You can use it to preview and analyze the top records in each of your files.
 
+Similarly you could run 
+
+* ``ess query "select * from category:startdate:enddate limit 30" #Rinclude`` 
+
+to achieve the same effect.
+
 .. maybe remove this part (when i use etl_commands) or switch to tail-30 and bottom records or subset of the records in.
 
-**Saving Files into R Variables**
+**Saving Files into R Variables using 'ess task stream'**
 
-You can also save your files into R variables using ``ess task stream category startdate enddate "cat -" #Rinclude`` for .csv files only or ``ess task stream category startdate enddate "aq_pp -f,eok - -d %cols" #Rinclude`` for any file with a constant delimiter. This should only be used to explore or analyze a few files so the data doesnt become too large (this feature just streams the files you select into variables in R).
+You can also save your files into R variables using ``ess task stream category startdate enddate "cat -" #Rinclude`` for .csv files only or ``ess task stream category startdate enddate "aq_pp -f,eok - -d %cols" #Rinclude`` for any file with a constant delimiter. This should only be used to explore or analyze a few files so the data doesnt become too large (this feature just streams the files you select into variables in R). 
 
 When saving multiple files from one category into R, you MUST include Essentia's ``-notitle`` flag somewhere on the line. You also have the option of saving all of the files you are streaming as one variable or into separate variables (one for each file). By default, the R integrator loads all of the files used in one
 ``ess task stream`` statement into a single R variable. To store each file into its own distinct R variable, run ::
@@ -209,9 +224,13 @@ When saving multiple files from one category into R, you MUST include Essentia's
     
 This will also cause the R integrator to automatically save the filenames of the stored files into a single additional R variable.
 
+.. **Saving Files into R Variables using 'ess query'**
+
+.. You can stream any files with a constant delimiter into an R dataframe using ``ess query "select * from category:startdate:enddate" #Rinclude`` 
+
 **Access Log Data Integration Syntax Examples**
 
-For any more complicated, delimited format you can use ``logcnv`` to convert the format to csv within the stream commmand. All of the following examples have the correct syntax. The data they're acting on is in Extended Apache Log Format. ::
+For any more complicated, delimited format you can use ``logcnv`` to convert the format to csv within the ``ess task stream`` commmand. All of the following examples have the correct syntax. The data they're acting on is in Extended Apache Log Format. ::
 
     ess task stream 125accesslogs "2014-12-07" "2014-12-07" "logcnv -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' i,tim:time sep:'] \"' s,clf,hl1:req_line1 sep:'\" ' i:res_status sep:' ' i:res_size sep:' \"' s,clf:referrer sep:'\" \"' s,clf:user_agent sep:'\"' X | cat -" #Rinclude
     
@@ -245,6 +264,18 @@ These next examples work on the diy_workshop purchase data available in the samp
     "head -10 | aq_pp -notitle -f,+1,eok - -d %cols" \
     #Rinclude
     
+    ess query "select * from browse:*:*" #-notitle #Rinclude #R#querybrowse#R#
+    
+    ess query "select * from purchase:*:*" #-notitle #Rinclude #R#querypurchase#R#
+    
+    ess query "select price,count(refID) from purchase:2014-09-01:2014-09-15 where articleID>=46 group by price" #Rinclude
+
+    ess query "select count(distinct userID) from purchase:2014-09-01:2014-09-15 where articleID>=46" #Rinclude
+
+    ess query "select userID,count(refID) from purchase:2014-09-01:2014-09-15 where articleID>=46 group by userID" #Rinclude
+
+    ess query "select * from purchase:*:* where articleID <= 20" #Rinclude #R#querystream#R#    
+    
 Syntax Examples for essQuery
 -----------------------------
 
@@ -261,6 +292,12 @@ Syntax Examples for essQuery
 * Takes the output of this ``ess task stream`` command and returns it to R using essQuery.
 
 A command such as ``head -30`` will work with the R integrator. You can use it to preview and analyze the top records in each of your files.
+
+Similarly you could run 
+
+* ``ess query "select * from category:startdate:enddate limit 30" #Rinclude`` 
+
+to achieve the same effect.
 
 **Saving Files into R Variables**
 
@@ -311,3 +348,14 @@ These next examples work on the diy_workshop purchase data available in the samp
     "head -10 | aq_pp -notitle -f,+1,eok - -d %cols", \
     "#Rinclude")
     
+    querybrowse <- essQuery("ess query", "select * from browse:*:*", "#-notitle #Rinclude")
+    
+    querypurchase <- essQuery("ess query", "select * from purchase:*:*", "#-notitle #Rinclude")
+        
+    pricecounts <- essQuery("ess query","select price,count(refID) from purchase:2014-09-01:2014-09-15 where articleID>=46 group by price","#Rinclude")
+
+    distinctusers <- essQuery("ess query", "select count(distinct userID) from purchase:2014-09-01:2014-09-15 where articleID>=46", "#Rinclude")
+
+    usercounts <- essQuery("ess query", "select userID,count(refID) from purchase:2014-09-01:2014-09-15 where articleID>=46 group by userID", "#Rinclude")
+
+    querystream <- essQuery("ess query", "select * from purchase:*:* where articleID <= 20", "#Rinclude")

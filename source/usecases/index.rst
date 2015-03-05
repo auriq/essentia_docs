@@ -11,6 +11,8 @@ available within the git repository under the ``casestudies`` directory
 .. toctree::
    :titlesonly:
 
-   apache-sample
+   calculate-sum-and-maximum
+   obtain-first-last-and-minimum
    conversion
-
+   apache-sample
+   rapache

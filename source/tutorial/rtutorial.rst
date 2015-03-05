@@ -76,6 +76,16 @@ Similarly we run ::
    
 to import the purchase files into R and save them as a dataframe called purchasedata. 
 
+Alternatively, we could use ``ess query`` commands with essQuery to stream the browse and purchase data into dataframes in R. We would run ::
+
+    querybrowse <- essQuery("ess query", "select * from browse:*:*", "#-notitle #Rinclude")
+    
+to import the browse data and ::
+
+    querypurchase <- essQuery("ess query", "select * from purchase:*:*", "#-notitle #Rinclude")
+    
+to import the purchase data.
+
 We are now free to analyze these files using the massive variety of R functions and methods. To get a quick count of the total number of rows and columns in each dataset we ran::
 
     nrow(browsedata)
@@ -89,6 +99,20 @@ We are now free to analyze these files using the massive variety of R functions 
     
     ncol(purchasedata)
     #[1] 5
+    
+    nrow(querybrowse)
+    #[1] 299725
+    
+    ncol(querybrowse)
+    #[1] 3
+    
+    nrow(querypurchase)
+    #[1] 41031
+    
+    ncol(querypurchase)
+    #[1] 5
+    
+As you can see, both the stream and query methods of importing the files into R result in the same number of rows and columns when used on the same data over the same date range. 
 
 6.4 read.udb
 ------------
@@ -99,21 +123,31 @@ An alternative way to send the files to R is to use **read.udb**.
 
     ess task stream browse '*' '*' "aq_pp -f,+1,eok - -d %cols -notitle" #Rinclude #R#browsedata#R#
     ess task stream purchase '*' '*' "aq_pp -f,+1,eok - -d %cols -notitle" #Rinclude #R#purchasedata#R#
+    ess query "select * from browse:*:*" #-notitle #Rinclude #R#querybrowse#R#
+    ess query "select * from purchase:*:*" #-notitle #Rinclude #R#querypurchase#R#
 
 and then simply have R run::
 
     file <- "myqueries.sh"  # store myqueries.sh as file
     library(RESS)           # load Essentia's R Integration package
     
-    read.udb(file)          # call read.udb to execute the essentia statements written in myqueries.sh and save them to R dataframes browsedata and purchasedata
+    read.udb(file)          # call read.udb to execute the essentia statements written in myqueries.sh and save them to R dataframes browsedata, purchasedata, querybrowse, and querypurchase
     
     nrow(browsedata)
     ncol(browsedata)
     nrow(purchasedata)
     ncol(purchasedata)
+    nrow(querybrowse)
+    ncol(querybrowse)
+    nrow(querypurchase)
+    ncol(querypurchase)
 
 The output is the same as before::
 
+    299725
+    3
+    41031
+    5
     299725
     3
     41031
