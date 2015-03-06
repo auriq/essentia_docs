@@ -8,7 +8,7 @@ The R Package
 In order to use R with Essentia, you must install the RESS package from C-RAN (open R and then run ``install.packages("RESS")``). 
 This package contains two R functions that can be used to capture the output of essentia commands into R, **essQuery** and **read.udb**.
 
-* **essQuery** is used to directly query the database using a single statement. You can call essQuery multiple times to run different statements.
+* **essQuery** is used to directly query the database using a single statement. You can call **essQuery** multiple times to run different statements.
 * **read.udb**, on the other hand, reads all of the statements in a file. Thus if you plan to run multiple statements
   that may be somewhat related to each other, it is recommended that you use **read.udb**.
 
@@ -83,8 +83,8 @@ read.udb
     ess task exec "aq_udb -exp logsapache4:vector4 -sort pagecount -dec" --debug
     ess task exec "aq_udb -exp logsapache2:vector2 -sort pagecount -dec" --debug
 
-Since these are all ``ess task exec`` statements and there's no ``#Rignore`` flag in any of the statment lines, read.udb will automatically store their output into R dataframes entitled 
-command1, command2, command3, and command4. All we need to do now is run the following R script telling R to use the RESS package, use read.udb on queryapache.sh to load the statements' output into 
+Since these are all ``ess task exec`` statements and there's no ``#Rignore`` flag in any of the statment lines, **read.udb** will automatically store their output into R dataframes entitled 
+command1, command2, command3, and command4. All we need to do now is run the following R script telling R to use the RESS package, use **read.udb** on queryapache.sh to load the statements' output into 
 R dataframes, and run the additional analysis written in the r script analyzeapache.R 
 
 .. code-block:: sh
@@ -104,8 +104,8 @@ R dataframes, and run the additional analysis written in the r script analyzeapa
 essQuery
 --------
     
-We could also have chosen to run these queries using the essQuery function. In this case, there is no need for a separate queryapache.sh file. 
-You can simply call essQuery on each statement we want to run. Thus the commands we need to run in R are     
+We could also have chosen to run these queries using the **essQuery** function. In this case, there is no need for a separate queryapache.sh file. 
+You can simply call **essQuery** on each statement we want to run. Thus the commands we need to run in R are     
     
 .. code-block:: sh
    :emphasize-lines: 4,7,12   

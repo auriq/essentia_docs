@@ -8,7 +8,7 @@ Using R with Essentia
 In order to use R with Essentia, you must install the RESS package from C-RAN (open R and then run ``install.packages("RESS")``). 
 This package contains two R functions that can be used to capture the output of essentia commands into R, **essQuery** and **read.udb**.
 
-* **essQuery** is used to directly query the database using a single statement. You can call essQuery multiple times to run different statements.
+* **essQuery** is used to directly query the database using a single statement. You can call **essQuery** multiple times to run different statements.
 * **read.udb**, on the other hand, reads all of the statements in a file. Thus if you plan to run multiple statements
   that may be somewhat related to each other, it is recommended that you use **read.udb**.
 
@@ -106,7 +106,7 @@ The benefits gained from using ``ess query`` are the sql-like commands and a sma
 Flags for RIntegration
 -----------------------
 
-The flags added to the essentia commands in the essQuery call or query script can include:
+The flags added to the essentia commands in the **essQuery** call or query script can include:
 
 *    ``#Rignore`` : Ignore an ``ess task exec`` statement. Do not capture
      the output of the statement into R.
@@ -179,7 +179,7 @@ where myvariable4 contains the list of filenames.
 Syntax Examples for read.udb
 -----------------------------
 
-You can enter any commands with the syntax demonstrated in this section into your query script and then call read.udb on that file, ::
+You can enter any commands with the syntax demonstrated in this section into your query script and then call **read.udb** on that file, ::
 
     read.udb("**query_script_name**")
 
@@ -203,13 +203,13 @@ or on a series of lines in the file ::
 
 * Takes the output of this ``ess task stream`` command and saves it into a variable in R.
 
-A command such as ``head -30`` will work with the R integrator. You can use it to preview and analyze the top records in each of your files.
+* A command such as ``head -30`` will work with the R integrator. You can use it to preview and analyze the top records in each of your files.
 
-Similarly you could run 
+* Similarly you could run 
 
-* ``ess query "select * from category:startdate:enddate limit 30" #Rinclude`` 
+  ``ess query "select * from category:startdate:enddate limit 30" #Rinclude`` 
 
-to achieve the same effect.
+  to achieve the same effect.
 
 .. maybe remove this part (when i use etl_commands) or switch to tail-30 and bottom records or subset of the records in.
 
@@ -281,23 +281,23 @@ Syntax Examples for essQuery
 
 ``essQuery("ess task exec", "aq_udb -cnt **database_name**:vector1'", "--debug")``
 
-* Outputs to std. out. (default) and will be returned by essQuery. This is the main use for the R integrator.
+* Outputs to std. out. (default) and will be returned by **essQuery**. This is the main use for the R integrator.
 
 ``essQuery("ess task exec", "aq_udb -cnt **database_name**:vector1'", "--debug #Rignore")``
 
-* This will IGNORE this ``ess task exec`` statement and this statement's output will NOT be captured or returned by essQuery.
+* This will IGNORE this ``ess task exec`` statement and this statement's output will NOT be captured or returned by **essQuery**.
 
 ``essQuery("ess task stream category startdate enddate", "**command**'", "#Rinclude")``
 
-* Takes the output of this ``ess task stream`` command and returns it to R using essQuery.
+* Takes the output of this ``ess task stream`` command and returns it to R using **essQuery**.
 
-A command such as ``head -30`` will work with the R integrator. You can use it to preview and analyze the top records in each of your files.
+* A command such as ``head -30`` will work with the R integrator. You can use it to preview and analyze the top records in each of your files.
 
-Similarly you could run 
+* Similarly you could run 
 
-* ``ess query "select * from category:startdate:enddate limit 30" #Rinclude`` 
+  ``essQuery("ess query", "select * from category:startdate:enddate limit 30", "#Rinclude")`` 
 
-to achieve the same effect.
+  to achieve the same effect.
 
 **Saving Files into R Variables**
 

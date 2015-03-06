@@ -1,5 +1,5 @@
 **********************
-Example aq_pp commands
+Example aq_pp Commands
 **********************
 
 **Required Files**
