@@ -80,7 +80,10 @@ We can now populate the 'allsales' table using::
   -imp wood:allsales"
 
 This is basically the same as the ETL example in the previous tutorial, with the addition of the
-``-imp wood:allsales`` directive.
+``-imp wood:allsales`` directive.  As with the ETL tutorial, the ``eok`` means to ignore errors (but still report
+them).  In this case, a message will be triggered for some of the data because it was designed to have corrupted
+fields.  The messages can be used to examine bad records directly, or they can be turned off entirely using the
+``qui`` attribute.
 
 Querying the database
 =====================

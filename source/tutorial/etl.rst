@@ -432,7 +432,7 @@ ways to achieve this, but the most robust is the following:
     -endif \
     -c purchaseDate userID articleID price refID \
     -notitle \
-    | bzip2 - -c > /data/%file.bz2"
+    | bzip2 - -c > .bz2/%file.bz2"
 
 .. note::
 

@@ -15,7 +15,7 @@ Desktop version
 The desktop version assumes you are using OSX or Linux as your operating system,
 and that you have Python 2.7 installed.
 
-1. Fetch the `installer <http://auriq.net/wp-content/uploads/installer/essentia-standalone-2.1.5.zip>`_
+1. Fetch the `installer <http://auriq.net/wp-content/uploads/installer/essentia-standalone-latest.zip>`_
    (for both Mac and Linux) .
 2. Unpack the zip file.
 3. ``cd`` into the directory it creates

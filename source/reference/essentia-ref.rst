@@ -96,8 +96,8 @@ Manage the Essentia cluster
     :widths: 15, 10 ,30
     
     instance local,--ips,Start a local environment using the listed ip addresses as workers
-    instance ec2 create,--num --type,create ec2 instances
-    instance ec2 reuse,--reservation,reuse existing reservations
+    instance ec2 create,--number --type,create ec2 instances
+    instance ec2 existing,reservation#,reuse existing reservations
     instance ec2 remove,--reservation,remove listed reservations from setup
     instance ec2 add,--reservation,add additional reservations to the setup
     instance ec2 terminate,all|reservation,terminate all instances or specific reservations
