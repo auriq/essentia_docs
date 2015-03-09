@@ -116,7 +116,7 @@ and limiting to the top 10 users.
 If you wish to delete the contents of a single table/vector or the entire database you can execute::
 
   $ ess task exec "aq_udb -clr wood:usersales"
-  $ ess task exec "aq_udb -clr_all"
+  $ ess task exec "aq_udb -clr_all -db wood"
 
 
 Map/Reduce, Essentia Style
