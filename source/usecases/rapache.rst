@@ -7,7 +7,7 @@ Overview
 
 In this use case, we will use Essentia to process some Apache logs so that we can analyze them using ``R``.  The data
 and scripts used here can be found in the ``casestudies/apache`` directory of the git repository.  If you
-haven't already, refer to the :doc:`../tutorial/rtutorial.rst` for how to setup ``R`` to work with Essential. To quickly
+haven't already, refer to the :doc:`../tutorial/rtutorial` for how to setup ``R`` to work with Essential. To quickly
 recap that information: You must install the RESS package from C-RAN (open R and then run
 ``install.packages("RESS")``). This package contains two R functions that can be used to capture the output of
 essentia commands into R, **essQuery** and **read.udb**.
