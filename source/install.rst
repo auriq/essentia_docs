@@ -26,27 +26,26 @@ Full example:
 
 .. code-block:: sh
 
-  unzip essentia-standalone-2.1.5.zip
-  cd essentia-standalone-2.1.5
+  unzip essentia-standalone-latest.zip
+  cd essentia-standalone-latest
   ./install
   export PATH=$PATH:$HOME/.local/essentia/bin
-  export PATH=$PATH:$HOME/.local/essentia/bin/aq_tools/bin
-  export PATH=$PATH:$HOME/.local/essentia/bin/aq_tools/udb
+  export PATH=$PATH:$HOME/.local/essentia/bin/aq_tool.osx/bin
 
-The final three ``export`` commands assume you are using a Bourne shell (i.e. bash, zsh).  C-Shell users would use:
+The final line assumes you are using a mac.  If on a linux system, use 'aq_tool.x86' instead.
+Also, the final two ``export`` commands assume you are using a Bourne shell (i.e. bash, zsh).  C-Shell users would use:
 
 .. code-block:: sh
 
   setenv PATH $PATH:$HOME/.local/essentia/bin
   setenv PATH $PATH:$HOME/.local/essentia/bin/aq_tools/bin
-  setenv PATH $PATH:$HOME/.local/essentia/bin/aq_tools/udb
 
 Once installed and the paths set, Essentia can be invoked from the command line using ``ess``.
 
 Essentia is self contained, and to uninstall, one only needs to execute ``rm -rf ~/.local/essentia``.
 
-Cloud version
-=============
+Cloud version (Free AMI)
+========================
 The cloud version requires that the user has an Amazon Web Services account.  New users can get more information from
 our :doc:`aws/aws` guide.
 
@@ -83,6 +82,21 @@ license key (if using the free version) to it using the following command from a
 
 The public IP will be listed on your AWS console.
 
+Cloud version (Paid AMI)
+========================
+We also offer an unlocked version of the software on the Amazon Marketplace.
+This version has no restrictions or time limits, but does cost a nominal free for each hour
+it is in use.  Prices range from $0.07-$2.00 per hour depending on instance type used.
+
+To get up and running with this AMI, the instructions are similar to the free version:
+
+#. Go to your AWS console, where all services are listed.
+#. Click on EC2.
+#. Create on the 'Launch Instance' button.  This will take you to a site where
+   you can select what OS and software you would like to access.
+#. Select the 'Marketplace' tab, and search for 'AuriQ'
+#. The list of results should include the latest release of Essentia.  Click on it to start.
+#. Follow the setup instructions.
 
 AWS additional notes
 ====================
