@@ -28,7 +28,7 @@ Examples
 .. toctree::
    :maxdepth: 1
    
-   essentia-examples
+   essentia-examples-simple
    aq_pp-option-examples
    aq_udb-option-examples
 
