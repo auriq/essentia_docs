@@ -28,9 +28,8 @@ data with Essentia's etl tools, and then send the data into R for more advanced 
 following commands to ``setupapache.sh``
 
 .. code-block:: sh
-   :emphasize-lines: 6,10,14,18,25,33
+   :emphasize-lines: 5,9,13,17,24,30
    
-    ess instance local    # Tell essentia to work on your local machine.
     ess udbd stop
     ess spec reset
     
@@ -52,13 +51,11 @@ following commands to ``setupapache.sh``
     
     ess udbd start
     
-    ess datastore select ./accesslogs
+    ess datastore select local
     ess datastore scan
     # Create a category called 125accesslogs that matches any file with 125-access_log in its filename. Tell essentia that these files have a date in their filenames and that this date has in sequence a 4 digit year, 2 digit month, and 2 digit day.
-    ess datastore rule add "*125-access_log*" "125accesslogs" "YYYYMMDD"    
+    ess datastore category add 125accesslogs "*accesslogs/*125-access_log*"    
     
-    ess datastore probe 125accesslogs --apply
-    ess datastore category change 125accesslogs compression none     # Tell essentia that the accesslogs are not compressed
     ess datastore summary
     
 
