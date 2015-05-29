@@ -121,7 +121,7 @@ Output the number of times a unique value of the userID was observed in the file
     8,202
     9,219
     
-Output all of the rows from files in the browse categroy over the entire date range, oredered by the values in the articleID column in ascending order.
+Output all of the rows from files in the browse category over the entire date range, ordered by the values in the articleID column in ascending order.
     
 ``select * from browse:*:* order by articleID`` ::
 
