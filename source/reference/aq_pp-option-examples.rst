@@ -20,7 +20,7 @@ For a full list and description of the available options, see the aq_pp Document
 This tutorial will emphasize the most commonly used options for aq_pp and how to use them to provide a simple modification or analysis of the two input files, tutorialdata.csv and lookup.csv. These options are:
 
 * **Input Specifications:** -f, -d, -cat, -cmb, and -var.
-* **Process Specifications:** -evlc, all -map options, -filt, -sub, and -grep.
+* **Process Specifications:** -eval, all -map options, -filt, -sub, and -grep.
 * **Output Specifications:** -o, -ovar, and -udb_imp.
 
 We will end with using a small portion of these options in conditional option groups (if else statements).
@@ -98,9 +98,9 @@ We can adjust are command to utilize this feature by simply changing the specifi
 
 Now that we know how to input datasets and combine multiple datasets together, lets focus on how to go about processing datasets. A very useful feature of aq_pp is the ability to **define, store, and modify variables**. 
 
-The **creation** of variables is accomplished using the ``-var`` option and their **modification** is typically handled using the ever-useful ``-evlc`` option with the variable as its argument or its input.
+The **creation** of variables is accomplished using the ``-var`` option and their **modification** is typically handled using the ever-useful ``-eval`` option with the variable as its argument or its input.
 
-``aq_pp -f,+1 tutorialdata.csv -d f:float_col i:integer_col s:last_name s:first_name s:country -var 'f:rolling_sum' 0 -var 'f:record_count' 0 -evlc 'rolling_sum' 'rolling_sum + float_col' -evlc 'record_count' 'record_count + 1' -evlc 'f:rolling_average' 'rolling_sum / record_count'``
+``aq_pp -f,+1 tutorialdata.csv -d f:float_col i:integer_col s:last_name s:first_name s:country -var 'f:rolling_sum' 0 -var 'f:record_count' 0 -eval 'rolling_sum' 'rolling_sum + float_col' -eval 'record_count' 'record_count + 1' -eval 'f:rolling_average' 'rolling_sum / record_count'``
 
 * This initializes two new variables: a float called ``rolling_sum`` set to zero and a float called ``record_count`` set to zero. It then adds the value of float_col to rolling_sum, increases record_count by one, and divides rolling_sum by record_count for each record in the input data. 
 * The variables are not included in the standard output, only the columns are included. The output is::
@@ -112,11 +112,11 @@ The **creation** of variables is accomplished using the ``-var`` option and thei
     3.5299999999999998,9678,"Kelley","Jacqueline","Philippines",55.584999999999994
 
 
-While defining variables is incredibly useful, ``-evlc`` also has the capability to **create entirely new columns** or **modify existing ones**. The only change necessary to act on columns is to give ``-evlc`` a column name or column specification as its argument. 
+While defining variables is incredibly useful, ``-eval`` also has the capability to **create entirely new columns** or **modify existing ones**. The only change necessary to act on columns is to give ``-eval`` a column name or column specification as its argument. 
 
 The difference between a column name and a column specification is that a column name is the name of an existing column whereas a column specification is the type you want the new column to be followed by a ``:`` and the name of the new column.
 
-``aq_pp -f,+1 tutorialdata.csv -d f:float_col i:integer_col s:last_name s:first_name s:country -evlc last_name 'first_name + " " + last_name' -evlc integer_col 'float_col * integer_col' -evlc s:mixed_col 'country + " : " + ToS(integer_col)' -c last_name mixed_col``
+``aq_pp -f,+1 tutorialdata.csv -d f:float_col i:integer_col s:last_name s:first_name s:country -eval last_name 'first_name + " " + last_name' -eval integer_col 'float_col * integer_col' -eval s:mixed_col 'country + " : " + ToS(integer_col)' -c last_name mixed_col``
 
 * This command adds the value of first_name and last_name separated by a space and saves this combined string into last_name, overriding the existing value for that record in that column. It then multiplies the float_col by the integer_col and saves this product into integer_col, overriding the existing value. 
 * Finally, it creates a new column called mixed_col that contains the value of country followed by ' : ' and the string-converted value of the modified integer_col. It then limits the columns that are output to just the last_name and mixed_col columns (see the -o option further on in this documentation). The output is::
@@ -127,11 +127,11 @@ The difference between a column name and a column specification is that a column
     "Sarah Wheeler","Portugal : 378443"
     "Jacqueline Kelley","Philippines : 34163"
 
-As you can see, the ``-evlc`` option is incredibly useful since it allows you to create or modify columns based on the results of an expression. This expression can reference literal values (such as 1 or "a string"), existing columns or variables, or any of the **default variables** that are built into aq_pp. 
+As you can see, the ``-eval`` option is incredibly useful since it allows you to create or modify columns based on the results of an expression. This expression can reference literal values (such as 1 or "a string"), existing columns or variables, or any of the **default variables** that are built into aq_pp. 
 
 One such default variable is ``$RowNum`` which simply keeps track of which record you are streaming from your input data file. This can be a useful value to add on to your exported data if you might need to reference your input data later in your analysis.
     
-``aq_pp -f,+1 tutorialdata.csv -d f:float_col i:integer_col s:last_name s:first_name s:country -evlc i:actual_row_number '$RowNum + 1'``
+``aq_pp -f,+1 tutorialdata.csv -d f:float_col i:integer_col s:last_name s:first_name s:country -eval i:actual_row_number '$RowNum + 1'``
 
 * This creates a new integer column called actual_row_number that adds 1 to the value of $RowNum for each record of the file. This corrects for the fact that we skipped the header line and thus represents the actual row number from tutorialdata.csv. The output is::
 
@@ -143,7 +143,7 @@ One such default variable is ``$RowNum`` which simply keeps track of which recor
     
 Another useful default variable is ``$FileId``. This allows you to keep track of which files your records are coming from so you can reference those files or group similar records at a later time. 
 
-``aq_pp -fileid 5 -f,+1 tutorialdata.csv -d f:float_col i:integer_col s:last_name s:first_name s:country -fileid 6 -cat,+1 lookup.csv s:grade f:float_2 s:last_name s:first_name s:country -evlc s:File_ID '"This record came from file " + ToS($FileId)'``
+``aq_pp -fileid 5 -f,+1 tutorialdata.csv -d f:float_col i:integer_col s:last_name s:first_name s:country -fileid 6 -cat,+1 lookup.csv s:grade f:float_2 s:last_name s:first_name s:country -eval s:File_ID '"This record came from file " + ToS($FileId)'``
 
 * This command gives tutorialdata.csv a fileid of 5 and lookup.csv a fileid of 6. It then concatenates tutorialdata.csv and lookup.csv together, skipping the top line (header) in each file, and including a column describing which file the record came from. The output is::
 
@@ -157,11 +157,11 @@ Another useful default variable is ``$FileId``. This allows you to keep track of
     0,0,"Wheeler","Sarah","Portugal","F",89,"This record came from file 6"
     0,0,"Kelley","Jacqueline","Philippines","F",57.600000000000001,"This record came from file 6"
 
-The expression in ``-evlc`` can use much more than existing columns and previously defined variables. There are also a variety of **built-in functions** that can only be used in the ``-evlc`` option that allow much more sophisticated analysis of your data. 
+The expression in ``-eval`` can use much more than existing columns and previously defined variables. There are also a variety of **built-in functions** that can only be used in the ``-eval`` option that allow much more sophisticated analysis of your data. 
 
 See the aq_pp Documentation for a full list and example of these functions. For now I'll introduce the simpler functions that allow you to find the minumum, maximum, and hash value of various columns.
     
-``aq_pp -f,+1 tutorialdata.csv -d f:float_col i:integer_col s:last_name s:first_name s:country -evlc i:minimum 'Min(float_col, integer_col)' -evlc i:maximum 'Max(float_col, integer_col)' -evlc i:hash 'SHash(country)' -c minimum maximum hash``
+``aq_pp -f,+1 tutorialdata.csv -d f:float_col i:integer_col s:last_name s:first_name s:country -eval i:minimum 'Min(float_col, integer_col)' -eval i:maximum 'Max(float_col, integer_col)' -eval i:hash 'SHash(country)' -c minimum maximum hash``
 
 * This stores the minimum and maximum values of float_col and integer_col into columns minimum and maximum, respectively. It then calculates the integer hash value of country and stores it in a column called hash. 
 * The output columns are then limited to minimum, maximum, and hash. The output is::
@@ -172,7 +172,7 @@ See the aq_pp Documentation for a full list and example of these functions. For 
     45,8356,1264705971
     3,9678,4213117258
 
-While the ``-evlc`` option is useful when modifying your existing data or creating new data off of it, it does not easily allow you to **limit which data continues on to the rest of your analysis**. 
+While the ``-eval`` option is useful when modifying your existing data or creating new data off of it, it does not easily allow you to **limit which data continues on to the rest of your analysis**. 
 
 This is where the ``-filt`` option comes in handy. ``-filt`` makes it easy to limit your data based on their values or ranges in values of various columns.
 
@@ -183,7 +183,7 @@ This is where the ``-filt`` option comes in handy. ``-filt`` makes it easy to li
     "float_col","integer_col","last_name","first_name","country"
     45.289999999999999,8356,"Wheeler","Sarah","Portugal"
 
-``-evlc`` is incredibly powerful when acting on numerical columns and many of its functions can be useful in processing string columns, but a lot of analysis needs more advanced parsing and combination of string type columns than ``-evlc`` can provide. 
+``-eval`` is incredibly powerful when acting on numerical columns and many of its functions can be useful in processing string columns, but a lot of analysis needs more advanced parsing and combination of string type columns than ``-eval`` can provide. 
 
 Thus aq_pp contains a variety of mapping functions to **allow values from certain columns to be extracted and recombined into the same or different columns**. The first two sets of mapping functions are ``-mapf`` and ``-mapc``, and ``-mapfrx`` and ``-mapc``.
 
@@ -298,7 +298,7 @@ You can also specify that you want the output to be **saved to a file**, which c
     
 Another form of output is to **only output the variables** you've defined and modified in your previous analysis. This is accomplished with the ``-ovar`` option.
 
-``aq_pp -f,+1 tutorialdata.csv -d f:float_col i:integer_col s:last_name s:first_name s:country -var 'f:rolling_sum' 0 -var 'f:record_count' 0 -evlc 'rolling_sum' 'rolling_sum + float_col' -evlc 'record_count' 'record_count + 1' -evlc 'f:rolling_average' 'rolling_sum / record_count' -ovar -``
+``aq_pp -f,+1 tutorialdata.csv -d f:float_col i:integer_col s:last_name s:first_name s:country -var 'f:rolling_sum' 0 -var 'f:record_count' 0 -eval 'rolling_sum' 'rolling_sum + float_col' -eval 'record_count' 'record_count + 1' -eval 'f:rolling_average' 'rolling_sum / record_count' -ovar -``
 
 * This command initializes two new variables: a float called rolling_sum set to zero and a float called record_count set to zero. It then adds the value of float_col to rolling_sum, increases record_count by one, and divides rolling_sum by record_count for each record in the input data. 
 * The columns are not included in the standard output, only the variables are included. The output is::
@@ -314,7 +314,7 @@ Thus ou can condense your data to just the number of unique values of the specif
 
 Say you have a **database** called my_database that contains a vector called country_grouping which has the column specification ``s,hash:country s:full_name i,+add:integer_col f,+max:float_col s:extra_column``. Running the following code will **import the data into your vector and apply the attributes listed there**.
  
-``aq_pp -f,+1 tutorialdata.csv -d f:float_col i:integer_col s:last_name s:first_name s:country -evlc s:full_name 'first_name + " " + last_name' -ddef -udb_imp my_database:country_grouping"``
+``aq_pp -f,+1 tutorialdata.csv -d f:float_col i:integer_col s:last_name s:first_name s:country -eval s:full_name 'first_name + " " + last_name' -ddef -udb_imp my_database:country_grouping"``
 
 * The output from exporting the vector to standard out (see aq_udb documentation) is::
  
@@ -329,7 +329,7 @@ To learn more about the Essentia Database, please review our aq_udb Tutorial.
 
 A final yet incredibly useful technique for processing your data is to use conditional statements to modify your data based on the results of the conditions. In aq_pp these are contained in ``-if``, ``-elif``, and ``else`` statements.
 
-``aq_pp -f,+1 tutorialdata.csv -d f:float_col i:integer_col s:last_name s:first_name s:country -if -filt 'country == "Portugal"' -evlc s:Is_Portugese '"TRUE"' -else -evlc Is_Portugese '"FALSE"' -endif``
+``aq_pp -f,+1 tutorialdata.csv -d f:float_col i:integer_col s:last_name s:first_name s:country -if -filt 'country == "Portugal"' -eval s:Is_Portugese '"TRUE"' -else -eval Is_Portugese '"FALSE"' -endif``
 
 * This creates an -if -else statement that creates the column Is_Portugese and gives it a value of TRUE if the country is 'Portugal' and FALSE otherwise. The output is::
  
@@ -339,7 +339,7 @@ A final yet incredibly useful technique for processing your data is to use condi
     45.289999999999999,8356,"Wheeler","Sarah","Portugal","TRUE"
     3.5299999999999998,9678,"Kelley","Jacqueline","Philippines","FALSE"
  
-``aq_pp -f,+1 tutorialdata.csv -d f:float_col i:integer_col s:last_name s:first_name s:country -filt '(float_col > 0) && (float_col <=100)' -if -filt '(float_col > 0) && (float_col <= 25)' -evlc s:quartile '"first"' -elif -filt '(float_col > 25) && (float_col <= 50)' -evlc quartile '"SECOND"' -elif -filt '(float_col > 50) && (float_col <= 75)' -evlc quartile '"THIRD"' -else -evlc quartile '"FOURTH"' -endif``
+``aq_pp -f,+1 tutorialdata.csv -d f:float_col i:integer_col s:last_name s:first_name s:country -filt '(float_col > 0) && (float_col <=100)' -if -filt '(float_col > 0) && (float_col <= 25)' -eval s:quartile '"first"' -elif -filt '(float_col > 25) && (float_col <= 50)' -eval quartile '"SECOND"' -elif -filt '(float_col > 50) && (float_col <= 75)' -eval quartile '"THIRD"' -else -eval quartile '"FOURTH"' -endif``
 
 * This command filters to make sure only records that have a value in float_col between 0 and 100 continue to be processed. It then creates an -if -elif -else statement that creates the column quartile and gives it the value of FIRST if float column is between 0 and 25, SECOND if float_col is between 25 and 50, THIRD if float_col is between 50 and 75, and FOURTH otherwise. The output is::
  
