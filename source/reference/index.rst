@@ -31,6 +31,7 @@ Examples
    essentia-examples-simple
    aq_pp-option-examples
    aq_udb-option-examples
+   direct-query-examples
 
 Tables
 ======
