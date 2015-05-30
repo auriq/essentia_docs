@@ -13,6 +13,7 @@ Manuals
 
    manpages/index
    essentia-ref
+   category-rules
 
 Additional guides
 =================
@@ -22,6 +23,7 @@ Additional guides
    loginf
    logcnv
    rpackage
+   getting-started-with-the-essentia-ui
 
 Examples
 ========
