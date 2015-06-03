@@ -54,7 +54,7 @@ following commands to ``setupapache.sh``
     ess datastore select local
     ess datastore scan
     # Create a category called 125accesslogs that matches any file with 125-access_log in its filename. Tell essentia that these files have a date in their filenames and that this date has in sequence a 4 digit year, 2 digit month, and 2 digit day.
-    ess datastore category add 125accesslogs "*accesslogs/*125-access_log*"    
+    ess datastore category add 125accesslogs "$HOME/*accesslog*125-access_log*"    
     
     ess datastore summary
     

@@ -55,7 +55,7 @@ Primary Lines in this Script
     
    ess datastore select local
     
-   ess datastore category add casino "*onlinecasino*"
+   ess datastore category add casino "$HOME/*onlinecasino*" --dateformat none
     
    ess datastore summary
     

@@ -23,7 +23,7 @@ records for each referrer.
     ess udbd restart
 
     ess datastore select local
-    ess datastore category add 125accesslogs "*accesslog/*125-access_log*" 
+    ess datastore category add 125accesslogs "$HOME/*accesslog*125-access_log*" 
 
     ess task stream 125accesslogs "2014-11-30" "2014-12-07" \
     "logcnv -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' \
