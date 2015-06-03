@@ -140,22 +140,6 @@ One such default variable is ``$RowNum`` which simply keeps track of which recor
     73.609999999999999,1249,"Hamilton","Evelyn","Portugal",3
     45.289999999999999,8356,"Wheeler","Sarah","Portugal",4
     3.5299999999999998,9678,"Kelley","Jacqueline","Philippines",5
-    
-Another useful default variable is ``$FileId``. This allows you to keep track of which files your records are coming from so you can reference those files or group similar records at a later time. 
-
-``aq_pp -fileid 5 -f,+1 tutorialdata.csv -d f:float_col i:integer_col s:last_name s:first_name s:country -fileid 6 -cat,+1 lookup.csv s:grade f:float_2 s:last_name s:first_name s:country -eval s:File_ID '"This record came from file " + ToS($FileId)'``
-
-* This command gives tutorialdata.csv a fileid of 5 and lookup.csv a fileid of 6. It then concatenates tutorialdata.csv and lookup.csv together, skipping the top line (header) in each file, and including a column describing which file the record came from. The output is::
-
-    "float_col","integer_col","last_name","first_name","country","grade","float_2","File_ID"
-    99.909999999999997,5350,"Lawrence","Lois","Philippines",,0,"This record came from file 5"
-    73.609999999999999,1249,"Hamilton","Evelyn","Portugal",,0,"This record came from file 5"
-    45.289999999999999,8356,"Wheeler","Sarah","Portugal",,0,"This record came from file 5"
-    3.5299999999999998,9678,"Kelley","Jacqueline","Philippines",,0,"This record came from file 5"
-    0,0,"Lawrence","Lois","Philippines","A",12.300000000000001,"This record came from file 6"
-    0,0,"Hamilton","Evelyn","Portugal","C",96.599999999999994,"This record came from file 6"
-    0,0,"Wheeler","Sarah","Portugal","F",89,"This record came from file 6"
-    0,0,"Kelley","Jacqueline","Philippines","F",57.600000000000001,"This record came from file 6"
 
 The expression in ``-eval`` can use much more than existing columns and previously defined variables. There are also a variety of **built-in functions** that can only be used in the ``-eval`` option that allow much more sophisticated analysis of your data. 
 
