@@ -24,15 +24,31 @@ This tutorial will provide sample usage of the currently supported options for D
 
 **Data Overview**
 
-This tutorial works on the browse data on our *public* bucket, **s3://asi-public**. To access this data:
+This tutorial works on the browse data on our *public* cloud storage, **asi-public**. To access this data:
 
-.. For S3 users, 
-First go to the **Data Repository** tab, then go to the **AWS S3** panel and click the plus button. Enter::
+First go to the **Data Repository** tab.
+
+
+S3 users then go to the **AWS S3** panel and click the plus button. Enter::
     
     asi-public
     Your_Access_Key
     Your_Secret_Access_Key
     
+and click **Add**. 
+
+Azure users instead go to the **Azure Blob** panel and click the plus button. Enter::
+
+    asi-public
+    asipublic
+    
+    
+and click **Add**. 
+
+*Note*: The **Password** field is left empty since this is a *public* bucket.
+
+
+
 Next go to the **Data Viewer** tab and select **asi-public** from the drop down menu.
 
 Now click the plus button, enter ``browse`` next to **Category**, and the globular pattern ``diy_woodworking/*browse*`` under **Pattern**. 
@@ -84,7 +100,7 @@ There is no difference between counting a single column and counting \* since th
     "row"
     8786
 
-Count the total number of unique values in the userID column from files in the browse category over the entire date range.
+Count the total number of unique values in the userID column from files in the browse category over the entire date range. The output is two columns: the number of rows in the data and the number of unique values in the userID column.
 
 ``select count(distinct userID) from browse:*:*`` ::
 
@@ -93,7 +109,7 @@ Count the total number of unique values in the userID column from files in the b
     
 **Sample Output Modification Usage**
 
-Only output the rows from the files in the browse category between 2014-09-01 and 2014-09-15 when they pass the condition that the value in the userID column is greater than 50.
+Only output the rows from the files in the browse category between 2014-09-01 and 2014-09-15 when they pass the condition that the value in the userID column is greater than or equal to 50.
 
 ``select * from browse:2014-09-01:2014-09-15 where userID >= 50`` ::
 
