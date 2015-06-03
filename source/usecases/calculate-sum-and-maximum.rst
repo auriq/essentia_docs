@@ -29,7 +29,7 @@ Primary Lines in this Script
 
 **Line 10**
 
-* Create a new rule to take any files with 'onlinecasino' in their name and put them in the casino category.
+* Create a new rule to take any files in your home directory with 'onlinecasino' in their name and put them in the casino category. Also tell Essentia not to look for a date in the filenames.
 
 **Line 14**
 

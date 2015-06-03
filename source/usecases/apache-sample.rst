@@ -46,7 +46,7 @@ Line by line description
 
 **Line 7**
 
-* Create a new rule to take any files with '125-access_log' in their name and put them in the 125accesslogs category.
+* Create a new rule to take any files in your home directory with 'accesslog' and '125-access_log' in their name and put them in the 125accesslogs category.
 
 **Line 9** 
 
