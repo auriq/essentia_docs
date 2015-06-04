@@ -1,7 +1,7 @@
 *************************
-Example Essentia Commands
+Example Essentia Syntax 
 *************************
-.. Essentia Syntax / Essentia Option Usage
+.. Example Essentia Commands  .. Essentia Option Usage
 
 
 ess spec
@@ -11,7 +11,7 @@ Setup UDB databases and schemas::
 
     ess spec reset
 
-    ess spec create database largecount --ports=3
+    ess spec create database largecount 
 
     ess spec create table mytable "s,pkey:country s,+key:user s,+first:time s,+last:time i,+add:payment"
 
@@ -57,24 +57,17 @@ ess datastore
 
 Manage data stored locally, on an S3 bucket, or on an Azure container::
 
+    ess datastore select local
     ess datastore select s3://asi-public --credentials=/home/ec2-user/asi-public.csv
-    ess datastore select /home/ec2-user/mydatafolder
+    ess datastore select blob://my_azure_container --account_name=my_account_name --account_key=my_account_key
     
     ess datastore summary
 
     ess datastore scan
 
-..    ess datastore purge
-..
-..    ess datastore push
-..
     ess datastore category add myfavoritedata "*exampledata*gz" --dateformat "*MM-YY-DD*"
 
     ess datastore category delete myfavoritedata
-
-    ess datastore category change 3 pattern "*newerisbetter*zip"
-
-    ess datastore probe myfavoritedata --apply
     
     ess datastore category change comment myfavoritedata "This category deserves a comment"
 
@@ -138,3 +131,34 @@ Display version information::
 
     ess -v 
     ess --version
+    
+--------------------------------------------------------------------------------
+	
+ess cat
+========
+
+Send the contents of a file from your datastore to standout output on your screen::
+
+    ess cat path_to_data/exampledata.csv
+    
+--------------------------------------------------------------------------------
+	
+ess lsa
+========
+
+Output the filenames contained within an archive file::
+
+    ess lsa my_archive_file.zip
+    
+--------------------------------------------------------------------------------
+	
+ess file
+========
+
+Send and receive files from your worker nodes::
+
+    ess file get path_to_file/exampledata.csv
+    
+    ess file put exampledata.csv --dest path_to_put_file/
+    
+    ess file mkdir path_to_put_file/
