@@ -105,9 +105,9 @@ and the column specification as explained in the AQ tutorials::
 
 
 Elements of a category can be modified.  For example, we can override the column spec to treat the userID as a string
-by using::
+and articleID as an integer by using::
 
-  $ ess datastore category change browse columnSpec "S:eventDate S:userID I:articleID"
+  $ ess datastore category change columnspec browse "S:eventDate S:userID I:articleID"
 
 
 Organizing the 'purchase' data is handled in a similar manner::

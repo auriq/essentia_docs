@@ -3,7 +3,7 @@ SQL Query
 *********
 
 For times when very basic data inspection is required, the ``query`` command can be useful.  It allows SQL like queries
-directly on your data sources.  For instance, if we interested in the number of sales and number of unique purchases
+directly on your data sources.  For instance, if we are interested in the number of sales and number of unique purchases
 over a 10 day span from our woodworking data, we can execute::
 
   $ ess query "select count(distinct userID) FROM purchase:2014-09-01:2014-09-10"

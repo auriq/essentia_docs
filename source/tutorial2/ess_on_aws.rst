@@ -54,35 +54,14 @@ Your master node needs a few things in order to spin up workers to build your Es
    file that allows them to SSH into the instance.  This file will end with the '.pem' extension, and it contains one
    side of a key pair required for authentication (the ec2 instance you are trying to log into has the other half).
 
-3. ``instance.conf``.  Finally, Essentia requires a configuration file that indicates the name of your credential and
-   pem files, plus some other information about the cluster you want to create.
-
-   The format of the included instance.conf is::
-
-     [EC2]
-     aws_credential: credential_file
-     use_private_ip: False
-     instance_tag: Essentia Worker Node
-     instance_type:  m3.medium
-     instance_count: 2
-     key_name: pem_file
-     security_groups: essentia-access
-     username: ec2-user
-
-   Notes:
-   * The pem file entry only does not require the extension (i.e. you should use ``mykey`` instead of ``mykey.pem``)
-   * Instance type and count can be overriden by essentia command line options (``--type``, ``--number``)
-   * Private IP is appropriate for when you use a VPN
-   * More information on setting up a security group can be found in :doc:`../aws/security-group`
-
 
 Once that is configured, launching worker nodes is done via the following command::
 
-  ess instance ec2 create [--number=] [--type=]
+  ess cluster create [--number=] [--type=]
 
 Terminating the cluster when done::
 
-  ess instance ec2 terminate all
+  ess cluster terminate
 
 
 

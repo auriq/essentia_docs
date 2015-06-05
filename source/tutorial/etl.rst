@@ -11,10 +11,6 @@ Getting Started
 ===============
 
 Again we'll use the ``tutorials/woodworking`` directory from the git repository.
-Since we are not using any worker nodes in this demo, we configure Essentia to be in 'local' mode using::
-
-  $ ess instance local
-
 
 Essentia treats data as a 'stream', similar to Unix pipes.  As an example, let's simply count the lines in one week of
 the log files that we classified in the previous tutorial::
@@ -94,14 +90,14 @@ For a simple example, let's say that the midterm grades for the chemistry final 
 the distribution falls within acceptable limits (i.e. grading on a curve)::
 
   aq_pp -f,+1 chemistry.csv -d i:id s,up:lastname s:firstname f:chem_mid s:chem_fin \
-        -evlc 'chem_mid' 'chem_mid*0.8'
+        -eval 'chem_mid' 'chem_mid*0.8'
 
   "id","lastname","firstname","chem_mid","chem_fin"
   1,"DAWSON","Leona",61.200000000000003,"B-"
   2,"JORDAN","Colin",20.719999999999999,"D"
   3,"MALONE","Peter",77.760000000000005,"A+"
 
-Here we use the math switch ``evlc`` to adjust the chem_mid column down 20%.
+Here we use the math switch ``eval`` to adjust the chem_mid column down 20%.
 
 
 Output Specifications
@@ -213,17 +209,17 @@ Data Transforms
 The input specification defines all the input columns we have to work with.  The goal of the process spec is to
 modify these data according to various rules.
 
-evlc
+eval
 ^^^^
 
-The ``-evlc`` switch allows users to overwrite or create entirely new columns based on some operation with existing
+The ``-eval`` switch allows users to overwrite or create entirely new columns based on some operation with existing
 columns or built-in variables.  The types of operations are broad, covering both string and numerical data.
 
 For example, if we want to merge our id, 'first' and 'last' name columns from the chemistry file to create a new
 column, we can do::
 
   aq_pp -f,+1 chemistry.csv -d i:id s:lastname s:firstname f:chem_mid s:chem_fin \
-        -evlc s:fullname 'ToS(id)+"-"+firstname+" "+lastname'
+        -eval s:fullname 'ToS(id)+"-"+firstname+" "+lastname'
 
   "id","lastname","firstname","chem_mid","chem_fin","fullname"
   1,"Dawson","Leona",76.5,"B-","1-Leona Dawson"
@@ -238,19 +234,19 @@ column, we had to provide the 'column spec', which in this case is ``s:fullname`
 Built in Variables
 ^^^^^^^^^^^^^^^^^^
 
-It may be useful to note the the record number or file ID in the output table.  The ``aq_pp`` handles this via
+It may be useful to note the the record number or a random integer in the output table.  The ``aq_pp`` handles this via
 built-in variables.  In the example below, we augment the output with a row number.  We add 1 to it to compensate for
 skipping the header via the ``-f,+1`` flag ::
 
   aq_pp -f,+1 chemistry.csv -d i:id s:lastname s:firstname f:chem_mid s:chem_fin \
-        -evlc i:row '$RowNum+1'
+        -eval i:row '$RowNum+1'
 
   "id","lastname","firstname","chem_mid","chem_fin","row"
   1,"Dawson","Leona",76.5,"B-",2
   2,"Jordan","Colin",25.899999999999999,"D",3
   3,"Malone","Peter",97.200000000000003,"A+",4
 
-Other built-ins are ``$Random`` for random number generation, and ``$FileId`` to reference the file being processed.
+Another built-in variable is ``$Random`` for random number generation.
 
 String Manipulation
 ^^^^^^^^^^^^^^^^^^^
@@ -265,7 +261,7 @@ Consider the simple case of extracting a 5 digit zip code from data which looks 
 A unix regular expression of ``([0-9]{5})`` would easily capture the 5 digit zip code.  In this 1 column example the
 command would be::
 
-  aq_pp -f zip.csv -d s:zip -rx_syntax extended -maprx zip "([0-9]{5})" 'zip=%%1%%'
+  aq_pp -f zip.csv -d s:zip -map,rx_extended zip "([0-9]{5})" 'zip=%%1%%'
   "zip"
   "zip=91101"
   "zip=91101"
@@ -277,8 +273,8 @@ and a format developed for another product called RT metrics.  Regex is more wid
 certain advantages for parsing log based data.  Full details can be found in the :doc:`../reference/manpages/aq_pp`
 manual.
 
-Back to the example above, we use a global option to specify the type of regex we want to use, and then the
-``-maprx`` switch to identify the column to work with and the regex.  Finally, the captured value (in this case the
+Back to the example above, we use the ``-map,rx_extended`` switch to identify the column to work with and the type of regex we want to use.  
+Finally, the captured value (in this case the
 first group, or '1', is mapped to a string using ``%%1%%``.  The output string can contain other text.
 
 This example highlights extraction and overwriting a single column.  We can also merge regex matching from multiple
@@ -286,14 +282,14 @@ columns to overwrite or create a new column.  For example, we can take our chemi
 for them based on the first three letters of their first name, and last 3 letters of their last name::
 
   aq_pp -f,+1 chemistry.csv -d i:id s:lastname s:firstname f:chem_mid s:chem_fin \
-  -rx_syntax extended -mapfrx firstname "^(.{3})" -mapfrx lastname "(.{3})$" -mapc s:nickname "%%1%%%%2%%"
+  -mapf,rx_extended firstname "^(.{3})" -mapf,rx_extended lastname "(.{3})$" -mapc s:nickname "%%1%%%%2%%"
 
   "id","lastname","firstname","chem_mid","chem_fin","nickname"
   1,"Dawson","Leona",76.5,"B-","Leoson"
   2,"Jordan","Colin",25.899999999999999,"D","Coldan"
   3,"Malone","Peter",97.200000000000003,"A+","Petone"
 
-Instead of ``-maprx``, we use multiple ``-mapfrx`` statements and then ``-mapc`` to map the matches to a new nickname
+Instead of ``-map,rx_extended``, we use multiple ``-mapf,rx_extended`` statements and then ``-mapc`` to map the matches to a new nickname
 column.
 
 
@@ -304,7 +300,7 @@ Often it is necessary to use a global variable that is not output as a column bu
 
 Consider the following where we wish to sum a column::
 
-  echo "1\n2\n3" | aq_pp -f - -d i:x -var 'i:sum' 0 -evlc 'sum' 'sum+x' -ovar -
+  echo -e "1\n2\n3" | aq_pp -f - -d i:x -var 'i:sum' 0 -eval 'sum' 'sum+x' -ovar -
 
   "sum"
   6
@@ -351,7 +347,7 @@ Let's extend the previous example by boosting the midterm scores of anyone in th
 leaving the others untouched::
 
   aq_pp -f,+1 chemistry.csv -d i:id s:lastname s:firstname f:chem_mid s:chem_fin \
-        -if -grep lastname whitelist.csv X FROM -evlc chem_mid 'chem_mid*0.8' -endif
+        -if -grep lastname whitelist.csv X FROM -eval chem_mid 'chem_mid*2' -endif
 
   "id","lastname","firstname","chem_mid","chem_fin"
   1,"Dawson","Leona",76.5,"B-"
@@ -402,18 +398,6 @@ bzip2 - -c > /data/%file.bz2
     generate the same filename as the input, except with a ``bz2`` extension.
 
 
-You will probably see a lot of output in the form of::
-
-  <stdin>: Bad field value: byte=164727+30 line=5734+1 field=articleID
-
-This is natural, and tells you about problems in your data.  The above indicates that many records were rejected
-because the 'articleID' could not be created as an integer.  If you recall from our :doc:`data` documentation,
-this was expected and desired behavior, since some articles were dead links that returned a string "TBD".  To turn
-off error reporting, add the attribute ``,qui`` right after the ``eok`` in the command.
-
-If instead you wish import the "TBD" record anyways, you would need to cast the entire column as a string.
-
-
 Cleaning the 'purchase' data
 ----------------------------
 
@@ -426,13 +410,13 @@ ways to achieve this, but the most robust is the following:
 
     $ ess task stream purchase 2014-09-01 2014-09-30 \
     "aq_pp -f,+1,eok,qui - -d %cols \
-    -evlc is:t 'DateToTime(%date_col,\"%date_fmt\") - DateToTime(\"2014-09-15\",\"Y.m.d\")' \
+    -eval is:t 'DateToTime(purchaseDate,\"Y.m.d.H.M.S\") - DateToTime(\"2014-09-15\",\"Y.m.d\")' \
     -if -filt 't>0' \
-      -evlc articleID 'articleID+1' \
+      -eval articleID 'articleID+1' \
     -endif \
     -c purchaseDate userID articleID price refID \
     -notitle \
-    | bzip2 - -c > .bz2/%file.bz2"
+    | bzip2 - -c > ./bz2/%file.bz2"
 
 .. note::
 
@@ -505,7 +489,7 @@ positional identifiers ($1, $2 etc) makes AWK code more challenging to develop a
 
 **AQ_PP**::
 
-  aq_pp -f,+1 sales.csv -d s:date s:currency f:amount -cmb,+1 exchange.csv s:currency f:rate -var f:sum 0.0 -evlc 'sum' 'sum+(amount*rate)' -ovar -
+  aq_pp -f,+1 sales.csv -d s:date s:currency f:amount -cmb,+1 exchange.csv s:currency f:rate -var f:sum 0.0 -eval 'sum' 'sum+(amount*rate)' -ovar -
 
 The AuriQ preprocessor is similar in spirit to AWK, but it simplifies many issues.
 We'll detail the specifics in the rest of the documentation, but even without knowing all of the syntax, the
