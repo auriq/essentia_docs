@@ -16,52 +16,44 @@ Both functions require an Essentia Bash script to be executed that sets up the E
 
     sh **load_script_name**.sh
 
-You can call either function in an R script. We use an R script called runr.R for demonstration purposes and to provide you with a template for your own use of the RESS package. 
-
-In runr.R we refer to a separate script containing our R analyses and we store its filename as ``rscriptfile`` ::
+You can call either function in an R script or on the R interactive prompt. It may be useful to maintain your RESS function calls in such an R script and refer to a separate script containing your R analyses by storing its filename as ``rscriptfile`` ::
 
     rscriptfile <- "**r_analysis_script**.R"
 
 .. Note: These filenames do NOT have to be the same.
 
-This is only used to make runr.R more readable, you can always type your R analysis directly into the script you're using to call **essQuery** or **read.udb**. 
+This makes the R script containing your RESS function calls more readable but is not required. You can always type your R analysis directly into the script you're using to call **essQuery** or **read.udb**. 
 You can also choose to work on the R interactive prompt instead.
-
-For **read.udb** their is an extra requirement that you store the query script's filename as ``file`` in the runr.R script. ::
-
-    file <- "**query_script_name**.sh"
-
-You then simply have R run runr.R and it will execute both the essentia and R commands.
 
 To have R run both the essentia queries and the commands found in your R file and then exit, run ::
 
-    R -f runr.R
+    R -f **your_r_script**.R
     
-If you want to stay in R after runr.R is run, first enter R by typing ::
+If you want to stay in R after your R script is run, first enter R by typing ::
 
     R
     
 at the command prompt. Then run the R command::
 
-    source("runr.R", echo=FALSE)
+    source("**your_r_script**.R", echo=FALSE)
+    
+*The Apache Example assumes you are working in the casestudies/apache/ directory of the github repository. If you are not currently in this directory, please switch to it now.*
     
 **Running the Apache Example with essQuery**
 
 1. Run ``sh setupapache.sh``  on the command line.
-2. Open 'runr.R' and enter "analyzeapache.R" for ``rscriptfile``. # This is the default but you will normally have to do this step.
-3. Run ``R`` on the command line.
-4. In the R prompt that appears, run ``source("runr.R", echo=FALSE)``
+2. Run ``R`` on the command line.
+3. In the R prompt that appears, run ``source("essqueryapache.R", echo=FALSE)``
     
 **Running the Apache Example with read.udb**
 
 1. Run ``sh setupapache.sh``  on the command line.
-2. Open 'runr.R' and enter "queryapache.sh" for ``file`` and "analyzeapache.R" for ``rscriptfile``. # These are the defaults but you will normally have to do this step.
-3. Run ``R`` on the command line.
-4. In the R prompt that appears, run ``source("runr.R", echo=FALSE)``
+2. Run ``R`` on the command line.
+3. In the R prompt that appears, run ``source("readudbapache.R", echo=FALSE)``
 
 You will see the results of the analysis print to the screen.
 
-To see the commands involved in getting this analysis, open runr.R  and analyzeapache.R for **essQuery** or queryapache.sh and analyzeapache.R for **read.udb**.
+To see the commands involved in getting this analysis, open essqueryapache.R  and analyzeapache.R for **essQuery** or queryapache.sh and analyzeapache.R for **read.udb**.
 
 R Integration Format Requirements
 =================================
@@ -232,17 +224,13 @@ This will also cause the R integrator to automatically save the filenames of the
 
 For any more complicated, delimited format you can use ``logcnv`` to convert the format to csv within the ``ess task stream`` commmand. All of the following examples have the correct syntax. The data they're acting on is in Extended Apache Log Format. ::
 
-    ess task stream 125accesslogs "2014-12-07" "2014-12-07" "logcnv -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' i,tim:time sep:'] \"' s,clf,hl1:req_line1 sep:'\" ' i:res_status sep:' ' i:res_size sep:' \"' s,clf:referrer sep:'\" \"' s,clf:user_agent sep:'\"' X | cat -" #Rinclude
+    ess task stream 125accesslogs "2014-12-07" "2014-12-07" "logcnv -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' i,tim:time sep:'] \"' s,clf:req_line1 sep:' ' s,clf:req_line2 sep:' ' s,clf:req_line3 sep:'\" ' i:res_status sep:' ' i:res_size sep:' \"' s,clf:referrer sep:'\" \"' s,clf:user_agent sep:'\"' X | cat -" #Rinclude
     
-    ess task stream 125accesslogs "2014-12-07" "2014-12-07" "head -30 | logcnv -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' i,tim:time sep:'] \"' s,clf,hl1:req_line1 sep:'\" ' i:res_status sep:' ' i:res_size sep:' \"' s,clf:referrer sep:'\" \"' s,clf:user_agent sep:'\"' X | aq_pp -f,qui,eok - -d ip:ip2 s:rlog X X X X X X X X X" #Rinclude
+    ess task stream 125accesslogs "2014-12-07" "2014-12-07" "head -30 | logcnv -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' i,tim:time sep:'] \"' s,clf:req_line1 sep:' ' s,clf:req_line2 sep:' ' s,clf:req_line3 sep:'\" ' i:res_status sep:' ' i:res_size sep:' \"' s,clf:referrer sep:'\" \"' s,clf:user_agent sep:'\"' X | aq_pp -f,qui,eok - -d ip:ip2 s:rlog X X X X X X X X X" #Rinclude
     
-    ess task stream 125accesslogs "2014-12-07" "2014-12-07" "head -q | logcnv -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' i,tim:time sep:'] \"' s,clf,hl1:req_line1 sep:'\" ' i:res_status sep:' ' i:res_size sep:' \"' s,clf:referrer sep:'\" \"' s,clf:user_agent sep:'\"' X | aq_pp -f,qui,eok - -d ip:ip2 s:rlog X X X X X X X X X" #Rinclude
+    ess task stream 125accesslogs "2014-12-07" "2014-12-07" "head -q | logcnv -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' i,tim:time sep:'] \"' s,clf:req_line1 sep:' ' s,clf:req_line2 sep:' ' s,clf:req_line3 sep:'\" ' i:res_status sep:' ' i:res_size sep:' \"' s,clf:referrer sep:'\" \"' s,clf:user_agent sep:'\"' X | aq_pp -f,qui,eok - -d ip:ip2 s:rlog X X X X X X X X X" #Rinclude
     
-    ess task stream 125accesslogs "2014-12-07" "2014-12-07" "logcnv -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' i,tim:time sep:'] \"' s,clf,hl1:req_line1 sep:'\" ' i:res_status sep:' ' i:res_size sep:' \"' s,clf:referrer sep:'\" \"' s,clf:user_agent sep:'\"' X | aq_pp -f,qui,eok - -d ip:ip2 s:rlog X X X X X X X X X" #Rinclude
-    
-    ess task stream 125accesslogs "2014-12-07" "2014-12-07" "logcnv -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' i,tim:time sep:'] \"' s,clf,hl1:req_line1 sep:'\" ' i:res_status sep:' ' i:res_size sep:' \"' s,clf:referrer sep:'\" \"' s,clf:user_agent sep:'\"' X | aq_pp -f,qui,eok - -d ip:ip2 s:rlog X X X X X X X X X | head -30" #Rinclude
-    
-    ess task stream 125accesslogs "2014-12-07" "2014-12-07" "logcnv -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' i,tim:time sep:'] \"' s,clf,hl1:req_line1 sep:'\" ' i:res_status sep:' ' i:res_size sep:' \"' s,clf:referrer sep:'\" \"' s,clf:user_agent sep:'\"' X | aq_pp -f,qui,eok - -d ip:ip2 s:rlog X X X X X X X X X | head -q" #Rinclude
+    ess task stream 125accesslogs "2014-12-07" "2014-12-07" "logcnv -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' i,tim:time sep:'] \"' s,clf:req_line1 sep:' ' s,clf:req_line2 sep:' ' s,clf:req_line3 sep:'\" ' i:res_status sep:' ' i:res_size sep:' \"' s,clf:referrer sep:'\" \"' s,clf:user_agent sep:'\"' X | aq_pp -f,qui,eok - -d ip:ip2 s:rlog X X X X X X X X X" #Rinclude
 
 **Purchase Data Integration Syntax Examples**
 
@@ -268,12 +256,12 @@ These next examples work on the diy_workshop purchase data available in the samp
     
     ess query "select * from purchase:*:*" #-notitle #Rinclude #R#querypurchase#R#
     
-    ess query "select price,count(refID) from purchase:2014-09-01:2014-09-15 where articleID>=46 group by price" #Rinclude
-
+    ess query "select count(refID) from purchase:2014-09-01:2014-09-15 where articleID>=46 group by price" #Rinclude
+    
     ess query "select count(distinct userID) from purchase:2014-09-01:2014-09-15 where articleID>=46" #Rinclude
-
-    ess query "select userID,count(refID) from purchase:2014-09-01:2014-09-15 where articleID>=46 group by userID" #Rinclude
-
+    
+    ess query "select count(refID) from purchase:2014-09-01:2014-09-15 where articleID>=46 group by userID" #Rinclude
+    
     ess query "select * from purchase:*:* where articleID <= 20" #Rinclude #R#querystream#R#    
     
 Syntax Examples for essQuery
@@ -316,17 +304,13 @@ This will also cause the R integrator to automatically save the filenames of the
 
 For any more complicated, delimited format you can use ``logcnv`` to convert the format to csv within the stream commmand. All of the following examples have the correct syntax. The data they're acting on is in Extended Apache Log Format. ::
 
-    essQuery("ess task stream 125accesslogs \"2014-12-07\" \"2014-12-07\"", "logcnv -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' i,tim:time sep:'] \"' s,clf,hl1:req_line1 sep:'\" ' i:res_status sep:' ' i:res_size sep:' \"' s,clf:referrer sep:'\" \"' s,clf:user_agent sep:'\"' X | cat -", "#Rinclude")
+    essQuery("ess task stream 125accesslogs \"2014-12-07\" \"2014-12-07\"", "logcnv -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' i,tim:time sep:'] \\\"' s,clf:req_line1 sep:' ' s,clf:req_line2 sep:' ' s,clf:req_line3 sep:'\\\" ' i:res_status sep:' ' i:res_size sep:' \\\"' s,clf:referrer sep:'\\\" \\\"' s,clf:user_agent sep:'\\\"' X | cat -", "#Rinclude")
     
-    essQuery("ess task stream 125accesslogs \"2014-12-07\" \"2014-12-07\"", "head -30 | logcnv -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' i,tim:time sep:'] \"' s,clf,hl1:req_line1 sep:'\" ' i:res_status sep:' ' i:res_size sep:' \"' s,clf:referrer sep:'\" \"' s,clf:user_agent sep:'\"' X | aq_pp -f,qui,eok - -d ip:ip2 s:rlog X X X X X X X X X", "#Rinclude")
+    essQuery("ess task stream 125accesslogs \"2014-12-07\" \"2014-12-07\"", "head -30 | logcnv -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' i,tim:time sep:'] \\\"' s,clf:req_line1 sep:' ' s,clf:req_line2 sep:' ' s,clf:req_line3 sep:'\\\" ' i:res_status sep:' ' i:res_size sep:' \\\"' s,clf:referrer sep:'\\\" \\\"' s,clf:user_agent sep:'\\\"' X | aq_pp -f,qui,eok - -d ip:ip2 s:rlog X X X X X X X X X", "#Rinclude")
     
-    essQuery("ess task stream 125accesslogs \"2014-12-07\" \"2014-12-07\"", "head -q | logcnv -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' i,tim:time sep:'] \"' s,clf,hl1:req_line1 sep:'\" ' i:res_status sep:' ' i:res_size sep:' \"' s,clf:referrer sep:'\" \"' s,clf:user_agent sep:'\"' X | aq_pp -f,qui,eok - -d ip:ip2 s:rlog X X X X X X X X X", "#Rinclude")
+    essQuery("ess task stream 125accesslogs \"2014-12-07\" \"2014-12-07\"", "head -q | logcnv -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' i,tim:time sep:'] \\\"' s,clf:req_line1 sep:' ' s,clf:req_line2 sep:' ' s,clf:req_line3 sep:'\\\" ' i:res_status sep:' ' i:res_size sep:' \\\"' s,clf:referrer sep:'\\\" \\\"' s,clf:user_agent sep:'\\\"' X | aq_pp -f,qui,eok - -d ip:ip2 s:rlog X X X X X X X X X", "#Rinclude")
     
-    essQuery("ess task stream 125accesslogs \"2014-12-07\" \"2014-12-07\"", "logcnv -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' i,tim:time sep:'] \"' s,clf,hl1:req_line1 sep:'\" ' i:res_status sep:' ' i:res_size sep:' \"' s,clf:referrer sep:'\" \"' s,clf:user_agent sep:'\"' X | aq_pp -f,qui,eok - -d ip:ip2 s:rlog X X X X X X X X X", "#Rinclude")
-    
-    essQuery("ess task stream 125accesslogs \"2014-12-07\" \"2014-12-07\"", "logcnv -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' i,tim:time sep:'] \"' s,clf,hl1:req_line1 sep:'\" ' i:res_status sep:' ' i:res_size sep:' \"' s,clf:referrer sep:'\" \"' s,clf:user_agent sep:'\"' X | aq_pp -f,qui,eok - -d ip:ip2 s:rlog X X X X X X X X X | head -30", "#Rinclude")
-    
-    essQuery("ess task stream 125accesslogs \"2014-12-07\" \"2014-12-07\"", "logcnv -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' i,tim:time sep:'] \"' s,clf,hl1:req_line1 sep:'\" ' i:res_status sep:' ' i:res_size sep:' \"' s,clf:referrer sep:'\" \"' s,clf:user_agent sep:'\"' X | aq_pp -f,qui,eok - -d ip:ip2 s:rlog X X X X X X X X X | head -q", "#Rinclude")
+    essQuery("ess task stream 125accesslogs \"2014-12-07\" \"2014-12-07\"", "logcnv -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' i,tim:time sep:'] \\\"' s,clf:req_line1 sep:' ' s,clf:req_line2 sep:' ' s,clf:req_line3 sep:'\\\" ' i:res_status sep:' ' i:res_size sep:' \\\"' s,clf:referrer sep:'\\\" \\\"' s,clf:user_agent sep:'\\\"' X | aq_pp -f,qui,eok - -d ip:ip2 s:rlog X X X X X X X X X", "#Rinclude")
 
 **Purchase Data Integration Syntax Examples**
 
@@ -342,20 +326,18 @@ These next examples work on the diy_workshop purchase data available in the samp
     
     essQuery("ess task stream purchase 2014-09-01 2014-09-03", "aq_pp -notitle -stat -f,eok - -d %cols", "#Rinclude")
     
-    essQuery("ess task exec", "echo \"1, 2, 3, 4, 5\"", "#-notitle")
+    essQuery("ess task exec", "echo \\\"1, 2, 3, 4, 5\\\"", "#-notitle")
     
-    essQuery("ess task stream purchase \"*\" \"*\"", \
-    "head -10 | aq_pp -notitle -f,+1,eok - -d %cols", \
-    "#Rinclude")
+    essQuery("ess task stream purchase \"*\" \"*\"", "head -10 | aq_pp -notitle -f,+1,eok - -d %cols", "#Rinclude")
     
     querybrowse <- essQuery("ess query", "select * from browse:*:*", "#-notitle #Rinclude")
     
     querypurchase <- essQuery("ess query", "select * from purchase:*:*", "#-notitle #Rinclude")
         
-    pricecounts <- essQuery("ess query","select price,count(refID) from purchase:2014-09-01:2014-09-15 where articleID>=46 group by price","#Rinclude")
-
+    pricecounts <- essQuery("ess query","select count(refID) from purchase:2014-09-01:2014-09-15 where articleID>=46 group by price","#Rinclude")
+    
     distinctusers <- essQuery("ess query", "select count(distinct userID) from purchase:2014-09-01:2014-09-15 where articleID>=46", "#Rinclude")
-
-    usercounts <- essQuery("ess query", "select userID,count(refID) from purchase:2014-09-01:2014-09-15 where articleID>=46 group by userID", "#Rinclude")
-
+    
+    usercounts <- essQuery("ess query", "select count(refID) from purchase:2014-09-01:2014-09-15 where articleID>=46 group by userID", "#Rinclude")
+    
     querystream <- essQuery("ess query", "select * from purchase:*:* where articleID <= 20", "#Rinclude")

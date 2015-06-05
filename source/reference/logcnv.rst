@@ -20,22 +20,23 @@ new option 'sep' which specifies the substring that separates a given column fro
 for example can be parsed using::
 
   logcnv -f,eok apache.log -d ip:ip sep:' ' s:rlog sep:' ' \
-  s:rusr sep:' [' i,tim:time sep:'] "' s,clf,hl1:req_line1 sep:'" ' \
-  i:res_status sep:' ' i:res_size sep:' "' \
-  s,clf:referrer sep:'" "' s,clf:user_agent sep:'"'``
+  s:rusr sep:' [' i,tim:time sep:'] "' s,clf:req_line1 sep:' ' s,clf:req_line2 sep:' ' s,clf:req_line3 \
+  sep:'" ' i:res_status sep:' ' i:res_size sep:' "' \
+  s,clf:referrer sep:'" "' s,clf:user_agent sep:'"'
 
 
-As in other AQ tools, attributes are used to augment the processing.  Here, we use the 'hl1' attribute with the
-column 'req_line1'.  This attribute parses HTTP request strings such as ``GET /index.html?query HTTP/1.0``.
+As in other AQ tools, attributes are used to augment the processing.  Here, we use the 'tim' attribute with the
+column 'time'.  This attribute parses the date and time from this column into a POSIX time, i.e. the number of seconds since January 1st, 1970.
 
 Similar to ``aq_pp`` you can specify the columns to output using the ``-c`` option and a list of column names.
 
 You can limit which columns are output in the final result by using the '-c' option. i.e. run::
 
-  logcnv -f,eok apache.log -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' \
-  i,tim:time sep:'] "' s,clf,hl1:req_line1 sep:'" ' i:res_status sep:' ' \
-  i:res_size sep:' "' s,clf:referrer sep:'" "' s,clf:user_agent sep:'"' \
-  -c ip time req_line1_f2 res_status res_size``
+  logcnv -f,eok apache.log -d ip:ip sep:' ' s:rlog sep:' ' \
+  s:rusr sep:' [' i,tim:time sep:'] "' s,clf:req_line1 sep:' ' s,clf:req_line2 sep:' ' s,clf:req_line3 \
+  sep:'" ' i:res_status sep:' ' i:res_size sep:' "' \
+  s,clf:referrer sep:'" "' s,clf:user_agent sep:'"' \
+  -c ip time req_line2 res_status res_size
 
   "ip","time","req_line1_f2","res_status","res_size"
   54.248.98.72,1416740843,"/",301,0
