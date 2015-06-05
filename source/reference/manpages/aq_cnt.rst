@@ -11,7 +11,7 @@ Synopsis
   aq_cnt [-h] Global_Opt Input_Spec Count_Spec Output_Spec
 
   Global_Opt:
-      [-verb] [-stat] [-tag TagLab] [-bz ReadBufSiz]
+      [-verb] [-stat] [-bz ReadBufSiz]
 
   Input_Spec:
       [-f[,AtrLst] File [File ...]] -d ColSpec [ColSpec ...]
@@ -21,7 +21,7 @@ Synopsis
 
   Output_Spec:
       [-kx|-kX[,AtrLst] File KeyName ColName [ColName ...]]
-      [-o[,AtrLst] File] [-notitle]
+      [-o[,AtrLst] File]
 
 
 Description
@@ -31,7 +31,7 @@ Description
 
 * First, it reads data from the input in various formats (e.g., CSV)
   according to the input spec.
-* Then it converts the input into an internal data row
+* Then it converts the input into internal data rows
   according to the column spec.
 * Key columns are then stored and counted according to the key spec.
   Each key can have one or more columns.
@@ -43,7 +43,7 @@ Since the program needs to store all the unique keys in memory in order to
 count them, its capacity is limited by the amount of physical memory in a
 machine.
 In case there is a capacity issue, an `aq_pp <aq_pp.html>`_ and `Udb <udbd.html>`_ combination can
-be used to implement a scalable key counting platform.
+be used to implement a scalable key counting solution.
 
 
 Options
@@ -65,16 +65,6 @@ Options
    ::
 
     aq_cnt:TagLab rec=Count err=Count
-
-
-.. _`-tag`:
-
-``-tag TagLab``
-  Set label used to tag output messages. Default is blank.
-  Currently, it is only used in:
-
-  * The `-stat`_ summary line.
-  * Final error message before program aborts.
 
 
 .. _`-bz`:
@@ -110,6 +100,7 @@ Options
 ``-d ColSpec [ColSpec ...]``
   Define the columns of the input records from all `-f`_ specs.
   ``ColSpec`` has the form ``Type[,AtrLst]:ColName``.
+  Up to 256 ``ColSpec`` can be defined (excluding ``X`` type columns).
   Supported ``Types`` are:
 
   * ``S`` - String.
@@ -123,7 +114,6 @@ Options
     Type is optional. It can be one of the above (default is ``S``).
     ColName is also optional. Such a name is simply discarded.
 
-  Up to 256 ``ColSpec`` can be defined (excluding ``X`` type columns).
   Optional ``AtrLst`` is a comma separated list containing:
 
   * ``esc`` - Denote that the input field uses '\\' as escape character. Data
@@ -160,9 +150,12 @@ Options
 
 ``-k KeyName ColName [ColName ...]``
   Define a key named ``KeyName`` and its associated columns by ``ColNames``.
-  ``KeyName`` may be followed by ``:wqy`` to indicate a Web Query key.
-  In this case, only one column is allowed in the key.
-  Query data is decomposed into individual "parm=val" before hashing.
+  The key count will appear in the overall count summary (see `-o`_).
+  ``KeyName`` may be optionally preceeded by a ``wqy:`` to indicate a
+  Web Query key.  In this case, only one column is allowed in the key.
+  The value of the column will be automatically splitted at the '&'
+  separator; each of the resulting elements will be counted as as a key
+  value.
 
 
 .. _`-kx`:
@@ -181,8 +174,8 @@ Options
   If ``File`` is a '-' (a single dash), data will be written to stdout.
   Optional ``AtrLst`` is described under `Output File Attributes`_.
 
-  **Note**: If this option is given, summary output will be suppressed
-  unless `-o`_ is specified explicitly.
+  **Note**: If this option is given, overall count summary output will be
+  suppressed unless `-o`_ is specified explicitly.
 
 
 ``-kX[,AtrLst] File KeyName ColName [ColName ...]``
@@ -199,8 +192,8 @@ Options
   If ``File`` is a '-' (a single dash), data will be written to stdout.
   Optional ``AtrLst`` is described under `Output File Attributes`_.
 
-  **Note**: If this option is given, summary output will be suppressed
-  unless `-o`_ is specified explicitly.
+  **Note**: If this option is given, overall count summary output will be
+  suppressed unless `-o`_ is specified explicitly.
 
 
 .. _`-o`:
@@ -236,13 +229,6 @@ Options
     In addition, unique values and occurrence counts of Key2 go to File2.
 
 
-.. _`-notitle`:
-
-``-notitle``
-  Suppress the column name label row from the output.
-  A label row is normally included by default.
-
-
 Exit Status
 ===========
 
@@ -251,9 +237,13 @@ with a non-zero status code along error messages printed to stderr.
 Applicable exit codes are:
 
 * 0 - Successful.
-* 1-9 - Program initial preparation error.
-* 10-19 - Input file load error.
-* 20-29 - Result output error.
+* 1 - Memory allocation error.
+* 2 - Command option spec error.
+* 3 - Initialization error.
+* 11 - Input open error.
+* 13 - Input processing error.
+* 21 - Output open error.
+* 22 - Output write error.
 
 
 Input File Attributes
@@ -288,6 +278,8 @@ Some output file can have these comma separated attributes:
 * ``noq`` - Do not quote string fields (CSV).
 * ``fmt_g`` - Use "%g" as print format for ``F`` type columns. Only use this
   to aid data inspection (e.g., during integrity check or debugging).
+* ``notitle`` - Suppress the column name label row from the output.
+  A label row is normally included by default.
 
 By default, output is in CSV format. Use the ``esc`` and ``noq`` attributes to
 set output characteristics as needed.

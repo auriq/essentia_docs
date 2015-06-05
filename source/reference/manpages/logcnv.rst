@@ -17,24 +17,27 @@ Synopsis
       [-f[,AtrLst] File [File ...]] [-d ColSpec [ColSpec ...]]
 
   Output_Spec:
-      [[-o[,AtrLst] File] [-c ColName [ColName ...]] [-notitle]]
+      [-o[,AtrLst] File] [-c ColName [ColName ...]]
 
 
 Description
 ===========
 
-``logcnv`` is a stream-based log converter.
+``logcnv`` is a stream-based log format converter.
 It processes input log files with a given column/separator spec and
 outputs the same data in CSV or binary format.
 Supported log format is:
 
  ::
 
-  [separator]data_col[separator[data_col ...]][\r]\n
+  [separator]data_col[data_col ...][separator[data_col ...]][\r]\n
 
 * Separators are literals that separate data columns.
 * Data columns are typed - numbers, string and IP.
   They can have attributes that turn on special processing steps.
+* A data column is usually followed by a separator or end-of-record.
+  However, this is not necessary if the data column has a length sepc.
+  See the `-d`_ option specification for details.
 
 With its stream-based design, ``logcnv`` can process an unlimited amount of
 data using a constant amount of memory. The output can either be stored
@@ -98,13 +101,14 @@ Options
 
    ::
 
-    [separator]data_col[separator[data_col ...]][\r]\n
+    [separator]data_col[data_col ...][separator[data_col ...]][\r]\n
 
   For a separator, ``ColSpec`` has the form ``SEP:SepStr`` where ``SEP``
-  (case insensitive) is a keyword and ``SepStr`` is the literal separator
-  (1 to 31 bytes long).
+  (case insensitive) is a keyword and ``SepStr`` is the literal separator.
+  The separator string is taken *as-is*, no escape sequence is interpreted.
 
-  For a data column,``ColSpec`` has the form ``Type[,AtrLst]:ColName``.
+  For a data column, ``ColSpec`` has the form ``Type[,AtrLst]:ColName``.
+  Up to 256 ``ColSpec`` can be defined (excluding ``X`` type columns).
   Supported ``Types`` are:
 
   * ``S`` - String.
@@ -118,7 +122,6 @@ Options
     Type is optional. It can be one of the above (default is ``S``).
     ColName is also optional. Such a name is simply discarded.
 
-  Up to 256 ``ColSpec`` can be defined (excluding ``X`` type columns).
   Optional ``AtrLst`` is a comma separated list containing:
 
   * ``clf`` - Denote that the input field uses Apache 2.0.46 and up escape
@@ -134,26 +137,18 @@ Options
   * ``hex`` - For numeric type. Denote that the input field is in hexdecimal
     notation. Starting ``0x`` is optional. For example, ``100`` is
     converted to 256 instead of 100.
+  * ``trm`` - Trim leading/trailing spaces from input field value.
+  * ``lo``, ``up`` - For ``S`` type. Convert input field to lower/upper case.
   * ``tim`` - For ``I`` or ``IS`` type. Denote that the input field is in
     Apache default timestamp format (e.g., '14/Feb/2009:08:31:30 +0900').
     The field will be converted back to UNIX seconds (e.g., 1234567890).
-  * ``hl1`` - For ``S`` type. Denote that the input field contains the
-    HTTP request line 1 as in:
-
-     ::
-
-      GET /index.html?query HTTP/1.0
-
-    The field will be
-    broken up into ``ColName_f1`` ("GET"), ``ColName_f2`` ("/index.html?query")
-    and ``ColName_f3`` ("HTTP/1.0") on output.
+  * ``n=Len`` - Extract exactly ``Len`` bytes. Use this for a fixed length
+    data column. If a data column has a length spec, it can be followed by
+    another data column.
 
   ``ColName`` restrictions:
 
   * Cannot exceed 31 bytes long.
-    Recall that an input column with an ``hl1`` attribute is splitted into 3
-    columns - ``ColName_f1``, ``ColName_f2`` and ``ColName_f3``;
-    in this case, ``ColName`` must not exceed 28 bytes long.
   * Contain only alphanumeric and '_' characters. The first character
     cannot be a digit.
   * It is case insensitive. However, this spec may change in the future.
@@ -164,31 +159,25 @@ Options
 
     $ logcnv ... -d
         IP:h SEP:' ' S:l SEP:' ' S:u SEP:' [' I,tim:t SEP:'] "'
-        S,clf,hl1:r SEP:'" ' I:s SEP:' ' I:b ...
+        S,clf:r SEP:'" ' I:s SEP:' ' I:b ...
 
   * Process records in the default common log columns.
 
 
 .. _`-o`:
 
-``[-o[,AtrLst] File] [-c ColName [ColName ...]] [-notitle]``
+``[-o[,AtrLst] File] [-c ColName [ColName ...]]``
   Output data rows.
   Optional "``-o[,AtrLst] File``" sets the output attributes and file.
   If ``File`` is a '-' (a single dash), data will be written to stdout.
   Optional ``AtrLst`` is described under `Output File Attributes`_.
 
   Optional "``-c ColName [ColName ...]``" selects the columns to output.
-  Recall that an input column with an ``hl1`` attribute is splitted into 3
-  columns on output - ``ColName_f1``, ``ColName_f2`` and ``ColName_f3``;
-  selection must be done on those 3 names individually.
   Without ``-c``, all columns are selected by default.
   If ``-c`` is specified without a previous ``-o``, output to stdout is
   assumed.
 
-  Optional ``-notitle`` suppresses the column name label row from the output.
-  A label row is normally included by default.
-
-  Multiple sets of "``-o ... -c ... -notitle``" can be specified.
+  Multiple sets of "``-o ... -c ...``" can be specified.
 
   Example:
 
@@ -208,9 +197,13 @@ with a non-zero status code along error messages printed to stderr.
 Applicable exit codes are:
 
 * 0 - Successful.
-* 1-9 - Program initial preparation error.
-* 10-19 - Input file load error.
-* 20-29 - Result output error.
+* 1 - Memory allocation error.
+* 2 - Command option spec error.
+* 3 - Initialization error.
+* 11 - Input open error.
+* 13 - Input processing error.
+* 21 - Output open error.
+* 22 - Output write error.
 
 
 Input File Attributes
@@ -237,6 +230,8 @@ Some output file can have these comma separated attributes:
 * ``noq`` - Do not quote string fields (CSV).
 * ``fmt_g`` - Use "%g" as print format for ``F`` type columns. Only use this
   to aid data inspection (e.g., during integrity check or debugging).
+* ``notitle`` - Suppress the column name label row from the output.
+  A label row is normally included by default.
 
 By default, output is in CSV format. Use the ``esc`` and ``noq`` attributes to
 set output characteristics as needed.
@@ -248,49 +243,50 @@ Apache Format Reference
 The following table shows the corresponding logcnv column spec for some
 common format strings:
 
-* %a => IP:Ip (Remote IP-address.)
-* %A => IP:Ip (Local IP-address.)
-* %B => I:Num (Size of response in bytes, excluding HTTP headers.)
-* %b => I:Num (Like %B, but in CLF format, i.e. a '-' rather than a 0 when no
-  bytes are sent.)
-* %{Foobar}C => S:Str or S,clf:Str (The contents of cookie Foobar in the
-  request sent to the server. Only version 0 cookies are fully supported.)
-* %D => I:Num (The time taken to serve the request, in microseconds.)
-* %{FOOBAR}e => S:Str or S,clf:Str (The contents of the environment variable
-  FOOBAR.)
-* %f => S:Str or S,clf:Str (Filename.)
-* %h => S:Str or IP:ip (Remote host if HostnameLookups is set, IP otherwise.)
-* %H => S:Str (The request protocol.)
-* %{Foobar}i => S,clf:Str (The contents of Foobar: header line(s) in the
-  request sent to the server.)
-* %k => I:Num (Number of keepalive requests handled on this connection.)
-* %l => S:Str or S,clf:Str (Remote logname.)
-* %m => S:Str (The request method.)
-* %{Foobar}n => S:Str or S,clf:Str (The contents of note Foobar from another
-  module.)
-* %{Foobar}o => S,clf:Str (The contents of Foobar: header line(s) in the reply.)
-* %p => I:Num (The canonical port of the server serving the request.)
-* %{format}p => I:Num (The canonical port of the server serving the request or
+* %a (Remote IP-address) => IP:Ip
+* %A (Local IP-address) => IP:Ip
+* %B (Size of response in bytes, excluding HTTP headers) => I:Num
+* %b (Like %B, but in CLF format, i.e. a '-' rather than a 0 when no
+  bytes are sent) => I:Num
+* %{Foobar}C (The contents of cookie Foobar in the request sent to the server.
+  Only version 0 cookies are fully supported) => S:Str or S,clf:Str
+* %D (The time taken to serve the request, in microseconds) => I:Num
+* %{FOOBAR}e (The contents of the environment variable FOOBAR) => S:Str or
+  S,clf:Str
+* %f (Filename) => S:Str or S,clf:Str
+* %h (Remote host if HostnameLookups is set, IP otherwise) => S:Str or IP:ip
+* %H (The request protocol) => S:Str
+* %{Foobar}i (The contents of Foobar: header line(s) in the request sent to
+  the server) => S,clf:Str
+* %k (Number of keepalive requests handled on this connection) => I:Num
+* %l (Remote logname) => S:Str or S,clf:Str
+* %m (The request method) => S:Str
+* %{Foobar}n (The contents of note Foobar from another module) => S:Str or
+  S,clf:Str
+* %{Foobar}o (The contents of Foobar: header line(s) in the reply) => S,clf:Str
+* %p (The canonical port of the server serving the request) => I:Num
+* %{format}p (The canonical port of the server serving the request or
   the server's actual port or the client's actual port. Valid formats are
-  canonical, local, or remote.)
-* %P => I:Num (The process ID of the child that serviced the request.)
-* %{format}P => I:Num (The process ID or thread id of the child that serviced
-  the request. Valid formats are pid, tid, and hextid.)
-* %q => S:Str (The query string prepended with a '?' or a blank if there is no
-  query.)
-* %r => S,clf:Str or S,clf,hl1:Str (First line of request.)
-* %R => S:Str (The handler generating the response.)
-* %s or %>s => I:Num (Status.)
-* %t => I,tim:Num (Time the request was received in standard format.)
+  canonical, local, or remote) => I:Num
+* %P (The process ID of the child that serviced the request) => I:Num
+* %{format}P (The process ID or thread id of the child that serviced
+  the request. Valid formats are pid, tid, and hextid) => I:Num
+* %q (The query string prepended with a '?' or a blank if there is no
+  query) => S:Str
+* %r (First line of request) => S,clf:Str or
+  broken down as S:Str_method SEP:' ' S,clf:Str_page SEP:' ' S:Str_version
+* %R (The handler generating the response) => S:Str
+* %s or %>s (Status) => I:Num
+* %t (Time the request was received in standard format) => I,tim:Num
 * %{format}t => Not supported.
-* %T => I:Num (The time taken to serve the request, in seconds.)
-* %u => S:Str or S,clf:Str (Remote user.)
-* %U => S:Str (The URL path requested, not including any query string.)
-* %v => S:Str (The canonical ServerName of the server serving the request.)
-* %V => S:Str (The server name according to the UseCanonicalName setting.)
-* %X => S:Str (Connection status when response is completed - 'X', '+' or '-'.)
-* %I => I:Num (Bytes received, including request and headers.)
-* %O => I:Num (Bytes sent, including headers.)
+* %T (The time taken to serve the request, in seconds) => I:Num
+* %u (Remote user) => S:Str or S,clf:Str
+* %U (The URL path requested, not including any query string) => S:Str
+* %v (The canonical ServerName of the server serving the request) => S:Str
+* %V (The server name according to the UseCanonicalName setting) => S:Str
+* %X (Connection status when response is completed - 'X', '+' or '-') => S:Str
+* %I (Bytes received, including request and headers) => I:Num
+* %O (Bytes sent, including headers) => I:Num
 
 Separator specs must be added to complete the record description.
 For example, consider this Common Log Format spec string:
@@ -304,12 +300,20 @@ It can be represented by these column spec:
  ::
 
   IP:h SEP:' ' S:l SEP:' ' S:u SEP:' [' I,tim:t SEP:'] "'
-  S,clf,hl1:r SEP:'" ' I:s SEP:' ' I:b
+  S,clf:r SEP:'" ' I:s SEP:' ' I:b
+
+or
+
+ ::
+
+  IP:h SEP:' ' S:l SEP:' ' S:u SEP:' [' I,tim:t SEP:'] "'
+  S:r_method SEP:' ' S,clf:r_page SEP:' ' S:r_version SEP:'" ' I:s SEP:' ' I:b
 
 
 See Also
 ========
 
+* `jsncnv <jsncnv.html>`_ - JSON log converter
 * `aq_pp <aq_pp.html>`_ - Record preprocessor
 * `udbd <udbd.html>`_ - User (Bucket) Database server
 * `aq_udb <aq_udb.html>`_ - Interface to Udb server

@@ -26,16 +26,18 @@ or at the end-of-file.
 Basic file format is:
 
 * Line oriented text file.
-  The maximum length of a line is 1022 bytes.
+  The maximum length of a line is 2046 bytes.
 * Leading spaces on each line are ignored.
   Interpretation starts at the first non-blank character.
 * Blank lines are ignored.
 * A line starting with a '#' character is a Comment line.
-  A comment must be on a line by itself.
+  Comment can also start in the middle of a line as long as the '#' character
+  is preceeded by a blank/punctuation.
 * Keywords and names are case insensitive.
 
 See the sample below for a complete description.
 Note that the indentation and blank lines in the sample are optional.
+Line breaks are also optional; however, they are recommended for readability.
 
 
 Sample Spec
@@ -58,7 +60,7 @@ Sample Spec
   @Server:
     127.0.0.1
     127.0.0.1:10011
-    [::127.0.0.1]:10012
+    [::127.0.0.1]:10012	# note syntax for v6 address with port
     a.b.com
     a.b.com:10011
     99.1.2.3|10.0.0.2:10013
@@ -68,6 +70,15 @@ Sample Spec
   # o Optional, default is 10010.
   #
   @Port:10010
+
+  #
+  # "@PKey:" sets the primary key (a.k.a. user key) of the database.
+  # o Required.
+  # o Must be a string type key of the form:
+  #     S:KeyName
+  #
+  @PKey:
+    s:user_cookie
 
   #
   # "@Table:TabName" starts a table spec:
@@ -85,8 +96,6 @@ Sample Spec
   #   o IS - 32-bit signed integer.
   #   o IP - v4/v6 address.
   # o Column Atr's are:
-  #   o PKEY - Must be "S" type. Mark the "bucket key". One column in the
-  #            table MUST have this attribute.
   #   o TKEY - Mark a single column as the table's default sort key
   #            (e.g., time). This is for convenience only. Sort column(s)
   #            can be selected at run time via aq_udb.
@@ -113,7 +122,6 @@ Sample Spec
     l:c1
     l:c2
     i:c3
-    s,pkey:user_cookie
     s:c5
     i:c6
     i:c7
@@ -137,11 +145,8 @@ Sample Spec
   # o Vector spec is identical to that of a table except that "+KEY" is
   #   not supported nor necessary - the "merge" operation is implicit
   #   since there is only one data row.
-  # o The name of the "PKEY" column must be the same as in previously
-  #   defined tables/vectors.
   #
   @Vector:Profile
-    s,pkey:user_cookie
     l,+bor:flag_1
     l,+bor:flag_2
     l,+add:sum_1
@@ -152,13 +157,15 @@ Sample Spec
   # o A Var vector holds a single row of data. The columns (or vars) are
   #   global and NOT bucket specific.
   # o It does not need a name since there can only be one Var vector spec.
-  #   However, it does have the implicit name "var".
+  #   However, it does have the implicit name of "var".
   # o Var columns can be used in most "aq_udb" operations. See the "aq_udb"
   #   manual for details.
   # o Columns in this vector are initialized to 0/blank. They can also be
   #   reset to 0/blank at any time using "aq_udb -clr var".
-  # o Columns in this vector can be set using
-  #   "aq_udb -scn var -var ColName ColVal -var ColName ColVal ...".
+  # o Columns in this vector can be set using:
+  #     $ aq_udb -scn var -var ColName ColVal -var ColName ColVal ...
+  #   or
+  #     $ aq_pp -f var_val.csv -udb -imp my_db:var
   # o Columns in this vector can be exported using "aq_udb -exp var"
   # o Vector spec is identical to that of a regular vector.
   # o The "merge" operation is done differently from that of a regular
@@ -192,17 +199,17 @@ An Udb server constructs its database according to the spec in this manner:
   +=================+=======+
   | User key (PKEY) | key1  |
   +=================+=======+
-  | +--------+-----------+  |
-  | | Table1 | row1 cols |  |
-  | |        | row2 cols |  |
-  | |        | ...       |  |
-  | +--------+-----------+  |
-  | | Table2 | row1 cols |  |
-  | |        | row2 cols |  |
-  | |        | ...       |  |
-  | +--------+-----------+  |
-  | | ...                |  |
-  | +--------+-----------+  |
+  | +---------+-----------+ |
+  | | Table1  | row1 cols | |
+  | |         | row2 cols | |
+  | |         | ...       | |
+  | +---------+-----------+ |
+  | | Table2  | row1 cols | |
+  | |         | row2 cols | |
+  | |         | ...       | |
+  | +---------+-----------+ |
+  | | ...                 | |
+  | +---------+-----------+ |
   | +---------+------+      |
   | | Vector1 | cols |      |
   | +---------+------+      |
@@ -214,17 +221,17 @@ An Udb server constructs its database according to the spec in this manner:
   +=================+=======+
   | User key (PKEY) | key2  |
   +=================+=======+
-  | +--------+-----------+  |
-  | | Table1 | row1 cols |  |
-  | |        | row2 cols |  |
-  | |        | ...       |  |
-  | +--------+-----------+  |
-  | | Table2 | row1 cols |  |
-  | |        | row2 cols |  |
-  | |        | ...       |  |
-  | +--------+-----------+  |
-  | | ...                |  |
-  | +--------+-----------+  |
+  | +---------+-----------+ |
+  | | Table1  | row1 cols | |
+  | |         | row2 cols | |
+  | |         | ...       | |
+  | +---------+-----------+ |
+  | | Table2  | row1 cols | |
+  | |         | row2 cols | |
+  | |         | ...       | |
+  | +---------+-----------+ |
+  | | ...                 | |
+  | +---------+-----------+ |
   | +---------+------+      |
   | | Vector1 | cols |      |
   | +---------+------+      |

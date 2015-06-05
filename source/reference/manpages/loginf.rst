@@ -172,9 +172,13 @@ with a non-zero status code along error messages printed to stderr.
 Applicable exit codes are:
 
 * 0 - Successful.
-* 1-9 - Program initial preparation error.
-* 10-19 - Input file load error.
-* 20-29 - Result output error.
+* 1 - Memory allocation error.
+* 2 - Command option spec error.
+* 3 - Initialization error.
+* 11 - Input open error.
+* 13 - Input processing error.
+* 21 - Output open error.
+* 22 - Output write error.
 
 
 Input File Attributes
@@ -182,6 +186,7 @@ Input File Attributes
 
 Each input file can have these comma separated attributes:
 
+* ``notitle`` - The first record from the input is *not* a label line.
 * ``tsv`` - Input is tab separated (default is comma separated).
 * ``sep=c`` - Use separator 'c' (single byte) as column separactor.
 * ``+Num[b|l]`` - Specifies the number of bytes (``b`` suffix)

@@ -17,7 +17,7 @@ The module is loaded by `aq_pp <aq_pp.html>`_ in this way:
 
  ::
 
-  aq_pp -emod rt ... -evlc ...
+  aq_pp -emod rt ... -eval ...
 
 The module loading syntax is "``-emod ModSpec``" where
 ``ModSpec`` is simply "rt", no module argument is necessary.

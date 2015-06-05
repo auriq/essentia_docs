@@ -8,38 +8,41 @@ Synopsis
 
 ::
 
-  aq_pp [-h] Global_Opt Input_Spec Process_Spec/Output_Spec Final_Output
+  aq_pp [-h] Global_Opt Input_Spec Prep_Spec Process_Spec Output_Spec
 
   Global_Opt:
-      [-test] [-verb] [-stat] [-tag TagLab] [-bz ReadBufSiz]
+      [-test] [-verb] [-stat] [-bz ReadBufSiz]
+
+  Input_Spec:
+      [-f[,AtrLst] File [File ...]] [-d ColSpec [ColSpec ...]]
+      [-cat[,AtrLst] File [File ...] ColSpec [ColSpec ...]]
+
+  Prep_Spec:
       [-ddef]
-      [-rx_syntax Syntax]
       [-seed RandSeed]
       [-rownum StartNum]
       [-emod ModSpec]
-
-  Input_Spec:
-      [-fileid FileId] [-f[,AtrLst] File [File ...]] [-d ColSpec [ColSpec ...]]
-      [-fileid FileId] [-cat[,AtrLst] File [File ...] ColSpec [ColSpec ...]]
       [-var ColSpec Val]
+      [-alias ColName AltName]
+      [-renam ColName NewName]
 
-  Process_Spec/Output_Spec:
-      [-evlc ColSpec|ColName Expr]
-      [-mapf[rx][,AtrLst] ColName MapFrom] [-mapc ColSpec|ColName MapTo]
+  Process_Spec:
+      [-eval ColSpec|ColName Expr]
+      [-mapf[,AtrLst] ColName MapFrom] [-mapc ColSpec|ColName MapTo]
       [-kenc ColSpec|ColName ColName [ColName ...]]
       [-kdec ColName ColSpec|ColName[+] [ColSpec|ColName[+] ...]]
       [-filt FilterSpec]
-      [-map[rx][,AtrLst] ColName MapFrom MapTo]
+      [-map[,AtrLst] ColName MapFrom MapTo]
       [-sub[,AtrLst] ColName File [File ...] [ColTag ...]]
       [-grep[,AtrLst] ColName File [File ...] [ColTag ...]]
       [-cmb[,AtrLst] File [File ...] ColSpec [ColSpec ...]]
       [-pmod ModSpec]
-      [[-o[,AtrLst] File] [-c ColName [ColName ...]] [-notitle]]
+
+  Output_Spec:
+      [-o[,AtrLst] File] [-c ColName [ColName ...]]
       [-udb [-spec UdbSpec | -db DbName] -imp [DbName:]TabName
         [-seg N1[-N2]/N] [-nobnk] [-nonew] [-mod ModSpec]]
-
-  Final_Output:
-      [-ovar[,AtrLst] File [-c ColName [ColName ...]] [-notitle]]
+      [-ovar[,AtrLst] File [-c ColName [ColName ...]]]
 
 
 Description
@@ -52,7 +55,7 @@ It loads and processes records on at a time through these simple steps:
   according to the input spec.
 * Then it converts the input into an internal data row
   according to the column spec.
-* The row is then passed through a *processing chain* 
+* The row is then passed through a *processing chain*
   according to the processing spec.
 * The data row, or any of its columns, can be output at any point in the chain.
   A row can also be output multiple times with varying values,
@@ -69,7 +72,7 @@ Other characteristics of the tool include:
   updated at each row. For example, a variable can be used to calculate the
   sum of a column over all rows in a data set.
 * A variety of processing options are supported to populate and modify
-  column values. An example is `-evlc`_ which sets a column's value
+  column values. An example is `-eval`_ which sets a column's value
   according to the evaluated result of an expression.
 * A variety of processing options are supported to select (or filter) data
   rows. An example is `-filt`_ which filters-in records
@@ -80,7 +83,7 @@ Other characteristics of the tool include:
   Another module type operates on the data row directly.
 * `Conditional processing groups`_ can be used to control execution within
   the chain.  For example, a `-filt`_ can control whether to
-  perform a `-evlc`. Even outputs can be controlled this way.
+  perform a `-eval`. Even the outputs can be controlled this way.
 * Result can go to files, stdout and/or another processing layer called Udb.
 
 With its stream-based design, ``aq_pp`` can process an unlimited amount of
@@ -124,16 +127,6 @@ Options
     aq_pp:TagLab rec=Count err=Count out=Count
 
 
-.. _`-tag`:
-
-``-tag TagLab``
-  Set label used to tag output messages. Default is blank.
-  Currently, it is only used in:
-
-  * The `-stat`_ summary line.
-  * Final error message before program aborts.
-
-
 .. _`-bz`:
 
 ``-bz ReadBufSiz``
@@ -143,97 +136,6 @@ Options
   discarded.
   Default length is 64KB. Use this option if a longer record is expected.
   ``ReadBufSiz`` is a number in bytes.
-
-
-.. _`-ddef`:
-
-``-ddef``
-  Turns on implicit column support for Udb import. If a column
-  required by the target Udb table is not defined in the data set,
-  its value will be set to 0 or blank during import.
-
-  * Instead of (or in addition to) this option, `-var`_ and/or `-evlc`_
-    can be used to add the required columns to the data set.
-  * The "PKEY" column cannot be implicit.
-  * This option applies to all Udb imports.
-
-
-.. _`-rx_syntax`:
-
-``-rx_syntax Syntax``
-  Set the syntax used for any subsequent RegEx. RegEx can be used in various
-  "mapping" and filtering operations.
-  Syntax is one of these values:
-
-  * ``none`` - No particular syntax (default).
-  * ``extended`` - Uses POSIX Extended Regular Expression syntax.
-  * ``newline`` - Apply certain newline matching restrictions.
-
-  Generally, set this option once before any RegEx is used. It is also possible
-  to change syntax within the processing chain; new syntax will affect
-  operations specified afterwards.
-
-  Example:
-
-   ::
-
-    $ aq_pp ...Operation_0...
-        -rx_syntax extended ...Operation_1...
-        -rx_syntax none ...Operation_2...
-
-  * Operation_0 will not use any particular syntax.
-    Operation_1 will use "grep" syntax.
-    Operation_2 will again use no particular syntax.
-
-
-.. _`-seed`:
-
-``-seed RandSeed``
-  Set the seed of random sequence used by the ``$Random``
-  ``evlc`` builtin variable.
-
-
-.. _`-rownum`:
-
-``-rownum StartNum``
-  Set the starting value for the ``$RowNum`` evaluation builtin variable.
-  ``StartNum`` is the index of the first row.
-  Default starting row index is 1.
-  See `-evlc`_ for an usage example.
-
-
-.. _`-emod`:
-
-``-emod ModSpec``
-  Load a module that supplies custom evaluation functions.
-  The supplied functions will be available for use in subsequent `-evlc`_
-  specs.
-
-  ``ModSpec`` has the form ``ModName[:argument]`` where ``ModName``
-  is the logical module name and ``argument`` is an optional module specific
-  parameter string.
-  aq_pp will look for "emod/``ModName``.so" in the directory where aq_pp is
-  installed. For example, if aq_pp is installed as ``SomeDirectory/aq_pp``,
-  aq_pp will load ``SomeDirectory/emod/ModName.so``.
-  Multiple eval modules can be specified.
-  In case a function of the same name is supplied by multiple
-  modules, the one from the most recently loaded module will be used.
-  Each emod is individually documented. See the "aq_pp-emod-\*" manual pages
-  for details.
-
-
-.. _`-fileid`:
-
-``-fileid FileId``
-  Set the file ID number for any inputs from `-f`_ and `-cat`_
-  specified after this option.
-  This ID is a constant until another `-fileid`_ where a different ID can be
-  set for any further inputs from `-f`_ and `-cat`_.
-  This ID can be retrieved during processing via the ``$FileId``
-  `-evlc`_ builtin variable. The value retrieved depends on
-  the file ID of the input file where the active record comes from.
-  Default file ID is 1.
-  See `-evlc`_ for an usage example.
 
 
 .. _`-f`:
@@ -258,6 +160,7 @@ Options
 ``-d ColSpec [ColSpec ...]``
   Define the columns of the input records from all `-f`_ specs.
   ``ColSpec`` has the form ``Type[,AtrLst]:ColName``.
+  Up to 256 ``ColSpec`` can be defined (excluding ``X`` type columns).
   Supported ``Types`` are:
 
   * ``S`` - String.
@@ -271,7 +174,6 @@ Options
     Type is optional. It can be one of the above (default is ``S``).
     ColName is also optional. Such a name is simply discarded.
 
-  Up to 256 ``ColSpec`` can be defined (excluding ``X`` type columns).
   Optional ``AtrLst`` is a comma separated list containing:
 
   * ``esc`` - Denote that the input field uses '\\' as escape character. Data
@@ -334,6 +236,54 @@ Options
     have columns Col1, Col2, Col3, Col4, Col5 and Col6.
 
 
+.. _`-ddef`:
+
+``-ddef``
+  Turns on implicit column support for Udb import. If a column
+  required by the target Udb table is not defined in the data set,
+  its value will be set to 0 or blank during import.
+
+  * Instead of (or in addition to) this option, `-var`_ and/or `-eval`_
+    can be used to add the required columns to the data set.
+  * The "PKEY" column cannot be implicit.
+  * This option applies to all Udb imports.
+
+
+.. _`-seed`:
+
+``-seed RandSeed``
+  Set the random sequence seed of the ``$Random`` evaluation builtin variable.
+  Default seed is 1.
+
+
+.. _`-rownum`:
+
+``-rownum StartNum``
+  Set the starting value for the ``$RowNum`` evaluation builtin variable.
+  ``StartNum`` is the index of the first row.
+  Default starting row index is 1.
+
+
+.. _`-emod`:
+
+``-emod ModSpec``
+  Load a module that supplies custom evaluation functions.
+  The supplied functions will be available for use in subsequent `-eval`_
+  specs.
+
+  ``ModSpec`` has the form ``ModName[:argument]`` where ``ModName``
+  is the logical module name and ``argument`` is an optional module specific
+  parameter string.
+  ``aq_pp`` will look for "emod/``ModName``.so" in the directory where it is
+  installed. For example, if it is installed as ``SomeDirectory/aq_pp``,
+  ``SomeDirectory/emod/ModName.so`` will be loaded.
+  Multiple eval modules can be specified.
+  In case a function of the same name is supplied by multiple
+  modules, the one from the most recently loaded module will be used.
+  Each emod is individually documented. See the "aq_pp-emod-\*" manual pages
+  for details.
+
+
 .. _`-var`:
 
 ``-var ColSpec Val``
@@ -343,9 +293,8 @@ Options
   ``ColSpec`` is the variable's spec in the form ``Type:ColName`` where Type
   is the data type and ColName is the variable's name. See the `-d`_ for
   details.
-  ``Val`` is the literal value to initialize the variable to
-  (``Val`` is not an expression, there is no need to enclose
-  a string value in double quotes).
+  Note that a string ``Val`` must be quoted,
+  see `String Constant`_ spec for details.
 
   Example:
 
@@ -353,30 +302,57 @@ Options
 
     $ aq_pp ... -d i:Col1 ...
         -var 'i:Sum' 0 ...
-        -evlc 'Sum' 'Sum + Col1' ...
+        -eval 'Sum' 'Sum + Col1' ...
 
   * Initialize variable Sum to 0, then update the rolling sum for each row.
 
 
-.. _`-evlc`:
+.. _`-alias`:
 
-``-evlc ColSpec|ColName Expr``
+``-alias ColName AltName``
+  Set a column alias.
+  `` ColName`` refers to a previously defined column/variable/alias.
+  ``AltName`` is the desired alias. An alias allow the same column to be
+  addressed using multiple names.
+  If the original column is no longer needed, use `-renam`_ instead.
+
+
+.. _`-renam`:
+
+``-renam ColName NewName``
+  Rename a column or an alias.
+  `` ColName`` refers to a previously defined column/variable/alias.
+  ``NewName`` is the new name of the column/variable/alias.
+  addressed using multiple names.
+
+
+.. _`-eval`:
+
+``-eval ColSpec|ColName Expr``
   Evaluate ``Expr`` and save the result to a column. The column can be a new
-  column or an existing column/variable.
+  column, an existing column/variable or null as explained below.
 
+  * If a ``-`` is given, the result will not be saved anywhere. This is
+    useful when calling a function that puts its result in destinated columns
+    by itself.
   * If ``ColSpec`` is given, a new column will be created using the spec.
     See `-d`_ for details. Note that the new column cannot participate in
     ``Expr``.
-  * If a ColName is given, it must refer to a previously defined
+  * If `` ColName`` is given, it must refer to a previously defined
     column/variable.
 
   ``Expr`` is the expression to evaluate.
   Data type of the evaluated result must be compatible with the data type of
   the target column. For example, string result for a string column and
-  numeric result for a numeric column.
+  numeric result for a numeric column (there is no automatic type conversion;
+  however, explicit conversion can be done using the ``To*()`` functions
+  described below).
   Operands in the expression can be the names of previously defined columns or
   variables, constants, builtin variables and functions.
 
+  * Column names are case insensitive. Do not quote the name.
+  * String constants must be quoted,
+    see `String Constant`_ spec for details.
   * Use '(' and ')' to group operations as appropriate.
   * For a numeric type evaluation, supported operators are
     '*', '/', '%', '+', '-', '&', '|' and '^'.
@@ -405,57 +381,78 @@ Options
     First row is 1 by default.
     Its initial value can be set using the `-rownum`_ option.
 
-  ``$FileId``
-    The file ID assigned to the input file currently being processed
-    Its value can be set using the `-fileid`_ option.
-
   Builtin functions:
 
   ``ToIP(Val)``
     Returns the IP address value of ``Val``.
-    ``Val`` can be a string/IP column's name, a literal string,
+    ``Val`` can be a string/IP column's name, a `string constant`_,
     or an expression that evaluates to a string/IP.
 
   ``ToF(Val)``
     Returns the floating point value of ``Val``.
-    ``Val`` can be a string/numeric column's name, a literal string/number,
+    ``Val`` can be a string/numeric column's name, a string/numeric constant,
     or an expression that evaluates to a string/number.
 
   ``ToI(Val)``
     Returns the integral value of ``Val``.
-    ``Val`` can be a string/numeric column's name, a literal string/number,
+    ``Val`` can be a string/numeric column's name, a string/numeric constant,
     or an expression that evaluates to a string/number.
 
   ``ToS(Val)``
     Returns the string representation of ``Val``.
-    ``Val`` can be a numeric column's name, a literal string/number/IP,
+    ``Val`` can be a numeric column's name, a string/numeric/IP constant,
     or an expression that evaluates to a string/number/IP.
 
-  ``Min(Val1, Val2)``
-    Returns the lesser of ``Val1`` and ``Val2``.
-    ``Val1`` and ``Val2`` can be a numeric column's name, a literal number,
-    or an expression that evaluates to a number.
+  ``Min(Val1, Val2 [, Val3 ...])``
+    Returns the smallest among ``Val1``, ``Val2`` and so on.
+    Values can be numeric column names, numbers,
+    or expressions that evaluates to a number.
 
-  ``Max(Val1, Val2)``
-    Returns the greater of ``Val1`` and ``Val2``.
-    ``Val1`` and ``Val2`` can be a numeric column's name, a literal number,
-    or an expression that evaluates to a number.
+  ``Max(Val1, Val2 [, Val3 ...])``
+    Returns the greatest among ``Val1``, ``Val2`` and so on.
+    Values can be numeric column names, numbers,
+    or expressions that evaluates to a number.
+
+  ``PatCmp(Val, Pattern [, AtrLst])``
+    Perform a pattern comparison between string value and a pattern.
+    Returns 1 (True) if successful or 0 (False) otherwise.
+    ``Val`` can be a string column's name, a `string constant`_,
+    or an expression that evaluates to a string.
+    ``Pattern`` is a `string constant`_ specifying
+    the pattern to match.
+    ``AtrLst`` is a comma separated string list containing:
+
+    * ``ncas`` - Do case insensitive pattern match (default is case sensitive).
+      This has the same effect as the case insensitive operators below.
+    * ``rx`` - Do Regular Expression matching.
+    * ``rx_extended`` - Do Regular Expression matching.
+      In addition, enable POSIX Extended Regular Expression syntax.
+    * ``rx_newline`` - Do Regular Expression matching.
+      In addition, apply certain newline matching restrictions.
+
+    Without any of the Regular Expression related attributes,
+    ``Pattern`` must be a simple wildcard pattern containing just '*'
+    (matches any number of bytes) and '?' (matches any 1 byte) only;
+    literal '*', '?' and '\\' in the pattern must be '\\' escaped.
+
+    If any of the Regular Expression related attributes is enabled, then
+    the pattern must be a GNU RegEx.
 
   ``SHash(Val)``
     Returns the numeric hash value of a string.
-    ``Val`` can be a string column's name, a literal string,
+    ``Val`` can be a string column's name, a `string constant`_,
     or an expression that evaluates to a string.
 
   ``SLeng(Val)``
     Returns the length of a string.
-    ``Val`` can be a string column's name, a literal string,
+    ``Val`` can be a string column's name, a `string constant`_,
     or an expression that evaluates to a string.
 
   ``DateToTime(DateVal, DateFmt)``
     Returns the UNIX time in integral seconds corresponding to ``DateVal``.
-    ``DateVal`` can be a string column's name, a literal string,
+    ``DateVal`` can be a string column's name, a `string constant`_,
     or an expression that evaluates to a string.
-    ``DateFmt`` is a literal string (quoted with double quotes) specifying
+    ``DateFmt`` is a `string constant`_ specifying
     the format of ``DateVal``.
     The format is a sequence of single-letter conversion codes:
 
@@ -479,9 +476,9 @@ Options
   ``TimeToDate(TimeVal, DateFmt)``
     Returns the date string corresponding to ``TimeVal``.
     The string's maximum length is 127.
-    ``TimeVal`` can be a numeric column's name, a literal number,
+    ``TimeVal`` can be a numeric column's name, a numeric constant,
     or an expression that evaluates to a number.
-    ``DateFmt`` is a literal string (quoted with double quotes) specifying
+    ``DateFmt`` is a `string constant`_ specifying
     the format of the output. See the ``strftime()`` C function manual
     page regarding the format of ``DateFmt``.
 
@@ -490,11 +487,11 @@ Options
 
   ``QryParmExt(QryVal, ParmSpec)``
     Extract query parameters from ``QryVal`` and place the results in columns.
-    Returns the number of parameters extracted.
-    Note that this function does not generate any error.
-    ``QryVal`` can be a string column's name, a literal string
+    Returns the number of parameters extracted. If the return value is not
+    needed, invoke function using ``-eval - QryParmExt(...)``.
+    ``QryVal`` can be a string column's name, a `string constant`_
     or an expression that evaluates to a string.
-    ``ParmSpec`` is a literal string (quoted with double quotes) specifying
+    ``ParmSpec`` is a `string constant`_ specifying
     the parameters to extract and the destination columns for the result.
     It has the form:
 
@@ -531,28 +528,20 @@ Options
 
    ::
 
-    $ aq_pp ... -d i:Col1 ... -evlc l:Col_evl 'Col1 * 10' ...
+    $ aq_pp ... -d i:Col1 ... -eval l:Col_evl 'Col1 * 10' ...
 
   * Set new column Col_evl to 10 times the value of Col1.
 
    ::
 
-    $ aq_pp -rownum 101 ... -d i:Col1 ... -evlc i:Seq '$RowNum' ...
+    $ aq_pp -rownum 101 ... -d i:Col1 ... -eval i:Seq '$RowNum' ...
 
   * Set starting row index to 101 and set new column Seq to the row index.
 
    ::
 
-    $ aq_pp -fileid 1 -f file1 -d i:Col1 ... -evlc i:Id '$FileId'
-        -fileid 2 -cat file2 ...
-
-  * After file1 and file2 are concatenated together, the new "Id" column will
-    have a value of 1 or 2 depending on which input file the record came from.
-
-   ::
-
     $ aq_pp ... -d s:Col1 s:Col2 ...
-        -evlc is:Dt 'DateToTime(Col2, "Y.m.d.H.M.S.p") - DateToTime(Col1, "Y.m.d.H.M.S.p")'
+        -eval is:Dt 'DateToTime(Col2, "Y.m.d.H.M.S.p") - DateToTime(Col1, "Y.m.d.H.M.S.p")'
         ...
 
   * Col1 and Col2 are date strings of the form "Year/Month/day Hour:Min:Sec AM".
@@ -562,70 +551,34 @@ Options
 .. _`-mapf`:
 
 ``-mapf[,AtrLst] ColName MapFrom``
-  Extract data from a string column.
-  ``ColName`` is a previously defined column to extract data from.
-  ``MapFrom`` defines the extraction rule using the
-  `RT MapFrom Syntax`_.
-  Optional ``AtrLst`` is:
-
-  * ncas - Do case insensitive pattern match (default is case sensitive).
-
-  Example:
-
-   ::
-
-    $ aq_pp ... -d s:Col1 ...
-        -mapf Col1 '%%v1_beg%%.%%v1_end%%'
-        -mapc s:Col_beg '%%v1_beg%%'
-        -mapc s:Col_end '%%v1_end%%'
-        ...
-
-  * Extract data from Col1, then put "parts" of this columns in 2 new columns.
-
-
-.. _`-mapfrx`:
-
-``-mapfrx[,AtrLst] ColName MapFrom``
-  Extract data from a string column.
+  Extract data from a string column. This option should be used in
+  conjunction with `-mapc`_.
   ``ColName`` is a previously defined column/variable to extract data from.
-  ``MapFrom`` defines the extraction rule using the
-  `RegEx MapFrom Syntax`_.
-  Optional ``AtrLst`` is:
+  ``MapFrom`` defines the extraction rule.
+  Optional ``AtrLst`` is a comma separated list containing:
 
-  * ncas - Do case insensitive pattern match (default is case sensitive).
+  * ``ncas`` - Do case insensitive pattern match (default is case sensitive).
+  * ``rx`` - Do Regular Expression matching.
+  * ``rx_extended`` - Do Regular Expression matching.
+    In addition, enable POSIX Extended Regular Expression syntax.
+  * ``rx_newline`` - Do Regular Expression matching.
+    In addition, apply certain newline matching restrictions.
 
-  Example:
-
-   ::
-
-    $ aq_pp ... -d s:Col2 s:Col3 ...
-        -mapfrx Col2 '\(.*\)-\(.*\)'
-        -mapfrx Col3 '\(.*\)_\(.*\)'
-        -mapc s:Col_beg '%%1%%,%%4%%'
-        -mapc s:Col_end '%%2%%,%%5%%'
-        ...
-
-  * Extract data from Col2 and Col3, then put "parts" of those columns in 2
-    new columns. Note that the RegEx based MapFrom's do not have named
-    placeholders for the extracted data, they are implicit.
-  * ``%%0%%`` - Reference the entire match in first ``-mapfrx`` (not used in example).
-  * ``%%1%%`` - Reference the 1st subpattern match in first ``-mapfrx``.
-  * ``%%2%%`` - Reference the 2nd subpattern match in first ``-mapfrx``.
-  * ``%%3%%`` - Reference the entire match in second ``-mapfrx`` (not used in example).
-  * ``%%4%%`` - Reference the 1st subpattern match in second ``-mapfrx``.
-  * ``%%5%%`` - Reference the 2nd subpattern match in second ``-mapfrx``.
+  If any of the Regular Expression related attributes are enabled, then
+  ``MapFrom`` must use the `RegEx MapFrom Syntax`_.
+  Otherwise, it must use the `RT MapFrom Syntax`_.
 
 
 .. _`-mapc`:
 
 ``-mapc ColSpec|ColName MapTo``
-  Render data extracted via previous `-mapf`_ and/or `-mapfrx`_ into a new
+  Render data extracted via previous `-mapf`_ into a new
   column or into an existing column/variable.
   The column must be of string type.
 
   * If ``ColSpec`` is given, a new column will be created using the spec.
     See `-d`_ for details.
-  * If a ``ColName`` is given, it must refer to a previously defined
+  * If ``ColName`` is given, it must refer to a previously defined
     column/variable.
 
   ``MapTo`` is the rendering spec. See `MapTo Syntax`_ for details.
@@ -636,21 +589,25 @@ Options
 
     $ aq_pp ... -d s:Col1 s:Col2 s:Col3 ...
         -mapf Col1 '%%v1_beg%%.%%v1_end%%'
-        -mapfrx Col2 '\(.*\)-\(.*\)'
-        -mapfrx Col3 '\(.*\)_\(.*\)'
+        -mapf,rx Col2 '\(.*\)-\(.*\)'
+        -mapf,rx Col3 '\(.*\)_\(.*\)'
         -mapc s:Col_beg '%%v1_beg%%,%%1%%,%%4%%'
         -mapc s:Col_end '%%v1_end%%,%%2%%,%%5%%'
         ...
 
-  * Extract data from Col1, Col2 and Col3, then put "parts" of those columns
-    in 2 new columns. Note that the RegEx based MapFrom's do not have named
-    placeholders for the extracted data, they are implicit.
-  * ``%%0%%`` - Reference the entire match in first ``-mapfrx`` (not used in example).
-  * ``%%1%%`` - Reference the 1st subpattern match in first ``-mapfrx``.
-  * ``%%2%%`` - Reference the 2nd subpattern match in first ``-mapfrx``.
-  * ``%%3%%`` - Reference the entire match in second ``-mapfrx`` (not used in example).
-  * ``%%4%%`` - Reference the 1st subpattern match in second ``-mapfrx``.
-  * ``%%5%%`` - Reference the 2nd subpattern match in second ``-mapfrx``.
+  * Extract data from Col1, Col2 and Col3. Then put "parts" of these columns
+    in two new columns.
+    Note that the RegEx based ``MapFrom`` expressions do not have named
+    placeholders for the extracted data. Placeholders are interpreted
+    implicitly from the the expressions in this way.
+  * ``%%0%%`` - Represent the entire match in the first ``-mapf,rx``
+    (not used in example).
+  * ``%%1%%`` - Represent the 1st subpattern match in the first ``-mapf,rx``.
+  * ``%%2%%`` - Represent the 2nd subpattern match in the first ``-mapf,rx``.
+  * ``%%3%%`` - Represent the entire match in the second ``-mapf,rx``
+    (not used in example).
+  * ``%%4%%`` - Represent the 1st subpattern match in the second ``-mapf,rx``.
+  * ``%%5%%`` - Represent the 2nd subpattern match in the second ``-mapf,rx``.
 
 
 .. _`-kenc`:
@@ -662,7 +619,7 @@ Options
 
   * If ``ColSpec`` is given, a new column will be created using the spec.
     See `-d`_ for details.
-  * If a ``ColName`` is given, it must refer to a previously defined
+  * If ``ColName`` is given, it must refer to a previously defined
     column/variable.
 
   The source ``ColNames`` must be previously defined.
@@ -744,50 +701,37 @@ Options
   ``FilterSpec`` is a logical expression that evaluates to either true or false
   for each record - if true, the record is selected; otherwise, it is
   discarded.
-  It has the basic form ``LHS <compare> RHS``.
-  LHS can be a column/variable name or an expression to evaluate:
+  It has the basic form ``[!] LHS [<compare> RHS]`` where:
 
-  * Column/variable name is case insensitive.
-  * Evaluation has the form ``Eval(Expr)`` where ``Expr`` is the expression
-    to evaluate as in `-evlc`_.
+  * The negation operator ``!`` negates the result of the comparison.
+    It is recommended that ``!(...)`` be used to clarify the intended
+    operation even though it is not required.
+  * LHS and RHS can be:
 
-  RHS can be a column/variable name or a constant:
+    * A column/variable name (case insensitive). Do not quote the name.
+    * A constant, which can be a string, a number or an IP address.
+      A string constant must be quoted,
+      see `String Constant`_ spec for details.
+    * An expression to evaluate as defined under `-eval`_.
 
-  * Column/variable name is case insensitive.
-  * A constant can be a string, a number or an IP address.
-    A string constant must be quoted with double quotes.
+  * If only the LHS is given, its values will be used as a boolean -
+    a non blank string or non zero number/IP equals True, False otherwise.
+  * Supported comparison operators are:
 
-  Supported comparison operators are:
-
-  * ``==``, ``>``, ``<``, ``>=``, ``<=`` -
-    LHS and RHS comparison.
-  * ``~==``, ``~>``, ``~<``, ``~>=``, ``~<=`` -
-    LHS and RHS case insensitive comparison; string type only.
-  * ``!=``, ``!~=`` -
-    Negation of the above equal operators.
-  * ``~~`` -
-    LHS value matches RHS pattern. LHS must be a string column and
-    RHS must be a literal pattern spec containing '*' (any number of bytes)
-    and '?' (any 1 byte).
-  * ``~~~`` -
-    Same as ``~~`` but does case insensitive match.
-  * ``!~``, ``!~~`` -
-    Negation of the above.
-  * ``##`` -
-    LHS value matches RHS regex. LHS must be a string column and
-    RHS must be a literal GNU RegEx.
-  * ``~##`` -
-    Same as ``##`` but does case insensitive match.
-  * ``!#``, ``!~#`` -
-    Negation of the above.
-  * ``&=`` -
-    Perform a "(LHS & RHS) == RHS" check; numeric types only.
-  * ``!&=`` -
-    Negation of the above.
-  * ``&`` -
-    Perform a "(LHS & RHS) != 0" check; numeric types only.
-  * ``!&`` -
-    Negation of the above.
+    * ``==``, ``>``, ``<``, ``>=``, ``<=`` -
+      LHS and RHS comparison.
+    * ``~==``, ``~>``, ``~<``, ``~>=``, ``~<=`` -
+      LHS and RHS case insensitive comparison; string type only.
+    * ``!=``, ``!~=`` -
+      Negation of the above equal operators.
+    * ``&=`` -
+      Perform a "(LHS & RHS) == RHS" check; numeric types only.
+    * ``!&=`` -
+      Negation of the above.
+    * ``&`` -
+      Perform a "(LHS & RHS) != 0" check; numeric types only.
+    * ``!&`` -
+      Negation of the above.
 
   More complex expression can be constructed by using ``(...)`` (grouping),
   ``!`` (negation), ``||`` (or) and ``&&`` (and).
@@ -796,10 +740,6 @@ Options
    ::
 
     LHS_1 == RHS_1 && !(LHS_2 == RHS_2 || LHS_3 == RHS_3)
-
-  In a quoted string literal, '\\' and double quotes must be '\\' escaped.
-  In addition, if the RHS is a pattern (``~~`` and ``!~`` operators)
-  literal '*' and '?' in the pattern must also be '\\' escaped.
 
   Example:
 
@@ -816,23 +756,22 @@ Options
 .. _`-map`:
 
 ``-map[,AtrLst] ColName MapFrom MapTo``
-  See `-maprx`_ below.
-
-
-.. _`-maprx`:
-
-``-maprx[,AtrLst] ColName MapFrom MapTo``
   Remap (a.k.a., rewrite) a string column's value.
   ``ColName`` is a previously defined column/variable.
-  ``MapFrom`` is the extraction rule.
-
-  * See `RT MapFrom Syntax`_ regarding ``-map`` MapFrom syntax.
-  * See `RegEx MapFrom Syntax`_ regarding ``-maprx`` MapFrom syntax.
-
+  ``MapFrom`` defines the extraction rule.
   ``MapTo`` is the rendering spec. See `MapTo Syntax`_ for details.
-  Optional ``AtrLst`` is:
+  Optional ``AtrLst`` is a comma separated list containing:
 
-  * ncas - Do case insensitive pattern match (default is case sensitive).
+  * ``ncas`` - Do case insensitive pattern match (default is case sensitive).
+  * ``rx`` - Do Regular Expression matching.
+  * ``rx_extended`` - Do Regular Expression matching.
+    In addition, enable POSIX Extended Regular Expression syntax.
+  * ``rx_newline`` - Do Regular Expression matching.
+    In addition, apply certain newline matching restrictions.
+
+  If any of the Regular Expression related attributes are enabled, then
+  ``MapFrom`` must use the `RegEx MapFrom Syntax`_.
+  Otherwise, it must use the `RT MapFrom Syntax`_.
 
   Example:
 
@@ -842,7 +781,7 @@ Options
         -map Col1 '%%v1_beg%%-%*' 'beg=%%v1_beg%%'
         ...
     $ aq_pp ... -d s:Col1 ...
-        -maprx Col1 '\(.*\)-*' 'beg=%%1%%'
+        -map,rx Col1 '\(.*\)-*' 'beg=%%1%%'
         ...
 
   * Both commands rewrite Col1 in the same way.
@@ -877,9 +816,9 @@ Options
   If ``ColTag`` is not used, the files are assumed to contain
   *exactly 2 columns* - the ``FROM`` and ``TO`` columns, in that order.
 
-  The ``FROM`` value is generally a string constant. Patterns can also be used,
+  The ``FROM`` value is generally a literal. Patterns can also be used,
   see the ``pat`` attribute description above.
-  The ``TO`` value is always a string constant.
+  The ``TO`` value is always a literal.
   Matches are carried out according to the order of the match value in the
   files. Match stops when the first match is found. If the files contain both
   exact value and pattern, then:
@@ -928,7 +867,7 @@ Options
   If ``ColTag`` is not used, the files are assumed to contain
   *exactly 1 column* - the ``FROM`` column.
 
-  The ``FROM`` value is generally a string constant. Patterns can also be used,
+  The ``FROM`` value is generally a literal. Patterns can also be used,
   see the ``pat`` attribute description above.
   Matches are carried out according to the order of the match value in the
   files. Match stops when the first match is found. If the files contain both
@@ -1019,16 +958,40 @@ Options
   ``ModSpec`` has the form ``ModName[:argument]`` where ``ModName``
   is the logical module name and ``argument`` is a module specific
   parameter string.
-  aq_pp will look for "pmod/``ModName``.so" in the directory where aq_pp is
-  installed. For example, if aq_pp is installed as ``/SomeDirectory/aq_pp``,
-  aq_pp will load ``/SomeDirectory/pmod/ModName.so``.
+  ``aq_pp`` will look for "pmod/``ModName``.so" in the directory where it is
+  installed. For example, if it is installed as ``/SomeDirectory/aq_pp``,
+  ``/SomeDirectory/pmod/ModName.so`` will be loaded.
   See the examples under "pmod/" in the source package regarding how this
   type of module is implemented.
+
+  Standard modules:
+
+  ``unwrap_strv``
+    Unwrap a delimiter separated string column into none or more values.
+    The row will be replicated for each of the unwrapped values.
+    Module arguments are:
+
+     ::
+
+      From_Col:From_Sep:To_Col[:AtrLst]
+
+    * ``From_Col`` - Column containing the string value to unwrap.
+      It must have type ``S``.
+    * ``From_Sep`` - The single byte delimiter that separate individual
+      values. The delimiter must be given as-is, no escape is recognized.
+    * ``To_Col`` - Column to save each unwrapped value to.
+      It must have type ``S``. The ``To_Col`` can be the same as the
+      ``From_Col`` - the module will remember the original ``From_Col``
+      value.
+    * AtrLst - A comma separated attribute list containing:
+
+     * ``relax`` - No trailing delimiter. One is expected by default.
+     * ``noblank`` - Skip blank values.
 
 
 .. _`-o`:
 
-``[-o[,AtrLst] File] [-c ColName [ColName ...]] [-notitle]``
+``[-o[,AtrLst] File] [-c ColName [ColName ...]]``
   Output data rows.
   Optional "``-o[,AtrLst] File``" sets the output attributes and file.
   If ``File`` is a '-' (a single dash), data will be written to stdout.
@@ -1041,10 +1004,13 @@ Options
   If ``-c`` is specified without a previous ``-o``, output to stdout is
   assumed.
 
-  Optional ``-notitle`` suppresses the column name label row from the output.
-  A label row is normally included by default.
+  In case a title line is desired but certain column names are not
+  appropriate, use `-alias`_ or `-renam`_ before the ``-o`` to remap the
+  name of those columns manually.
+  With `-alias`_, the alternate names must be explicitly selected with ``-c``.
+  With `-renam`_, ``-c`` is optional.
 
-  Multiple sets of "``-o ... -c ... -notitle``" can be specified.
+  Multiple sets of "``-o ... -c ...``" can be specified.
 
   Example:
 
@@ -1075,6 +1041,9 @@ Options
   * Optional ``DbName`` defines ``UdbSpec`` indirectly as in the ``-db`` option.
   * Columns from the current data set, including variables, matching the
     columns of ``TabName`` are automatically selected for import.
+    In case certain columns in the current data set are named
+    differently from tbe columns of ``TabName``, use `-alias`_ or `-renam`_
+    to remap those columns manually.
   * See `-ddef`_ if any column in the target table is missing from the
     current data set.
 
@@ -1089,18 +1058,18 @@ Options
   Optional ``-nonew`` tells the server not to create any new user during this
   import. Records belonging to users not yet in the DB are discarded.
 
-  Optional "``-mod ModSpec``" specifies a module to load on the server side.
+  Optional "``-mod ModSpec``" specifies a module to load on the *server side*.
   ``ModSpec`` has the form ``ModName[:argument]`` where ``ModName``
   is the logical module name and ``argument`` is a module specific
-  parameter string. Udb server will try to load "mod/``ModName``.so"
-  in the server directory.
+  parameter string. Udb server will try to load "umod/``ModName``.so"
+  in the directory where ``udbd`` is installed.
 
   Multiple sets of "``-udb -spec ... -imp ...``" can be specified.
 
 
 .. _`-ovar`:
 
-``-ovar[,AtrLst] File [-c ColName [ColName ...]] [-notitle]``
+``-ovar[,AtrLst] File [-c ColName [ColName ...]]``
   Output the final variable values.
   Variables are those defined using the `-var`_ option.
   Only a single data row is output.
@@ -1113,17 +1082,20 @@ Options
   ``ColName`` refers to a previously defined variable.
   Without ``-c``, all variables are selected by default.
 
-  Optional ``-notitle`` suppresses the column name label row from the output.
-  A label row is normally included by default.
+  In case a title line is desired but certain variable names are not
+  appropriate, use `-alias`_ or `-renam`_ before ``-ovar`` to remap the
+  name of those variables manually.
+  With `-alias`_, the alternate names must be explicitly selected with ``-c``.
+  With `-renam`_, ``-c`` is optional.
 
-  Multiple sets of "``-ovar ... -c ... -notitle``" can be specified.
+  Multiple sets of "``-ovar ... -c ...``" can be specified.
 
   Example:
 
    ::
 
     $ aq_pp ... -d i:Col1 i:Col2 ... -var i:Sum1 0 -var i:Sum2 0 ...
-        -evlc Sum1 'Sum1 + Col1' -evlc Sum2 'Sum2 + (Col2 * Col2)' ...
+        -eval Sum1 'Sum1 + Col1' -eval Sum2 'Sum2 + (Col2 * Col2)' ...
         -ovar - -c Sum1 Sum2
 
   * Calculate sums and output their evaluates at the end of processing.
@@ -1137,10 +1109,15 @@ with a non-zero status code along error messages printed to stderr.
 Applicable exit codes are:
 
 * 0 - Successful.
-* 1-9 - Program initial preparation error.
-* 10-19 - Input file load error.
-* 20-29 - Result output error.
-* 30-39 - Udb server connection/communication error.
+* 1 - Memory allocation error.
+* 2 - Command option spec error.
+* 3 - Initialization error.
+* 11 - Input open error.
+* 13 - Input processing error.
+* 21 - Output open error.
+* 22 - Output write error.
+* 31 - Udb connect error.
+* 32 - Udb communication error.
 
 
 Input File Attributes
@@ -1175,9 +1152,48 @@ Some output file can have these comma separated attributes:
 * ``noq`` - Do not quote string fields (CSV).
 * ``fmt_g`` - Use "%g" as print format for ``F`` type columns. Only use this
   to aid data inspection (e.g., during integrity check or debugging).
+* ``notitle`` - Suppress the column name label row from the output.
+  A label row is normally included by default.
 
 By default, output is in CSV format. Use the ``esc`` and ``noq`` attributes to
 set output characteristics as needed.
+
+
+String Constant
+===============
+
+A string constant must be quoted between double or single quotes.
+With *double* quotes, special character sequences can be used to represent
+special characters.
+With *single* quotes, no special sequence is recognized; in other words,
+a single quote cannot occur between single quotes.
+
+Character sequences recognized between *double* quotes are:
+
+* ``\\`` - represents a literal backslash character.
+* ``\"`` - represents a literal double quote character.
+* ``\b`` - represents a literal backspace character.
+* ``\f`` - represents a literal form feed character.
+* ``\n`` - represents a literal new line character.
+* ``\r`` - represents a literal carriage return character.
+* ``\t`` - represents a literal horizontal tab character.
+* ``\v`` - represents a literal vertical tab character.
+* ``\0`` - represents a NULL character.
+* ``\xHH`` - represents a character whose HEX value is ``HH``.
+
+Beyond these, other special sequences may be recognized depending on where
+the string is used. For example, in a simple wildcard pattern
+(see ``PatCmp()``), ``\?`` and ``\*`` represent literal ``?`` and ``*``
+respectively.
+Sequences that are not recognized will be kept as-is. For example, in ``\a``,
+the backslash will not be removed.
+
+Two or more quoted strings can be used back to back to form a single string.
+For example,
+
+ ::
+
+  'a "b" c'" d 'e' f" => a "b" c d 'e' f
 
 
 RT MapFrom Syntax
@@ -1193,11 +1209,11 @@ It has this general syntax:
   ``%*`` matches any number of bytes and ``%?`` matches any 1 byte.
   This is like a pattern comparison.
 * A variable -
-  ``%%myVar%%`` -
-  Extract the value into a variable named ``myVar``. ``myVar`` can later be
+  ``%%my_var%%`` -
+  Extract the value into a variable named ``my_var``. ``my_var`` can later be
   used in the MapTo spec.
 * Literals and variables -
-  ``literal_1%%myVar_1%%literal_2%%myVar_2%%`` -
+  ``literal_1%%my_var_1%%literal_2%%my_var_2%%`` -
   A common way to extract specific data portions.
 * Case sensitive or insensitive toggling -
   ``literal_1%=literal_2%=literal_3`` -
@@ -1206,7 +1222,7 @@ It has this general syntax:
   ``literal_1``'s match will be case sensitive, but ``literal_2``'s will be
   case insensitive, and ``literal_3``'s will be case sensitive again.
 * '\\' escape -
-  ``\%\%not_var\%\%%%myVar%%a_backslash\\others`` -
+  ``\%\%not_var\%\%%%my_var%%a_backslash\\others`` -
   If a '%' is used in such a way that resembles an unintended MapFrom spec,
   the '%' must be escaped. Literal '\\' must also be escaped.
   On the other hand, '\\' has no special meaning within a variable spec
@@ -1237,28 +1253,28 @@ where
   * ``g`` - Characters in ``{}[]()``.
   * ``q`` - Single/double/back quotes.
 
-  Multiple classes can be used; e.g., ``%%myVar:@nab%%`` for all alphanumerics.
+  Multiple classes can be used; e.g., ``%%my_var:@nab%%`` for all alphanumerics.
 * ``:[chars]`` (``[]`` is part of the syntax) is similar to the character class
   described above except that the allowed characters are set explicitly.
   Note that ranges is not supported, all characters must be specified.
   For example,
-  ``%%myVar:[0123456789abcdefABCDEF]%%`` (same as
-  ``%%myVar:@n:[abcdefABCDEF]%%``) for hex digits. To include a ']'
-  as one of the characters, put it first, as in ``%%myVar:[]xyz]%%``.
+  ``%%my_var:[0123456789abcdefABCDEF]%%`` (same as
+  ``%%my_var:@n:[abcdefABCDEF]%%``) for hex digits. To include a ']'
+  as one of the characters, put it first, as in ``%%my_var:[]xyz]%%``.
 * ``:min[-max]`` is the min and optional max length (bytes, inclusive) to
   extract. Without a max, the default is unlimited (actually ~64Kb).
 * ``,brks`` defines a list of characters at which extraction of the variable
-  should stop. For example, ``%%myVar,,;:%%`` will extract data into myVar
+  should stop. For example, ``%%my_var,,;:%%`` will extract data into ``my_var``
   until one of ``,;:`` or end-of-string is encountered. This usuage is often
-  followed by a wild card, as in ``%%myVar,,;:%%%*``.
+  followed by a wild card, as in ``%%my_var,,;:%%%*``.
 
 
 RegEx MapFrom Syntax
 ====================
 
-Regular expression style MapFrom is used in both `-mapfrx`_ and `-maprx`_
-options. The MapFrom spec is used to match and/or extract data from a string
-(a column value).
+Regular expression style ``MapFrom`` can be used in both `-mapf`_ and `-map`_
+options. ``MapFrom`` defines what to match and/or extract from a string
+value of a column.
 
 Differences between RegEx mapping and RT mapping:
 
@@ -1267,7 +1283,7 @@ Differences between RegEx mapping and RT mapping:
   beginning and end of a RegEx as in ``^pattern$``.
 * RegEx MapFrom does not have named variables for the extracted data. Instead,
   extracted data is put into implicit variables ``%%0%%``, ``%%1%%``, and so on.
-  See `-mapfrx`_ for an usage example.
+  See `-mapc`_ for an usage example.
 
 Regular Expression is very powerful but also complex. Please consult the
 GNU RegEx manual for details.
@@ -1276,19 +1292,19 @@ GNU RegEx manual for details.
 MapTo Syntax
 ============
 
-MapTo is used in `-mapc`_, `-map`_ and `-maprx`_. It renders the data
+MapTo is used in `-mapc`_ and `-map`_. It renders the data
 extracted by MapFrom into a column. Both RT and RegEx MapTo share the same
 syntax:
 
 * A literal - In other words, the result will be a constant.
 * A variable -
-  ``%%myVar%%`` -
-  Substitute the value of ``myVar``.
+  ``%%my_var%%`` -
+  Substitute the value of ``my_var``.
 * Literals and variables -
-  ``literal_1%%myVar_1%%literal_2%%myVar_2%%`` -
+  ``literal_1%%my_var_1%%literal_2%%my_var_2%%`` -
   A common way to render extracted data.
 * '\\' escape -
-  ``\%\%not_var\%\%%%myVar%%a_backslash\\others`` -
+  ``\%\%not_var\%\%%%my_var%%a_backslash\\others`` -
   If a '%' is used in such a way that resembles an unintended MapTo spec,
   the '%' must be escaped. Literal '\\' must also be escaped.
   On the other hand, '\\' has no special meaning within a variable spec
@@ -1321,7 +1337,7 @@ where
 * ``,brks`` defines a list of characters at which substitution of the variable's
   value should stop.
 
-See `-mapfrx`_ for an usage example.
+See `-mapc`_ for an usage example.
 
 
 Conditional Processing Groups
@@ -1346,7 +1362,7 @@ of another rule. The basic form of a conditional group is:
 
 Groups can be nested to form more complex conditions.
 Supported ``RuleToCheck`` and ``RuleToRun`` are
-`-evlc`_, `-mapf`_, `-mapc`_, `-kenc`_, `-kdec`_,
+`-eval`_, `-mapf`_, `-mapc`_, `-kenc`_, `-kdec`_,
 `-filt`_, `-map`_, `-sub`_, `-grep`_, `-cmb`_, `-pmod`_,
 `-o`_ and `-udb`_. Note that some of these rules may be responsible for the
 initialization of dynamically created columns. If such rules get skipped
@@ -1371,11 +1387,11 @@ Example:
 
   $ aq_pp ... -d i:Col1 ...
       -if -filt 'Col1 == 1'
-        -evlc s:Col2 '"Is-1"'
+        -eval s:Col2 '"Is-1"'
       -elif -filt 'Col1 == 2'
         -false
       -else
-        -evlc Col2 '"Others"'
+        -eval Col2 '"Others"'
       -endif
       ...
 
