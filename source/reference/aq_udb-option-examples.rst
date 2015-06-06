@@ -25,7 +25,7 @@ This data was imported using aq_pp and the example data provided in the aq_pp do
     ess spec create table country_table "s,hash:country s:last_name s:first_name i:integer_col f:float_col f:float_2 s:grade s:extra_column"
     ess spec create variable "i:defined_integer_var s:defined_string_var"
     ess udbd start
-    aq_pp -f,+1 tutorialdata.csv -d f:float_col i:integer_col s:last_name s:first_name s:country -ddef -udb_imp my_database:country_table
+    aq_pp -f,+1 exampledata.csv -d f:float_col i:integer_col s:last_name s:first_name s:country -ddef -udb_imp my_database:country_table
     aq_pp -f,+1 lookup.csv -d s:grade f:float_2 s:last_name s:first_name s:country -ddef -udb_imp my_database:country_table
 
 
