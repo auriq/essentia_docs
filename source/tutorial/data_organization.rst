@@ -30,10 +30,12 @@ credentials, though we recommend the use of credential files if possible.
 
 For an Azure Blob datastore you would enter::
 
-  $ ess datastore select s3://asi-public --account_name=asipublic
+  $ ess datastore select blob://asi-public --account_name=asipublic
   
 This is specifically for our public Azure container. If you wanted to access a private Azure container you would need to 
-supply both the appropriate account name and the apporpriate account key.
+supply both the appropriate account name and the apporpriate account key as in::
+
+  $ ess datastore select blob://private_container --account_name=associated_account --account_key=associated_key
 
 
 Categorization of Data
