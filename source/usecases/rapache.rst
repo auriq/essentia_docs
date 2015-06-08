@@ -52,7 +52,6 @@ following commands to ``setupapache.sh``
     ess udbd start
     
     ess datastore select local
-    ess datastore scan
     # Create a category called 125accesslogs that matches any file with 125-access_log in its filename. Tell essentia that these files have a date in their filenames and that this date has in sequence a 4 digit year, 2 digit month, and 2 digit day.
     ess datastore category add 125accesslogs "$HOME/*accesslog*125-access_log*"    
     
@@ -98,7 +97,7 @@ R dataframes, and run the additional analysis written in the r script ``analyzea
    :emphasize-lines: 5,8 
    
     file <- "queryapache.sh"            # store queryapache.sh as file
-    rscriptfile <- "analyzeapache.R"    # store apache.R as rscriptfile
+    rscriptfile <- "analyzeapache.R"    # store analyzeapache.R as rscriptfile
     library("RESS")                     # load Essentia's R Integration package
     
     # call read.udb to execute the essentia statements written in queryapache.sh and save them to R dataframes command1 through command4
