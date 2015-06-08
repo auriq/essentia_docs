@@ -38,7 +38,7 @@ understanding the material.
    :hidden:
    :maxdepth: 3
 
-   source/install
+   source/install/index
    source/tutorial/index
    source/tutorial2/index
    source/usecases/index

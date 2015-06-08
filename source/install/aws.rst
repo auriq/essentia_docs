@@ -1,58 +1,20 @@
 :tocdepth: 1
 
-************
-Installation
-************
-
-Essentia is available as either a desktop download, or via a cloud based service.  The tutorials on this site will
-work with either, though for evaluating performance on larger or more complex data sets,
-users should consider the cloud version which allows the creation of an Essentia cluster.
+***********
+AWS Install
+***********
 
 
-Desktop version
-===============
-
-The desktop version assumes you are using OSX or Linux as your operating system,
-and that you have Python 2.7 installed.
-
-1. Fetch the `installer <http://auriq.net/wp-content/uploads/installer/essentia-standalone-latest.zip>`_
-   (for both Mac and Linux) .
-2. Unpack the zip file.
-3. ``cd`` into the directory it creates
-4. type ``./install`` to start the installation.  Essentia will be installed by default to ``~/.local/essentia``
-5. Add the executable directories to your ``$PATH`` environment variable.
-
-Full example:
-
-.. code-block:: sh
-
-  unzip essentia-standalone-latest.zip
-  cd essentia-standalone-latest
-  ./install
-  export PATH=$PATH:$HOME/.local/essentia/bin
-  export PATH=$PATH:$HOME/.local/essentia/bin/aq_tool.osx/bin
-
-The final line assumes you are using a mac.  If on a linux system, use 'aq_tool.x86' instead.
-Also, the final two ``export`` commands assume you are using a Bourne shell (i.e. bash, zsh).  C-Shell users would use:
-
-.. code-block:: sh
-
-  setenv PATH $PATH:$HOME/.local/essentia/bin
-  setenv PATH $PATH:$HOME/.local/essentia/bin/aq_tools/bin
-
-Once installed and the paths set, Essentia can be invoked from the command line using ``ess``.
-
-Essentia is self contained, and to uninstall, one only needs to execute ``rm -rf ~/.local/essentia``.
-
-Cloud version (Free AMI)
-========================
 The cloud version requires that the user has an Amazon Web Services account.  New users can get more information from
 our :doc:`aws/aws` guide.
 
-We have created AMIs which any AWS user can launch to form a
-private, AWS account specific master node.
+Essentia is available as an Amazon Machine Image (AMI) which contains a Linux based OS with Essentia installed.
+Any AWS user can launch on of these AMIs to form a private, AWS account specific master node.
 Once active, you can log into the instance and start Essentia.  There is a version that requires a
 license key to run, and a paid version which doesn't need a key but instead charges by the hour.
+
+Cloud version (Free AMI)
+========================
 
 A trial license key is free, and can be obtained via an `easy signup <../pricing>`_.  It grants
 the user 30 days of unlimited use.  Note however that standard EC2 rates
