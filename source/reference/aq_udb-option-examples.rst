@@ -25,7 +25,7 @@ This data was imported using aq_pp and the example data provided in the aq_pp do
     ess spec create table country_table "s,hash:country s:last_name s:first_name i:integer_col f:float_col f:float_2 s:grade s:extra_column"
     ess spec create variable "i:defined_integer_var s:defined_string_var"
     ess udbd start
-    aq_pp -f,+1 tutorialdata.csv -d f:float_col i:integer_col s:last_name s:first_name s:country -ddef -udb_imp my_database:country_table
+    aq_pp -f,+1 exampledata.csv -d f:float_col i:integer_col s:last_name s:first_name s:country -ddef -udb_imp my_database:country_table
     aq_pp -f,+1 lookup.csv -d s:grade f:float_2 s:last_name s:first_name s:country -ddef -udb_imp my_database:country_table
 
 
@@ -43,7 +43,7 @@ For a full list and description of the available options, see the aq_udb Documen
 This tutorial will emphasize the most commonly used options for aq_udb and how to use them to provide a simple modification or analysis of the data in the example data in the udb database. These options are:
 
 * **Global Specification:** -db.
-* **Export Specifications:** -exp, -cnt, -exp_usr, -cnt_usr, -lim_usr, -lim_rec, -var, -pp, -pp_filt, -pp_evlc, -pp_var, -filt, -o, -c, -notitle, and -sort.
+* **Export Specifications:** -exp, -cnt, -exp_usr, -cnt_usr, -lim_usr, -lim_rec, -var, -pp, -filt, -eval, -bvar, -filt, -o, -c, -notitle, and -sort.
 * **Order Specification:** -ord.
 
 
@@ -149,13 +149,13 @@ You can similarly **limit the number of records** in your output by including th
     
 You can also use ``-var`` to define **global variables** just as you could in aq_pp; however, in order to process that variable or any of your other exported data you need to define a ``-pp`` group.
 
-This ``-pp`` group specifies which table or vector you want to process and you use a series of ``-pp_evlc``, ``-pp_var``, and ``-pp_filt`` rules to modify it.
+This ``-pp`` group specifies which table or vector you want to process and you use a series of ``-eval``, ``-bvar``, and ``-filt`` rules to modify it.
 
 You can have multiple groups and each group can have multiple rules so you can form extremely powerful **processing chains** by stringing these groups and rules together.
 
-With a single variable definition followed by a single ``-pp`` group and two simple ``-pp_evlc`` rules you can easily enter meaningful values into the extra column we have in my_database.
+With a single variable definition followed by a single ``-pp`` group and two simple ``-eval`` rules you can easily enter meaningful values into the extra column we have in my_database.
 
-``aq_udb -db my_database -exp country_table -var defined_integer_var 0 -pp country_table -pp_evlc defined_integer_var 'defined_integer_var + 1' -pp_evlc extra_column '"Row : " + ToS(defined_integer_var)'``
+``aq_udb -db my_database -exp country_table -var defined_integer_var 0 -pp country_table -eval defined_integer_var 'defined_integer_var + 1' -eval extra_column '"Row : " + ToS(defined_integer_var)' -endpp``
 
 * This command exports country_table from my_database and initializes the previously defined variable to 0. It then establishes a pp (pre-processing) group for country_table. 
 * For each record in the table, it increases the variable defined_integer_var by 1 and stores that value preceded by 'Row : ' in extra_column as a string. The output is::
@@ -170,9 +170,9 @@ With a single variable definition followed by a single ``-pp`` group and two sim
     "Philippines","Lawrence","Lois",0,0,12.300000000000001,"A","Row : 7"
     "Philippines","Kelley","Jacqueline",0,0,57.600000000000001,"F","Row : 8"
 
-A pp group can also have its own **local variable** using ``-pp_var``. This allows the variable to be defined and modified only within the pp group, enabling a command very similar to the one we just ran but with a slighly different output.
+A pp group can also have its own **local variable** using ``-bvar``. This allows the variable to be defined and modified only within the pp group, enabling a command very similar to the one we just ran but with a slighly different output.
 
-``aq_udb -db my_database -exp country_table -pp country_table -pp_var defined_integer_var 0 -pp_evlc defined_integer_var 'defined_integer_var + 1' -pp_evlc extra_column '"Row : " + ToS(defined_integer_var)'``
+``aq_udb -db my_database -exp country_table -pp country_table -bvar defined_integer_var 0 -eval defined_integer_var 'defined_integer_var + 1' -eval extra_column '"Row : " + ToS(defined_integer_var)' -endpp``
 
 * This exports country_table from my_database and establishes a pp (pre-processing) group for country_table. 
 * For each record in a bucket in the table, it increases the variable defined_integer_var by 1 and stores that value preceded by 'Row : ' in extra_column as a string. The output is::
@@ -189,16 +189,16 @@ A pp group can also have its own **local variable** using ``-pp_var``. This allo
 
 As you can see, the variable defined_integer_var was reset to 0 when the pp group got to a record that had a different unique value for the primary key (a different bucket, as we sometimes call them).
 
-Every pp rule in a pp group can also use action codes to tell aq_udb how to proceed when an evaluated expression in the pp rule is successful and what to do when its unsuccessful.
-
-Action codes are letters or numbers following any pp rule as a comma-separated attribute, and tell aq_udb **whether and how far it should move forward in the processing chain** when the expression is successful and in the case it is unsuccessful.
-
-``aq_udb -db my_database -exp country_table -pp country_table -pp_filt,01 '(last_name ### "^H.*$")' -pp_evlc,10 extra_column '"This record belongs to a user with a last name starting with h"' -pp_evlc extra_column '"The record does not"'``
-
-* This exports country_table from my_database and then establishes a pp (pre-processing) group for country_table. 
-* For each record, it checks whether the value in the last_name column begins with an 'h'. If it does, the next pp rule is run (-pp_evlc,10) and a value of 'This record belongs to a user with a last name starting with h' is assigned to extra_column. 
-* If it does not, the next pp rule is skipped and the following pp rule is run instead (-pp_evlc). This second pp rule gives extra_column a value of 'The record does not'. The output is::
+``aq_udb -db my_database -exp country_table -if -filt 'PatCmp(last_name, "^H.*$", "ncas,rx")' -eval extra_column '"This record belongs to a user with a last name starting with h"' -else -eval extra_column '"The record does not"' -endif``
     
+.. .. Every pp rule in a pp group can also use action codes to tell aq_udb how to proceed when an evaluated expression in the pp rule is successful and what to do when its unsuccessful.
+
+.. .. Action codes are letters or numbers following any pp rule as a comma-separated attribute, and tell aq_udb **whether and how far it should move forward in the processing chain** when the expression is successful and in the case it is unsuccessful.
+
+ * This exports country_table from my_database and then establishes a pp (pre-processing) group for country_table. 
+ * For each record, this command uses a globular pattern comparison to check whether the value in the last_name column begins with an 'h'. If it does, the next pp rule is run (the first ``-eval``) and a value of 'This record belongs to a user with a last name starting with h' is assigned to extra_column. 
+ * If it does not, the next pp rule is skipped and the following pp rule is run instead (another ``-eval``). This second pp rule gives extra_column a value of 'The record does not'. The output is::
+
     "country","last_name","first_name","integer_col","float_col","float_2","grade","extra_column"
     "Portugal","Hamilton","Evelyn",1249,73.609999999999999,0,,"This record belongs to a user with a last name starting with h"
     "Portugal","Wheeler","Sarah",8356,45.289999999999999,0,,"The record does not"
@@ -208,12 +208,12 @@ Action codes are letters or numbers following any pp rule as a comma-separated a
     "Philippines","Kelley","Jacqueline",9678,3.5299999999999998,0,,"The record does not"
     "Philippines","Lawrence","Lois",0,0,12.300000000000001,"A","The record does not"
     "Philippines","Kelley","Jacqueline",0,0,57.600000000000001,"F","The record does not"
+            
+While filtering record by record with ``-filt`` is useful, sometimes you just want to **filter the entire set of exported data**. 
 
-While filtering record by record with ``-pp_filt`` is useful, sometimes you just want to **filter the entire set of exported data**. 
+``aq_udb`` includes a ``-filt`` option identical to the one in ``aq_pp`` to provide an easy way to limit the data sent to your output.
 
-``aq_udb`` includes a ``-filt`` option identical to the one in ``-evlc`` to provide an easy way to limit the data sent to your output.
-
-``aq_udb -db my_database -exp country_table -filt '(last_name ### "^H.*$")'``
+``aq_udb -db my_database -exp country_table -filt 'PatCmp(last_name, "^H.*$", "ncas,rx")'``
 
 * This command exports country_table from my_database and limits the output to only records that have an 'h' as the first letter in last_name. The output is::
     

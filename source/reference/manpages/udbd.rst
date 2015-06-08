@@ -55,17 +55,17 @@ A typical database is stored in this way:
   +=================+=======+             +=================+=======+
   | User key (PKEY) | key11 |     ...     | User key (PKEY) | keyN1 |
   +=================+=======+             +=================+=======+
-  | +--------+-----------+  |             | +--------+-----------+  |
-  | | Table1 | row1 cols |  |             | | Table1 | row1 cols |  |
-  | |        | row2 cols |  |             | |        | row2 cols |  |
-  | |        | ...       |  |             | |        | ...       |  |
-  | +--------+-----------+  |             | +--------+-----------+  |
-  | | Table2 | row1 cols |  |             | | Table2 | row1 cols |  |
-  | |        | row2 cols |  |             | |        | row2 cols |  |
-  | |        | ...       |  |             | |        | ...       |  |
-  | +--------+-----------+  |             | +--------+-----------+  |
-  | | ...                |  |             | | ...                |  |
-  | +--------+-----------+  |             | +--------+-----------+  |
+  | +---------+-----------+ |             | +---------+-----------+ |
+  | | Table1  | row1 cols | |             | | Table1  | row1 cols | |
+  | |         | row2 cols | |             | |         | row2 cols | |
+  | |         | ...       | |             | |         | ...       | |
+  | +---------+-----------+ |             | +---------+-----------+ |
+  | | Table2  | row1 cols | |             | | Table2  | row1 cols | |
+  | |         | row2 cols | |             | |         | row2 cols | |
+  | |         | ...       | |             | |         | ...       | |
+  | +---------+-----------+ |             | +---------+-----------+ |
+  | | ...                 | |             | | ...                 | |
+  | +---------+-----------+ |             | +---------+-----------+ |
   | +---------+------+      |             | +---------+------+      |
   | | Vector1 | cols |      |             | | Vector1 | cols |      |
   | +---------+------+      |             | +---------+------+      |
@@ -77,17 +77,17 @@ A typical database is stored in this way:
   +=================+=======+             +=================+=======+
   | User key (PKEY) | key12 |             | User key (PKEY) | keyN2 |
   +=================+=======+             +=================+=======+
-  | +--------+-----------+  |             | +--------+-----------+  |
-  | | Table1 | row1 cols |  |             | | Table1 | row1 cols |  |
-  | |        | row2 cols |  |             | |        | row2 cols |  |
-  | |        | ...       |  |             | |        | ...       |  |
-  | +--------+-----------+  |             | +--------+-----------+  |
-  | | Table2 | row1 cols |  |             | | Table2 | row1 cols |  |
-  | |        | row2 cols |  |             | |        | row2 cols |  |
-  | |        | ...       |  |             | |        | ...       |  |
-  | +--------+-----------+  |             | +--------+-----------+  |
-  | | ...                |  |             | | ...                |  |
-  | +--------+-----------+  |             | +--------+-----------+  |
+  | +---------+-----------+ |             | +---------+-----------+ |
+  | | Table1  | row1 cols | |             | | Table1  | row1 cols | |
+  | |         | row2 cols | |             | |         | row2 cols | |
+  | |         | ...       | |             | |         | ...       | |
+  | +---------+-----------+ |             | +---------+-----------+ |
+  | | Table2  | row1 cols | |             | | Table2  | row1 cols | |
+  | |         | row2 cols | |             | |         | row2 cols | |
+  | |         | ...       | |             | |         | ...       | |
+  | +---------+-----------+ |             | +---------+-----------+ |
+  | | ...                 | |             | | ...                 | |
+  | +---------+-----------+ |             | +---------+-----------+ |
   | +---------+------+      |             | +---------+------+      |
   | | Vector1 | cols |      |             | | Vector1 | cols |      |
   | +---------+------+      |             | +---------+------+      |
@@ -158,11 +158,14 @@ Options
 ``WorkDir``
   The `start`_ and `restart`_ actions can take an optional
   work directory parameter.
+  It is the server's work/runtime directory where its log file and pid file
+  are saved.
+  The default work directory location is determined in this order:
 
-  * It sets the server work/runtime directory.
-  * By default, the work directory is udbd's installation directory.
-  * The work directory is where the log file and pid file are saved.
-  * The work directory is where udb modules (if any) are installed.
+  1) ``udb/`` under the aq tool installation directory.
+  2) ``../udb/`` from the directory where ``udbd`` is installed.
+     This is usually the same as (1).
+  3) The directory where ``udbd`` is installed.
 
 
 .. _`-q`:

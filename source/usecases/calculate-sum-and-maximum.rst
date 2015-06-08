@@ -19,34 +19,33 @@ as it allows you to fit more of the relevant data into memory and thus increases
 Primary Lines in this Script
 ============================
 
-**Line 5**
+**Line 4**
 
 * Store a vector myvector in the database totalwinnings that keeps track of the maximum value of the bet column and aggregates the values in the winnings column for each unique value of the user column.
 
-**Line 9**
+**Line 8**
 
-* Tell Essentia to look for data in your current directory.
+* Tell Essentia to look for data on your local datastore.
 
-**Line 13**
+**Line 10**
 
-* Create a new rule to take any files with 'onlinecasino' in their name and put them in the casino category.
+* Create a new rule to take any files in your home directory with 'onlinecasino' in their name and put them in the casino category. Also tell Essentia not to look for a date in the filenames.
 
-**Line 18**
+**Line 14**
 
 * Pipe all files in the category casino to the aq_pp command. 
 * In the aq_pp command, tell the preprocessor to take data from stdin, ignoring errors and skipping the first line (the header). 
 * Then define the incoming data's columns, skipping the second and fifth columns (time and country), and import the data to the vector in the totalwinnings database so the attributes 
   listed there can be applied.
 
-**Line 20**
+**Line 16**
 
 * Export the modified and aggregated data from the database and save the results to a csv file.
 
 .. code-block:: sh
    :linenos:
-   :emphasize-lines: 5,9,13,18,20
+   :emphasize-lines: 4,8,10,14,16
     
-   ess instance local
    ess spec drop database totalwinnings
    ess spec create database totalwinnings --ports=1
     
@@ -54,13 +53,10 @@ Primary Lines in this Script
     
    ess udbd start
     
-   ess datastore select .
+   ess datastore select local
     
-   ess datastore scan
+   ess datastore category add casino "$HOME/*onlinecasino*" --dateformat none
     
-   ess datastore rule add "*onlinecasino*" "casino" 
-    
-   ess datastore probe casino --apply
    ess datastore summary
     
    ess task stream casino "*" "*" "aq_pp -f,+1,eok - -d s:user X i:bet f:winnings X -udb_imp totalwinnings:myvector" --debug

@@ -20,39 +20,38 @@ attributes to your data and return the results you want in the order you want th
 Primary Lines in this Script
 ============================
 
-**Line 5**
+**Line 4**
 
 * Store a table called grouping in the database worstloss that keeps track of the first value of the time column, last value of the bet column, and minimum value in the winnings column for each unique 
   value of the country and user columns.
 
-**Line 9**
+**Line 8**
 
-* Tell Essentia to look for data in your current directory.
+* Tell Essentia to look for data on your local datastore.
 
-**Line 13**
+**Line 10**
 
-* Create a new rule to take any files with 'onlinecasino' in their name and put them in the casino category.
+* Create a new rule to take any files in your home directory with 'onlinecasino' in their name and put them in the casino category. Also tell Essentia not to look for a date in the filenames.
 
-**Line 18**
+**Line 14**
 
 * Pipe all files in the category casino to the aq_pp command. 
 * In the aq_pp command, tell the preprocessor to take data from stdin, ignoring errors and skipping the first line (the header). 
 * Then define the incoming data's columns and import the data to the vector in the worstloss database so the attributes 
   listed there can be applied.
 
-**Line 20**
+**Line 16**
 
 * Internally sort the records in the database, within each unique country, by winnings. Since this is internal, it has no output.
 
-**Line 20**
+**Line 17**
 
 * Export the modified and sorted data from the database and then save the results to a csv file.
 
 .. code-block:: sh
    :linenos:
-   :emphasize-lines: 5,9,13,18,20,21
+   :emphasize-lines: 4,8,10,14,16,17
     
-   ess instance local
    ess spec drop database worstloss
    ess spec create database worstloss --ports=1
     
@@ -60,13 +59,10 @@ Primary Lines in this Script
     
    ess udbd start
     
-   ess datastore select .
+   ess datastore select local
     
-   ess datastore scan
+   ess datastore category add casino "$HOME/*onlinecasino*" --dateformat none
     
-   ess datastore rule add "*onlinecasino*" "casino" 
-    
-   ess datastore probe casino --apply
    ess datastore summary
     
    ess task stream casino "*" "*" "aq_pp -f,+1,eok - -d s:user s:time i:bet f:winnings s:country -udb_imp worstloss:grouping" --debug

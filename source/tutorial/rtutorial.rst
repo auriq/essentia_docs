@@ -29,20 +29,11 @@ filesystem for the browse and purchase data located in the ``tutorials/woodworki
 If you are not already in the ``tutorials/woodworking`` directory used in the previous tutorials, switch into it now.
 We save the following commands to my_setup_script.sh::
 
-    ess instance local
+    ess datastore select local
     
-    ess datastore select ../woodworking/diy_woodworking
-    ess datastore scan
+    ess datastore category add browse "$HOME/*/woodworking/diy_woodworking/*browse*gz"
     
-    ess datastore rule add "*browse*gz" "browse" "YYYYMMDD"
-    ess datastore probe browse --apply
-    ess datastore category change browse dateFormat "Y.m.d.H.M.S"
-    ess datastore category change browse TZ GMT
-    
-    ess datastore rule add "*purchase*gz" purchase "YYYYMMDD"
-    ess datastore probe purchase --apply
-    ess datastore category change purchase dateFormat "Y.m.d.H.M.S"
-    ess datastore category change purchase TZ GMT
+    ess datastore category add purchase "$HOME/*/woodworking/diy_woodworking/*purchase*gz"
 
 
 and then run ::

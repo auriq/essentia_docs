@@ -10,7 +10,7 @@ analyses and queries than ``aq_pp`` could do alone.  It is a distributed, hash-b
 bucket` part is derived from our work analyzing digital marketing logs, where we wish to track the behavior of users
 across many different log files.  For other types of logs, this 'PRIMARY KEY' can be anything.
 
-Each node in cluster is responsible for a unique set of keys.  When a node processes data with ``aq_pp``, it looks
+Each node in a cluster is responsible for a unique set of keys.  When a node processes data with ``aq_pp``, it looks
 up which node in the cluster maintains the data for the particular record being processed, and transports it over the
 network to that node.
 
@@ -56,7 +56,7 @@ Vectors
 
 Vectors are a bit different.  For each unique hash key, there is one vector of data.  This is commonly used to store
 summary information about a key.  In this example, we want to know the total amount of money each user spent,
-and we want to know the last article we imported.  The attributes '+last and +sum' accomplish this. There are many
+and we want to know the last article we imported.  The attributes '+add' and '+last' accomplish this. There are many
 other attributes that can be used. See the :doc:`../reference/index`.
 
 
@@ -72,10 +72,10 @@ We can now populate the 'allsales' table using::
 
   $ ess task stream purchase 2014-09-01 2014-09-30 \
   "aq_pp -f,+1,eok - -d %cols \
-  -evlc i:ptime 'DateToTime(%date_col,\"%date_fmt\")' \
-  -evlc is:t 'ptime - DateToTime(\"2014-09-15\",\"Y.m.d\")' \
+  -eval i:ptime 'DateToTime(purchaseDate,\"Y.m.d.H.M.S\")' \
+  -eval is:t 'ptime - DateToTime(\"2014-09-15\",\"Y.m.d\")' \
   -if -filt 't>0' \
-    -evlc articleID 'articleID+1' \
+    -eval articleID 'articleID+1' \
   -endif \
   -imp wood:allsales"
 
@@ -122,14 +122,14 @@ If you wish to delete the contents of a single table/vector or the entire databa
 Map/Reduce, Essentia Style
 ==========================
 
-The intent of this section is not teach how the Map/Reduce algorithm works, but rather demonstrate how Essentia can
+The intent of this section is not to teach how the Map/Reduce algorithm works, but rather demonstrate how Essentia can
 be used in a manner similar to it.  Beginner tutorials on Map/Reduce almost always demonstrate the 'Word Count'
 problem, so it should be conceptually familiar to many.  But if not, the problem is as follows:
-We have a large number of files containing text, and wish to count the occurrence words in this collection of documents.
+We have a large number of files containing text, and wish to count the occurrence of words in this collection of documents.
 
 In a Hadoop implemenation of Map/Reduce, the files are moved onto the Hadoop cluster.  Then a JAVA program is written
 to provide 'map' and 'reduce' classes.  The MAP task scans a file (or part of a file) and EMITS a key-value pair of
-``{word:1}``.  This key in this pair is mapped to a particular node on the cluster,
+``{word:1}``.  The key in this pair is mapped to a particular node on the cluster,
 meaning that any given node will be responsible for a unique set of keys.  Since the data and MAP tasks are
 distributed across the cluster, processing will be fast.
 
@@ -138,27 +138,26 @@ At the end of the MAP phase, dictionaries of the form ``{word:[1,1,1,1]}`` will 
 each node goes through the list of keys it is responsible for and outputs a new key-value pair in the form of
 ``{word:sum}``, which is the result we want.
 
-Essentia is not dissimilar in how it would approach this problem, except we leverage common UNIX tools rather write
+Essentia is not dissimilar in how it would approach this problem, except we leverage common UNIX tools rather than write
 JAVA code to handle the task.  Here is a fully worked example, using the text from the book "A Tale of Two Cities" by
 Charles Dickens.  You will find it under ``tutorials\map-reduce`` in the git repository.
 
 
 .. code-block:: sh
    :linenos:
-   :emphasize-lines: 4,6,7
+   :emphasize-lines: 3,5,6
 
-   ess instance local
    ess spec reset
    ess spec create database mapreduce
    ess spec create vector wordcount s,pkey:word i,+add:count
    ess udbd restart
    cat pg98.txt | tr -s '[[:punct:][:space:]]' '\n' | \
-                  aq_pp -d s:word -evlc i:count 1 -imp mapreduce:wordcount
+                  aq_pp -d s:word -eval i:count 1 -imp mapreduce:wordcount
    aq_udb -exp mapreduce:wordcount -sort count -dec -top 10
 
 
 Since this is just a single file, we have elected to use the raw ``aq_pp`` rather than wrapping inside of an
-Essentia statement (``task stream``).  The first 2 lines setup the cluster and clean out any old schemas (if they
+Essentia statement (``task stream``).  The first line cleans out any old schemas (if they
 existed).  The next 2 lines simply setup the schema, with the vector really acting as
 an on-the-fly 'REDUCER'.  We then restart the UDB to wipe out any previous content from earlier tutorials.
 

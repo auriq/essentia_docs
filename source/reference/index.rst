@@ -30,7 +30,7 @@ Examples
 .. toctree::
    :maxdepth: 1
    
-   essentia-examples
+   essentia-3-examples-simple
    aq_pp-option-examples
    aq_udb-option-examples
    direct-query-examples
@@ -63,11 +63,8 @@ string      provides
 %path       path to file being processed
 %file       file without extension
 %FILE       file with extension
-%tz         Timezone
 %cols       Full column spec
 %delim      Delimeter
-%date_col   name of the date column
-%date_fmt   format of date
 =========   =======================
 
 **Table 3 :** Substitution strings for the Essentia 'stream' or 'exec' command.

@@ -8,15 +8,15 @@ Synopsis
 
 ::
 
-  aq_sess [-h] Global_Opt Input_Spec Count_Spec Output_Spec
+  aq_sess [-h] Global_Opt Input_Spec Sess_Spec Output_Spec
 
   Global_Opt:
-      [-verb] [-stat] [-tag TagLab] [-bz ReadBufSiz]
+      [-verb] [-stat] [-bz ReadBufSiz]
 
   Input_Spec:
       [-f[,AtrLst] File [File ...]] -d ColSpec [ColSpec ...]
 
-  Count_Spec:
+  Sess_Spec:
       -t ColName
       -k ColName [ColName ...]
       -tout SessEpxr
@@ -24,7 +24,7 @@ Synopsis
       [-trim]
 
   Output_Spec:
-      [-o[,AtrLst] File] [-notitle]
+      [-o[,AtrLst] File]
 
 
 Description
@@ -80,16 +80,6 @@ Options
     aq_sess:TagLab rec=Count err=Count out=Count
 
 
-.. _`-tag`:
-
-``-tag TagLab``
-  Set label used to tag output messages. Default is blank.
-  Currently, it is only used in:
-
-  * The `-stat`_ summary line.
-  * Final error message before program aborts.
-
-
 .. _`-bz`:
 
 ``-bz ReadBufSiz``
@@ -123,6 +113,7 @@ Options
 ``-d ColSpec [ColSpec ...]``
   Define the columns of the input records from all `-f`_ specs.
   ``ColSpec`` has the form ``Type[,AtrLst]:ColName``.
+  Up to 256 ``ColSpec`` can be defined (excluding ``X`` type columns).
   Supported ``Types`` are:
 
   * ``S`` - String.
@@ -136,7 +127,6 @@ Options
     Type is optional. It can be one of the above (default is ``S``).
     ColName is also optional. Such a name is simply discarded.
 
-  Up to 256 ``ColSpec`` can be defined (excluding ``X`` type columns).
   Optional ``AtrLst`` is a comma separated list containing:
 
   * ``esc`` - Denote that the input field uses '\\' as escape character. Data
@@ -259,13 +249,6 @@ Options
   * Output to stdout in a format suitable for Amazon Cloud.
 
 
-.. _`-notitle`:
-
-``-notitle``
-  Suppress the column name label row from the output.
-  A label row is normally included by default.
-
-
 Exit Status
 ===========
 
@@ -274,9 +257,13 @@ with a non-zero status code along error messages printed to stderr.
 Applicable exit codes are:
 
 * 0 - Successful.
-* 1-9 - Program initial preparation error.
-* 10-19 - Input file load error.
-* 20-29 - Result output error.
+* 1 - Memory allocation error.
+* 2 - Command option spec error.
+* 3 - Initialization error.
+* 11 - Input open error.
+* 13 - Input processing error.
+* 21 - Output open error.
+* 22 - Output write error.
 
 
 Input File Attributes
@@ -311,6 +298,8 @@ Some output file can have these comma separated attributes:
 * ``noq`` - Do not quote string fields (CSV).
 * ``fmt_g`` - Use "%g" as print format for ``F`` type columns. Only use this
   to aid data inspection (e.g., during integrity check or debugging).
+* ``notitle`` - Suppress the column name label row from the output.
+  A label row is normally included by default.
 
 By default, output is in CSV format. Use the ``esc`` and ``noq`` attributes to
 set output characteristics as needed.

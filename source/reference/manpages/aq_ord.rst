@@ -11,17 +11,16 @@ Synopsis
   aq_ord [-h] Global_Opt Input_Spec Sort_Spec Output_Spec
 
   Global_Opt:
-      [-test] [-verb] [-stat] [-tag TagLab] [-bz ReadBufSiz]
+      [-test] [-verb] [-stat] [-bz ReadBufSiz]
 
   Input_Spec:
       [-f[,AtrLst] File [File ...]] [-d ColSpec [ColSpec ...]]
 
   Sort_Spec:
-      -sort ColTyp:ColNum | -sort ColName [ColName ...]
-      [-dec]
+      -sort[,AtrLst] ColTyp:ColNum | -sort[,AtrLst] ColName [ColName ...]
 
   Output_Spec:
-      [[-o[,AtrLst] File] [-c ColName [ColName ...]] [-notitle]]
+      [-o[,AtrLst] File] [-c ColName [ColName ...]]
 
 
 Description
@@ -117,16 +116,6 @@ Options
     aq_ord:TagLab rec=Count err=Count
 
 
-.. _`-tag`:
-
-``-tag TagLab``
-  Set label used to tag output messages. Default is blank.
-  Currently, it is only used in:
-
-  * The `-stat`_ summary line.
-  * Final error message before program aborts.
-
-
 .. _`-bz`:
 
 ``-bz ReadBufSiz``
@@ -161,6 +150,7 @@ Options
   Define the columns of the input records from all `-f`_ specs.
   Only needed in `Parsed sort mode`_.
   ``ColSpec`` has the form ``Type[,AtrLst]:ColName``.
+  Up to 256 ``ColSpec`` can be defined (excluding ``X`` type columns).
   Supported ``Types`` are:
 
   * ``S`` - String.
@@ -174,7 +164,6 @@ Options
     Type is optional. It can be one of the above (default is ``S``).
     ColName is also optional. Such a name is simply discarded.
 
-  Up to 256 ``ColSpec`` can be defined (excluding ``X`` type columns).
   Optional ``AtrLst`` is a comma separated list containing:
 
   * ``esc`` - Denote that the input field uses '\\' as escape character. Data
@@ -209,12 +198,16 @@ Options
 
 .. _`-sort`:
 
-``-sort ColTyp:ColNum``
+``-sort[,AtrLst] ColTyp:ColNum``
   Define the `Raw sort mode`_ sort column.
   ``ColTyp`` specifies the sort column's data type. See `-d`_ for a list of
   types,``X`` is not supported.
   ``ColNum`` specifies the column number (position) of the sort column in each
   row. ``ColNum`` of the first column is 1.
+  Optional ``AtrLst`` is a comma separated list containing:
+
+  * ``dec`` - Sort in descending order. Default order is ascending.
+    Descending sort is done by inverting the ascending sort result.
 
   Example:
 
@@ -227,9 +220,13 @@ Options
   * This uses the `Raw sort mode`_, so no column spec is needed.
 
 
-``-sort ColName [ColName ...]``
+``-sort[,AtrLst] ColName [ColName ...]``
   Define the `Parsed sort mode`_ sort columns.
   ``ColNames`` must already be defined under `-d`_.
+  Optional ``AtrLst`` is a comma separated list containing:
+
+  * ``dec`` - Sort in descending order. Default order is ascending.
+    Descending sort is done by inverting the ascending sort result.
 
   Example:
 
@@ -243,19 +240,9 @@ Options
     specified.
 
 
-.. _`-dec`:
-
-``-dec``
-  Sort is normally done in ascending order. Specify this option to sort in
-  descending order.
-
-  **Note**: Descending sort is implemented by inverting the ascending
-  sort result, which can be different from a formal descending sort.
-
-
 .. _`-o`:
 
-``[-o[,AtrLst] File] [-c ColName [ColName ...]] [-notitle]``
+``[-o[,AtrLst] File] [-c ColName [ColName ...]]``
   Output data rows.
   Optional "``-o[,AtrLst] File``" sets the output attributes and file.
   If ``File`` is a '-' (a single dash), data will be written to stdout.
@@ -263,7 +250,7 @@ Options
 
   In the `Raw sort mode`_, most output attributes have no effect since
   the records are not altered (only their order).
-  The ``-c`` and ``-notitle`` options are not applicable either.
+  The ``-c`` option is not applicable either.
 
   In the `Parsed sort mode`_,
   optional "``-c ColName [ColName ...]``" selects the columns to output.
@@ -272,10 +259,7 @@ Options
   If ``-c`` is specified without a previous ``-o``, output to stdout is
   assumed.
 
-  Optional ``-notitle`` suppresses the column name label row from the output.
-  A label row is normally included by default.
-
-  Multiple sets of "``-o ... -c ... -notitle``" can be specified.
+  Multiple sets of "``-o ... -c ...``" can be specified.
 
   Example:
 
@@ -295,9 +279,13 @@ with a non-zero status code along error messages printed to stderr.
 Applicable exit codes are:
 
 * 0 - Successful.
-* 1-9 - Program initial preparation error.
-* 10-19 - Input file load error.
-* 20-29 - Result output error.
+* 1 - Memory allocation error.
+* 2 - Command option spec error.
+* 3 - Initialization error.
+* 11 - Input open error.
+* 13 - Input processing error.
+* 21 - Output open error.
+* 22 - Output write error.
 
 
 Input File Attributes
@@ -332,6 +320,8 @@ Some output file can have these comma separated attributes:
 * ``noq`` - Do not quote string fields (CSV).
 * ``fmt_g`` - Use "%g" as print format for ``F`` type columns. Only use this
   to aid data inspection (e.g., during integrity check or debugging).
+* ``notitle`` - Suppress the column name label row from the output.
+  A label row is normally included by default.
 
 By default, output is in CSV format. Use the ``esc`` and ``noq`` attributes to
 set output characteristics as needed.
