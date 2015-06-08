@@ -189,25 +189,26 @@ A pp group can also have its own **local variable** using ``-bvar``. This allows
 
 As you can see, the variable defined_integer_var was reset to 0 when the pp group got to a record that had a different unique value for the primary key (a different bucket, as we sometimes call them).
 
-..  aq_udb -db my_database -exp country_table -if -filt 'PatCmp(last_name, "^H.*$", "ncas,rx")' -eval extra_column '"This record belongs to a user with a last name starting with h"' -else -eval extra_column '"The record does not"' -endif
-..    "country","last_name","first_name","integer_col","float_col","float_2","grade","extra_column"
-..    "Portugal","Hamilton","Evelyn",1249,73.609999999999999,0,,"This record belongs to a user with a last name starting with h"
-..    "Portugal","Wheeler","Sarah",8356,45.289999999999999,0,,"The record does not"
-..    "Portugal","Hamilton","Evelyn",0,0,96.599999999999994,"C","This record belongs to a user with a last name starting with h"
-..    "Portugal","Wheeler","Sarah",0,0,89,"F","The record does not"
-..    "Philippines","Lawrence","Lois",5350,99.909999999999997,0,,"The record does not"
-..    "Philippines","Kelley","Jacqueline",9678,3.5299999999999998,0,,"The record does not"
-..    "Philippines","Lawrence","Lois",0,0,12.300000000000001,"A","The record does not"
-..    "Philippines","Kelley","Jacqueline",0,0,57.600000000000001,"F","The record does not"
-
+``aq_udb -db my_database -exp country_table -if -filt 'PatCmp(last_name, "^H.*$", "ncas,rx")' -eval extra_column '"This record belongs to a user with a last name starting with h"' -else -eval extra_column '"The record does not"' -endif``
+    
 .. .. Every pp rule in a pp group can also use action codes to tell aq_udb how to proceed when an evaluated expression in the pp rule is successful and what to do when its unsuccessful.
 
 .. .. Action codes are letters or numbers following any pp rule as a comma-separated attribute, and tell aq_udb **whether and how far it should move forward in the processing chain** when the expression is successful and in the case it is unsuccessful.
 
-.. * This exports country_table from my_database and then establishes a pp (pre-processing) group for country_table. 
-.. * For each record, it checks whether the value in the last_name column begins with an 'h'. If it does, the next pp rule is run (-eval,10) and a value of 'This record belongs to a user with a last name starting with h' is assigned to extra_column. 
-.. * If it does not, the next pp rule is skipped and the following pp rule is run instead (-eval). This second pp rule gives extra_column a value of 'The record does not'. The output is::
-    
+ * This exports country_table from my_database and then establishes a pp (pre-processing) group for country_table. 
+ * For each record, this command uses a globular pattern comparison to check whether the value in the last_name column begins with an 'h'. If it does, the next pp rule is run (the first ``-eval``) and a value of 'This record belongs to a user with a last name starting with h' is assigned to extra_column. 
+ * If it does not, the next pp rule is skipped and the following pp rule is run instead (another ``-eval``). This second pp rule gives extra_column a value of 'The record does not'. The output is::
+
+    "country","last_name","first_name","integer_col","float_col","float_2","grade","extra_column"
+    "Portugal","Hamilton","Evelyn",1249,73.609999999999999,0,,"This record belongs to a user with a last name starting with h"
+    "Portugal","Wheeler","Sarah",8356,45.289999999999999,0,,"The record does not"
+    "Portugal","Hamilton","Evelyn",0,0,96.599999999999994,"C","This record belongs to a user with a last name starting with h"
+    "Portugal","Wheeler","Sarah",0,0,89,"F","The record does not"
+    "Philippines","Lawrence","Lois",5350,99.909999999999997,0,,"The record does not"
+    "Philippines","Kelley","Jacqueline",9678,3.5299999999999998,0,,"The record does not"
+    "Philippines","Lawrence","Lois",0,0,12.300000000000001,"A","The record does not"
+    "Philippines","Kelley","Jacqueline",0,0,57.600000000000001,"F","The record does not"
+            
 While filtering record by record with ``-filt`` is useful, sometimes you just want to **filter the entire set of exported data**. 
 
 ``aq_udb`` includes a ``-filt`` option identical to the one in ``aq_pp`` to provide an easy way to limit the data sent to your output.
