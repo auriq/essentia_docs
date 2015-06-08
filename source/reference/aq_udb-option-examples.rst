@@ -43,7 +43,7 @@ For a full list and description of the available options, see the aq_udb Documen
 This tutorial will emphasize the most commonly used options for aq_udb and how to use them to provide a simple modification or analysis of the data in the example data in the udb database. These options are:
 
 * **Global Specification:** -db.
-* **Export Specifications:** -exp, -cnt, -exp_usr, -cnt_usr, -lim_usr, -lim_rec, -var, -pp, -filt, -eval, -bvar, -filt, -o, -c, -notitle, and -sort.
+* **Export Specifications:** -exp, -cnt, -exp_usr, -cnt_usr, -lim_usr, -lim_rec, -var, -pp, -filt, -eval, -bvar, -o, -c, -notitle, and -sort.
 * **Order Specification:** -ord.
 
 
@@ -205,17 +205,17 @@ As you can see, the variable defined_integer_var was reset to 0 when the pp grou
     "Philippines","Lawrence","Lois",0,0,12.300000000000001,"A","The record does not"
     "Philippines","Kelley","Jacqueline",0,0,57.600000000000001,"F","The record does not"
             
-While filtering record by record with ``-filt`` is useful, sometimes you just want to **filter the entire set of exported data**. 
+.. While filtering record by record with ``-filt`` is useful, sometimes you just want to **filter the entire set of exported data**. 
 
-``aq_udb`` includes a ``-filt`` option identical to the one in ``aq_pp`` to provide an easy way to limit the data sent to your output.
+.. ``aq_udb`` includes a ``-filt`` option identical to the one in ``aq_pp`` to provide an easy way to limit the data sent to your output.
 
-``aq_udb -db my_database -exp country_table -filt 'PatCmp(last_name, "^H.*$", "ncas,rx")'``
+.. ``aq_udb -db my_database -exp country_table -filt 'PatCmp(last_name, "^H.*$", "ncas,rx")'``
 
-* This command exports country_table from my_database and limits the output to only records that have an 'h' as the first letter in last_name. The output is::
+.. * This command exports country_table from my_database and limits the output to only records that have an 'h' as the first letter in last_name. The output is::
     
-    "country","last_name","first_name","integer_col","float_col","float_2","grade","extra_column"
-    "Portugal","Hamilton","Evelyn",1249,73.609999999999999,0,,
-    "Portugal","Hamilton","Evelyn",0,0,96.599999999999994,"C",
+..     "country","last_name","first_name","integer_col","float_col","float_2","grade","extra_column"
+..     "Portugal","Hamilton","Evelyn",1249,73.609999999999999,0,,
+..     "Portugal","Hamilton","Evelyn",0,0,96.599999999999994,"C",
 
 Just as in aq_pp, you can save your results to a file or output to standard out.
 
