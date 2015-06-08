@@ -137,6 +137,7 @@ Lets consider the case where we want to merge our chemistry and physics grades i
 
   aq_pp -f,+1 chemistry.csv -d i:id s,up:lastname s:firstname f:chem_mid s:chem_fin \
         -cat,+1 physics.csv i:id s,up:lastname s:firstname f:phys_mid s:phys_fin
+        
   "id","lastname","firstname","chem_mid","chem_fin","phys_mid","phys_fin"
   1,"DAWSON","Leona",76.5,"B-",0,
   2,"JORDAN","Colin",25.899999999999999,"D",0,
@@ -160,6 +161,7 @@ Records will be matched based on all the columns that share the same names betwe
 
   aq_pp -f,+1 chemistry.csv -d i:id s,up:lastname s:firstname f:chem_mid s:chem_fin \
         -cmb,+1 physics.csv i:id X X f:phys_mid s:phys_fin
+        
   "id","lastname","firstname","chem_mid","chem_fin","phys_mid","phys_fin"
   1,"DAWSON","Leona",76.5,"B-",88.5,"A"
   2,"JORDAN","Colin",25.899999999999999,"D",0,
@@ -262,6 +264,7 @@ A unix regular expression of ``([0-9]{5})`` would easily capture the 5 digit zip
 command would be::
 
   aq_pp -f zip.csv -d s:zip -map,rx_extended zip "([0-9]{5})" 'zip=%%1%%'
+  
   "zip"
   "zip=91101"
   "zip=91101"

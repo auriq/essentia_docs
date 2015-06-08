@@ -115,7 +115,7 @@ and articleID as an integer by using::
 Organizing the 'purchase' data is handled in a similar manner::
 
   ess datastore category add purchase "$HOME/*tutorials/woodworking/diy_woodworking/*purchase*"
-  ess datastore category change columnpec purchase "S:purchaseDate S:userID I:articleID f:price I:refID"
+  ess datastore category change columnspec purchase "S:purchaseDate S:userID I:articleID f:price I:refID"
 
 In the next tutorial (ETL) we show how to apply operations to files within a group en masse.
 
