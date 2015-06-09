@@ -12,8 +12,8 @@ development work or as a trial.
    :maxdepth: 2
    :numbered:
 
-   aws
-   azure
+   aws/index
+   azure/index
    desktop
 
 
