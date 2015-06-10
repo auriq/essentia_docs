@@ -4,7 +4,9 @@ Intro Tutorials
 
 The following tutorials provide a solid background on most of Essentia's capabilities.  They do not require significant
 computational resources, and therefore the desktop version or the AWS free tier of instances is sufficient to get
-started.
+started. 
+
+.. They can also be run on our Azure VM Image during the free trial period.
 
 
 .. note::
@@ -17,6 +19,7 @@ Users are encouraged to go through the tutorials in order.
    :maxdepth: 2
    :numbered:
 
+   datastore
    data
    data_organization
    etl

@@ -3,8 +3,9 @@ Tutorial Data
 *************
 
 We maintain a `GitHub repository <https://github.com/auriq/EssentiaPublic>`_ that contains test data and source code for
-some of the tutorials and usecases you will find in this documentation.  For AWS users, we also have a public S3
-bucket (s3://asi-public) that stores the larger and more complex datasets used for training purposes.
+some of the tutorials and usecases you will find in this documentation.  
+
+.. For AWS users, we also have a public S3 bucket (s3://asi-public) that stores the larger and more complex datasets used for training purposes.
 
 To get started, pull the tutorial repository via::
 

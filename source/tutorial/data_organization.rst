@@ -9,33 +9,16 @@ By abstracting out classes of data that share the same properties (i.e. log data
 one file per day), we can concentrate less on where the data is, and focus on analyzing it.
 
 
-
 Getting Started
-===============
+=================
+
 This tutorial is found under ``tutorials/woodworking/1-datastore.sh`` of the git repository,
 and should be run from that same directory.
 
-Essentia defines a resource that contains data a 'datastore'.  Current datastore types that are supported by Essentia
-include a local disk drive, an AWS S3 store (cloud based storage), and an Azure Blob store.  To register the local 
-datastore with Essentia you would enter the command::
+In order to utilize the data in the github repository, you need to pull the repository and then select
+your local machine as a datastore::
 
   $ ess datastore select local
-
-For the version of the files on our public S3 bucket, you would enter::
-
-  $ ess datastore select s3://asi-public --credentials=~/mycredentials.csv
-
-The ``credentials`` flag can be replace with ``aws_access_key`` and ``aws_secret_access_key`` to directly enter
-credentials, though we recommend the use of credential files if possible.
-
-For an Azure Blob datastore you would enter::
-
-  $ ess datastore select blob://asi-public --account_name=asipublic
-  
-This is specifically for our public Azure container. If you wanted to access a private Azure container you would need to 
-supply both the appropriate account name and the apporpriate account key as in::
-
-  $ ess datastore select blob://private_container --account_name=associated_account --account_key=associated_key
 
 
 Categorization of Data
@@ -54,14 +37,14 @@ these files as follows::
 The glob pattern is given, matching files are assigned to a new category we label as 'browse'. Essentia also
 automatically exracts a date from the filenames so these files can be organized by time. Sometimes it is necessary to
 supply a pattern to help Essentia extract a date from the filename.  This is another globular pattern,
-but uses Y M D to designate year, month, and day fields.  For example:
+but uses **Y M D** to designate *year, month, and day fields*.  For example:
 
 :2015-04-30-00-05-22-63C8146U29G91:
 
   ``Y-M-D-h-m-s-*``
   Here the automatic extraction alone won't work since there are multiple sets of numbers that could be dates. 
   Therefore we add the ``-``'s and ``*`` to specify the format of the date in relation to the rest of the filename. 
-  Also note that we used h m s to designate hour, minute, and second fields.
+  Also note that we used **h m s** to designate *hour, minute, and second fields*.
 
 .. tip::
   ``ess datastore ls "*browse*"`` can be used to list all the files that match a glob pattern.  That same pattern can
@@ -123,7 +106,7 @@ Future sessions
 ===============
 Essentia keeps track of your datastores and categories using a series of json files located in a ``.ess`` directory on your machine. 
 This allows you to access these datastores and your existing categories without providing all of the access credentials and commands needed in the initial setup.
-To access asi-public again simply run the command::
+For instance, to access asi-public again simply run the command::
 
     $ ess datastore select asi-public
 
