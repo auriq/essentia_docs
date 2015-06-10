@@ -6,7 +6,7 @@ Desktop Install
 
 .. note::
 
-    The desktop version uses Essentia 2.1.7, while the cloud based installs are v3.0.0.  An updated desktop
+    The desktop version uses Essentia 2.1.7 even though v3.0.0 now available for the Azure cloud.  An updated desktop
     installer will be made available soon.
 
 The desktop version assumes you are using OSX or Linux as your operating system,

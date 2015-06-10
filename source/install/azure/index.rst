@@ -6,3 +6,6 @@ Azure Install
 
 Contents pending.
 
+.. toctree::
+
+   quick-start

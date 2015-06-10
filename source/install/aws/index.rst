@@ -4,9 +4,13 @@
 AWS Install
 ***********
 
+.. note::
+
+    The AWS version uses Essentia 2.1.7 even though v3.0.0 now available for the Azure cloud.  An updated AWS AMI
+    is being prepared.
 
 The cloud version requires that the user has an Amazon Web Services account.  New users can get more information from
-our :doc:`aws/aws` guide.
+our :doc:`aws` guide.
 
 Essentia is available as an Amazon Machine Image (AMI) which contains a Linux based OS with Essentia installed.
 Any AWS user can launch on of these AMIs to form a private, AWS account specific master node.
@@ -35,7 +39,7 @@ At this point the decisions available will depend on your account and zone.
 You may have the ability to launch Essentia into 'EC2-Classic' mode, or from
 within a VPC.  The latter is preferred for security.  Whatever you choose,
 you will eventually be asked to configure a security group.  This is important
-enough that we created a separate walk-though for it: :doc:`aws/security-group`
+enough that we created a separate walk-though for it: :doc:`security-group`
 
 Once your instance is configured and launched, you should copy your
 license key (if using the free version) to it using the following command from a terminal::
@@ -65,6 +69,6 @@ AWS additional notes
 
 .. toctree::
 
-   aws/aws
-   aws/security-group
+   aws
+   security-group
 

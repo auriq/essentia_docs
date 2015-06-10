@@ -28,11 +28,16 @@ understanding the material.
 
 * Decent understanding of the Unix command line
 * shell scripting (bash for example)
+* General understanding of the map/reduce approach and key-value pair databases.
 
-**Also useful**
+*****************
+Intended Platform
+*****************
 
-* General understanding of the map/reduce approach
-* Cloud computing, in particular Amazon Web Services (AWS)
+While we do offer a single node version that can be run from a desktop, the power of Essentia lies in the cloud.
+There we can spin up as many worker nodes as needed to scale to difficult problems.  Currently Amazon and Microsoft
+clouds are supported.  Essentia can also be used for an on premise cluster; `contact us <mailto:essentia@auriq.com>`_
+for details.
 
 .. toctree::
    :hidden:
