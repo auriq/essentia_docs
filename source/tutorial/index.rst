@@ -17,7 +17,6 @@ Users are encouraged to go through the tutorials in order.
 
 .. toctree::
    :maxdepth: 2
-   :numbered:
 
    datastore
    data

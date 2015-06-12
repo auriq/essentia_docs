@@ -8,8 +8,6 @@ construct an Essentia cluster.
 
 .. toctree::
    :maxdepth: 2
-   :numbered:
-
 
    ess_on_aws
    redshift

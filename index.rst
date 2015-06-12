@@ -11,10 +11,11 @@ Specifically, we needed a framework that would allow us to quickly:
   the data we needed.
 * Clean the data to enable analytics.
 
-
-Essentia can be used to simplify many common problems encountered by data engineers and
+Essentia combines scalable, fast, ETL operations with an in-memory NoSQL database to
+simplify many common problems encountered by data engineers and
 scientists. The documentation in these pages is meant to train users on how to use
-and integrate Essentia into their data processing workflows.
+and integrate Essentia into their data processing workflow. Another useful resource and
+supplement to this documentation are the `Essentia Forums <http://forum.auriq.com>`_.
 
 *****************
 Intended Audience
@@ -22,9 +23,7 @@ Intended Audience
 
 Data scientists and engineers are specifically targeted here, but anyone with
 a technical background that needs to deal with data will have no trouble
-understanding the material.
-
-**Prequisite skillset**
+understanding the material.  Assumed skillset:
 
 * Decent understanding of the Unix command line
 * shell scripting (bash for example)
