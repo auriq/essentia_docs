@@ -44,7 +44,6 @@ for details.
 
    source/install/index
    source/tutorial/index
-   source/tutorial2/index
    source/usecases/index
    source/reference/index
 

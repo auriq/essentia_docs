@@ -52,7 +52,7 @@ copyright = u'2015, AuriQ Systems Inc.'
 # built documents.
 #
 # The short X.Y version.
-version = '3.0.0'
+version = '3.0'
 # The full version, including alpha/beta/rc tags.
 release = version
 
@@ -115,7 +115,7 @@ html_sidebars = {
 # theme further.
 html_theme_options = {
     # Navigation bar title. (Default: ``project`` value)
-    'navbar_title': "Essentia",
+    'navbar_title': "Home",
 
     # Tab name for entire site. (Default: "Site")
     'navbar_site_name': "Topics",

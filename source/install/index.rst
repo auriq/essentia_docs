@@ -2,14 +2,10 @@
 Installation
 ************
 
-Essentia can be run on either the Amazon or Microsoft clouds, where they can scale via the addition of worker node
-virtual machines.  Alternatively, there is a non scaling desktop version available that is useful for either
-development work or as a trial.
-
-.. note::
-
-    The AWS and desktop versions use Essentia 2.1.7, while the Azure platform uses Essentia 3.0.0.  All three versions
-    will be updated to 3.1 by late June 2015.
+Essentia can be run on the Amazon cloud, where it can scale via the addition of worker node
+virtual machines.  The Microsoft Azure version focuses on a new, web-based UI that provides
+insights into data stored in your cloud based 'data lake'.  Finally the desktop version is a
+non scaling version useful for either development work or as a trial.
 
 .. toctree::
    :maxdepth: 2

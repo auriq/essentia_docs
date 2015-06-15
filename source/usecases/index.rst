@@ -11,6 +11,7 @@ available within the git repository under the ``casestudies`` directory
 .. toctree::
    :titlesonly:
 
+   redshift
    calculate-sum-and-maximum
    obtain-first-last-and-minimum
    conversion

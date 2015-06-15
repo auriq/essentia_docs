@@ -2,13 +2,9 @@
 AWS Install
 ***********
 
-.. note::
 
-    The AWS version uses Essentia 2.1.7 even though v3.0.0 now available for the Azure cloud.  An updated AWS AMI
-    is being prepared.
-
-The cloud version requires that the user has an Amazon Web Services account.  New users can get more information from
-our :doc:`aws` guide.
+The Amazon cloud version requires that the user has an Amazon Web Services account.  New users can get more information from
+our :doc:`aws-account` guide.
 
 Essentia is available as an Amazon Machine Image (AMI) which contains a Linux based OS with Essentia installed.
 Any AWS user can launch on of these AMIs to form a private, AWS account specific master node.
@@ -18,7 +14,7 @@ license key to run, and a paid version which doesn't need a key but instead char
 Cloud version (Free AMI)
 ========================
 
-A trial license key is free, and can be obtained via an `easy signup <../pricing>`_.  It grants
+A trial license key is free, and can be obtained via an `easy signup <http://www.auriq.com/pricing/>`_.  It grants
 the user 30 days of unlimited use.  Note however that standard EC2 rates
 still apply, but during the trial the cost of using Essentia is free.
 
@@ -67,6 +63,7 @@ AWS additional notes
 
 .. toctree::
 
-   aws
+   quick-start
+   aws-account
    security-group
 

@@ -1,8 +1,8 @@
 :tocdepth: 1
 
-**************
-Running on AWS
-**************
+***************
+AWS Quick-Start
+***************
 
 The Amazon cloud is a pay as you need infrastucture, which offers general and specific computing resources,
 as well as reliable data storage.  Essentia primarily uses three key AWS components:

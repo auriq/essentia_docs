@@ -2,10 +2,6 @@
 Desktop Install
 ***************
 
-.. note::
-
-    The desktop version uses Essentia 2.1.7 even though v3.0.0 now available for the Azure cloud.  An updated desktop
-    installer will be made available soon.
 
 The desktop version assumes you are using OSX or Linux as your operating system,
 and that you have Python 2.7 installed.

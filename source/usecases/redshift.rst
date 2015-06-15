@@ -1,6 +1,6 @@
-******************************************************
-Empowering Data Integration with Redshift and Essentia
-******************************************************
+*******************************************
+Data Integration: AWS Redshift and Essentia
+*******************************************
 
 AWS provides a scalable SQL service called 'redshift'.  It is commonly used in data warehousing,
 and can scale to store PB of data. But going from raw data into a properly formatted table suitable for Redshift (or
