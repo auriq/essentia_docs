@@ -23,7 +23,6 @@ Additional guides
    loginf
    logcnv
    rpackage
-   getting-started-with-the-essentia-ui
 
 Examples
 ========
@@ -33,7 +32,7 @@ Examples
    essentia-3-examples-simple
    aq_pp-option-examples
    aq_udb-option-examples
-   direct-query-examples
+
 
 Tables
 ======
