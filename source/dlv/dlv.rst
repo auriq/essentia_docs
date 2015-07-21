@@ -1,6 +1,6 @@
-**************************************
-Getting Started with the Essentia UI
-**************************************
+***************
+Getting Started
+***************
 
 
 *This guide will help walk you through the basic setup of the Essentia Data Viewer.*
@@ -32,7 +32,7 @@ Repository setup and management
 4. Confirm to delete your setting.
 
 Datastore category setup and management
------------------------------------------
+---------------------------------------
 
 **Create category**
 

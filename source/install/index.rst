@@ -2,10 +2,11 @@
 Installation
 ************
 
-Essentia can be run on the Amazon cloud, where it can scale via the addition of worker node
-virtual machines.  The Microsoft Azure version focuses on a new, web-based UI that provides
-insights into data stored in your cloud based 'data lake'.  Finally the desktop version is a
-non scaling version useful for either development work or as a trial.
+Essentia can be run on the cloud, where it can scale via the addition of worker node
+virtual machines.  Users can also evaluate the software using a virtualized image that can be run
+using VirtualBox on their desktop.
+It will not have the same performance as the cloud based version but is useful for development or demonstration
+purposes.
 
 .. toctree::
    :maxdepth: 2

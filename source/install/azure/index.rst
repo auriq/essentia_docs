@@ -1,8 +1,8 @@
 :tocdepth: 1
 
-******************************
-Azure Data Lake Viewer Install
-******************************
+*************
+Azure Install
+*************
 
 The Azure version is hosted on the Azure Marketplace, and users can use
 `this direct link <http://azure.microsoft.com/en-us/marketplace/partners/auriq-systems/essentia-data-viewer/>`_ to access it.
@@ -65,7 +65,6 @@ username and password.  This can be the same as in step 1 above, but does not ha
 
 
 .. toctree::
+   :maxdepth: 1
 
-   quick-start
-   direct-query-examples
    migration

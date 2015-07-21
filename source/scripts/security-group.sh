@@ -22,13 +22,10 @@ then
 fi
 
 group_id=`aws ec2 create-security-group --group-name=${1} --description="Essentia Security Group" | grep -o -e "[a-z]\{2\}-[a-z0-9]\{8\}"`
-# Allow UDB and SSH communication between ec2 instances of this same group
-aws ec2 authorize-security-group-ingress --group-name=${1} --protocol tcp --port 10010-10079 --source-group ${group_id}
-aws ec2 authorize-security-group-ingress --group-name=${1} --protocol tcp --port 22 --source-group ${group_id}
+
 # allow SSH access from places you trust.
 aws ec2 authorize-security-group-ingress --group-name=${1} --protocol tcp --port 22 --cidr ${2}
-# Optional:
-# allow SSH access from the Essentia UI
-aws ec2 authorize-security-group-ingress --group-name=${1} --protocol tcp --port 22 --cidr 54.164.194.159/0
+# allow HTTP access from places you trust.
+aws ec2 authorize-security-group-ingress --group-name=${1} --protocol tcp --port 80 --cidr ${2}
 
 

@@ -43,6 +43,7 @@ for details.
    :maxdepth: 3
 
    source/install/index
+   source/dlv/index
    source/tutorial/index
    source/usecases/index
    source/reference/index

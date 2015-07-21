@@ -3,7 +3,7 @@ File Migration
 *****************************
 
 Overview
-=========
+========
 
 The Essentia File Migration tool is a simple script that can be called from the command line.
 It allows the easy and efficient transfer of files from AWS S3 to Azure Blob storage using an Azure VM.
