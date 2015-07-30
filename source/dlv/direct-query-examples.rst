@@ -129,7 +129,7 @@ Only output the first three rows from the files in the browse category between 2
 
 Output the number of times a unique value of the userID was observed in the files from the browse category over the entire date range.
 
-``select count(distinct userID) from browse:*:* group by userID`` ::
+``select count(userID) from browse:*:* group by userID`` ::
 
     "userID","Count"
     6,202
