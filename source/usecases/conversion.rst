@@ -15,11 +15,11 @@ The following code block shows how simple this is:
    :linenos:
    :emphasize-lines: 3,5
 
-   ess datastore select s3://my-gz-data --credentials=mycreds.csv
-   ess datastore select s3://my-zip-data --credentials=my-other-creds.csv
-   ess datastore category add zipfiles "*.zip" --dateformat="YYMMDD.zip"
+   ess select s3://my-gz-data --credentials=mycreds.csv
+   ess select s3://my-zip-data --credentials=my-other-creds.csv
+   ess category add zipfiles "*.zip" --dateformat="YYMMDD.zip"
 
-   ess task stream zipfiles "*" "*" "gzip -3 -c -" --s3out=s3://my-gz-data/converted/%path/%file.gz
+   ess stream zipfiles "*" "*" "gzip -3 -c -" --s3out=my-gz-data:/converted/%path/%file.gz
 
 
 Each time we 'register' a datastore with the ``select`` command, Essentia remembers it.  In the above example,

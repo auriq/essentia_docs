@@ -29,11 +29,11 @@ filesystem for the browse and purchase data located in the ``tutorials/woodworki
 If you are not already in the ``tutorials/woodworking`` directory used in the previous tutorials, switch into it now.
 We save the following commands to my_setup_script.sh::
 
-    ess datastore select local
+    ess select local
     
-    ess datastore category add browse "$HOME/*/woodworking/diy_woodworking/*browse*gz"
+    ess category add browse "$HOME/*/woodworking/diy_woodworking/*browse*gz"
     
-    ess datastore category add purchase "$HOME/*/woodworking/diy_woodworking/*purchase*gz"
+    ess category add purchase "$HOME/*/woodworking/diy_woodworking/*purchase*gz"
 
 
 and then run ::
@@ -59,17 +59,17 @@ First we must open an R script or the R interactive prompt and type ::
    
 to tell R to use the installed RESS package. Then we run ::
     
-   browsedata <- essQuery("ess task stream browse '*' '*'", "aq_pp -f,+1,eok - -d %cols -notitle", "#Rinclude")
+   browsedata <- essQuery("ess stream browse '*' '*'", "aq_pp -f,+1,eok - -d %cols -notitle", "#Rinclude")
 
 to import the browse files into R and save them as a dataframe called browsedata. 
 
-Here ``essentia_command`` is an ``ess task stream`` 
+Here ``essentia_command`` is an ``ess stream`` 
 command pulling all of the browse data and sending it to aq_command. This aq_command then uses the ETL Engine's preprocessor, aq_pp, to import the files with the columns defined in the scan 
 of the data (from the Essentia's Environment step) and export them in csv format with no header line. The ``#Rinclude`` flag tells **essQuery** to take the output of this statement and return it to R.
 
 Similarly we run ::
     
-   purchasedata <- essQuery("ess task stream purchase '*' '*'", "aq_pp -f,+1,eok - -d %cols -notitle", "#Rinclude")
+   purchasedata <- essQuery("ess stream purchase '*' '*'", "aq_pp -f,+1,eok - -d %cols -notitle", "#Rinclude")
    
 to import the purchase files into R and save them as a dataframe called purchasedata. 
 
@@ -111,8 +111,8 @@ An alternative way to send the files to R is to use **read.udb**.
 
 **read.udb** requires you to store the essentia queries in a bash script and then store that script's filename as ``file`` in R. Thus we save the following statements to myqueries.sh::
 
-    ess task stream browse '*' '*' "aq_pp -f,+1,eok - -d %cols -notitle" #Rinclude #R#browsedata#R#
-    ess task stream purchase '*' '*' "aq_pp -f,+1,eok - -d %cols -notitle" #Rinclude #R#purchasedata#R#
+    ess stream browse '*' '*' "aq_pp -f,+1,eok - -d %cols -notitle" #Rinclude #R#browsedata#R#
+    ess stream purchase '*' '*' "aq_pp -f,+1,eok - -d %cols -notitle" #Rinclude #R#purchasedata#R#
     ess query "select * from browse:*:*" #-notitle #Rinclude #R#querybrowse#R#
     ess query "select * from purchase:*:*" #-notitle #Rinclude #R#querypurchase#R#
 

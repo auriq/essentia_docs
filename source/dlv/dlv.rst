@@ -8,6 +8,8 @@ Getting Started
 Repository setup and management
 --------------------------------
 
+`Video Demo <https://www.youtube.com/watch?v=G5x4dDazFug&width=640&height=480>`_
+
 **Link to AWS S3**
 
 1. Click on **Repository** in the sidebar and then the AWS S3 tab.
@@ -33,6 +35,8 @@ Repository setup and management
 
 Datastore category setup and management
 ---------------------------------------
+
+`Video Demo <https://www.youtube.com/watch?v=LeyRahnbfIA&width=640&height=480>`_
 
 **Create category**
 
@@ -70,11 +74,13 @@ Datastore category setup and management
 Query setup and management
 -----------------------------
 
+`Video Demo <https://youtu.be/CRWqzkYWn3I>`_
+
 **Create a Query**
 
 1. Click on **Direct Query** in the sidebar and and select a Repository from the drop down
 2. Enter your SQL like query in the **Try New Query** input area.
-3. Click on the **Run** button to view your query results on your screen or download it to file by entering a filename and clicking **Download**.
+3. Click on the **Run** button to view your query results on your screen, download it to file by entering a filename and clicking **Download**, or generate an OData link for easy loading into Tableau by clicking **OData**.
 4. From this point you can save your query or run a new query.
 
 *Note:* If you need to view available categories, click on the **Categories** drop down arrow to view a list of available categories.
@@ -92,4 +98,15 @@ Query setup and management
     select * from myfavoritedata:*:* where payment >= 50
     select * from purchase:2014-09-01:2014-09-15 where articleID>=46 limit 10
     
-To see more examples of the queries we offer and work with some sample queries of our public data, please go through our :doc:`./direct-query-examples`
+To see more examples of the types of queries we allow and work with some sample queries of our public data, please go through our :doc:`./direct-query-examples`
+
+**Transfer Data with OData**
+
+1. Create a query following the steps above and click the **OData** button to generate an OData link to your query.
+2. Copy this Link using the **Copy** option on the right of the URL box or highlight the URL and copy it to your clipboard.
+3. Open Tableau and go to the "To a server" connection section.
+4. Select **OData**. Note, you need to click "More Servers" to see the OData option if you are using Tableau Desktop.
+5. Paste the URL into the box after "Server:" and select **No Authentication** (this should be the default).
+
+| *Note:* 
+|   Our OData service is still in its Beta version and is currently limited to sending 10,000 lines of data (and 100,000 values) *into* Tableau. However, you can *query* larger amounts of data as long as the *output* is less than 10,000 lines (and 100,000 values). This will be improved in the full version, which will be released in the near future, along with support for OData clients other than Tableau.
