@@ -6,11 +6,11 @@ Using R with Essentia
 .. 518f2f233489ef51a8801cb983b8b02dc2dc4879
 
 In order to use R with Essentia, you must install the RESS package from C-RAN (open R and then run ``install.packages("RESS")``). 
-This package contains two R functions that can be used to capture the output of essentia commands into R, **essQuery** and **read.udb**.
+This package contains two R functions that can be used to capture the output of essentia commands into R, **essQuery** and **capture.essentia**.
 
 * **essQuery** is used to directly query the database using a single statement. You can call **essQuery** multiple times to run different statements.
-* **read.udb**, on the other hand, reads all of the statements in a file. Thus if you plan to run multiple statements
-  that may be somewhat related to each other, it is recommended that you use **read.udb**.
+* **capture.essentia**, on the other hand, reads all of the statements in a file. Thus if you plan to run multiple statements
+  that may be somewhat related to each other, it is recommended that you use **capture.essentia**.
 
 Both functions require an Essentia Bash script to be executed that sets up the Essentia environment and optionally loads data into the UDB database. Thus they require you to run ::
 
@@ -22,7 +22,7 @@ You can call either function in an R script or on the R interactive prompt. It m
 
 .. Note: These filenames do NOT have to be the same.
 
-This makes the R script containing your RESS function calls more readable but is not required. You can always type your R analysis directly into the script you're using to call **essQuery** or **read.udb**. 
+This makes the R script containing your RESS function calls more readable but is not required. You can always type your R analysis directly into the script you're using to call **essQuery** or **capture.essentia**. 
 You can also choose to work on the R interactive prompt instead.
 
 To have R run both the essentia queries and the commands found in your R file and then exit, run ::
@@ -45,7 +45,7 @@ at the command prompt. Then run the R command::
 2. Run ``R`` on the command line.
 3. In the R prompt that appears, run ``source("essqueryapache.R", echo=FALSE)``
     
-**Running the Apache Example with read.udb**
+**Running the Apache Example with capture.essentia**
 
 1. Run ``sh setupapache.sh``  on the command line.
 2. Run ``R`` on the command line.
@@ -53,7 +53,7 @@ at the command prompt. Then run the R command::
 
 You will see the results of the analysis print to the screen.
 
-To see the commands involved in getting this analysis, open essqueryapache.R  and analyzeapache.R for **essQuery** or queryapache.sh and analyzeapache.R for **read.udb**.
+To see the commands involved in getting this analysis, open essqueryapache.R  and analyzeapache.R for **essQuery** or queryapache.sh and analyzeapache.R for **capture.essentia**.
 
 R Integration Format Requirements
 =================================
@@ -61,7 +61,7 @@ R Integration Format Requirements
 For statements that you want to capture the output from, you must either 
 
 * call them separately with **essQuery** or 
-* include all of these statements in the script containing your essentia query commands and call the query script with **read.udb**.
+* include all of these statements in the script containing your essentia query commands and call the query script with **capture.essentia**.
 
 Ess Exec Statements
 ------------------------
@@ -142,8 +142,8 @@ To change the names of the stored dataframes, use the ``#R#any_name#R#`` flag. T
 
 With ``#filelist``, the extra dataframe is saved as "commandN+1" by default, or "any_nameN+1" if ``#R#any_name#R#`` is also used.
 
-Order of R Variables with read.udb
-----------------------------------
+Order of R Variables with capture.essentia
+------------------------------------------
 
 The output you capture from each statement will be saved into R variables labeled command1, command2, .... in order.
 
@@ -168,20 +168,20 @@ If the ``ess stream`` statement also included the ``#filelist`` flag then the st
     
 where myvariable4 contains the list of filenames.
 
-Syntax Examples for read.udb
------------------------------
+Syntax Examples for capture.essentia
+------------------------------------
 
-You can enter any commands with the syntax demonstrated in this section into your query script and then call **read.udb** on that file, ::
+You can enter any commands with the syntax demonstrated in this section into your query script and then call **capture.essentia** on that file, ::
 
-    read.udb("**query_script_name**")
+    capture.essentia("**query_script_name**")
 
 on a specific line of the file, ::
 
-    read.udb("**query_script_name**", 10)
+    capture.essentia("**query_script_name**", 10)
     
 or on a series of lines in the file ::
 
-    read.udb("**query_script_name**",c(13,14,15))
+    capture.essentia("**query_script_name**",c(13,14,15))
     
 ``ess exec "aq_udb -cnt **database_name**:vector1'" --debug``
 

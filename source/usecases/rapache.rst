@@ -10,12 +10,12 @@ and scripts used here can be found in the ``casestudies/apache`` directory of th
 haven't already, refer to the :doc:`../tutorial/rtutorial` for how to setup ``R`` to work with Essential. To quickly
 recap that information: You must install the RESS package from C-RAN (open R and then run
 ``install.packages("RESS")``). This package contains two R functions that can be used to capture the output of
-essentia commands into R, **essQuery** and **read.udb**.
+essentia commands into R, **essQuery** and **capture.essentia**.
 
 * **essQuery** is used to directly query the database using a single statement. You can call **essQuery**
   multiple times to run different statements.
-* **read.udb**, on the other hand, reads all of the statements in a file. Thus if you plan to run multiple statements
-  that may be somewhat related to each other, it is recommended that you use **read.udb**.
+* **capture.essentia**, on the other hand, reads all of the statements in a file. Thus if you plan to run multiple statements
+  that may be somewhat related to each other, it is recommended that you use **capture.essentia**.
 
 Essentia's Environment
 ======================
@@ -70,10 +70,10 @@ and then run ``sh setupapache.sh``.
 
 Now we use the functions in the RESS package to query the database and output the results to R. 
 
-read.udb
-========
+capture.essentia
+================
 
-**read.udb** requires us to save the queries we want run into a file. In this case we save the following
+**capture.essentia** requires us to save the queries we want run into a file. In this case we save the following
 queries in ``queryapache.sh``
 
 .. code-block:: sh
@@ -88,9 +88,9 @@ queries in ``queryapache.sh``
     ess exec "aq_udb -exp logsapache2:vector2 -sort pagecount -dec" --debug
 
 Since these are all ``ess exec`` statements and there are no ``#Rignore`` flags in any of the statement lines,
-**read.udb** will automatically store their output into R dataframes entitled
+**capture.essentia** will automatically store their output into R dataframes entitled
 command1, command2, command3, and command4. All we need to do now is run the following R
-script telling R to use the RESS package, use **read.udb** on ``queryapache.sh`` to load the statements' output into
+script telling R to use the RESS package, use **capture.essentia** on ``queryapache.sh`` to load the statements' output into
 R dataframes, and run the additional analysis written in the r script ``analyzeapache.R``
 
 .. code-block:: sh
@@ -100,8 +100,8 @@ R dataframes, and run the additional analysis written in the r script ``analyzea
     rscriptfile <- "analyzeapache.R"    # store analyzeapache.R as rscriptfile
     library("RESS")                     # load Essentia's R Integration package
     
-    # call read.udb to execute the essentia statements written in queryapache.sh and save them to R dataframes command1 through command4
-    read.udb(file)                      
+    # call capture.essentia to execute the essentia statements written in queryapache.sh and save them to R dataframes command1 through command4
+    capture.essentia(file)                      
     
     # run the R commands written in analyzeapache.R to analyze the data in the dataframes we just created. Turn echo to TRUE to make the output less results-oriented and easier to debug.
     source(rscriptfile, echo=FALSE)     
