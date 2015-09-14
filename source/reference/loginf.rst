@@ -20,57 +20,148 @@ We will look at a simple 3 column file ( click to download :download:`donations.
 the last
 name, city,
 and amount donated
-to a fictional charity.  In the rawest form, one can execute the following to get the full output::
+to a fictional charity.  In the rawest form, one can execute the following to get the full output in json format::
 
   loginf -f donations.csv
+  {
+    "Process Time" : 0.000,
+    "Report String Encoding" : false,
+    "Source Files" : 1,
+    "Has BOM" : 0,
+    "Bytes" : {
+      "Source" : 228,
+      "Count" : 205,
+      "Percent" : 89.9123
+    },
+    "Lines" : {
+      "Source" : 11,
+      "Count" : 10,
+      "Percent" : 90.9091
+    },
+    "Rows" : {
+      "Count" : 10,
+      "Length" : {
+        "Min" : 15,
+        "Max" : 31,
+        "Avg" : 20.5
+      }
+    },
+    "Columns" : {
+      "Min" : 3,
+      "Max" : 3,
+      "Avg" : 3
+    },
+    "Column" : [
+      {
+        "Index" : 1,
+        "Label" : "lastname",
+        "pp-Type" : "S",
+        "pp-Attr" : "",
+        "pp-Name" : "lastname",
+        "pp-Sample" : "Henderson",
+        "Bytes" : {
+          "Count" : 64,
+          "Percent" : 31.2195
+        },
+        "Rows" : {
+          "Count" : 10,
+          "Percent" : 100
+        },
+        "Length" : {
+          "Min" : 4,
+          "Max" : 9,
+          "Avg" : 6.4
+        },
+        "Unique Estimate" : 10,
+        "Type-String" : {
+          "Rows" : {
+            "Count" : 10,
+            "Percent" : 100
+          },
+          "Sample" : [
+            "Henderson",
+            "Long",
+            "Alexander",
+            "Bailey"
+          ]
+        }
+      },
+      {
+        "Index" : 2,
+        "Label" : "city",
+        "pp-Type" : "S",
+        "pp-Attr" : "",
+        "pp-Name" : "city",
+        "pp-Sample" : "Ngou",
+        "Bytes" : {
+          "Count" : 91,
+          "Percent" : 44.3902
+        },
+        "Rows" : {
+          "Count" : 10,
+          "Percent" : 100
+        },
+        "Length" : {
+          "Min" : 4,
+          "Max" : 18,
+          "Avg" : 9.1
+        },
+        "Unique Estimate" : 10,
+        "Type-String" : {
+          "Rows" : {
+            "Count" : 10,
+            "Percent" : 100
+          },
+          "Sample" : [
+            "Ngou",
+            "Lendangara Satu",
+            "Carazinho",
+            "Pedro Leopoldo"
+          ],
+          "Sample-Has binary" : "Oborniki Śląskie"
+        }
+      },
+      {
+        "Index" : 3,
+        "Label" : "donation",
+        "pp-Type" : "I",
+        "pp-Attr" : "",
+        "pp-Name" : "donation",
+        "pp-Sample" : "26",
+        "Bytes" : {
+          "Count" : 20,
+          "Percent" : 9.7561
+        },
+        "Rows" : {
+          "Count" : 10,
+          "Percent" : 100
+        },
+        "Length" : {
+          "Min" : 2,
+          "Max" : 2,
+          "Avg" : 2
+        },
+        "Unique Estimate" : 9,
+        "Type-Integer" : {
+          "Rows" : {
+            "Count" : 10,
+            "Percent" : 100
+          },
+          "Value" : {
+            "Min" : 25,
+            "Max" : 50
+          },
+          "Sample" : [
+            "26",
+            "27",
+            "31",
+            "35"
+          ]
+        }
+      }
+    ]
+  }
 
-  Sources = 1
-  Process Time = 0.000
-  Original Bytes = 228
-  Analyzed Bytes = 228 (100.00% Original)
-  Original Lines = 11
-  Analyzed Lines = 11 (100.00% Original)
-  Rows = 11
-  Row Length Min|Max|Avg = 15|31|20.7273
-  Columns Min|Max = 3|3
-  Column.1
-    Value Bytes = 72 (31.58% Analyzed)
-    Count = 11 (100.00% Rows)
-    Value Length Min|Max|Avg = 4|9|6.54545
-    Unique Estimate = 11
-    Type.String
-      Occurrence = 11 (100.00% Count)
-      Sample.1 = [8]lastname
-      Sample.2 = [9]Henderson
-      Sample.3 = [4]Long
-      Sample.4 = [9]Alexander
-  Column.2
-    Value Bytes = 95 (41.67% Analyzed)
-    Count = 11 (100.00% Rows)
-    Value Length Min|Max|Avg = 4|18|8.63636
-    Unique Estimate = 11
-    Type.String
-      Occurrence = 11 (100.00% Count)
-      Sample.1 = [4]city
-      Sample.2 = [4]Ngou
-      Sample.3 = [15]Lendangara Satu
-      Sample.4 = [9]Carazinho
-      Sample.Has binary = [18]Oborniki Śląskie
-  Column.3
-    Value Bytes = 28 (12.28% Analyzed)
-    Count = 11 (100.00% Rows)
-    Value Length Min|Max|Avg = 2|8|2.54545
-    Unique Estimate = 10
-    Type.String
-      Occurrence = 1 (9.09% Count)
-      Sample.1 = [8]donation
-    Type.Integer
-      Occurrence = 10 (90.91% Count)
-      Numeric Min|Max = 25|50
-      Sample.1 = [2]26
-      Sample.2 = [2]27
-      Sample.3 = [2]31
-      Sample.4 = [2]35
 
 ``logcnv`` breaks down each column.  Note column three which is the numerical column.  Since at first ``logcnv`` does
 not know if there is a header line, it identifies that 1/11 entries are strings, while the other 10/11 are integers.
