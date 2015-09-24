@@ -17,15 +17,15 @@ records for each referrer.
     :linenos:
     :emphasize-lines: 3,7,9-15,17-18
 
-    ess spec reset
-    ess spec create database apache --ports=1
-    ess spec create vector vector1 s,pkey:referrer i,+add:pagecount
+    ess server reset
+    ess create database apache --ports=1
+    ess create vector vector1 s,pkey:referrer i,+add:pagecount
     ess udbd restart
 
-    ess datastore select local
-    ess datastore category add 125accesslogs "$HOME/*accesslog*125-access_log*" 
+    ess select local
+    ess category add 125accesslogs "$HOME/*accesslog*125-access_log*" 
 
-    ess task stream 125accesslogs "2014-11-30" "2014-12-07" \
+    ess stream 125accesslogs "2014-11-30" "2014-12-07" \
     "logcnv -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' \
     i,tim:time sep:'] \"' s,clf:req_line1 sep:' ' s,clf:req_line2 sep:' ' s,clf:req_line3 sep:'\" ' i:res_status sep:' ' \
     i:res_size sep:' \"' s,clf:referrer \
@@ -33,7 +33,7 @@ records for each referrer.
     aq_pp -f,qui,eok - -d X X X X X X X X X s:referrer X \
     -eval i:pagecount \"1\" -ddef -udb_imp apache:vector1"
 
-    ess task exec "aq_udb -exp apache:vector1 -sort pagecount -dec -top 25; \
+    ess exec "aq_udb -exp apache:vector1 -sort pagecount -dec -top 25; \
     aq_udb -cnt apache:vector1"
 
 Line by line description

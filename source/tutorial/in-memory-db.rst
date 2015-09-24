@@ -28,9 +28,9 @@ Our first step is to setup the database to store our data.
 As with many database systems, we need to create a database and define schemas.  We concentrate
 first on the sales data::
 
-  $ ess spec create database wood
-  $ ess spec create table allsales s,pkey:userid i,tkey:ptime i:articleid f:price i:refid
-  $ ess spec create vector usersales s,pkey:userid i,+last:articleid f,+add:total
+  $ ess create database wood
+  $ ess create table allsales s,pkey:userid i,tkey:ptime i:articleid f:price i:refid
+  $ ess create vector usersales s,pkey:userid i,+last:articleid f,+add:total
 
 
 The first line defines a database called 'wood', and within that we create two things.
@@ -70,7 +70,7 @@ The database servers are not running by default.  We can fire them up using::
 
 We can now populate the 'allsales' table using::
 
-  $ ess task stream purchase 2014-09-01 2014-09-30 \
+  $ ess stream purchase 2014-09-01 2014-09-30 \
   "aq_pp -f,+1,eok - -d %cols \
   -eval i:ptime 'DateToTime(purchaseDate,\"Y.m.d.H.M.S\")' \
   -eval is:t 'ptime - DateToTime(\"2014-09-15\",\"Y.m.d\")' \
@@ -89,34 +89,34 @@ Querying the database
 =====================
 After executing the following, you will see a text dump of the contents of the 'allsales' table::
 
-  $ ess task exec "aq_udb -exp wood:allsales"
+  $ ess exec "aq_udb -exp wood:allsales"
 
 .. note ::
-    In 'local' mode, users can execute the aq_udb commands directly without using Essentia (``ess task exec``). However,
+    In 'local' mode, users can execute the aq_udb commands directly without using Essentia (``ess exec``). However,
     we recommend using the full command since it can be used immediately if worker nodes are added to the cluster.
 
 You can note that the userids are output in groups, which is how UDB has stored the data.  However, it is not in time
 order per user.  Than can be done via::
 
-  $ ess task exec "aq_udb -ord wood:allsales"
+  $ ess exec "aq_udb -ord wood:allsales"
 
 With the data sorted in time order, we can take advantage of our vector that summarizes each user::
 
-  $ ess task exec "aq_udb -exp wood:allsales -notitle | \
+  $ ess exec "aq_udb -exp wood:allsales -notitle | \
                    aq_pp -f - -d s:userid X i:articleid f:total X -imp wood:usersales"
 
 What we've done is pipe the output to another UDB import command.  Since the data is grouped by user and in time
 order per user, the 'last article read' will be accurately reflected.  Take a look at the summary with another export::
 
-  $ ess task exec "aq_udb -exp wood:usersales -sort total -dec -top 10"
+  $ ess exec "aq_udb -exp wood:usersales -sort total -dec -top 10"
 
 Here we have added additional options to sort the output by decending total money spent,
 and limiting to the top 10 users.
 
 If you wish to delete the contents of a single table/vector or the entire database you can execute::
 
-  $ ess task exec "aq_udb -clr wood:usersales"
-  $ ess task exec "aq_udb -clr_all -db wood"
+  $ ess exec "aq_udb -clr wood:usersales"
+  $ ess exec "aq_udb -clr_all -db wood"
 
 
 Map/Reduce, Essentia Style
@@ -147,9 +147,9 @@ Charles Dickens.  You will find it under ``tutorials\map-reduce`` in the git rep
    :linenos:
    :emphasize-lines: 3,5,6
 
-   ess spec reset
-   ess spec create database mapreduce
-   ess spec create vector wordcount s,pkey:word i,+add:count
+   ess server reset
+   ess create database mapreduce
+   ess create vector wordcount s,pkey:word i,+add:count
    ess udbd restart
    cat pg98.txt | tr -s '[[:punct:][:space:]]' '\n' | \
                   aq_pp -d s:word -eval i:count 1 -imp mapreduce:wordcount
@@ -157,7 +157,7 @@ Charles Dickens.  You will find it under ``tutorials\map-reduce`` in the git rep
 
 
 Since this is just a single file, we have elected to use the raw ``aq_pp`` rather than wrapping inside of an
-Essentia statement (``task stream``).  The first line cleans out any old schemas (if they
+Essentia statement (``stream``).  The first line cleans out any old schemas (if they
 existed).  The next 2 lines simply setup the schema, with the vector really acting as
 an on-the-fly 'REDUCER'.  We then restart the UDB to wipe out any previous content from earlier tutorials.
 

@@ -63,23 +63,23 @@ For statements that you want to capture the output from, you must either
 * call them separately with **essQuery** or 
 * include all of these statements in the script containing your essentia query commands and call the query script with **read.udb**.
 
-Ess Task Exec Statements
+Ess Exec Statements
 ------------------------
 
-By default, the R Integrator captures the output of ``ess task exec`` statements.
+By default, the R Integrator captures the output of ``ess exec`` statements.
 
-You must have one output to standard out per ``ess task exec`` statement.
+You must have one output to standard out per ``ess exec`` statement.
 
-Thus you must separate multiple database exports or counts into multiple ``ess task exec`` statements.
+Thus you must separate multiple database exports or counts into multiple ``ess exec`` statements.
 
 To ignore a statement, put ``#Rignore`` at the end of the statement line.
 
-Ess Task Stream Statements
+Ess Stream Statements
 --------------------------
 
-To include an ``ess task stream`` statement, put ``#Rinclude`` at the end of the statement line.
+To include an ``ess stream`` statement, put ``#Rinclude`` at the end of the statement line.
 
-If you want to capture the output of an ``ess task stream`` statement, you CANNOT use its ``--debug`` option.
+If you want to capture the output of an ``ess stream`` statement, you CANNOT use its ``--debug`` option.
 
 If you are streaming multiple files from one category and want to include that statement, you must include a ``-notitle`` flag somewhere in your statement, in addition to ``#Rinclude``.
 
@@ -100,17 +100,17 @@ Flags for RIntegration
 
 The flags added to the essentia commands in the **essQuery** call or query script can include:
 
-*    ``#Rignore`` : Ignore an ``ess task exec`` statement. Do not capture
+*    ``#Rignore`` : Ignore an ``ess exec`` statement. Do not capture
      the output of the statement into R.
 
-*    ``#Rinclude`` : Include an ``ess task stream`` or ``ess query`` statement. Capture the
+*    ``#Rinclude`` : Include an ``ess stream`` or ``ess query`` statement. Capture the
      output of the statement into R.
 
 *    ``#-notitle`` : Tell R not to use the first line of the output as
      the header.
 
 *    ``#Rseparate`` : Can be used when saving multiple files into an R
-     dataframe using an ``ess task stream`` command. Saves each file into
+     dataframe using an ``ess stream`` command. Saves each file into
      a different R dataframe.
 
 *    ``#filelist`` : Causes an extra dataframe to be stored in R that
@@ -135,7 +135,7 @@ The value returned by **essQuery** is the output from querying the database. Thi
 
 or directly analyzed in R.
 
-If you use **essQuery** to save multiple files into separate R dataframes using a single ``ess task stream`` command, the files are stored automatically in R dataframes called command1 to commandN
+If you use **essQuery** to save multiple files into separate R dataframes using a single ``ess stream`` command, the files are stored automatically in R dataframes called command1 to commandN
 (where N is the number of files) and no value is returned. 
 
 To change the names of the stored dataframes, use the ``#R#any_name#R#`` flag. The dataframes will then be stored as any_name1 to any_nameN.
@@ -158,11 +158,11 @@ in the order that you wrote those six statements.
 You can change the name of the output variable by including ``#R#any_variable_name#R#`` somewhere in your statement line. When used with ``#Rseparate``, this saves the files as name1 to nameN, 
 where N is the number of files. Since this still counts as a statement, the next default dataframe saved will be stored as ``command`` followed by the number of previous statements run plus one.
 
-Therefore if command3 above had been an ``ess task stream`` statement that saved 3 files into R with the flags ``#Rseparate`` and ``#R#myvariable#R#``, the 6 statements would be stored as ::
+Therefore if command3 above had been an ``ess stream`` statement that saved 3 files into R with the flags ``#Rseparate`` and ``#R#myvariable#R#``, the 6 statements would be stored as ::
 
     command1, command2, myvariable1, myvariable2, myvariable3, command4, command5, command6
     
-If the ``ess task stream`` statement also included the ``#filelist`` flag then the statements would be stored as ::
+If the ``ess stream`` statement also included the ``#filelist`` flag then the statements would be stored as ::
 
     command1, command2, myvariable1, myvariable2, myvariable3, myvariable4, command4, command5, command6
     
@@ -183,17 +183,17 @@ or on a series of lines in the file ::
 
     read.udb("**query_script_name**",c(13,14,15))
     
-``ess task exec "aq_udb -cnt **database_name**:vector1'" --debug``
+``ess exec "aq_udb -cnt **database_name**:vector1'" --debug``
 
 * Outputs to std. out. (default) and will be captured in an R variable. This is the main use for the R integrator.
 
-``ess task exec "aq_udb -cnt **database_name**:vector1'" --debug #Rignore``
+``ess exec "aq_udb -cnt **database_name**:vector1'" --debug #Rignore``
 
-* This will IGNORE this ``ess task exec`` statement and this statement's output will NOT be stored in a variable in R.
+* This will IGNORE this ``ess exec`` statement and this statement's output will NOT be stored in a variable in R.
 
-``ess task stream category startdate enddate "**command**'" #Rinclude``
+``ess stream category startdate enddate "**command**'" #Rinclude``
 
-* Takes the output of this ``ess task stream`` command and saves it into a variable in R.
+* Takes the output of this ``ess stream`` command and saves it into a variable in R.
 
 * A command such as ``head -30`` will work with the R integrator. You can use it to preview and analyze the top records in each of your files.
 
@@ -205,14 +205,14 @@ or on a series of lines in the file ::
 
 .. maybe remove this part (when i use etl_commands) or switch to tail-30 and bottom records or subset of the records in.
 
-**Saving Files into R Variables using 'ess task stream'**
+**Saving Files into R Variables using 'ess stream'**
 
-You can also save your files into R variables using ``ess task stream category startdate enddate "cat -" #Rinclude`` for .csv files only or ``ess task stream category startdate enddate "aq_pp -f,eok - -d %cols" #Rinclude`` for any file with a constant delimiter. This should only be used to explore or analyze a few files so the data doesnt become too large (this feature just streams the files you select into variables in R). 
+You can also save your files into R variables using ``ess stream category startdate enddate "cat -" #Rinclude`` for .csv files only or ``ess stream category startdate enddate "aq_pp -f,eok - -d %cols" #Rinclude`` for any file with a constant delimiter. This should only be used to explore or analyze a few files so the data doesnt become too large (this feature just streams the files you select into variables in R). 
 
 When saving multiple files from one category into R, you MUST include Essentia's ``-notitle`` flag somewhere on the line. You also have the option of saving all of the files you are streaming as one variable or into separate variables (one for each file). By default, the R integrator loads all of the files used in one
-``ess task stream`` statement into a single R variable. To store each file into its own distinct R variable, run ::
+``ess stream`` statement into a single R variable. To store each file into its own distinct R variable, run ::
 
-    ess task stream category startdate enddate "aq_pp -notitle -f,eok - -d %cols" #Rseparate #Rinclude #filelist
+    ess stream category startdate enddate "aq_pp -notitle -f,eok - -d %cols" #Rseparate #Rinclude #filelist
     
 This will also cause the R integrator to automatically save the filenames of the stored files into a single additional R variable.
 
@@ -222,33 +222,33 @@ This will also cause the R integrator to automatically save the filenames of the
 
 **Access Log Data Integration Syntax Examples**
 
-For any more complicated, delimited format you can use ``logcnv`` to convert the format to csv within the ``ess task stream`` commmand. All of the following examples have the correct syntax. The data they're acting on is in Extended Apache Log Format. ::
+For any more complicated, delimited format you can use ``logcnv`` to convert the format to csv within the ``ess stream`` commmand. All of the following examples have the correct syntax. The data they're acting on is in Extended Apache Log Format. ::
 
-    ess task stream 125accesslogs "2014-12-07" "2014-12-07" "logcnv -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' i,tim:time sep:'] \"' s,clf:req_line1 sep:' ' s,clf:req_line2 sep:' ' s,clf:req_line3 sep:'\" ' i:res_status sep:' ' i:res_size sep:' \"' s,clf:referrer sep:'\" \"' s,clf:user_agent sep:'\"' X | cat -" #Rinclude
+    ess stream 125accesslogs "2014-12-07" "2014-12-07" "logcnv -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' i,tim:time sep:'] \"' s,clf:req_line1 sep:' ' s,clf:req_line2 sep:' ' s,clf:req_line3 sep:'\" ' i:res_status sep:' ' i:res_size sep:' \"' s,clf:referrer sep:'\" \"' s,clf:user_agent sep:'\"' X | cat -" #Rinclude
     
-    ess task stream 125accesslogs "2014-12-07" "2014-12-07" "head -30 | logcnv -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' i,tim:time sep:'] \"' s,clf:req_line1 sep:' ' s,clf:req_line2 sep:' ' s,clf:req_line3 sep:'\" ' i:res_status sep:' ' i:res_size sep:' \"' s,clf:referrer sep:'\" \"' s,clf:user_agent sep:'\"' X | aq_pp -f,qui,eok - -d ip:ip2 s:rlog X X X X X X X X X" #Rinclude
+    ess stream 125accesslogs "2014-12-07" "2014-12-07" "head -30 | logcnv -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' i,tim:time sep:'] \"' s,clf:req_line1 sep:' ' s,clf:req_line2 sep:' ' s,clf:req_line3 sep:'\" ' i:res_status sep:' ' i:res_size sep:' \"' s,clf:referrer sep:'\" \"' s,clf:user_agent sep:'\"' X | aq_pp -f,qui,eok - -d ip:ip2 s:rlog X X X X X X X X X" #Rinclude
     
-    ess task stream 125accesslogs "2014-12-07" "2014-12-07" "head -q | logcnv -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' i,tim:time sep:'] \"' s,clf:req_line1 sep:' ' s,clf:req_line2 sep:' ' s,clf:req_line3 sep:'\" ' i:res_status sep:' ' i:res_size sep:' \"' s,clf:referrer sep:'\" \"' s,clf:user_agent sep:'\"' X | aq_pp -f,qui,eok - -d ip:ip2 s:rlog X X X X X X X X X" #Rinclude
+    ess stream 125accesslogs "2014-12-07" "2014-12-07" "head -q | logcnv -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' i,tim:time sep:'] \"' s,clf:req_line1 sep:' ' s,clf:req_line2 sep:' ' s,clf:req_line3 sep:'\" ' i:res_status sep:' ' i:res_size sep:' \"' s,clf:referrer sep:'\" \"' s,clf:user_agent sep:'\"' X | aq_pp -f,qui,eok - -d ip:ip2 s:rlog X X X X X X X X X" #Rinclude
     
-    ess task stream 125accesslogs "2014-12-07" "2014-12-07" "logcnv -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' i,tim:time sep:'] \"' s,clf:req_line1 sep:' ' s,clf:req_line2 sep:' ' s,clf:req_line3 sep:'\" ' i:res_status sep:' ' i:res_size sep:' \"' s,clf:referrer sep:'\" \"' s,clf:user_agent sep:'\"' X | aq_pp -f,qui,eok - -d ip:ip2 s:rlog X X X X X X X X X" #Rinclude
+    ess stream 125accesslogs "2014-12-07" "2014-12-07" "logcnv -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' i,tim:time sep:'] \"' s,clf:req_line1 sep:' ' s,clf:req_line2 sep:' ' s,clf:req_line3 sep:'\" ' i:res_status sep:' ' i:res_size sep:' \"' s,clf:referrer sep:'\" \"' s,clf:user_agent sep:'\"' X | aq_pp -f,qui,eok - -d ip:ip2 s:rlog X X X X X X X X X" #Rinclude
 
 **Purchase Data Integration Syntax Examples**
 
 These next examples work on the diy_workshop purchase data available in the samples folder provided with Essentia or on Auriq's publicly accessible bucket asi_public. ::
     
-    ess task stream purchase "2014-09-15" "2014-09-15" "aq_pp -f,eok - -d X s:userid X f:price X" #Rinclude
+    ess stream purchase "2014-09-15" "2014-09-15" "aq_pp -f,eok - -d X s:userid X f:price X" #Rinclude
     
-    ess task stream purchase "2014-09-16" "2014-09-16" "aq_pp -notitle -f,+1,eok - -d X s:userid X f:price X" #Rinclude
+    ess stream purchase "2014-09-16" "2014-09-16" "aq_pp -notitle -f,+1,eok - -d X s:userid X f:price X" #Rinclude
     
-    ess task stream purchase "2014-09-17" "2014-09-17" "aq_pp -notitle -f,+1,eok - -d X s:userid X f:price X" #Rinclude
+    ess stream purchase "2014-09-17" "2014-09-17" "aq_pp -notitle -f,+1,eok - -d X s:userid X f:price X" #Rinclude
     
-    ess task stream purchase "2014-09-15" "2014-09-16" "aq_pp -notitle -f,+1,eok - -d X s:userid X f:price X" #Rseparate #Rinclude
+    ess stream purchase "2014-09-15" "2014-09-16" "aq_pp -notitle -f,+1,eok - -d X s:userid X f:price X" #Rseparate #Rinclude
     
-    ess task stream purchase 2014-09-01 2014-09-03 "aq_pp -notitle -stat -f,eok - -d %cols" #Rinclude
+    ess stream purchase 2014-09-01 2014-09-03 "aq_pp -notitle -stat -f,eok - -d %cols" #Rinclude
     
-    ess task exec "echo \"1, 2, 3, 4, 5\"" #-notitle
+    ess exec "echo \"1, 2, 3, 4, 5\"" #-notitle
     
-    ess task stream purchase "*" "*" \
+    ess stream purchase "*" "*" \
     "head -10 | aq_pp -notitle -f,+1,eok - -d %cols" \
     #Rinclude
     
@@ -267,17 +267,17 @@ These next examples work on the diy_workshop purchase data available in the samp
 Syntax Examples for essQuery
 -----------------------------
 
-``essQuery("ess task exec", "aq_udb -cnt **database_name**:vector1'", "--debug")``
+``essQuery("ess exec", "aq_udb -cnt **database_name**:vector1'", "--debug")``
 
 * Outputs to std. out. (default) and will be returned by **essQuery**. This is the main use for the R integrator.
 
-``essQuery("ess task exec", "aq_udb -cnt **database_name**:vector1'", "--debug #Rignore")``
+``essQuery("ess exec", "aq_udb -cnt **database_name**:vector1'", "--debug #Rignore")``
 
-* This will IGNORE this ``ess task exec`` statement and this statement's output will NOT be captured or returned by **essQuery**.
+* This will IGNORE this ``ess exec`` statement and this statement's output will NOT be captured or returned by **essQuery**.
 
-``essQuery("ess task stream category startdate enddate", "**command**'", "#Rinclude")``
+``essQuery("ess stream category startdate enddate", "**command**'", "#Rinclude")``
 
-* Takes the output of this ``ess task stream`` command and returns it to R using **essQuery**.
+* Takes the output of this ``ess stream`` command and returns it to R using **essQuery**.
 
 * A command such as ``head -30`` will work with the R integrator. You can use it to preview and analyze the top records in each of your files.
 
@@ -289,14 +289,14 @@ Syntax Examples for essQuery
 
 **Saving Files into R Variables**
 
-You can also send your files into R using ``essQuery("ess task stream category startdate enddate", "cat -", "#Rinclude")`` for .csv files only or 
-``essQuery("ess task stream category startdate enddate", "aq_pp -f,eok - -d %cols", "#Rinclude")`` for any file with a constant delimiter. 
+You can also send your files into R using ``essQuery("ess stream category startdate enddate", "cat -", "#Rinclude")`` for .csv files only or 
+``essQuery("ess stream category startdate enddate", "aq_pp -f,eok - -d %cols", "#Rinclude")`` for any file with a constant delimiter. 
 This should only be used to explore or analyze a few files so the data doesnt become too large (this feature just streams the files you select into variables in R).
 
 When saving multiple files from one category into R, you MUST include Essentia's ``-notitle`` flag somewhere on the line. You also have the option of sending all of the files you are streaming into R as a single returned output or as separate dataframes (one for each file). By default, the R integrator loads all of the files used in one
-``ess task stream`` statement into a single returned output. To store each file into its own distinct R variable, run ::
+``ess stream`` statement into a single returned output. To store each file into its own distinct R variable, run ::
 
-    essQuery("ess task stream category startdate enddate", "aq_pp -notitle -f,eok - -d %cols", "#Rseparate #Rinclude #filelist")
+    essQuery("ess stream category startdate enddate", "aq_pp -notitle -f,eok - -d %cols", "#Rseparate #Rinclude #filelist")
     
 This will also cause the R integrator to automatically save the filenames of the stored files into a single additional R variable.
 
@@ -304,31 +304,31 @@ This will also cause the R integrator to automatically save the filenames of the
 
 For any more complicated, delimited format you can use ``logcnv`` to convert the format to csv within the stream commmand. All of the following examples have the correct syntax. The data they're acting on is in Extended Apache Log Format. ::
 
-    essQuery("ess task stream 125accesslogs \"2014-12-07\" \"2014-12-07\"", "logcnv -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' i,tim:time sep:'] \\\"' s,clf:req_line1 sep:' ' s,clf:req_line2 sep:' ' s,clf:req_line3 sep:'\\\" ' i:res_status sep:' ' i:res_size sep:' \\\"' s,clf:referrer sep:'\\\" \\\"' s,clf:user_agent sep:'\\\"' X | cat -", "#Rinclude")
+    essQuery("ess stream 125accesslogs \"2014-12-07\" \"2014-12-07\"", "logcnv -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' i,tim:time sep:'] \\\"' s,clf:req_line1 sep:' ' s,clf:req_line2 sep:' ' s,clf:req_line3 sep:'\\\" ' i:res_status sep:' ' i:res_size sep:' \\\"' s,clf:referrer sep:'\\\" \\\"' s,clf:user_agent sep:'\\\"' X | cat -", "#Rinclude")
     
-    essQuery("ess task stream 125accesslogs \"2014-12-07\" \"2014-12-07\"", "head -30 | logcnv -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' i,tim:time sep:'] \\\"' s,clf:req_line1 sep:' ' s,clf:req_line2 sep:' ' s,clf:req_line3 sep:'\\\" ' i:res_status sep:' ' i:res_size sep:' \\\"' s,clf:referrer sep:'\\\" \\\"' s,clf:user_agent sep:'\\\"' X | aq_pp -f,qui,eok - -d ip:ip2 s:rlog X X X X X X X X X", "#Rinclude")
+    essQuery("ess stream 125accesslogs \"2014-12-07\" \"2014-12-07\"", "head -30 | logcnv -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' i,tim:time sep:'] \\\"' s,clf:req_line1 sep:' ' s,clf:req_line2 sep:' ' s,clf:req_line3 sep:'\\\" ' i:res_status sep:' ' i:res_size sep:' \\\"' s,clf:referrer sep:'\\\" \\\"' s,clf:user_agent sep:'\\\"' X | aq_pp -f,qui,eok - -d ip:ip2 s:rlog X X X X X X X X X", "#Rinclude")
     
-    essQuery("ess task stream 125accesslogs \"2014-12-07\" \"2014-12-07\"", "head -q | logcnv -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' i,tim:time sep:'] \\\"' s,clf:req_line1 sep:' ' s,clf:req_line2 sep:' ' s,clf:req_line3 sep:'\\\" ' i:res_status sep:' ' i:res_size sep:' \\\"' s,clf:referrer sep:'\\\" \\\"' s,clf:user_agent sep:'\\\"' X | aq_pp -f,qui,eok - -d ip:ip2 s:rlog X X X X X X X X X", "#Rinclude")
+    essQuery("ess stream 125accesslogs \"2014-12-07\" \"2014-12-07\"", "head -q | logcnv -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' i,tim:time sep:'] \\\"' s,clf:req_line1 sep:' ' s,clf:req_line2 sep:' ' s,clf:req_line3 sep:'\\\" ' i:res_status sep:' ' i:res_size sep:' \\\"' s,clf:referrer sep:'\\\" \\\"' s,clf:user_agent sep:'\\\"' X | aq_pp -f,qui,eok - -d ip:ip2 s:rlog X X X X X X X X X", "#Rinclude")
     
-    essQuery("ess task stream 125accesslogs \"2014-12-07\" \"2014-12-07\"", "logcnv -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' i,tim:time sep:'] \\\"' s,clf:req_line1 sep:' ' s,clf:req_line2 sep:' ' s,clf:req_line3 sep:'\\\" ' i:res_status sep:' ' i:res_size sep:' \\\"' s,clf:referrer sep:'\\\" \\\"' s,clf:user_agent sep:'\\\"' X | aq_pp -f,qui,eok - -d ip:ip2 s:rlog X X X X X X X X X", "#Rinclude")
+    essQuery("ess stream 125accesslogs \"2014-12-07\" \"2014-12-07\"", "logcnv -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' i,tim:time sep:'] \\\"' s,clf:req_line1 sep:' ' s,clf:req_line2 sep:' ' s,clf:req_line3 sep:'\\\" ' i:res_status sep:' ' i:res_size sep:' \\\"' s,clf:referrer sep:'\\\" \\\"' s,clf:user_agent sep:'\\\"' X | aq_pp -f,qui,eok - -d ip:ip2 s:rlog X X X X X X X X X", "#Rinclude")
 
 **Purchase Data Integration Syntax Examples**
 
 These next examples work on the diy_workshop purchase data available in the samples folder provided with Essentia or on Auriq's publicly accessible bucket asi_public. ::
     
-    essQuery("ess task stream purchase \"2014-09-15\" \"2014-09-15\"", "aq_pp -f,eok - -d X s:userid X f:price X", "#Rinclude")
+    essQuery("ess stream purchase \"2014-09-15\" \"2014-09-15\"", "aq_pp -f,eok - -d X s:userid X f:price X", "#Rinclude")
     
-    essQuery("ess task stream purchase \"2014-09-16\" \"2014-09-16\"", "aq_pp -notitle -f,+1,eok - -d X s:userid X f:price X", "#Rinclude")
+    essQuery("ess stream purchase \"2014-09-16\" \"2014-09-16\"", "aq_pp -notitle -f,+1,eok - -d X s:userid X f:price X", "#Rinclude")
     
-    essQuery("ess task stream purchase \"2014-09-17\" \"2014-09-17\"", "aq_pp -notitle -f,+1,eok - -d X s:userid X f:price X", "#Rinclude")
+    essQuery("ess stream purchase \"2014-09-17\" \"2014-09-17\"", "aq_pp -notitle -f,+1,eok - -d X s:userid X f:price X", "#Rinclude")
     
-    essQuery("ess task stream purchase \"2014-09-15\" \"2014-09-16\"", "aq_pp -notitle -f,+1,eok - -d X s:userid X f:price X", "#Rseparate #Rinclude")
+    essQuery("ess stream purchase \"2014-09-15\" \"2014-09-16\"", "aq_pp -notitle -f,+1,eok - -d X s:userid X f:price X", "#Rseparate #Rinclude")
     
-    essQuery("ess task stream purchase 2014-09-01 2014-09-03", "aq_pp -notitle -stat -f,eok - -d %cols", "#Rinclude")
+    essQuery("ess stream purchase 2014-09-01 2014-09-03", "aq_pp -notitle -stat -f,eok - -d %cols", "#Rinclude")
     
-    essQuery("ess task exec", "echo \\\"1, 2, 3, 4, 5\\\"", "#-notitle")
+    essQuery("ess exec", "echo \\\"1, 2, 3, 4, 5\\\"", "#-notitle")
     
-    essQuery("ess task stream purchase \"*\" \"*\"", "head -10 | aq_pp -notitle -f,+1,eok - -d %cols", "#Rinclude")
+    essQuery("ess stream purchase \"*\" \"*\"", "head -10 | aq_pp -notitle -f,+1,eok - -d %cols", "#Rinclude")
     
     querybrowse <- essQuery("ess query", "select * from browse:*:*", "#-notitle #Rinclude")
     

@@ -22,7 +22,7 @@ On some systems, you may use ``zcat`` instead of ``funzip``.
 
 The Essentia equivalent is::
 
-  $ ess task stream browse 2014-09-01 2014-09-07 'wc -l'
+  $ ess stream browse 2014-09-01 2014-09-07 'wc -l'
 
 Some notes here.  The ``bash`` version is fairly straightforward in this case, but gets much more complicated if you
 want to traverse dates that span weeks, months, or years.  Essentia handles the decompression of the data and
@@ -374,7 +374,7 @@ For our first example, we are tasked with generating a cleaned version of each f
 and saving it as a comma separated file with bz2 compression::
 
   $ mkdir bz2
-  $ ess task stream browse 2014-09-01 2014-09-30 "aq_pp -f,+1,eok - -d %cols -notitle | bzip2 - -c > ./bz2/%file.bz2"
+  $ ess stream browse 2014-09-01 2014-09-30 "aq_pp -f,+1,eok - -d %cols -notitle | bzip2 - -c > ./bz2/%file.bz2"
 
 We can break down the command (everything within the double quotes) as follows:
 
@@ -411,7 +411,7 @@ ways to achieve this, but the most robust is the following:
    :linenos:
    :emphasize-lines: 3,4,5,6,7
 
-    $ ess task stream purchase 2014-09-01 2014-09-30 \
+    $ ess stream purchase 2014-09-01 2014-09-30 \
     "aq_pp -f,+1,eok,qui - -d %cols \
     -eval is:t 'DateToTime(purchaseDate,\"Y.m.d.H.M.S\") - DateToTime(\"2014-09-15\",\"Y.m.d\")' \
     -if -filt 't>0' \

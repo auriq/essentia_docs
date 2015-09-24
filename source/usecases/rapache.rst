@@ -31,36 +31,36 @@ following commands to ``setupapache.sh``
    :emphasize-lines: 5,9,13,17,24,30
    
     ess udbd stop
-    ess spec reset
+    ess server reset
     
-    ess spec create database logsapache1 --ports=1
+    ess create database logsapache1 --ports=1
     # Create a vector to aggregate (count) the number of pages, hits, and bytes seen or used by day.
-    ess spec create vector vector1 s,pkey:day i,+add:pagecount i,+add:hitcount i,+add:pagebytes
+    ess create vector vector1 s,pkey:day i,+add:pagecount i,+add:hitcount i,+add:pagebytes
     
-    ess spec create database logsapache2 --ports=1
+    ess create database logsapache2 --ports=1
     # Create a vector to aggregate (count) the number of pages, hits, and bytes seen or used by hour.
-    ess spec create vector vector2 s,pkey:hour i,+add:pagecount i,+add:hitcount i,+add:pagebytes
+    ess create vector vector2 s,pkey:hour i,+add:pagecount i,+add:hitcount i,+add:pagebytes
     
-    ess spec create database logsapache3 --ports=1
+    ess create database logsapache3 --ports=1
     # Create a vector to aggregate (count) the number of pages, hits, and bytes seen or used over each month of data.
-    ess spec create vector vector3 s,pkey:month i,+add:pagecount i,+add:hitcount i,+add:pagebytes
+    ess create vector vector3 s,pkey:month i,+add:pagecount i,+add:hitcount i,+add:pagebytes
     
-    ess spec create database logsapache4 --ports=1
+    ess create database logsapache4 --ports=1
     # Create a vector to aggregate (count) the number of pages, hits, and bytes seen or used by day of the week.
-    ess spec create vector vector4 s,pkey:dayoftheweek i,+add:pagecount i,+add:hitcount i,+add:pagebytes
+    ess create vector vector4 s,pkey:dayoftheweek i,+add:pagecount i,+add:hitcount i,+add:pagebytes
     
     ess udbd start
     
-    ess datastore select local
+    ess select local
     # Create a category called 125accesslogs that matches any file with 125-access_log in its filename. Tell essentia that these files have a date in their filenames and that this date has in sequence a 4 digit year, 2 digit month, and 2 digit day.
-    ess datastore category add 125accesslogs "$HOME/*accesslog*125-access_log*"    
+    ess category add 125accesslogs "$HOME/*accesslog*125-access_log*"    
     
-    ess datastore summary
+    ess summary
     
 
     # Stream your access logs from the startdate and enddate you specify into the following command. Use logcnv to specify the format of the records in the access log and convert them to .csv format. Then pipe the data into our preprocessor (aq_pp) and specify which columns you want to keep. Filter on httpstatus so that you only include the 'good' http status codes that correspond to actual views. Create a column that you can aggregate for each record to keep track of hits and another column to group the data by. Filter on accessedfile to eliminate any viewed files that dont have certain elements in their filename. If this filter returns true, count that file as a page and save the file to a column called pageurl. If the filter returns false then the file is not counted as a page. Convert the time column to a date and extract the month ("December"...), day ("01"...), dayoftheweek ("Sun"...), and hour ("00" to "23") into their respective columns. Import the modified and reduced data into the four vectors in the databases you defined above so that the attributes defined there can be applied.    
             
-    ess task stream 125accesslogs "2014-11-09" "2014-12-07" "logcnv -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' i,tim:time sep:'] \"' s,clf:req_line1 sep:' ' s,clf:req_line2 sep:' ' s,clf:req_line3 sep:'\" ' i:res_status sep:' ' i:res_size sep:' \"' s,clf:referrer sep:'\" \"' s,clf:user_agent sep:'\"' X \
+    ess stream 125accesslogs "2014-11-09" "2014-12-07" "logcnv -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' i,tim:time sep:'] \"' s,clf:req_line1 sep:' ' s,clf:req_line2 sep:' ' s,clf:req_line3 sep:'\" ' i:res_status sep:' ' i:res_size sep:' \"' s,clf:referrer sep:'\" \"' s,clf:user_agent sep:'\"' X \
     | aq_pp -emod rt -f,eok - -d ip:ip X X i:time X s:accessedfile X i:httpstatus i:pagebytes X X -filt 'httpstatus == 200 || httpstatus == 304' -eval i:hitcount '1' \
     -if -filt '(PatCmp(accessedfile, \"*.html[?,#]?*\", \"ncas\") || PatCmp(accessedfile, \"*.htm[?,#]?*\", \"ncas\") || PatCmp(accessedfile, \"*.php[?,#]?*\", \"ncas\") || PatCmp(accessedfile, \"*.asp[?,#]?*\", \"ncas\") || PatCmp(accessedfile, \"*/\", \"ncas\") || PatCmp(accessedfile, \"*.php\", \"ncas\"))' -eval i:pagecount '1' -eval s:pageurl 'accessedfile' \
     -else -eval pagecount '0' -endif -eval s:month 'TimeToDate(time,\"%B\")' -eval s:day 'TimeToDate(time,\"%d\")' -eval s:dayoftheweek 'TimeToDate(time,\"%a\")' -eval s:hour 'TimeToDate(time,\"%H\")' \
@@ -80,14 +80,14 @@ queries in ``queryapache.sh``
    :emphasize-lines: 1,4 
        
     # This first query exports the data from a vector in the database that contains the counts over each month so that it can be read into an R dataframe.
-    ess task exec "aq_udb -exp logsapache3:vector3" --debug
+    ess exec "aq_udb -exp logsapache3:vector3" --debug
     
     # The next three statements export the day, day of the week, and hour vectors from their respective databases, ordering the output by the number of pages seen (in descending order). R will capture the output of each command into an R dataframe.
-    ess task exec "aq_udb -exp logsapache1:vector1 -sort pagecount -dec" --debug
-    ess task exec "aq_udb -exp logsapache4:vector4 -sort pagecount -dec" --debug
-    ess task exec "aq_udb -exp logsapache2:vector2 -sort pagecount -dec" --debug
+    ess exec "aq_udb -exp logsapache1:vector1 -sort pagecount -dec" --debug
+    ess exec "aq_udb -exp logsapache4:vector4 -sort pagecount -dec" --debug
+    ess exec "aq_udb -exp logsapache2:vector2 -sort pagecount -dec" --debug
 
-Since these are all ``ess task exec`` statements and there are no ``#Rignore`` flags in any of the statement lines,
+Since these are all ``ess exec`` statements and there are no ``#Rignore`` flags in any of the statement lines,
 **read.udb** will automatically store their output into R dataframes entitled
 command1, command2, command3, and command4. All we need to do now is run the following R
 script telling R to use the RESS package, use **read.udb** on ``queryapache.sh`` to load the statements' output into
@@ -123,9 +123,9 @@ You can simply call **essQuery** on each statement we want to run. Thus the comm
     command1 <- essQuery("aq_udb -exp logsapache3:vector3", "--debug")
     
     # The next three statements export the day, day of the week, and hour vectors from their respective databases, ordering the output by the number of pages seen (in descending order). We send the output of each command directly into R and then save it into an R dataframe.
-    command2 <- essQuery("ess task exec", "aq_udb -exp logsapache1:vector1 -sort pagecount -dec", "--debug")
-    command3 <- essQuery("ess task exec", "aq_udb -exp logsapache4:vector4 -sort pagecount -dec", "--debug")
-    command4 <- essQuery("ess task exec", "aq_udb -exp logsapache2:vector2 -sort pagecount -dec", "--debug")
+    command2 <- essQuery("ess exec", "aq_udb -exp logsapache1:vector1 -sort pagecount -dec", "--debug")
+    command3 <- essQuery("ess exec", "aq_udb -exp logsapache4:vector4 -sort pagecount -dec", "--debug")
+    command4 <- essQuery("ess exec", "aq_udb -exp logsapache2:vector2 -sort pagecount -dec", "--debug")
     
     # run the R commands written in analyzeapache.R to analyze the data in the dataframes we just created. Turn echo to TRUE to make the output less results-oriented and easier to debug.
     source(rscriptfile, echo=FALSE)     
