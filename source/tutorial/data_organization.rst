@@ -18,7 +18,7 @@ and should be run from that same directory.
 In order to utilize the data in the github repository, you need to pull the repository and then select
 your local machine as a datastore::
 
-  $ ess datastore select local
+  $ ess select local
 
 
 Categorization of Data
@@ -31,7 +31,7 @@ In this case, a glob pattern of ``*browse*`` would match all of our browsing log
 to the data as it allows Essentia to skip irrelevant directories. We can tell Essentia to classify
 these files as follows::
 
-  $ ess datastore category add browse "$HOME/*tutorials/woodworking/diy_woodworking/*browse*" 
+  $ ess category add browse "$HOME/*tutorials/woodworking/diy_woodworking/*browse*" 
 
 
 The glob pattern is given, matching files are assigned to a new category we label as 'browse'. Essentia also
@@ -47,14 +47,14 @@ but uses **Y M D** to designate *year, month, and day fields*.  For example:
   Also note that we used **h m s** to designate *hour, minute, and second fields*.
 
 .. tip::
-  ``ess datastore ls "*browse*"`` can be used to list all the files that match a glob pattern.  That same pattern can
+  ``ess ls "*browse*"`` can be used to list all the files that match a glob pattern.  That same pattern can
   then
   be used as a rule pattern.
 
 
 With some files now categorized, we can introduce the summary command to get an overview of our data::
 
-  $ ess datastore summary
+  $ ess summary
   ------------------------------------------------------------------------
   -------------------------------- local ---------------------------------
   ------------------------------------------------------------------------
@@ -69,7 +69,7 @@ We can see that our 'browse' category has a total of 30 files, takes up 1.9 MB o
 You can also summarize a particlular category to see more information that can be particularly useful, such as how the data is delimited 
 and the column specification as explained in the AQ tutorials::  
 
-  $ ess datastore summary browse
+  $ ess summary browse
   Name:        browse
   Pattern:     /home/ec2-user/*tutorials/woodworking/diy_woodworking/*browse*
   Date Format: auto
@@ -92,13 +92,13 @@ and the column specification as explained in the AQ tutorials::
 Elements of a category can be modified.  For example, we can override the column spec to treat the userID as a string
 and articleID as an integer by using::
 
-  $ ess datastore category change columnspec browse "S:eventDate S:userID I:articleID"
+  $ ess category change columnspec browse "S:eventDate S:userID I:articleID"
 
 
 Organizing the 'purchase' data is handled in a similar manner::
 
-  ess datastore category add purchase "$HOME/*tutorials/woodworking/diy_woodworking/*purchase*"
-  ess datastore category change columnspec purchase "S:purchaseDate S:userID I:articleID f:price I:refID"
+  ess category add purchase "$HOME/*tutorials/woodworking/diy_woodworking/*purchase*"
+  ess category change columnspec purchase "S:purchaseDate S:userID I:articleID f:price I:refID"
 
 In the next tutorial (ETL) we show how to apply operations to files within a group en masse.
 
@@ -108,7 +108,7 @@ Essentia keeps track of your datastores and categories using a series of json fi
 This allows you to access these datastores and your existing categories without providing all of the access credentials and commands needed in the initial setup.
 For instance, to access asi-public again simply run the command::
 
-    $ ess datastore select asi-public
+    $ ess select asi-public
 
 A typical scenario, particularly with log data, is that new files are placed on the data store on a regular basis.
 After the initial category setup, all future sessions with Essentia need only select the datastore and scan it to index new
