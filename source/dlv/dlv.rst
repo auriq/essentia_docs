@@ -8,7 +8,9 @@ Getting Started
 Repository setup and management
 --------------------------------
 
-`Video Demo <https://www.youtube.com/watch?v=G5x4dDazFug&width=640&height=480>`_
+.. `Video Demo <https://www.youtube.com/watch?v=G5x4dDazFug&width=640&height=480>`_
+
+`Video Demo <https://youtu.be/Bsoa7psCFgo>`_
 
 **Link to AWS S3**
 
@@ -37,7 +39,7 @@ Repository setup and management
 Datastore category setup and management
 ---------------------------------------
 
-`Video Demo <https://www.youtube.com/watch?v=LeyRahnbfIA&width=640&height=480>`_
+`Video Demo <https://youtu.be/ed0g7uVzEmA>`_
 
 **Create category**
 
@@ -62,9 +64,10 @@ Datastore category setup and management
 * `Date Format <http://www.auriq.com/documentation/source/reference/category-rules.html#date-format>`_ - matching date format pattern found in filename structure
 * `Delimiter <http://www.auriq.com/documentation/source/reference/category-rules.html#delimiter>`_ - the type of delimiter (comma, space, tab, etc) used in your data.
 
-3. Or click on the options drop down arrow to display category options and define the Archive option:
+3. Or click on the options drop down arrow to display category options and define either of the following options:
 
 * `Archive <http://www.auriq.com/documentation/source/reference/category-rules.html#archive>`_ - matching pattern to describe filenames within a compressed file
+* `Preprocess <http://www.auriq.com/documentation/source/reference/category-rules.html#preprocess>`_ - command to modify your raw data before it is scanned by Essentia.
 .. * `Compression <http://www.auriq.com/documentation/source/reference/category-rules.html#compression>`_ - drop down to select the type of file compression
 
 **Directly Edit Column Specification**
@@ -77,7 +80,7 @@ Datastore category setup and management
 Query setup and management
 -----------------------------
 
-`Video Demo <https://youtu.be/CRWqzkYWn3I>`_
+`Video Demo <https://youtu.be/jILkSbnPHeg>`_
 
 **Create a Query**
 
@@ -95,6 +98,16 @@ Query setup and management
     select count(distinct [column_name] | [*]) from [category_name]:[start_date | *]:[end_date | *]  where ...
 
     select [column_name], count(*) from from [category_name]:[start_date | *]:[end_date | *]  where ... group by [column_name]
+    
+`Rules <http://www.auriq.com/documentation/source/reference/direct-query-examples.html>`_ ::
+
+    The first query format above is a "select" query.
+    The second and third query formats above are "count" queries.
+    
+    1. Group By is NOT supported for SELECT queries. 
+    2. Order By is NOT supported for COUNT queries.
+    3. Limit is NOT supported for COUNT queries.
+    4. Group By can only be used when there is no DISTINCT in COUNT queries.
     
 `Example <http://www.auriq.com/documentation/source/reference/direct-query-examples.html>`_ ::
 
