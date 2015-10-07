@@ -3,7 +3,7 @@ Getting Started
 ***************
 
 
-*This guide will help walk you through the basic setup of the Essentia Data Viewer.*
+*This guide will help walk you through the basic setup and use of the Essentia Data Lake Manager.*
 
 Repository setup and management
 --------------------------------
@@ -77,6 +77,16 @@ Datastore category setup and management
 3. From here, you can change `column headers <http://www.auriq.com/documentation/source/reference/category-rules.html#column-headers>`_ (no spaces) and assign `data types <http://www.auriq.com/documentation/source/reference/category-rules.html#data-types>`_ in case the scan was not correct.
 4. Click on the **Save** button to save your changes.
 
+**Exploring Your Data Repository**
+
+1. Click **Explore**.
+2. Click the **+** next to a directory to navigate through the directories on your Repository.
+3. Your current path is displayed at the top, next to your repository name. This is useful when defining a pattern for the files you want to group into a category.
+
+You can click **Size** to calculate the total number of files and bytes in your Repository.
+
+You can click **Refresh** to get the latest list of files on your Repository. 
+
 Query setup and management
 -----------------------------
 
@@ -85,9 +95,9 @@ Query setup and management
 **Create a Query**
 
 1. Click on **Direct Data Query** in the top menu and and select a Repository from the drop down
-2. Enter your SQL like query in the **Input your query here** area.
+2. Enter your SQL like query in the **Input your query here** area. You can optionally enter a label for this query so you can reference it later. 
 3. Click on the **Run** button to view your query results on your screen, download your query results into a file on your instance by clicking **Download** and entering a filename, or generate an OData link for easy loading into Tableau by clicking **OData**.
-4. From this point you can save your query or run a new query.
+4. From this point you can access a saved query or run a new query.
 
 *Note:* If you need to view available categories, click on the **Categories** drop down arrow to view a list of available categories.
 
@@ -126,3 +136,56 @@ To see more examples of the types of queries we allow and work with some sample 
 
 | *Note:* 
 |   Our OData service is still in its Beta version and is currently limited to sending 10,000 lines of data (and 100,000 values) *into* Tableau. However, you can *query* larger amounts of data as long as the *output* is less than 10,000 lines (and 100,000 values). This will be improved in the full version, which will be released in the near future, along with support for OData clients other than Tableau.
+
+**Working with Saved Queries**
+
+1. Select your Saved Query from the dropdown. The query should appear in the "Input your query here" area. If you labeled your query, the label should appear next to the saved query dropdown.
+2. Now you can click the **Run** button to view your query results on your screen, download your query results into a file on your instance by clicking **Download** and entering a filename, access the query via an http link by clicking **HTTP**, or generate an OData link for easy loading into Tableau by clicking **OData**.
+
+You can generate a new HTTP link for your query by clicking **HTTP** and then clicking **Reset**. This is useful if you want to share the link with others, but only want to provide them access for a limited amount of time. 
+
+You can search your saved queries by entering any parts of your desired queries into the **Search** box. 
+
+Using RStudio
+-------------
+
+**Setting up RStudio**
+
+If you plan to use our RStudio Integration and you haven't enabled it yet, you need to:
+
+1. Go to the AWS Console.
+2. Right Click on your Instance, click **Instance State**, and **Stop** your instance.
+3. Right Click on your Instance, click **Instance Settings**, and click **View/Change User Data**
+4. Enter **"rstudio"**.
+5. Right Click on your Instance, click **Instance State**, and **Start** your instance.
+
+**Accessing RStudio**
+
+Go to the UI and then click the **RStudio** link in the top menu. 
+
+Enter **"essentia"** as the username and enter the **Instance ID** of your instance as your password.
+
+You can now use all the capabilities of RStudio directly from your browser. 
+
+**Running Essentia via RStudio**
+
+Essentia's R Integration package is installed by default. To access it, you simply need to enter the R command **library(RESS)**. See our `R Integration Tutorial <http://www.auriq.com/documentation/source/tutorial/rtutorial.html>`_ to see how to use the RESS package to integrate R and Essentia.
+
+To run an Essentia Bash Script that already exists on your file system, you can simply run it from within RStudio by navigating to the directory that contains your script and entering **system("sh Your_Script_name.sh")**.
+
+To create an Essentia Bash Script from within RStudio:
+
+* Click **File** → **New File** → **Text File**
+* Click **File** → **Save As**
+* Enter your desired filename followed by **.sh** (Ex: Your_Script_Name.sh)
+
+You are now free to enter any Essentia commands to accomplish your data preparation, integration, or analysis.
+
+To Save your script, use a shortcut or click **File** → **Save**.
+
+To run your script, navigate to the directory that contains your script and then either run **system("sh Your_Script_name.sh")** or click on **Run Script** in the top right of the Script Panel.
+
+Questions
+---------
+
+Our tutorials are intended to guide you through the usage of the included tools, but you should feel free to contact us at info@auriq.com with any other questions.
