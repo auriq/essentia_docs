@@ -5,18 +5,23 @@ Using R with Essentia
 
 .. 518f2f233489ef51a8801cb983b8b02dc2dc4879
 
-In order to use R with Essentia, you must install the RESS package from C-RAN (open R and then run ``install.packages("RESS")``). 
-This package contains two R functions that can be used to capture the output of essentia commands into R, **essQuery** and **capture.essentia**.
+In order to use R with Essentia, you must install the RESS package from C-RAN. Open R and then run::
 
-* **essQuery** is used to directly query the database using a single statement. You can call **essQuery** multiple times to run different statements.
-* **capture.essentia**, on the other hand, reads all of the statements in a file. Thus if you plan to run multiple statements
-  that may be somewhat related to each other, it is recommended that you use **capture.essentia**.
+   install.packages("RESS")
 
-Both functions require an Essentia Bash script to be executed that sets up the Essentia environment and optionally loads data into the UDB database. Thus they require you to run ::
+ 
+This package contains three R functions that can be used to capture the output of Essentia commands into
+R.
+
+* **read.essentia** takes an Essentia script and captures the output csv data into R, where you can save the output to a dataframe or stream it directly into additional analysis. The output can only contain the csv formatted data that you want to read into R.
+* **essQuery** is used to directly query the database using a single statement. You can call **essQuery** multiple times to run different statements. You can save the output to a dataframe or stream it directly into additional analysis.
+* **capture.essentia**, on the other hand, takes a file containing any number of Essentia commands and captures the output of the specified statements into R dataframes. Thus if you plan to run multiple statements that may be somewhat related to each other, you may want to use **capture.essentia**.
+
+All three functions require an Essentia Bash script to be executed that sets up the Essentia environment and optionally loads data into the UDB database. Thus they require you to run ::
 
     sh **load_script_name**.sh
 
-You can call either function in an R script or on the R interactive prompt. It may be useful to maintain your RESS function calls in such an R script and refer to a separate script containing your R analyses by storing its filename as ``rscriptfile`` ::
+You can call any of these functions in an R script or on the R interactive prompt. It may be useful to maintain your RESS function calls in such an R script and refer to a separate script containing your R analyses by storing its filename as ``rscriptfile`` ::
 
     rscriptfile <- "**r_analysis_script**.R"
 
@@ -37,6 +42,11 @@ at the command prompt. Then run the R command::
 
     source("**your_r_script**.R", echo=FALSE)
     
+The rest of this document only describes the options and sytax of **essQuery** and **capture.essentia**. To see an example of how read.essentia is used, go through :doc:`../tutorial/rtutorial2`.
+
+Apache Example
+==============
+    
 *The Apache Example assumes you are working in the casestudies/apache/ directory of the github repository. If you are not currently in this directory, please switch to it now.*
     
 **Running the Apache Example with essQuery**
@@ -53,14 +63,14 @@ at the command prompt. Then run the R command::
 
 You will see the results of the analysis print to the screen.
 
-To see the commands involved in getting this analysis, open essqueryapache.R  and analyzeapache.R for **essQuery** or queryapache.sh and analyzeapache.R for **capture.essentia**.
+To see the commands involved in getting this analysis, open essqueryapache.R and analyzeapache.R for **essQuery** or queryapache.sh and analyzeapache.R for **capture.essentia**.
 
 R Integration Format Requirements
 =================================
 
 For statements that you want to capture the output from, you must either 
 
-* call them separately with **essQuery** or 
+* call them separately with **read.essentia** or **essQuery**. Or 
 * include all of these statements in the script containing your essentia query commands and call the query script with **capture.essentia**.
 
 Ess Exec Statements

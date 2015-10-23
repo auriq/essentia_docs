@@ -80,12 +80,12 @@ queries in ``queryapache.sh``
    :emphasize-lines: 1,4 
        
     # This first query exports the data from a vector in the database that contains the counts over each month so that it can be read into an R dataframe.
-    ess exec "aq_udb -exp logsapache3:vector3" --debug
+    ess exec "aq_udb -exp logsapache3:vector3"
     
     # The next three statements export the day, day of the week, and hour vectors from their respective databases, ordering the output by the number of pages seen (in descending order). R will capture the output of each command into an R dataframe.
-    ess exec "aq_udb -exp logsapache1:vector1 -sort pagecount -dec" --debug
-    ess exec "aq_udb -exp logsapache4:vector4 -sort pagecount -dec" --debug
-    ess exec "aq_udb -exp logsapache2:vector2 -sort pagecount -dec" --debug
+    ess exec "aq_udb -exp logsapache1:vector1 -sort pagecount -dec"
+    ess exec "aq_udb -exp logsapache4:vector4 -sort pagecount -dec"
+    ess exec "aq_udb -exp logsapache2:vector2 -sort pagecount -dec"
 
 Since these are all ``ess exec`` statements and there are no ``#Rignore`` flags in any of the statement lines,
 **capture.essentia** will automatically store their output into R dataframes entitled
@@ -120,12 +120,12 @@ You can simply call **essQuery** on each statement we want to run. Thus the comm
     library(RESS)                       # load Essentia's R Integration package
     
     # This first query exports the data from a vector in the database that contains the counts over each month so that it can be read into R. We save the result in R as a dataframe called command1. However, you can use this output however you want for your own analysis, including piping the output directly into that analysis so that it never has to be saved.
-    command1 <- essQuery("aq_udb -exp logsapache3:vector3", "--debug")
+    command1 <- essQuery("aq_udb -exp logsapache3:vector3")
     
     # The next three statements export the day, day of the week, and hour vectors from their respective databases, ordering the output by the number of pages seen (in descending order). We send the output of each command directly into R and then save it into an R dataframe.
-    command2 <- essQuery("ess exec", "aq_udb -exp logsapache1:vector1 -sort pagecount -dec", "--debug")
-    command3 <- essQuery("ess exec", "aq_udb -exp logsapache4:vector4 -sort pagecount -dec", "--debug")
-    command4 <- essQuery("ess exec", "aq_udb -exp logsapache2:vector2 -sort pagecount -dec", "--debug")
+    command2 <- essQuery("ess exec", "aq_udb -exp logsapache1:vector1 -sort pagecount -dec")
+    command3 <- essQuery("ess exec", "aq_udb -exp logsapache4:vector4 -sort pagecount -dec")
+    command4 <- essQuery("ess exec", "aq_udb -exp logsapache2:vector2 -sort pagecount -dec")
     
     # run the R commands written in analyzeapache.R to analyze the data in the dataframes we just created. Turn echo to TRUE to make the output less results-oriented and easier to debug.
     source(rscriptfile, echo=FALSE)     
