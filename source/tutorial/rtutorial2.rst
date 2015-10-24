@@ -80,7 +80,7 @@ and then simply have R run::
 
     library(RESS)           # load Essentia's R Integration package
     
-    mydata <- read.essentia('readquery.sh')          # call read.essentia to execute the essentia statement written in readquery.sh and save their output into R as a dataframe called mydata
+    mydata <- read.essentia('readquery.sh')          # call read.essentia to execute the essentia statement written in readquery.sh and save its output into R as a dataframe called mydata
     
 We are now free to analyze this data using the massive variety of R functions and methods. To get a few quick plots of this data, we run::
 
@@ -97,7 +97,7 @@ essQuery
 ========
     
 .. With the environment setup, we can now use **essQuery** to export the data from the UDB database and into an R dataframes. 
-We could also have used **essQuery** to export the data from the UDB database and into an R dataframes. 
+We could also have used **essQuery** to export the data from the UDB database and into an R dataframe. 
 
 The **essQuery** function takes three arguments: ``essentia``, ``aq``, and ``flags``. 
 
@@ -118,7 +118,7 @@ to tell R to use the installed RESS package. Then we run ::
 to import the apache files into R and save them as a dataframe called mydata. 
 
 Here ``essentia`` is an ``ess exec`` 
-command pulling all of the aggregated and grouped apache access log data from the UDB database.
+command executing the aq_command. This aq_command then pulls all of the aggregated and grouped apache access log data from the UDB database.
 
 We can now run::
 
@@ -160,4 +160,4 @@ Next Steps
 
 This tutorial was meant to continue to familiarize the user with Essentia's R Integration and demonstrated how to use the
 functions inside the RESS package to send data through Essentia's preprocessor and into R.
-To see more advanced analysis of much more complex datasets, please read through our :doc:`../usecases/rapache` use case.
+To see more analysis of complex datasets, please read through our :doc:`../usecases/rapache` use case.

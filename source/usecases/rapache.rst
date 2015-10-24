@@ -7,15 +7,22 @@ Overview
 
 In this use case, we will use Essentia to process some Apache logs so that we can analyze them using ``R``.  The data
 and scripts used here can be found in the ``casestudies/apache`` directory of the git repository.  If you
-haven't already, refer to the :doc:`../tutorial/rtutorial` for how to setup ``R`` to work with Essential. To quickly
-recap that information: You must install the RESS package from C-RAN (open R and then run
-``install.packages("RESS")``). This package contains two R functions that can be used to capture the output of
-essentia commands into R, **essQuery** and **capture.essentia**.
+haven't already, refer to the :doc:`../tutorial/rtutorial` for how to setup ``R`` to work with Essentia. To quickly
+recap that information: 
 
-* **essQuery** is used to directly query the database using a single statement. You can call **essQuery**
-  multiple times to run different statements.
-* **capture.essentia**, on the other hand, reads all of the statements in a file. Thus if you plan to run multiple statements
-  that may be somewhat related to each other, it is recommended that you use **capture.essentia**.
+In order to use R with Essentia, you must install the RESS package from C-RAN. Open R and then run::
+
+   install.packages("RESS")
+
+
+This package contains three R functions that can be used to capture the output of Essentia commands into
+R.
+
+* **read.essentia** takes an Essentia script and captures the output csv data into R, where you can save the output to a dataframe or stream it directly into additional analysis. The output can only contain the csv formatted data that you want to read into R.
+* **essQuery** is used to directly query the database using a single statement. You can call **essQuery** multiple times to run different statements. You can save the output to a dataframe or stream it directly into additional analysis.
+* **capture.essentia**, on the other hand, takes a file containing any number of Essentia commands and captures the output of the specified statements into R dataframes. Thus if you plan to run multiple statements that may be somewhat related to each other, you may want to use **capture.essentia**.
+
+In this case study we only utilize **essQuery** and **capture.essentia**.
 
 Essentia's Environment
 ======================
@@ -96,16 +103,13 @@ R dataframes, and run the additional analysis written in the r script ``analyzea
 .. code-block:: sh
    :emphasize-lines: 5,8 
    
-    file <- "queryapache.sh"            # store queryapache.sh as file
-    rscriptfile <- "analyzeapache.R"    # store analyzeapache.R as rscriptfile
     library("RESS")                     # load Essentia's R Integration package
     
     # call capture.essentia to execute the essentia statements written in queryapache.sh and save them to R dataframes command1 through command4
-    capture.essentia(file)                      
+    capture.essentia("queryapache.sh")                      
     
     # run the R commands written in analyzeapache.R to analyze the data in the dataframes we just created. Turn echo to TRUE to make the output less results-oriented and easier to debug.
-    source(rscriptfile, echo=FALSE)     
-    remove(file, rscriptfile)
+    source("analyzeapache.R", echo=FALSE)     
 
 essQuery
 ========
@@ -116,7 +120,6 @@ You can simply call **essQuery** on each statement we want to run. Thus the comm
 .. code-block:: sh
    :emphasize-lines: 4,7,12   
     
-    rscriptfile <- "analyzeapache.R"    # store analyzeapache.R as rscriptfile
     library(RESS)                       # load Essentia's R Integration package
     
     # This first query exports the data from a vector in the database that contains the counts over each month so that it can be read into R. We save the result in R as a dataframe called command1. However, you can use this output however you want for your own analysis, including piping the output directly into that analysis so that it never has to be saved.
@@ -128,8 +131,7 @@ You can simply call **essQuery** on each statement we want to run. Thus the comm
     command4 <- essQuery("ess exec", "aq_udb -exp logsapache2:vector2 -sort pagecount -dec")
     
     # run the R commands written in analyzeapache.R to analyze the data in the dataframes we just created. Turn echo to TRUE to make the output less results-oriented and easier to debug.
-    source(rscriptfile, echo=FALSE)     
-    remove(rscriptfile)
+    source("analyzeapache.R", echo=FALSE)     
     
 Results
 =======

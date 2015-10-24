@@ -2,9 +2,6 @@
 Using R with Essentia
 *********************
 
-
-.. 518f2f233489ef51a8801cb983b8b02dc2dc4879
-
 In order to use R with Essentia, you must install the RESS package from C-RAN. Open R and then run::
 
    install.packages("RESS")
