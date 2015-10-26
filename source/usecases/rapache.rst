@@ -22,7 +22,9 @@ R.
 * **essQuery** is used to directly query the database using a single statement. You can call **essQuery** multiple times to run different statements. You can save the output to a dataframe or stream it directly into additional analysis.
 * **capture.essentia**, on the other hand, takes a file containing any number of Essentia commands and captures the output of the specified statements into R dataframes. Thus if you plan to run multiple statements that may be somewhat related to each other, you may want to use **capture.essentia**.
 
-In this case study we only utilize **essQuery** and **capture.essentia**.
+.. note::
+
+    In this case study we only utilize ``essQuery`` and ``capture.essentia``.
 
 Essentia's Environment
 ======================

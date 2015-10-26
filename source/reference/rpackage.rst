@@ -24,7 +24,7 @@ You can call any of these functions in an R script or on the R interactive promp
 
 .. Note: These filenames do NOT have to be the same.
 
-This makes the R script containing your RESS function calls more readable but is not required. You can always type your R analysis directly into the script you're using to call **essQuery** or **capture.essentia**. 
+This makes the R script containing your RESS function calls more readable but is not required. You can always type your R analysis directly into the script you're using to call **read.essentia**, **essQuery**, or **capture.essentia**. 
 You can also choose to work on the R interactive prompt instead.
 
 To have R run both the essentia queries and the commands found in your R file and then exit, run ::
@@ -39,12 +39,14 @@ at the command prompt. Then run the R command::
 
     source("**your_r_script**.R", echo=FALSE)
     
-The rest of this document only describes the options and sytax of **essQuery** and **capture.essentia**. To see an example of how read.essentia is used, go through :doc:`../tutorial/rtutorial2`.
+.. note::
+
+    The rest of this document only describes the options and sytax of ``essQuery`` and ``capture.essentia``. To see an example of how read.essentia is used, go through :doc:`../tutorial/rtutorial` or :doc:`../tutorial/rtutorial2`.
 
 Apache Example
 ==============
     
-*The Apache Example assumes you are working in the casestudies/apache/ directory of the github repository. If you are not currently in this directory, please switch to it now.*
+*The Apache Example assumes you are working in the* ``casestudies/apache/`` *directory of the github repository. If you are not currently in this directory, please switch to it now.*
     
 **Running the Apache Example with essQuery**
 
@@ -67,7 +69,8 @@ R Integration Format Requirements
 
 For statements that you want to capture the output from, you must either 
 
-* call them separately with **read.essentia** or **essQuery**. Or 
+* call them separately with **read.essentia** or **essQuery** or
+ 
 * include all of these statements in the script containing your essentia query commands and call the query script with **capture.essentia**.
 
 Ess Exec Statements
@@ -189,6 +192,10 @@ on a specific line of the file, ::
 or on a series of lines in the file ::
 
     capture.essentia("**query_script_name**",c(13,14,15))
+    
+.. note::
+
+    The rest of the commands in this section demonstrate the correct syntax for commands in your ``query`` script.
     
 ``ess exec "aq_udb -cnt **database_name**:vector1'" --debug``
 

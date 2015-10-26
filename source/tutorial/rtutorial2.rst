@@ -86,8 +86,10 @@ We are now free to analyze this data using the massive variety of R functions an
 
     barplot(t(as.matrix(mydata[,2])), names.arg=mydata[,1], col=c("black"), beside=TRUE, main="# of Pages",xlab="Time",axes=TRUE,las=2,ylim=c(0,max(mydata[,2])))
     legend("topright",legend=c("Pages"),fill=c("black"),bty="n")
+    
     barplot(t(as.matrix(mydata[,3])), names.arg=mydata[,1], col=c("blue"), beside=TRUE, main="# of Hits",xlab="Time",axes=TRUE,las=2,ylim=c(0,max(mydata[,3])))
     legend("topright",legend=c("Hits"),fill=c("blue"),bty="n")
+    
     barplot(t(as.matrix(mydata[,4])), names.arg=mydata[,1], col=c("red"), beside=TRUE, main="Bandwidth",xlab="Time",axes=TRUE,las=2,ylim=c(0,max(mydata[,4])),cex.axis=.7,cex.names=.8)
     legend("topright",legend=c("Bandwidth"),fill=c("red"),bty="n")
     
@@ -124,8 +126,10 @@ We can now run::
 
     barplot(t(as.matrix(mydata[,2])), names.arg=mydata[,1], col=c("black"), beside=TRUE, main="# of Pages",xlab="Time",axes=TRUE,las=2,ylim=c(0,max(mydata[,2])))
     legend("topright",legend=c("Pages"),fill=c("black"),bty="n")
+    
     barplot(t(as.matrix(mydata[,3])), names.arg=mydata[,1], col=c("blue"), beside=TRUE, main="# of Hits",xlab="Time",axes=TRUE,las=2,ylim=c(0,max(mydata[,3])))
     legend("topright",legend=c("Hits"),fill=c("blue"),bty="n")
+    
     barplot(t(as.matrix(mydata[,4])), names.arg=mydata[,1], col=c("red"), beside=TRUE, main="Bandwidth",xlab="Time",axes=TRUE,las=2,ylim=c(0,max(mydata[,4])),cex.axis=.7,cex.names=.8)
     legend("topright",legend=c("Bandwidth"),fill=c("red"),bty="n")
     
@@ -148,8 +152,10 @@ and then simply have R run::
     
     barplot(t(as.matrix(mydata[,2])), names.arg=mydata[,1], col=c("black"), beside=TRUE, main="# of Pages",xlab="Time",axes=TRUE,las=2,ylim=c(0,max(mydata[,2])))
     legend("topright",legend=c("Pages"),fill=c("black"),bty="n")
+    
     barplot(t(as.matrix(mydata[,3])), names.arg=mydata[,1], col=c("blue"), beside=TRUE, main="# of Hits",xlab="Time",axes=TRUE,las=2,ylim=c(0,max(mydata[,3])))
     legend("topright",legend=c("Hits"),fill=c("blue"),bty="n")
+    
     barplot(t(as.matrix(mydata[,4])), names.arg=mydata[,1], col=c("red"), beside=TRUE, main="Bandwidth",xlab="Time",axes=TRUE,las=2,ylim=c(0,max(mydata[,4])),cex.axis=.7,cex.names=.8)
     legend("topright",legend=c("Bandwidth"),fill=c("red"),bty="n")
 

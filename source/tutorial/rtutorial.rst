@@ -63,9 +63,13 @@ and then simply have R run::
 
     library(RESS)           # load Essentia's R Integration package
     
-    browsedata <- read.essentia('read_browse.sh')          # call read.essentia to execute the essentia statement written in read_browse.sh and save its output into R as a dataframe called browsedata
+    browsedata <- read.essentia('read_browse.sh #-notitle')          # call read.essentia to execute the essentia statement written in read_browse.sh and save its output into R as a dataframe called browsedata
     
-    purchasedata <- read.essentia('read_purchase.sh')          # call read.essentia to execute the essentia statement written in read_puchase.sh and save its output into R as a dataframe called purchasedata
+    purchasedata <- read.essentia('read_purchase.sh #-notitle')          # call read.essentia to execute the essentia statement written in read_puchase.sh and save its output into R as a dataframe called purchasedata
+    
+.. note::
+    
+    The ``#-notitle`` is needed to tell R that there isn't a header in the data.
    
 We are now free to analyze these files using the massive variety of R functions and methods. To get a quick count of the total number of rows and columns in each dataset we ran::
 
@@ -189,5 +193,5 @@ This tutorial was meant as a simple introduction to Essentia's R Integration and
 functions inside the RESS package to send data through Essentia's preprocessor and into R.
 We analyzed simple compressed, csv files and ran incredibly basic analysis. The next tutorial, :doc:`rtutorial2`, 
 will work with more complex logs that need to be converted and analyzed before being loaded into R, where we will 
-plot the resulting data. To see more advanced analysis of much more complex datasets, 
+plot the resulting data. To see more advanced analysis of more complex datasets, 
 please read through our :doc:`../usecases/rapache` use case.
