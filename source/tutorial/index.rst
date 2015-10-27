@@ -31,4 +31,5 @@ Users are encouraged to go through the tutorials in order.
    in-memory-db
    query
    rtutorial
+   rtutorial2
 
