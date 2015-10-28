@@ -1,6 +1,6 @@
-****************************
+******************************
 R Integration - Access Log Data
-****************************
+******************************
 
 The R Package
 =============
@@ -27,7 +27,7 @@ All three functions require an Essentia Bash script to be executed that sets up 
 In this tutorial we just want to setup a simple Essentia environment, one that runs on our local computer and scans our local 
 filesystem for the apache access log data data located in the ``casestudies/apache/accesslogs`` directory. 
 If you are not already in the ``casestudies/apache/accesslogs`` directory, please switch into it now.
-We save the following commands to :download:`my_setup_script.sh <../../scripts/my_setup_script.sh>`::
+We save the following commands to my_setup_script.sh::
 
     ess udbd stop
     ess server reset
@@ -99,6 +99,7 @@ essQuery
 ========
     
 .. With the environment setup, we can now use **essQuery** to export the data from the UDB database and into an R dataframes. 
+
 We could also have used **essQuery** to export the data from the UDB database and into an R dataframe. 
 
 The **essQuery** function takes three arguments: ``essentia``, ``aq``, and ``flags``. 
