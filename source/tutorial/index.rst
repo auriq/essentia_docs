@@ -30,6 +30,5 @@ Users are encouraged to go through the tutorials in order.
    etl
    in-memory-db
    query
-   rtutorial
-   rtutorial2
+   R Integration/index
 
