@@ -877,4 +877,5 @@ See Also
 * `aq_pp <aq_pp.html>`_ - Record preprocessor
 * `udb.spec <udb.spec.html>`_ - Udb spec file.
 * `udbd <udbd.html>`_ - User (Bucket) Database server
+* :doc:`../aq_udb-option-examples` - Further examples of aq_udb options.
 
