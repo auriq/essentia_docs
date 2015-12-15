@@ -1,33 +1,14 @@
 ****************************************
-R Integration - Aq Log Data
+Aq Log Data
 ****************************************
-
-The R Package
-=============
-
-In order to use R with Essentia, you must install the RESS package from C-RAN. Open R and then run::
-
-   install.packages("RESS")
-
-
-This package contains three R functions that can be used to capture the output of Essentia commands into
-R.
-
-* **read.essentia** takes an Essentia script and captures the output csv data into R, where you can save the output to a dataframe or stream it directly into additional analysis. The output can only contain the csv formatted data that you want to read into R.
-* **essQuery** is used to directly query the database using a single statement. You can call **essQuery** multiple times to run different statements. You can save the output to a dataframe or stream it directly into additional analysis.
-* **capture.essentia**, on the other hand, takes a file containing any number of Essentia commands and captures the output of the specified statements into R dataframes. Thus if you plan to run multiple statements that may be somewhat related to each other, you may want to use **capture.essentia**.
 
 Essentia's Environment
 ======================
 
-All three functions require an Essentia Bash script to be executed that sets up the Essentia environment and optionally loads data into the UDB database. Thus they require you to run ::
-
-    sh **load_script_name**.sh
-
 In this tutorial we just want to setup a simple Essentia environment, one that runs on our local computer and scans our local 
 filesystem for the aq log data data located in the ``casestudies/aq/aqlogs`` directory. 
 If you are not already in the ``casestudies/aq/`` directory, please switch into it now.
-We save the following commands to aqlog.sh::
+We save the following commands to ``aqlog.sh``::
 
     ess udbd stop
     ess server reset
@@ -72,7 +53,7 @@ and then run ::
 
     sh aqlog.sh
         
-This executes the essentia commands in aqlog.sh to load the aq logs into the UDB database. 
+This executes the essentia commands in ``aqlog.sh`` to load the aq logs into the UDB database. 
     
 read.essentia
 =============
@@ -85,7 +66,7 @@ The output can be saved into an R dataframe ::
 
     **my_dataframe_name** <- read.essentia(file)
     
-**read.essentia** requires you to store each essentia query in a bash script. Thus we save the following statement to aqlogday.sh::
+**read.essentia** requires you to store each essentia query in a bash script. Thus we save the following statement to ``aqlogday.sh``::
     
     # This statement exports the day vector from its database. 
     ess exec "aq_udb -exp aqlogday:aqlogday"
@@ -95,17 +76,17 @@ to export the data from vector aqlogday in the aqlogday database. Similarly we s
     # This statement exports the hour vector from its database. 
     ess exec "aq_udb -exp aqloghour:aqloghour"
 
-into aqloghour.sh, ::
+into ``aqloghour.sh``, ::
 
     # This statement exports the day-of-the-week vector from its database. 
     ess exec "aq_udb -exp aqlogdayoftheweek:aqlogdayoftheweek"
 
-into aqlogdayoftheweek.sh, and ::
+into ``aqlogdayoftheweek.sh``, and ::
 
     # This statement exports the month vector from its database. 
     ess exec "aq_udb -exp aqlogmonth:aqlogmonth"
 
-into aqlogmonth.sh.
+into ``aqlogmonth.sh``.
 
 Then we simply have R run::
 
@@ -129,7 +110,7 @@ Then we simply have R run::
     aqlogdayoftheweek <- read.essentia('aqlogdayoftheweek.sh')
     # Call read.essentia to execute the essentia statement written in aqlogdayoftheweek.sh and save it's output into to an R dataframe.
 
-We are now free to analyze this data using the massive variety of R functions and methods. To get a few quick plots of this data, we can run the R commands written in analyzeaqlog.R::
+We are now free to analyze this data using the massive variety of R functions and methods. To get a few quick plots of this data, we can run the R commands written in ``analyzeaqlog.R``::
 
     source("analyzeaqlog.R", echo=FALSE)  
     # Run the R commands written in analyzeaqlog.R to analyze the data in the dataframes we just created.
@@ -140,6 +121,6 @@ This creates plots of the number of pages and hits versus month, day, day of the
 Next Steps
 ==========
 
-This tutorial was meant to continue to familiarize the user with Essentia's R Integration and demonstrated how to use the
-functions inside the RESS package to send data through Essentia's preprocessor and into R.
-To see more analysis of complex datasets, please read through our :doc:`../usecases/rapache` use case.
+This tutorial was meant to continue to familiarize the user with Essentia's R Integration and demonstrated how to use read.essentia
+to send data through Essentia's preprocessor and into R.
+To see more analysis of complex datasets, please read through our :doc:`../../usecases/rapache` use case.

@@ -1,33 +1,14 @@
 ****************************************
-R Integration - Access Log Data
+Access Log Data
 ****************************************
-
-The R Package
-=============
-
-In order to use R with Essentia, you must install the RESS package from C-RAN. Open R and then run::
-
-   install.packages("RESS")
-
-
-This package contains three R functions that can be used to capture the output of Essentia commands into
-R.
-
-* **read.essentia** takes an Essentia script and captures the output csv data into R, where you can save the output to a dataframe or stream it directly into additional analysis. The output can only contain the csv formatted data that you want to read into R.
-* **essQuery** is used to directly query the database using a single statement. You can call **essQuery** multiple times to run different statements. You can save the output to a dataframe or stream it directly into additional analysis.
-* **capture.essentia**, on the other hand, takes a file containing any number of Essentia commands and captures the output of the specified statements into R dataframes. Thus if you plan to run multiple statements that may be somewhat related to each other, you may want to use **capture.essentia**.
 
 Essentia's Environment
 ======================
 
-All three functions require an Essentia Bash script to be executed that sets up the Essentia environment and optionally loads data into the UDB database. Thus they require you to run ::
-
-    sh **load_script_name**.sh
-
 In this tutorial we just want to setup a simple Essentia environment, one that runs on our local computer and scans our local 
 filesystem for the apache access log data data located in the ``casestudies/apache/accesslogs`` directory. 
-If you are not already in the ``casestudies/apache/accesslogs`` directory, please switch into it now.
-We save the following commands to my_setup_script.sh::
+If you are not already in the ``casestudies/apache/`` directory, please switch into it now.
+We save the following commands to ``my_setup_script.sh``::
 
     ess udbd stop
     ess server reset
@@ -58,7 +39,7 @@ and then run ::
 
     sh my_setup_script.sh 2014-11-30 2014-12-07 %d "*.html[?,#]?*" "httpstatus == 200 || httpstatus == 304"
     
-This substitutes four parameters into the script my_setup_script.sh and then executes the essentia commands in my_setup_script.sh to load the access logs into the UDB database. 
+This substitutes four parameters into the script ``my_setup_script.sh`` and then executes the essentia commands in ``my_setup_script.sh`` to load the access logs into the UDB database. 
     
 read.essentia
 =============
@@ -71,7 +52,7 @@ The output can be saved into an R dataframe ::
 
     **my_dataframe_name** <- read.essentia(file)
     
-**read.essentia** requires you to store the essentia query in a bash script. Thus we save the following statement to readquery.sh::
+**read.essentia** requires you to store the essentia query in a bash script. Thus we save the following statement to ``readquery.sh``::
 
     # This statement exports the time segment vector from its database. 
     ess exec "aq_udb -exp logsapache1:vector1"
@@ -141,7 +122,7 @@ capture.essentia
 
 An alternative way to send the data to R is to use **capture.essentia**.
 
-**capture.essentia** requires you to store the essentia queries in a bash script and then store that script's filename as ``file`` in R. Thus we save the following statements to capture_essentia_query.sh::
+**capture.essentia** requires you to store the essentia queries in a bash script and then store that script's filename as ``file`` in R. Thus we save the following statements to ``capture_essentia_query.sh``::
 
     ess exec "aq_udb -exp logsapache1:vector1" #Rinclude #R#mydata#R#
 
@@ -166,5 +147,6 @@ Next Steps
 ==========
 
 This tutorial was meant to continue to familiarize the user with Essentia's R Integration and demonstrated how to use the
-functions inside the RESS package to send data through Essentia's preprocessor and into R.
-To see more analysis of complex datasets, please read through our :doc:`../usecases/rapache` use case.
+functions inside the RESS package to send data through Essentia's preprocessor and into R. The next tutorial, :doc:`rtutorial3`, 
+will work on similar log data that needs to be converted and analyzed before being loaded into R. It will focus on using **read.essentia**
+to load the data into R. To see more analysis of complex datasets, please read through our :doc:`../../usecases/rapache` use case.
