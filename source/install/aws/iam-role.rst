@@ -53,3 +53,34 @@ To create one, follow these steps:
 
    Improperly created roles pose a security risk.  The above role is very liberal in granting permissions to spin up
    new ec2 instances. Consult with your AWS experts, or contact us if there are any questions or concerns.
+   
+.. note::
+
+   If you plan to utilize our Redshift Integration, you need to enable Redshift access in this IAM Role. The following policy will do that:
+   
+::
+
+    {
+        "Version": "2012-10-17",
+        "Statement": [
+            {
+                "Effect": "Allow",
+                "Action": [
+                    "ec2:*"
+                ],
+                "Resource": [
+                    "*"
+                ]
+            },
+            {
+                "Effect": "Allow",
+                "Action": [
+                    "redshift:*"
+                ],
+                "Resource": [
+                    "*"
+                ]
+            }
+        ]
+    }
+    

@@ -20,6 +20,7 @@ In order to link Essentia and Redshift, the following is needed:
 * A running Redshift cluster.
 * A running Essentia cluster.
 * The Essentia security group needs to allow SSH (port 22) access from your Redshift cluster.
+* The Redshift security group needs to allow port 5439 access from your Essentia cluster.
 * Essentia cluster needs to be in the same zone as the Redshift cluster.
 * Essentia cluster needs to be in the same VPC as the Redshift cluster, and cannot be in EC2-Classic.
 * Redshift database username and password required.
@@ -55,6 +56,7 @@ Here is an example of a policy that allows access to EC2 Instances as well as Re
         ]
     }
 
+To learn how to create an IAM role, follow the instructions in :doc:`../install/aws/iam-role`.
 
 Moving data
 ===========
@@ -69,6 +71,13 @@ and then provide the ETL operation which is in a format very similar to the 'str
   
 Here, 'command' is typically ``aq_pp``, but it can also be any other program that accepts text data from the stdin
 and outputs the results to stdout.
+
+Querying Data
+=========================
+
+Once you have data loaded into Redshift you can query that data with Essentia using sql statements. You simply run::
+
+   $ ess redshift sql 'SQL_COMMAND'
 
 Example: Access Logs
 ====================
