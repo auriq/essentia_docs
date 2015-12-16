@@ -47,6 +47,8 @@ for details.
    source/tutorial/index
    source/usecases/index
    source/reference/index
+   source/integrations/index
+   
 
 
 
