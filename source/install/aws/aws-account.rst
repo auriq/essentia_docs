@@ -1,43 +1,38 @@
-AWS Account Creation
+AWS アカウント作成
 ====================
 
-If you don't have an AWS account, it is free to sign up.  New accounts get several services for free,
-but with some restrictions.  See `the free tier page <http://aws.amazon.com/free>`_ for more information.  Since most
-of the tutorials in this documentation are not computationally expensive, it would be safe to use the 'free tier' of
-instances that AWS provides for new users.
+AWSは無料でサインアップできるamazonのクラウドサービスです。
+新規ユーザーにはいくつかのサービスに対する無料枠が期限や機能限定で提供されています。詳しくは `AWS無料枠 <http://aws.amazon.com/jp/free>`_ をご参照ください。
+このチュートリアルでご紹介するサンプルは負荷の低いものが多いため、新規ユーザーの無料枠で十分ご利用頂けます。
+::
+  - サインアップ無料
+  - 新規ユーザーへの無料枠
+  - 新規ユーザー無料枠分でessentiaを試そう！
+::
 
-Creating an AWS account
+
+AWSアカウント作成手順の詳細はコチラ=> `AWSアカウント作成の流れ <https://aws.amazon.com/jp/register-flow/>`_ 
+
+
+Essentiaと親和性の高いAWSのサービス
 -----------------------
+EC2インスタンス
+  essentiaではAWSサービスのうち主にEC2インスタンスを使用します。マスターノードとしてもワーカーノードとしても使用されます。
+  EC2サービスの概要については `こちら <http://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/concepts.html>`_ を参照下さい。
 
-#. Go to `<http://aws.amazon.com>`_
-#. Click on "Create an AWS Account" in the upper right hand corner.
-#. Enter your email address and select "I am a new user" then "Sign in using our Secure Server".
-#. Enter your name, email address, and password and then click "Create Account".
-#. Fill Out Your Contact Information.
-#. Enter Your Credit Card Information.
-#. Enter your phone number and hit "Call Me Now" then enter the pin they provide into your phone.
-#. Select a Support Plan. The free option is called "Basic".
-#. Wait for your account to be created and then click "Launch the AWS Management Console".
-#. Enter your email address and password to login.
-#. Click on "Identity and Access Management", "Users", and then "Create New Users".
-#. Enter a username and then click "Create" in the lower right corner.
-#. Click "Show User Security Credentials" to see your credentials and then be sure to make a copy/record of them.
-   You can also download a credential file to save your keys for future use.
+S3データストレジ
+  また、同じくらい重要なサービスとして `S3データストレージ <http://docs.aws.amazon.com/ja_jp/AmazonS3/latest/gsg/GetStartedWithS3.html>`_ があげられます。豊富なクラウドストレージを用いることで、essentiaが効果的に大容量のデータを処理することが可能となります。
 
-Now What?
----------
+AWSコマンドインターフェース
+  AWSの各種サービスはウェブUIからの操作も可能ですが、`AWSコマンドインターフェース <http://aws.amazon.com/jp/cli/?nc1=h_ls>`_ を使用しコマンドラインから操作も可能になることでより柔軟なコーディングが可能になります。
 
-The main AWS resource that Essentia uses are the EC2 instances.  These virtual
-machines act as master and worker nodes in an Essentia cluster, and supply
-the computing and memory required for processing data.  First time users are
-strongly encouraged to read the excellent
-`documentation <http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/concepts.html>`_ provided by Amazon.
+..
+  #. `<http://aws.amazon.com>`_ に行く。
+  #. サイト上部の"AWSアカウントを作成"を押す。
+  #. eメールアドレスまたは携帯電話番号を入力し、"私は新規ユーザーです。"を選択し、"サインイン(セキュリティシステムを使う)"ボタンを押す。
+  #. お名前・eメールアドレス・パスワードを入力し"アカウントの作成"を押す。
+  #. 連絡先情報を入力する。
+  #. クレジットカード情報を入力する。
+  #. 電話番号を入力し
+..
 
-Just as vital is the
-`S3 data storage <http://docs.aws.amazon.com/AmazonS3/latest/gsg/GetStartedWithS3.html>`_
-resource.  By providing highly redundant data storage in the cloud, Essentia
-is able to effectively process large volumes of data without being I/O bound.
-
-Although AWS related operations can be performed with the Web-based GUI the
-AWS Console provides, we encourage our users to download and use the
-`AWS Command Line Interface <http://aws.amazon.com/cli/>`_.
