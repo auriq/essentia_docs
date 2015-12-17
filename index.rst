@@ -75,7 +75,8 @@ for details.
    :hidden:
    :maxdepth: 3
    
-   source/reference/index
+   source/reference/manuals/index
+   source/reference/tables/index
 
 .. toctree::
    :maxdepth: 1
