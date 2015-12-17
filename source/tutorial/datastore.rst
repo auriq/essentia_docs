@@ -1,51 +1,82 @@
-**********************
-Selecting your Data
-**********************
+.. **********************
+.. **********************
+===== 
+データのリソースを定義する
+===== 
 
-Essentia defines a resource that contains data as a 'datastore'.  Current datastore types that are supported by Essentia
-include: 
+Essentiaではまず、使用するデータのリソースを"datastore"として定義します。
+現在Essentiaでサポートしているdatastoreタイプは下記です。
 
-* a **local** disk drive
-* an AWS **s3** store (cloud based storage)
-* and an Azure **blob** store  
+* ローカルディスクドライブ_
+* AWSのS3データストア_
+* Azureのblobストア_
 
-To register the local datastore with Essentia you would enter the command::
+AuriqではEssentiaを試用して頂くための サンプルデータ_ を公開しております。
 
-  $ ess select local
+------------
 
-.. For the version of the files on our public S3 bucket, you would enter::
+.. _ローカルディスクドライブ:
 
-For an AWS S3 bucket you would enter::
+■ ローカルにあるファイルを使う場合 
 
-  $ ess select s3://bucket_name --credentials=~/your_credential_file.csv
+  ::
 
-..  $ ess select s3://asi-public --credentials=~/mycredentials.csv
+    $ ess select local
 
-The ``credentials`` flag can be replaced with ``aws_access_key`` and ``aws_secret_access_key`` to directly enter
-credentials, though we recommend the use of credential files if possible.
 
-For an Azure Blob datastore you would enter::
 
-  $ ess select blob://private_container --account_name=associated_account --account_key=associated_key
+
+.. _AWSのS3データストア:
+
+■ AWSのS3バケットを使う場合
+
+  ::
+
+    $ ess select s3://bucket_name --credentials=~/your_credential_file.csv
+
+  もしくは ::
+
+    $ ess select s3://bucket_name --aws_access_key=XXX-YOURKEY-XXX --aws_secret_access_key=XXX-YOURSECRETKEY-XXX
+
+
+
+
+.. _Azureのblobストア:
+
+**■ AzureのBlobデータストアを使う場合** 
+
+  パブリックコンテナの場合 ::
+
+    $ ess select blob://private_container --account_name=associated_account --account_key=associated_key
   
-for a private container or ::
+  プライベートコンテナの場合 ::
 
-  $ ess select blob://public_container --account_name=associated_account
+    $ ess select blob://public_container --account_name=associated_account
   
-for a public container.
 
-Public Data
+------------
+
+
+.. _サンプルデータ :
+
+サンプルデータ
 ================
 
-The rest of the tutorials work on your local datastore and on data pulled from a public Github Repository that we provide.  
+AuriqではチュートリアルやEssentiaのテストの為にサンプルデータを公開しております。
 
-We also provide a public bucket on AWS S3 and container on Azure Blob that contain data you can play with after you finish our tutorials. 
-To select these public datastores, the commands are::
+ローカルデータ
+  `こちら <https://github.com/auriq/EssentiaPublic>`_ のgithubよりデータをpullしてご利用下さい。
 
-  $ ess select s3://asi-public --credentials=~/mycredentials.csv
+AWS S3データ
+  ::
 
-for AWS, and ::
+    $ ess select s3://asi-public --credentials=~/mycredentials.csv
 
-  $ ess select blob://asi-public --account_name=asipublic
-  
-for Azure.
+Azure Blob データ
+  ::
+    
+    $ ess select blob://asi-public --account_name=asipublic
+
+
+
+
