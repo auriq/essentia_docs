@@ -11,7 +11,7 @@ To get started, pull the tutorial repository via::
 
   $ git clone https://github.com/auriq/EssentiaPublic.git
 
-The data and scripts relevant for most of the documentation is under ``tutorials``.
+The data and scripts relevant for most of the documentation tutorials are under ``tutorials`` and those relevant for the examples and integrations are under ``case studies``.
 
 
 Description of Data

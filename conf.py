@@ -131,6 +131,10 @@ html_theme_options = {
     #    ("Examples", "examples"),
     #    ("Link", "http://example.com", True),
     #],
+    'navbar_links': [
+        ("Github", "https://github.com/auriq/EssentiaPublic", True),
+        ("Forums", "http://forum.auriq.com", True),
+    ],
 
     # Render the next and previous page links in navbar. (Default: true)
     'navbar_sidebarrel': False,

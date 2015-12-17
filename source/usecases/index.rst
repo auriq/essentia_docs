@@ -1,7 +1,7 @@
 :tocdepth: 1
 
 ************
-Case Studies
+Examples
 ************
 
 This section provides a collection of scripts where each focuses on a particular use case or feature.  They are in no
@@ -11,9 +11,10 @@ available within the git repository under the ``casestudies`` directory
 .. toctree::
    :titlesonly:
 
-   redshift
    calculate-sum-and-maximum
    obtain-first-last-and-minimum
    conversion
    apache-sample
-   rapache
+
+.. redshift
+.. rapache

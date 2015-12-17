@@ -2,17 +2,15 @@
 Installation
 ************
 
+.. Users can also evaluate the software using a virtualized image that can be run using VirtualBox on their desktop. It will not have the same performance as the cloud based version but is useful for development or demonstration purposes.
+
 Essentia can be run on the cloud, where it can scale via the addition of worker node
-virtual machines.  Users can also evaluate the software using a virtualized image that can be run
-using VirtualBox on their desktop.
-It will not have the same performance as the cloud based version but is useful for development or demonstration
-purposes.
+virtual machines.  
 
 .. toctree::
    :maxdepth: 2
 
    aws/index
    azure/index
-   desktop
 
 
