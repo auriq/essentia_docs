@@ -32,7 +32,7 @@ To get started, pull the tutorial repository via::
 
 The data and scripts relevant for most of the documentation tutorials are under ``tutorials`` and those relevant for the examples and integrations are under ``case studies``.
 
-To get started, go to :doc:`source/tutorial/index`. 
+To get started, go to :doc:`source/tutorial/essentiatutorials/index`. 
 
 ..  comment::
 
@@ -64,7 +64,8 @@ for details.
    :maxdepth: 3
 
    source/dlv/index
-   source/tutorial/index
+   source/tutorial/essentiatutorials/index
+   source/tutorial/dataprocessingtutorials/index
    source/usecases/index
    source/integrations/index
 
@@ -83,4 +84,13 @@ for details.
 
    source/install/index
 
+| 
 
+.. note::
+
+   The tutorials assume you are using the ``bash`` shell.
+
+.. note::
+
+   The Azure version does not support worker nodes.  A release in the near future will sync up all the capabilities of
+   both the Azure and Amazon versions of Essentia.
