@@ -4,9 +4,10 @@
 Syntax and Options
 *************************
 
-This section provides a collection of scripts where each focuses on a particular use case or feature.  They are in no
-particular order.  For the most part they can be executed with just a single node setup.  The data and scripts are
-available within the git repository under the ``casestudies`` directory
+This section provides a collection of examples of the Essentia and Data Processing syntaxes. 
+These examples show sample invocations of the various commands, but do not demonstrate all of the available options. 
+They are in no particular order. :doc:`aq_pp-option-examples` and :doc:`aq_udb-option-examples` 
+both rely on ``exampledata.csv`` and ``lookup.csv`` found under ``tutorials/etl-engine`` in the github repository.
 
 .. toctree::
    :titlesonly:
