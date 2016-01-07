@@ -337,4 +337,4 @@ Thus the data that is being stored is modified and **sorted within the database*
 As you can see, the data was sorted by its values in the last_name column for each unique value of the primary key column (country). 
 
 You should now have a greater understanding of the structure of the aq_udb command and its commonly-used options. To
-see how to use the higher level Essentia commands please review the `Data Classification <http://www.auriq.com/documentation/source/tutorial/data_organization.html>`_ Tutorial.
+see how to use the higher level Essentia commands please review the `Data Classification <http://www.auriq.com/documentation/source/tutorial/essentiatutorials/data_organization.html>`_ Tutorial.

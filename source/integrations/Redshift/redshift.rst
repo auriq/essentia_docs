@@ -63,7 +63,7 @@ Moving data
 
 Transferring data is very straightforward.  First register the Redshift cluster with Essentia, then optionally generate a table using Essentia, 
 and then provide the ETL operation which is in a format very similar to the 'stream' command as described in the
-:doc:`ETL tutorial <../tutorial/etl>` to load the data into the table::
+:doc:`ETL tutorial <../../tutorial/essentiatutorials/etl>` to load the data into the table::
 
   $ ess redshift register redshift_cluster_name redshift_database_name username password
   $ ess redshift gentable table_name category_name --key "column_name = distkey"

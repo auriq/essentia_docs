@@ -47,9 +47,9 @@ Datastore category setup and management
 2. Click on the **+Add** icon to open the input form.
 3. Define your Category by entering:
 
-* `Category name <http://www.auriq.com/documentation/source/reference/category-rules.html#category-name>`_ - any arbitrary name (no spaces)
-* `Pattern <http://www.auriq.com/documentation/source/reference/category-rules.html#pattern>`_ - globular matching pattern to describe what types of files to include in your category
-* `Comment <http://www.auriq.com/documentation/source/reference/category-rules.html#comment>`_ - any arbitrary comment
+* `Category name <http://www.auriq.com/documentation/source/reference/manuals/category-rules.html#category-name>`_ - any arbitrary name (no spaces)
+* `Pattern <http://www.auriq.com/documentation/source/reference/manuals/category-rules.html#pattern>`_ - globular matching pattern to describe what types of files to include in your category
+* `Comment <http://www.auriq.com/documentation/source/reference/manuals/category-rules.html#comment>`_ - any arbitrary comment
 
 4. Define Category Options (optional) to speed up data scanning (see section 2 for more detail).
 5. Click on the **Save** button to create your category. This may take a few minutes while Essentia scans your data.
@@ -61,20 +61,20 @@ Datastore category setup and management
 1. Follow steps 1-3 of creating a category.
 2. Define either or both of the following options:
 
-* `Date Format <http://www.auriq.com/documentation/source/reference/category-rules.html#date-format>`_ - matching date format pattern found in filename structure
-* `Delimiter <http://www.auriq.com/documentation/source/reference/category-rules.html#delimiter>`_ - the type of delimiter (comma, space, tab, etc) used in your data.
+* `Date Format <http://www.auriq.com/documentation/source/reference/manuals/category-rules.html#date-format>`_ - matching date format pattern found in filename structure
+* `Delimiter <http://www.auriq.com/documentation/source/reference/manuals/category-rules.html#delimiter>`_ - the type of delimiter (comma, space, tab, etc) used in your data.
 
 3. Or click on the options drop down arrow to display category options and define either of the following options:
 
-* `Archive <http://www.auriq.com/documentation/source/reference/category-rules.html#archive>`_ - matching pattern to describe filenames within a compressed file
-* `Preprocess <http://www.auriq.com/documentation/source/reference/category-rules.html#preprocess>`_ - command to modify your raw data before it is scanned by Essentia.
-.. * `Compression <http://www.auriq.com/documentation/source/reference/category-rules.html#compression>`_ - drop down to select the type of file compression
+* `Archive <http://www.auriq.com/documentation/source/reference/manuals/category-rules.html#archive>`_ - matching pattern to describe filenames within a compressed file
+* `Preprocess <http://www.auriq.com/documentation/source/reference/manuals/category-rules.html#preprocess>`_ - command to modify your raw data before it is scanned by Essentia.
+.. * `Compression <http://www.auriq.com/documentation/source/reference/manuals/category-rules.html#compression>`_ - drop down to select the type of file compression
 
 **Directly Edit Column Specification**
 
 1. Follow steps 1-5 of creating a category.
 2. Click on the **Direct Edit** checkbox to allow the current column spec to be edited.
-3. From here, you can change `column headers <http://www.auriq.com/documentation/source/reference/category-rules.html#column-headers>`_ (no spaces) and assign `data types <http://www.auriq.com/documentation/source/reference/category-rules.html#data-types>`_ in case the scan was not correct.
+3. From here, you can change `column headers <http://www.auriq.com/documentation/source/reference/manuals/category-rules.html#column-headers>`_ (no spaces) and assign `data types <http://www.auriq.com/documentation/source/reference/manuals/category-rules.html#data-types>`_ in case the scan was not correct.
 4. Click on the **Save** button to save your changes.
 
 **Exploring Your Data Repository**
@@ -101,7 +101,7 @@ Query setup and management
 
 *Note:* If you need to view available categories, click on the **Categories** drop down arrow to view a list of available categories.
 
-`Query Format <http://www.auriq.com/documentation/source/reference/direct-query-examples.html>`_ ::
+`Query Format <http://www.auriq.com/documentation/source/dlv/direct-query-examples.html>`_ ::
 
     select [column_name] | [*] from [category_name]:[start_date | *]:[end_date | *] where ... order by ... limit ...
 
@@ -109,7 +109,7 @@ Query setup and management
 
     select [column_name], count(*) from from [category_name]:[start_date | *]:[end_date | *]  where ... group by [column_name]
     
-`Rules <http://www.auriq.com/documentation/source/reference/direct-query-examples.html>`_ ::
+`Rules <http://www.auriq.com/documentation/source/dlv/direct-query-examples.html>`_ ::
 
     The first query format above is a "select" query.
     The second and third query formats above are "count" queries.
@@ -119,7 +119,7 @@ Query setup and management
     3. Limit is NOT supported for COUNT queries.
     4. Group By can only be used when there is no DISTINCT in COUNT queries.
     
-`Example <http://www.auriq.com/documentation/source/reference/direct-query-examples.html>`_ ::
+`Example <http://www.auriq.com/documentation/source/dlv/direct-query-examples.html>`_ ::
 
     select * from myfavoritedata:*:* where payment >= 50
     select * from purchase:2014-09-01:2014-09-15 where articleID>=46 limit 10
@@ -169,7 +169,7 @@ You can now use all the capabilities of RStudio directly from your browser.
 
 **Running Essentia via RStudio**
 
-Essentia's R Integration package is installed by default. To access it, you simply need to enter the R command **library(RESS)**. See our `R Integration Tutorial <http://www.auriq.com/documentation/source/tutorial/rtutorial.html>`_ to see how to use the RESS package to integrate R and Essentia.
+Essentia's R Integration package is installed by default. To access it, you simply need to enter the R command **library(RESS)**. See our `R Integration Tutorial <http://www.auriq.com/documentation/source/integrations/R/index.html>`_ to see how to use the RESS package to integrate R and Essentia.
 
 To run an Essentia Bash Script that already exists on your file system, you can simply run it from within RStudio by navigating to the directory that contains your script and entering **system("sh Your_Script_name.sh")**.
 

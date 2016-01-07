@@ -165,7 +165,7 @@ to a fictional charity.  In the rawest form, one can execute the following to ge
   }
 
 
-``logcnv`` breaks down each column.  Note column three which is the numerical column.  Since at first ``logcnv`` does
+``loginf`` breaks down each column.  Note column three which is the numerical column.  Since at first ``loginf`` does
 not know if there is a header line, it identifies that 1/11 entries are strings, while the other 10/11 are integers.
 If you know in advance how many lines to skip at the start of a file, can can use the `-f,
 +n` attribute to skip the first n lines.
@@ -185,4 +185,4 @@ Other Notes
 
 This utility also has the ability to store the output in a raw form that can be used to merge results from several
 files.  This is most useful when an estimate of uniqueness is needed from a column in a set of log files that span a
-length of time.  Refer to the ``loginf`` manual for the full syntax.
+length of time.  Refer to the ``../../reference/manpages/loginf`` manual for the full syntax.
