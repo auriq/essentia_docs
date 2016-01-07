@@ -185,4 +185,4 @@ Other Notes
 
 This utility also has the ability to store the output in a raw form that can be used to merge results from several
 files.  This is most useful when an estimate of uniqueness is needed from a column in a set of log files that span a
-length of time.  Refer to the ``../../reference/manpages/loginf`` manual for the full syntax.
+length of time.  Refer to the :doc:`../../reference/manpages/loginf` manual for the full syntax.
