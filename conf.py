@@ -52,7 +52,7 @@ copyright = u'2015, AuriQ Systems Inc.'
 # built documents.
 #
 # The short X.Y version.
-version = '3.1.0'
+version = '3.0.9.12'
 # The full version, including alpha/beta/rc tags.
 release = version
 
@@ -65,9 +65,9 @@ language = None
 
 # There are two options for replacing |today|: either, you set today to some
 # non-false value, then it is used:
-#today = ''
+#today = ''   ########
 # Else, today_fmt is used as the format for a strftime call.
-#today_fmt = '%B %d, %Y'
+#today_fmt = '%B %d, %Y'    #########
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
@@ -191,7 +191,7 @@ html_theme_options = {
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
-#html_title = None
+#html_title = None   ###########
 
 # A shorter title for the navigation bar.  Default is the same as html_title.
 #html_short_title = None
@@ -217,7 +217,7 @@ html_static_path = ['_static']
 
 # If not '', a 'Last updated on:' timestamp is inserted at every page bottom,
 # using the given strftime format.
-#html_last_updated_fmt = '%b %d, %Y'
+html_last_updated_fmt = '   %b %d, %Y'
 
 # If true, SmartyPants will be used to convert quotes and dashes to
 # typographically correct entities.

@@ -83,6 +83,12 @@ for details.
    :maxdepth: 1
 
    source/install/index
+   
+.. toctree::
+   :hidden:
+   :maxdepth: 3
+   
+   updateddate
 
 | 
 
