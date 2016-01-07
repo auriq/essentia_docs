@@ -22,4 +22,4 @@ This is much simpler than loading data into a database or other system and obtai
 convenience is that the query command does not support many SQL keywords.  A future update will expand the
 functionality of this interface.
 
-To see more examples of the types of queries we allow and work with some sample queries of our public data, please go through our :doc:`../dlv/direct-query-examples`
+To see more examples of the types of queries we allow and work with some sample queries of our public data, please go through our :doc:`../../dlv/direct-query-examples`

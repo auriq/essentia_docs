@@ -6,8 +6,8 @@ One common type of log file are those that are collected from Apache web servers
 needs some preprocessing before it can be properly used.  Here we will demonstrate the use of ``logcnv``, another
 application in the Essentia toolkit which allows us to perform ETL and analysis of Apache data in a fluid manner.
 
-The script and the data used in this brief demo can be found on the git repository under ``usecases/``.  The script
-is designed to find out the most popular 'referrers'.
+The script and the data used in this brief demo can be found on the git repository under ``casestudies/apache``.  The script
+is called ``apache.sh`` and is designed to find out the most popular 'referrers'.
 It uses ``logcnv`` to parse a line from the log and turn it into a CSV record.  This record is then fed into ``aq_pp``
 for ETL operations, and then finally fed into the UDB database. We use the UDB to sort and count the number of
 records for each referrer.

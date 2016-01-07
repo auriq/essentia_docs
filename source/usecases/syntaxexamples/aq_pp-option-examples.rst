@@ -4,7 +4,7 @@ Example aq_pp Commands
 
 **Required Files**
 
-This tutorial requires 2 small files: :download:`exampledata.csv` and :download:`lookup.csv`.
+This tutorial requires 2 small files: ``exampledata.csv`` and ``lookup.csv``, which can both be found in ``tutorials/etl-engine`` in the git repository.
 
 
 **Overview**

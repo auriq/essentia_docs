@@ -149,4 +149,4 @@ Next Steps
 This tutorial was meant to continue to familiarize the user with Essentia's R Integration and demonstrated how to use the
 functions inside the RESS package to send data through Essentia's preprocessor and into R. The next tutorial, :doc:`rtutorial3`, 
 will work on similar log data that needs to be converted and analyzed before being loaded into R. It will focus on using **read.essentia**
-to load the data into R. To see more analysis of complex datasets, please read through our :doc:`../../usecases/rapache` use case.
+to load the data into R. To see more analysis of complex datasets, please read through our :doc:`rapache` use case.

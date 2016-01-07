@@ -255,7 +255,7 @@ command would be::
 
 ``aq_pp`` has a number of options related to pattern matching.  First and formost, it supports regular expressions
 and a format developed for another product called RT metrics.  Regex is more widespread, but the RT format has
-certain advantages for parsing log based data.  Full details can be found in the :doc:`../reference/manpages/aq_pp`
+certain advantages for parsing log based data.  Full details can be found in the :doc:`../../reference/manpages/aq_pp`
 manual.
 
 Back to the example above, we use the ``-map,rx_extended`` switch to identify the column to work with and the type of regex we want to use.  
@@ -373,7 +373,7 @@ d %cols
     datastore and categorized our files.  The ``%cols`` is a substitution string.  Instead of having to enter the
     columns each time by hand, Essentia will lookup the column spec from your datastore settings and place it here.
     There are several substitution strings that can be used, and they are listed in the section:
-    :doc:`../reference/index`
+    :doc:`../../reference/tables/index`
 
 notitle
     A switch to turn off the header line when generating output

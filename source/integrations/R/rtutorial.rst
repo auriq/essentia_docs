@@ -175,4 +175,4 @@ functions inside the RESS package to send data through Essentia's preprocessor a
 We analyzed simple compressed, csv files and ran incredibly basic analysis. The next tutorial, :doc:`rtutorial2`, 
 will work with more complex logs that need to be converted and analyzed before being loaded into R, where we will 
 plot the resulting data. To see more advanced analysis of more complex datasets, 
-please read through our :doc:`../../usecases/rapache` use case.
+please read through our :doc:`rapache` use case.

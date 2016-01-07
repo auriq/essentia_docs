@@ -7,8 +7,8 @@ matching rules.  ``logcnv`` was developed to help with this process, with the in
 directly into ``aq_pp`` for further processing.
 
 In this tutorial, we will use an Apache web log as an example, since they are among the most common type of logs we
-work with.  You will need the file 'apache.log' (:download:`click to download<data/apache.log>`),
-the first line of which is::
+work with.  You will need the file ``apache.log``, which can be found under ``tutorials/etl-engine`` in the git repository.
+Its first line is::
 
     54.248.98.72 - - [23/Nov/2014:03:07:23 -0800] "GET / HTTP/1.0" 301 - "-" "Mozilla/5.0 (compatible; monitis - premium monitoring service; http://www.monitis.com)"
 

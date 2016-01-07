@@ -16,7 +16,9 @@ algorithm which results in an answer that is accurate to within a few percent.
 Usage
 =====
 
-We will look at a simple 3 column file ( click to download :download:`donations.csv<data/donations.csv>`) that records
+.. :download:`donations.csv<data/donations.csv>`
+
+We will look at a simple 3 column file called ``donations.csv`` that can be found under ``tutorials/etl-engine`` in the git repository. It records
 the last
 name, city,
 and amount donated
