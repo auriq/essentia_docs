@@ -1419,5 +1419,5 @@ See Also
 * `udbd <udbd.html>`_ - User (Bucket) Database server
 * `udb.spec <udb.spec.html>`_ - Udb spec file.
 * `aq_udb <aq_udb.html>`_ - Interface to Udb server
-* :doc:`../aq_pp-option-examples` - Further examples of aq_pp options.
+* :doc:`../../usecases/syntaxexamples/aq_pp-option-examples` - Further examples of aq_pp options.
 

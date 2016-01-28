@@ -31,9 +31,9 @@ How to Launch Essentia in the Amazon Cloud
    * Network: Select VPC and choose one of your available VPCs.
    * Subnet: Select a subnet to launch in.
 
-   | There is no strict requirement on what VPC to launch Essentia in, with one exception:
-   Users wanting to use the **REDSHIFT** integrator should launch Essentia into the **same VPC**
-   as their Redshift cluster.
+     There is no strict requirement on what VPC to launch Essentia in, 
+     with one exception: users wanting to use the **Redshift** integrator 
+     should launch Essentia into the **same VPC** as their Redshift cluster.
 
    * Auto-assign Public IP: **ENABLE**
    * IAM Role: **None** is OK, though it would be ideal to attach an IAM role that authorizes the
@@ -53,7 +53,8 @@ How to Launch Essentia in the Amazon Cloud
    to generate a new access key pair, or use an existing one.  The file created in this process is
    critical because it is the only way to gain access via SSH to your worker node.
 
-
+Once the instance is launched, you can connect to the web based UI by entering the IP address into your web browser. The default account username is "essentia" and password is your 'Instance ID'. 
+Instructions for getting started with the viewer are found in :doc:`../../dlv/dlv`.
 
 AWS additional notes
 ====================

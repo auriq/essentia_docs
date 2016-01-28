@@ -57,7 +57,7 @@ The Essentia Platform
 Essentia is made to be run on the cloud, where we can spin up as many worker nodes as needed to scale to difficult problems.  
 Currently Amazon and Microsoft clouds are supported.  
 Essentia can also be used for an on premise cluster; `contact us <mailto:essentia@auriq.com>`_
-for details.
+for details. We do offer a single node version that can be run from a desktop; however, the power of Essentia lies in the cloud.
 
 .. toctree::
    :hidden:
