@@ -37,6 +37,8 @@ You can then go through our :doc:`../../tutorial/essentiatutorials/index`, :doc:
 
    This software is subject to the End-User License Agreement located in :doc:`license`.
 
+This local installation is using Essentia version 3.1.0.1. See :doc:`newoptions`.
+
 Essentia requires Python 2.7.5 or greater. If you encounter the error: "ess requires Python 2.7.5 and up." during installation then you need to install a newer version of Python.
     
 To **Uninstall Essentia**: 
@@ -48,6 +50,14 @@ To **Uninstall Essentia**:
 #. Type ``y`` to uninstall Essentia.
 
 #. Type ``y`` to confirm that you want to uninstall Essentia.
+
+Additional Notes
+================
+
+.. toctree::
+
+   license
+   newoptions
 
 .. install locations
 .. uninstall

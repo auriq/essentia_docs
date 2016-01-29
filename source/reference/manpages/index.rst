@@ -17,14 +17,15 @@ Data processing commands:
 
 * `aq_pp <aq_pp.html>`_ - Record preprocessor
 
-  * `rt.so <aq_pp-emod-rt.html>`_ - aq_pp RT module
+  * `rt.so <aq_pp-emod-rt.html>`_ - aq_pp RT module.
 
 * `aq_udb <aq_udb.html>`_ - Udb server interface
 * `aq_cnt <aq_cnt.html>`_ - Data row/key count
 * `aq_ord <aq_ord.html>`_ - In-memory record sort
 * `aq_sess <aq_sess.html>`_ - Session count
 * `logcnv <logcnv.html>`_ - CLF log converter
-* `jsncnv <jsncnv.html>`_ - JSON log converter
+* `jsncnv <jsncnv.html>`_ - JSON log converter. 
+* `objcnv <objcnv.html>`_ - Object converter. 
 
 User bucket database server:
 
@@ -37,8 +38,9 @@ Helpers:
 
 * `loginf <loginf.html>`_ - Log analyzer
 * `prtrng <prtrng.html>`_ - File/stream data range dump
-* `smon <smon.html>`_ - System monitor
-* `tmon <tmon.html>`_ - Task monitor
+
+.. * `smon <smon.html>`_ - System monitor
+.. * `tmon <tmon.html>`_ - Task monitor
 
 .. toctree::
    :maxdepth: 1
@@ -52,13 +54,15 @@ Helpers:
    aq_sess
    logcnv
    jsncnv
+   objcnv
    udbd
    udb.spec
    udb-size
    loginf
    prtrng
-   smon
-   tmon
+
+..   smon
+..   tmon
 
 
 .. Indices and tables
