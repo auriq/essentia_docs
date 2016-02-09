@@ -2,7 +2,9 @@
 Local Install
 ************
 
-The local version of Essentia will run on Linux systems such as Centos 6. Installing the local version of Essentia on these systems is simple. 
+The local version of Essentia will run on Linux systems. It's tested on 6 Linux 
+based operating systems including Amazon Linux 2015.09.1, CentOS 7.1, Debian "Jessie",Ubuntu 15.04, 
+Red Hat Enterprise Linux 7.2, and Fedora 23. Installing the local version of Essentia on these systems is simple. 
 
 How to Install Essentia on your Local Machine
 =============================================
@@ -11,13 +13,13 @@ How to Install Essentia on your Local Machine
 
 #. Run::
 
-    unzip essentia-linux-x64-310_1.zip
+    unzip essentia-linux-x64-310_3.zip
     
 #. Read the README and LICENSE.txt files.
 
 #. Run:: 
 
-    sudo ./essentia-linux-x64-310_1.sh
+    sudo ./essentia-linux-x64-310_3.sh
 
 #. Type ``y`` to install Essentia.
 
@@ -37,15 +39,28 @@ You can then go through our :doc:`../../tutorial/essentiatutorials/index`, :doc:
 
    This software is subject to the End-User License Agreement located in :doc:`license`.
 
-This local installation is using Essentia version 3.1.0.1. See :doc:`newoptions`.
+This local installation is using Essentia version 3.1.0.3. See :doc:`newoptions`.
 
-Essentia requires Python 2.7.5 or greater. If you encounter the error: "ess requires Python 2.7.5 and up." during installation then you need to install a newer version of Python.
+.. Essentia requires Python 2.7.5 or greater. If you encounter the error: "ess requires Python 2.7.5 and up." during installation then you need to install a newer version of Python.
+
+This software requires python2.7.5 or higher, pip2.7 and wget.
+
+If your system does not have python2.7.5 or higher, please read the python download page:
+
+https://www.python.org/downloads/
+
+If your system does not have pip, please read the following instruction:
+
+https://pip.pypa.io/en/stable/installing/
+
+Alternatively, the installation script provides an option to automatically install pip and wget 
+for the above listed operating systems.
     
 To **Uninstall Essentia**: 
 
 #. Run::
 
-    sudo ./essentia-linux-x64-310_1.sh
+    sudo ./essentia-linux-x64-310_3.sh
 
 #. Type ``y`` to uninstall Essentia.
 
@@ -58,6 +73,7 @@ Additional Notes
 
    license
    newoptions
+   udbsql
 
 .. install locations
 .. uninstall

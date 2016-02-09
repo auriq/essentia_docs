@@ -6,7 +6,7 @@ rt.so
 Description
 ===========
 
-*Deprecated in Essentia version 3.1.0.1. Eliminated emod modules and incorporated available functions by default*.
+*Deprecated in Essentia version 3.1.0.3. Eliminated emod modules and incorporated available functions by default*.
 
 ``rt.so`` is a module for `aq_pp <aq_pp.html>`_'s ``-emod`` option.
 It provides callable RT functions for `aq_pp <aq_pp.html>`_'s evaluation options.

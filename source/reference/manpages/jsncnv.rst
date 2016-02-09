@@ -23,7 +23,7 @@ Synopsis
 Description
 ===========
 
-*Deprecated in Essentia version 3.1.0.1. Use* :doc:`objcnv` *instead*.
+*Deprecated in Essentia version 3.1.0.3. Use* :doc:`objcnv` *instead*.
 
 ``jsncnv`` is a stream-based log format converter.
 It processes input log files with a given JSON field spec and

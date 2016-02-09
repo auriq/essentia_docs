@@ -7,7 +7,7 @@ Copyright 2016 AuriQ Systems Inc.
 End-User License Agreement for Essentia
 
 This End-User License Agreement (EULA) is a legal agreement between you
-(either an individual or a single entity) and the mentioned author (AuriQ
+(either an individual or a single entity) and the mentioned Author (AuriQ
 Systems Inc.) of this Software for the software product identified above,
 which includes computer software and may include associated media, printed
 materials, and "online" or electronic documentation ("SOFTWARE PRODUCT").
@@ -62,7 +62,7 @@ purpose, or noninfringement. The entire risk arising out of use or performance
 of the SOFTWARE PRODUCT remains with you.
 
 NO LIABILITY FOR DAMAGES.
-In no event shall the author of this Software be liable for any special,
+In no event shall the Author of this Software be liable for any special,
 consequential, incidental or indirect damages whatsoever (including, without
 limitation, damages for loss of business profits, business interruption, loss of
 business information, or any other pecuniary loss) arising out of the use of or

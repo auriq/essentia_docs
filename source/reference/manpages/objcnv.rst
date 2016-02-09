@@ -26,7 +26,7 @@ Synopsis
 Description
 ===========
 
-*Takes the place of* :doc:`jsncnv` *in Essentia version 3.1.0.1*.
+*Takes the place of* :doc:`jsncnv` *in Essentia version 3.1.0.3*.
 
 ``objcnv`` is a stream-based data object field extractor.
 It processes input log files with a given object structure and

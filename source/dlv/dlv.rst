@@ -107,7 +107,7 @@ Query setup and management
 
     select count(distinct [column_name] | [*]) from [category_name]:[start_date | *]:[end_date | *]  where ...
 
-    select [column_name], count(*) from from [category_name]:[start_date | *]:[end_date | *]  where ... group by [column_name]
+    select [column_name], count(*) from [category_name]:[start_date | *]:[end_date | *]  where ... group by [column_name]
     
 `Rules <http://www.auriq.com/documentation/source/dlv/direct-query-examples.html>`_ ::
 

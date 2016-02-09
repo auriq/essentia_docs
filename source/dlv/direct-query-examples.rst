@@ -13,7 +13,7 @@ Direct Data Query Examples
 Direct Data Query is Essentia's unique method of quering the data in your datastore directly, without loading anything into memory. 
 It allows you to quickly and efficiently explore data in a multitude of formats and is written in a user friendly, SQL-like language.
 
-The Direct Data Query command structure consists of a select statement to defined which columns are desired and what operations you want to perform on them, 
+The Direct Data Query command structure consists of a select statement to define which columns are desired and what operations you want to perform on them, 
 a from statement telling Direct Data Query which category in your repository to pull the data from and over what time period, and a series of filtering and ordering options to modify how the data is output.
 
 This tutorial will provide sample usage of the currently supported options for Direct Data Query. These options are:

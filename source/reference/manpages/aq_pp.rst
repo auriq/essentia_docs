@@ -267,7 +267,7 @@ Options
 .. _`-emod`:
 
 ``-emod ModSpec``
-  *Deprecated in Essentia version 3.1.0.1. Eliminated emod modules and incorporated available functions by default*.
+  *Deprecated in Essentia version 3.1.0.3. Eliminated emod modules and incorporated available functions by default*.
   
   Load a module that supplies custom evaluation functions.
   The supplied functions will be available for use in subsequent `-eval`_
