@@ -4,7 +4,7 @@ New Options for Local Essentia Version 3.1.0.3
 
 Essentia Version 3.1.0.3 contains some options that aren't mentioned anywhere else in the documentation. The two new options and the commands they affect are described below. 
 
-There is also an additional command called ``udbsql`` which is described in :doc:`./udbsql`.
+There is also an additional command called ``udbsql`` which is described in :doc:`udbsql`.
 
 Date Regex
 ---------------
