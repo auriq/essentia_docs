@@ -146,18 +146,47 @@ You can generate a new HTTP link for your query by clicking **HTTP** and then cl
 
 You can search your saved queries by entering any parts of your desired queries into the **Search** box. 
 
+Script setup and management
+-----------------------------
+
+.. `Video Demo <https://youtu.be/jILkSbnPHeg>`_
+
+**Run a Script**
+
+1. Click on **Direct Script** in the top menu.
+2. Select a Github Repository from the drop down menu or use the Default (DirectScipt - auriq).
+3. Enter your Essentia or unix shell commands in the **Input your script here** area. You can optionally select one of the files from your Github Repository to edit or run. To do this, click the file icon to the left of the filename. 
+4. Click on the **Run** button to view your script's results on your screen.
+
+*Note:* You can also **Stop** running your script or, when it has finished, **Download** the result onto your local machine.
+
+**Connect to a Github Repository**
+
+1. Click on **Direct Script** in the top menu.
+2. Click the **Add** button.
+3. Enter the **Owner** of your Github Repository, the name of your **Repository**, and your Personal Access **Token**. If you do not have a Personal Access Token, follow the instructions found `here <https://help.github.com/articles/creating-an-access-token-for-command-line-use/>`_.
+4. Click on the **Save** button to finish adding your Github Repository.
+5. From this point you can view, run, or edit any of the scripts stored in the Github Repository. To commit any changes back to you Github Repository, the Personal Access Token you used to connect to the repository must have had write permissions. If this is the case, you can click **Commit** to push your changes back onto the Github Repository.
+
+*Note:* To view or switch between available Github Repositories or Branches, click on the **Repository** or **Branch** drop down menus.
+
 Using RStudio
 -------------
 
+.. note::
+
+    R and RStudio-Server are NOT part of our Essentia Platform. They are third party software that we enable users to install and integrate with AT THEIR OWN DISCRETION. This Decision is up to the User and is not required to use any of AuriQ Systems Inc.'s solutions.
+
 **Setting up RStudio**
+
+.. sudo bash install-rstudio.sh
 
 If you plan to use our RStudio Integration and you haven't enabled it yet, you need to:
 
 1. Go to the AWS Console.
-2. Right Click on your Instance, click **Instance State**, and **Stop** your instance.
-3. Right Click on your Instance, click **Instance Settings**, and click **View/Change User Data**
-4. Enter **"rstudio"**.
-5. Right Click on your Instance, click **Instance State**, and **Start** your instance.
+2. Right Click on your Instance and then click **Connect**.
+3. Follow the Intructions on the page that appears to connect to your instance via the command line as the **ec2-user** (replace ``root@`` with ``ec2-user@``).
+4. Once you are logged onto your instance in the ec2-user directory, run ``sudo bash /opt/essentia/install-rstudio.sh`` to install R and RStudio-Server on your instance.
 
 **Accessing RStudio**
 
@@ -169,9 +198,10 @@ You can now use all the capabilities of RStudio directly from your browser.
 
 **Running Essentia via RStudio**
 
-Essentia's R Integration package is installed by default. To access it, you simply need to enter the R command **library(RESS)**. See our `R Integration Tutorial <http://www.auriq.com/documentation/source/integrations/R/index.html>`_ to see how to use the RESS package to integrate R and Essentia.
+First, Essentia's R Integration package must be installed by running ``install.packages("RESS")`` in R. Then, to access it, you simply need to enter the R command ``library(RESS)``. 
+See our `R Integration Tutorial <http://www.auriq.com/documentation/source/integrations/R/index.html>`_ to see how to use the RESS package to integrate R and Essentia.
 
-To run an Essentia Bash Script that already exists on your file system, you can simply run it from within RStudio by navigating to the directory that contains your script and entering **system("sh Your_Script_name.sh")**.
+To run an Essentia Bash Script that already exists on your file system, you can simply run it from within RStudio by navigating to the directory that contains your script and entering ``system("sh Your_Script_name.sh")``.
 
 To create an Essentia Bash Script from within RStudio:
 
@@ -183,7 +213,7 @@ You are now free to enter any Essentia commands to accomplish your data preparat
 
 To Save your script, use a shortcut or click **File** → **Save**.
 
-To run your script, navigate to the directory that contains your script and then either run **system("sh Your_Script_name.sh")** or click on **Run Script** in the top right of the Script Panel.
+To run your script, navigate to the directory that contains your script and then either run ``system("sh Your_Script_name.sh")`` or click on **Run Script** in the top right of the Script Panel.
 
 Questions
 ---------
