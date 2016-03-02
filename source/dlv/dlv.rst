@@ -47,15 +47,15 @@ Datastore category setup and management
 2. Click on the **+Add** icon to open the input form.
 3. Define your Category by entering:
 
-* `Category name <http://www.auriq.com/documentation/source/reference/manuals/category-rules.html#category-name>`_ - any arbitrary name (no spaces).
-* `Pattern <http://www.auriq.com/documentation/source/reference/manuals/category-rules.html#pattern>`_ - globular matching pattern to describe what types of files to include in your category.
+* `Category name <../reference/manuals/category-rules.html#category-name>`_ - any arbitrary name (no spaces).
+* `Pattern <../reference/manuals/category-rules.html#pattern>`_ - globular matching pattern to describe what types of files to include in your category.
 
 4. Optionally define any number of the following options to speed up data scanning or make data management easier:
 
-* `Comment <http://www.auriq.com/documentation/source/reference/manuals/category-rules.html#comment>`_ - any arbitrary comment.
-* `Delimiter <http://www.auriq.com/documentation/source/reference/manuals/category-rules.html#delimiter>`_ - the type of delimiter (comma, space, tab, etc) used in your data.
-* `Exclude <http://www.auriq.com/documentation/source/reference/manuals/category-rules.html#pattern>`_ - globular matching pattern to describe what files to not include in your category. **Note:** this further restricts the files included by your ``Pattern``.
-* `Date Format <http://www.auriq.com/documentation/source/reference/manuals/category-rules.html#date-format>`_ - matching date format pattern found in filename structure. You can optionally specify a regular expression pattern to extract the date, see `Date Regex <http://www.auriq.com/documentation/source/reference/manuals/category-rules.html#date-regex>`_.
+* `Comment <../reference/manuals/category-rules.html#comment>`_ - any arbitrary comment.
+* `Delimiter <../reference/manuals/category-rules.html#delimiter>`_ - the type of delimiter (comma, space, tab, etc) used in your data.
+* `Exclude <../reference/manuals/category-rules.html#pattern>`_ - globular matching pattern to describe what files to not include in your category. **Note:** this further restricts the files included by your ``Pattern``.
+* `Date Format <../reference/manuals/category-rules.html#date-format>`_ - matching date format pattern found in filename structure. You can optionally specify a regular expression pattern to extract the date, see `Date Regex <../reference/manuals/category-rules.html#date-regex>`_.
 
 5. Click on the **Save** button to create your category. This may take a few minutes while Essentia scans your data.
 6. After scan is complete, the derived column specifications will be displayed along with metadata about your files. Also, you can now **Define Additional Category Options** (see section 2 for more detail) or choose to **Directly Edit Column Specification** (see section 3 for more detail).
@@ -66,20 +66,20 @@ Datastore category setup and management
 1. Follow steps 1-5 of creating a category.
 2. Click on the preprocess drop down to **Check** or save a command to preprocess your data:
 
-* `Preprocess <http://www.auriq.com/documentation/source/reference/manuals/category-rules.html#preprocess>`_ - command to modify your raw data before it is scanned by Essentia.
+* `Preprocess <../reference/manuals/category-rules.html#preprocess>`_ - command to modify your raw data before it is scanned by Essentia.
 
 3. Or click on the options drop down arrow to display category options and define either of the following options:
 
-* `Archive <http://www.auriq.com/documentation/source/reference/manuals/category-rules.html#archive>`_ - matching pattern to describe filenames within a compressed file.
-* `Cache file list <http://www.auriq.com/documentation/source/reference/manuals/category-rules.html#file-list-cache>`_ - store a local file list for the current category that can be used instead of accessing the repository.
+* `Archive <../reference/manuals/category-rules.html#archive>`_ - matching pattern to describe filenames within a compressed file.
+* `Cache file list <../reference/manuals/category-rules.html#file-list-cache>`_ - store a local file list for the current category that can be used instead of accessing the repository.
 
-.. * `Compression <http://www.auriq.com/documentation/source/reference/manuals/category-rules.html#compression>`_ - drop down to select the type of file compression
+.. * `Compression <../reference/manuals/category-rules.html#compression>`_ - drop down to select the type of file compression
 
 **Directly Edit Column Specification**
 
 1. Follow steps 1-5 of creating a category.
 2. Click on the **Direct Edit** checkbox to allow the current column spec to be edited.
-3. From here, you can change `column headers <http://www.auriq.com/documentation/source/reference/manuals/category-rules.html#column-headers>`_ (no spaces) and assign `data types <http://www.auriq.com/documentation/source/reference/manuals/category-rules.html#data-types>`_ in case the scan was not correct.
+3. From here, you can change `column headers <../reference/manuals/category-rules.html#column-headers>`_ (no spaces) and assign `data types <../reference/manuals/category-rules.html#data-types>`_ in case the scan was not correct.
 4. Click on the **Save** button to save your changes.
 
 **Exploring Your Data Repository**
@@ -109,7 +109,7 @@ Query setup and management
 
 *Note:* If you need to view available categories, click on the **Categories** drop down arrow to view a list of available categories.
 
-`Query Format <http://www.auriq.com/documentation/source/dlv/direct-query-examples.html>`_ ::
+`Query Format <../dlv/direct-query-examples.html>`_ ::
 
     select [column_name] | [*] from [category_name]:[start_date | *]:[end_date | *] where ... order by ... limit ...
 
@@ -117,7 +117,7 @@ Query setup and management
 
     select [column_name], count(*) from [category_name]:[start_date | *]:[end_date | *]  where ... group by [column_name]
     
-`Rules <http://www.auriq.com/documentation/source/dlv/direct-query-examples.html>`_ ::
+`Rules <../dlv/direct-query-examples.html>`_ ::
 
     The first query format above is a "select" query.
     The second and third query formats above are "count" queries.
@@ -127,7 +127,7 @@ Query setup and management
     3. Limit is NOT supported for COUNT queries.
     4. Group By can only be used when there is no DISTINCT in COUNT queries.
     
-`Example <http://www.auriq.com/documentation/source/dlv/direct-query-examples.html>`_ ::
+`Example <../dlv/direct-query-examples.html>`_ ::
 
     select * from myfavoritedata:*:* where payment >= 50
     select * from purchase:2014-09-01:2014-09-15 where articleID>=46 limit 10
@@ -207,7 +207,7 @@ You can now use all the capabilities of RStudio directly from your browser.
 **Running Essentia via RStudio**
 
 First, Essentia's R Integration package must be installed by running ``install.packages("RESS")`` in R. Then, to access it, you simply need to enter the R command ``library(RESS)``. 
-See our `R Integration Tutorial <http://www.auriq.com/documentation/source/integrations/R/index.html>`_ to see how to use the RESS package to integrate R and Essentia.
+See our `R Integration Tutorial <../integrations/R/index.html>`_ to see how to use the RESS package to integrate R and Essentia.
 
 To run an Essentia Bash Script that already exists on your file system, you can simply run it from within RStudio by navigating to the directory that contains your script and entering ``system("sh Your_Script_name.sh")``.
 
