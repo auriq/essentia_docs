@@ -15,7 +15,7 @@ Desktop version
 The desktop version assumes you are using OSX or Linux as your operating system,
 and that you have Python 2.7 installed.
 
-1. Fetch the `installer <http://auriq.net/wp-content/uploads/installer/essentia-standalone-latest.zip>`_
+1. Fetch the `installer <http://www.auriq.com/download/essentia-standalone-latest.zip>`_
    (for both Mac and Linux) .
 2. Unpack the zip file.
 3. ``cd`` into the directory it creates
@@ -95,7 +95,8 @@ To get up and running with this AMI, the instructions are similar to the free ve
 #. Create on the 'Launch Instance' button.  This will take you to a site where
    you can select what OS and software you would like to access.
 #. Select the 'Marketplace' tab, and search for 'AuriQ'
-#. The list of results should include the latest release of Essentia.  Click on it to start.
+#. The list of results should include the latest release of Essentia, Essentia (HVM).  Click on Previous versions.
+#. Click the Version drop down and select 2.1.7.
 #. Follow the setup instructions.
 
 AWS additional notes
