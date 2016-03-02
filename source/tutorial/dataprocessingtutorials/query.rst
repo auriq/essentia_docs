@@ -1,6 +1,6 @@
-*********
-SQL Query
-*********
+********************
+SQL Query: Categories
+********************
 
 For times when very basic data inspection is required, the ``query`` command can be useful.  It allows SQL like queries
 directly on your data sources.  For instance, if we are interested in the number of sales and number of unique purchases

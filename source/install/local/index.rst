@@ -43,8 +43,6 @@ You can then go through our :doc:`../../tutorial/essentiatutorials/index`, :doc:
 
    This software is subject to the End-User License Agreement located in :doc:`license`.
 
-This local installation is using Essentia version 3.1.0.3. See :doc:`newoptions`.
-
 .. Essentia requires Python 2.7.5 or greater. If you encounter the error: "ess requires Python 2.7.5 and up." during installation then you need to install a newer version of Python.
 
 This software requires python2.7.5 or higher, pip2.7 and wget.
@@ -78,8 +76,6 @@ Additional Notes
 .. toctree::
 
    license
-   newoptions
-   udbsql
 
 .. install locations
 .. uninstall
