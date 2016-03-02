@@ -1,7 +1,7 @@
 *********************
-Updated On Feb 25, 2016
+Updated On Mar 01, 2016
 *********************
 
-This documentation site was updated on Feb 25, 2016. 
+This documentation site was updated on Mar 01, 2016. 
 
 If have any questions please go to the `Forums <http://forum.auriq.com>`_ or `Contact Us <mailto:essentia@auriq.com>`_.

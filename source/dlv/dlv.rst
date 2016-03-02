@@ -47,27 +47,32 @@ Datastore category setup and management
 2. Click on the **+Add** icon to open the input form.
 3. Define your Category by entering:
 
-* `Category name <http://www.auriq.com/documentation/source/reference/manuals/category-rules.html#category-name>`_ - any arbitrary name (no spaces)
-* `Pattern <http://www.auriq.com/documentation/source/reference/manuals/category-rules.html#pattern>`_ - globular matching pattern to describe what types of files to include in your category
-* `Comment <http://www.auriq.com/documentation/source/reference/manuals/category-rules.html#comment>`_ - any arbitrary comment
+* `Category name <http://www.auriq.com/documentation/source/reference/manuals/category-rules.html#category-name>`_ - any arbitrary name (no spaces).
+* `Pattern <http://www.auriq.com/documentation/source/reference/manuals/category-rules.html#pattern>`_ - globular matching pattern to describe what types of files to include in your category.
 
-4. Define Category Options (optional) to speed up data scanning (see section 2 for more detail).
+4. Optionally define any number of the following options to speed up data scanning or make data management easier:
+
+* `Comment <http://www.auriq.com/documentation/source/reference/manuals/category-rules.html#comment>`_ - any arbitrary comment.
+* `Delimiter <http://www.auriq.com/documentation/source/reference/manuals/category-rules.html#delimiter>`_ - the type of delimiter (comma, space, tab, etc) used in your data.
+* `Exclude <http://www.auriq.com/documentation/source/reference/manuals/category-rules.html#pattern>`_ - globular matching pattern to describe what files to not include in your category. **Note:** this further restricts the files included by your ``Pattern``.
+* `Date Format <http://www.auriq.com/documentation/source/reference/manuals/category-rules.html#date-format>`_ - matching date format pattern found in filename structure. You can optionally specify a regular expression pattern to extract the date, see `Date Regex <http://www.auriq.com/documentation/source/reference/manuals/category-rules.html#date-regex>`_.
+
 5. Click on the **Save** button to create your category. This may take a few minutes while Essentia scans your data.
-6. After scan is complete, the derived column specifications will be displayed along with metadata about your files. Also, you can now choose **Direct Edit** to edit the column specification (see section 3 for more detail).
+6. After scan is complete, the derived column specifications will be displayed along with metadata about your files. Also, you can now **Define Additional Category Options** (see section 2 for more detail) or choose to **Directly Edit Column Specification** (see section 3 for more detail).
 7. Your newly added category will be displayed in the category table for the selected repository. From here you can edit, copy or delete a category, view a sample of the data or see the list of files that make up your category.
 
-**Define Category Options**
+**Define Additional Category Options**
 
-1. Follow steps 1-3 of creating a category.
-2. Define either or both of the following options:
+1. Follow steps 1-5 of creating a category.
+2. Click on the preprocess drop down to **Check** or save a command to preprocess your data:
 
-* `Date Format <http://www.auriq.com/documentation/source/reference/manuals/category-rules.html#date-format>`_ - matching date format pattern found in filename structure
-* `Delimiter <http://www.auriq.com/documentation/source/reference/manuals/category-rules.html#delimiter>`_ - the type of delimiter (comma, space, tab, etc) used in your data.
+* `Preprocess <http://www.auriq.com/documentation/source/reference/manuals/category-rules.html#preprocess>`_ - command to modify your raw data before it is scanned by Essentia.
 
 3. Or click on the options drop down arrow to display category options and define either of the following options:
 
-* `Archive <http://www.auriq.com/documentation/source/reference/manuals/category-rules.html#archive>`_ - matching pattern to describe filenames within a compressed file
-* `Preprocess <http://www.auriq.com/documentation/source/reference/manuals/category-rules.html#preprocess>`_ - command to modify your raw data before it is scanned by Essentia.
+* `Archive <http://www.auriq.com/documentation/source/reference/manuals/category-rules.html#archive>`_ - matching pattern to describe filenames within a compressed file.
+* `Cache file list <http://www.auriq.com/documentation/source/reference/manuals/category-rules.html#file-list-cache>`_ - store a local file list for the current category that can be used instead of accessing the repository.
+
 .. * `Compression <http://www.auriq.com/documentation/source/reference/manuals/category-rules.html#compression>`_ - drop down to select the type of file compression
 
 **Directly Edit Column Specification**
@@ -82,10 +87,13 @@ Datastore category setup and management
 1. Click **Explore**.
 2. Click the **+** next to a directory to navigate through the directories on your Repository.
 3. Your current path is displayed at the top, next to your repository name. This is useful when defining a pattern for the files you want to group into a category.
+4. You can click the icon next to any filename to **Download** or **Delete** that file from your Repository.
 
-You can click **Size** to calculate the total number of files and bytes in your Repository.
+You can click **Upload** to choose files to upload to the current path on your Repository.
 
-You can click **Refresh** to get the latest list of files on your Repository. 
+You can click **Size** to calculate the total number of files and bytes in the current path on your Repository.
+
+You can click **Refresh** to get the latest list of files on your Repository.
 
 Query setup and management
 -----------------------------
@@ -126,7 +134,7 @@ Query setup and management
     
 To see more examples of the types of queries we allow and work with some sample queries of our public data, please go through our :doc:`./direct-query-examples`
 
-**Transfer Data with OData**
+**Transfer Data with Tableau OData**
 
 1. Create a query following the steps above and click the **OData** button to generate an OData link to your query.
 2. Copy this Link using the **Copy** option on the right of the URL box or highlight the URL and copy it to your clipboard.

@@ -31,6 +31,7 @@ Essentia Commands
     | ``[--pcmd ProbeCommand]``
     | ``[--size Bytes]``","scans a file to determine its compression, file format, etc."
     ess category add,"| name pattern 
+    | ``[--dateregex regex_pattern|none]``
     | ``[--dateformat auto|none|custom]`` 
     | ``[--archive pattern]``
     | ``[--compression type|none]``
@@ -41,12 +42,13 @@ Essentia Commands
     | ``[--overwrite]``
     | ``[--label name]``
     | ``[--comment comment]``
-    | ``[--noprobe]``","Add a category to the datastore"
+    | ``[--noprobe]``
+    | ``[--usecache]``","Add a category to the datastore"
     ess category delete,"| ExistingCategory
     ``[--label name]``","Remove the reference to this category"
     ess category copy,"ExistingCategory NewCategory","Create a copy of an existing category reference"
-    ess category change,"| columnspec|dateformat|comment
-    | NewSpec|NewFormat|NewComment","Modify or override details about a category"
+    ess category change,"| columnspec|dateformat|dateregex|usecache|comment
+    | NewSpec|NewFormat|NewRegex|NewCache|NewComment","Modify or override details about a category"
     ess cluster create,"| ``[--type]`` 
     | ``[--number]``","Create worker nodes"
     ess cluster terminate,,"Shutdown all worker nodes"

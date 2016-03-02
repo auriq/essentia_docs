@@ -9,6 +9,10 @@ Red Hat Enterprise Linux 7.2, and Fedora 23. Installing the local version of Ess
 How to Install Essentia on your Local Machine
 =============================================
 
+.. note::
+  
+   You must have root privledges run the installer. If you do not, please see your system administrator.
+
 #. Go to the directory where the installer is located.
 
 #. Run::

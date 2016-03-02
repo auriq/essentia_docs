@@ -90,6 +90,36 @@ This is a UNIX-style globular matching pattern to describe how a date or number 
         
 *Note:* For a more detailed description of globular matching patterns, see `Glob (programming) <http://en.wikipedia.org/wiki/Glob_%28programming%29>`_
 
+*Note:* To use regular expression patterns to extract the date from your filename, see **Date Regex**.
+
+Date Regex
+---------------
+This Date-regex option (``--dateregex``) can be used to match a regular expression 
+pattern to the file paths and names in a category in order to extract the corresponding date. 
+This increases the versatility of Essentia's date extraction by allowing 
+regular expression patterns and will allow date extraction from much more 
+complex or unique file paths and names.
+
+The key options you can provide it to symbolize each date segment are:
+
+| **Date and Time:**
+| **[:%Y:]** = Four Digit Year 
+| **[:%y:]** = Two Digit Year       
+| **[:%m:]** = Two Digit Month
+| **[:%b:]** = Three Letter Month (Jan, Feb, ..., Dec)
+| **[:%B:]** = Text Month (January, ..., December)
+| **[:%d:]** = Two Digit Day         
+| **[:%H:]** = Two Digit Hour
+| **[:%M:]** = Two Digit Minute
+| **[:%S:]** = Two Digit Second
+| **[:%z:]** = TimeZone
+| **[:%p:]** = Case Insensitive AM or PM.
+
+| For filenames that dont have a date or number in them you can also set the Date Regex field to **none**.
+
+.. %Y, %m, %d, %H, %M, %S, %p, %z -> [:%b:] - Jan, Feb, ..., Dec; [:%B:] - January, ..., December; "None" 
+.. link to **regex** description and date format -> *Note:* For a more detailed description of globular matching patterns, see `Glob (programming) <http://en.wikipedia.org/wiki/Glob_%28programming%29>`_
+
 Delimiter
 ---------------
 The type of delimiter that your data uses. You can choose any single delimiter for your files. 
@@ -109,6 +139,16 @@ This is a UNIX-style globular matching pattern to describe what types of files a
     *Placement*
     
 *Note:* For a more detailed description of globular matching patterns, see `Glob (programming) <http://en.wikipedia.org/wiki/Glob_%28programming%29>`_
+
+File List Cache
+---------------
+This option (``--usecache``) stores a list of the files that are grouped into a category and references 
+this list whenever that category is used. This list is static and must be updated 
+if files in this category are changed or new files matching the file pattern are uploaded. 
+This is a very useful feature for large repositories that have categories containing 
+files spread across different directories or many undesired files in the same directory as the categorized files.
+
+To change this option for a single category you would run ``ess category change name usecache [--usecache|--nocache]``.
 
 Preprocess
 ---------------
@@ -195,6 +235,7 @@ This option allows you to apply a command to the data in your category before Es
 .. ---------------
 .. A drop down to sleect the compression of the files in your category. Currently the options are **zip**, **gzip**, **tar**, and **none**.
 .. 
+
 Column Headers
 ---------------
 These allow you to name your columns so you can reference them later. They **cannot contain spaces or special characters** and they **cannot start with a number**. These can be used in your sql statement in Direct Data Query to select and perform certain operations on specific columns in your data.
