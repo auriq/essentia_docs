@@ -22,7 +22,7 @@ This tutorial will provide sample usage of the currently supported options for D
 * **From Statement Specifications:** *category_name:start_date:end_date*
 * **Output Modification Options:** *where column_name operator value, limit number, group by column_name, order by column_name*
 
-They are subject to the rules listed `here <http://www.auriq.com/documentation/source/dlv/dlv.html#query-setup-and-management>`_.
+They are subject to the rules listed `here <../dlv/dlv.html#query-setup-and-management>`_.
 
 **Data Overview**
 
