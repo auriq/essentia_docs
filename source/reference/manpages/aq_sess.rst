@@ -2,6 +2,8 @@
 aq_sess
 =======
 
+Session count
+
 
 Synopsis
 ========
@@ -77,7 +79,7 @@ Options
 
    ::
 
-    aq_sess:TagLab rec=Count err=Count out=Count
+    aq_sess: rec=Count err=Count out=Count
 
 
 .. _`-bz`:
@@ -111,9 +113,9 @@ Options
 .. _`-d`:
 
 ``-d ColSpec [ColSpec ...]``
-  Define the columns of the input records from all `-f`_ specs.
+  Define the columns in the input records from all the `-f`_ specs.
   ``ColSpec`` has the form ``Type[,AtrLst]:ColName``.
-  Up to 256 ``ColSpec`` can be defined (excluding ``X`` type columns).
+  Up to 2048 ``ColSpec`` can be defined (excluding ``X`` type columns).
   Supported ``Types`` are:
 
   * ``S`` - String.
@@ -129,6 +131,8 @@ Options
 
   Optional ``AtrLst`` is a comma separated list containing:
 
+  * ``n=Len`` - Extract exactly ``Len`` source bytes. Use this for a fixed
+    length data column.
   * ``esc`` - Denote that the input field uses '\\' as escape character. Data
     exported from databases (e.g. MySQL) sometimes use this format. Be careful
     when dealing with multibyte character set because '\\' can be part of a
@@ -154,10 +158,10 @@ Options
 
     $ aq_sess ... -d s:Col1 s,lo:Col2 i,trm:Col3 ...
 
-  * Col1 is a string. Col2 also a string, but the input value will be converted
-    to lower case. Col3 is an unsigned integer, the ``trm`` attribute removes
-    blanks around the value before it is converted to an internal number.
-
+  * Col1 is a string. Col2 is also a string, but the input value will be
+    converted to lower case. Col3 is an unsigned integer, the ``trm``
+    attribute removes blanks around the value before it is converted to
+    an internal number.
 
 
 .. _`-t`:
@@ -261,6 +265,7 @@ Applicable exit codes are:
 * 2 - Command option spec error.
 * 3 - Initialization error.
 * 11 - Input open error.
+* 12 - Input read error.
 * 13 - Input processing error.
 * 21 - Output open error.
 * 22 - Output write error.
@@ -269,46 +274,57 @@ Applicable exit codes are:
 Input File Attributes
 =====================
 
-Each input file can have these comma separated attributes:
+Each input option can have a list of comma separated attributes:
 
-* ``eok`` - Make error non-fatal. If there is an input error, program will
-  try to skip over bad/broken records. If there is a record processing error,
-  program will just discard the record.
-* ``qui`` - Quiet; i.e., do not print any input/processing error message.
-* ``tsv`` - Input is in TSV format (default is CSV).
-* ``sep=c`` - Use separator 'c' (single byte) as column separactor.
-* ``bin`` - Input is in binary format (default is CSV).
-* ``esc`` - '\\' is an escape character in input fields (CSV or TSV).
+* ``eok`` - Make input error non-fatal. If there is an input parse error,
+  program will try to skip over bad/broken record. If there is an input data
+  processing error, program will just discard the record.
+* ``qui`` - Quiet; i.e., do not print any input error message.
+* ``csv`` - Input is in CSV format. This is the default.
+* ``sep=c`` or ``sep=\xHH`` - Input is in 'c' (single byte) separated value
+  format. '\xHH' is a way to specify 'c' via its HEX value ``HH``.
+  Note that ``sep=,`` is not the same as ``csv`` because CSV is a more
+  advanced format.
+* ``fix`` - Input columns are all fixed width. There is no field separator.
+  Individual column width is specified as a column attribute.
+* ``tab`` - Input is in HTML table format - columns must be enclosed in
+  "``<td>data</td>``" or "``<td ...>data</td>``" and rows must be terminated
+  by a "``</tr>``".
+* ``bin`` - Input is in aq_tool's internal binary format.
+* ``esc`` - '\\' is an escape character in input fields (non binary).
 * ``noq`` - No quotes around fields (CSV).
 * ``+Num[b|r|l]`` - Specifies the number of bytes (``b`` suffix), records (``r``
   suffix) or lines (no suffix or ``l`` suffix) to skip before processing.
 
-By default, input files are assumed to be in formal CSV format. Use the
-``tsv``, ``esc`` and ``noq`` attributes to set input characteristics as needed.
+If no input format attribute is given, CSV is assumed.
 
 
 Output File Attributes
 ======================
 
-Some output file can have these comma separated attributes:
+Each output option can have a list of comma separated attributes:
 
-* ``app`` - Append to file; otherwise, file is overwritten by default.
-* ``bin`` - Input in binary format (default is CSV).
-* ``esc`` - Use '\\' to escape ',', '"' and '\\' (CSV).
+* ``notitle`` - Suppress the column name label row from the output.
+  A label row is normally included by default.
+* ``app`` - When outputting to a file, append to it instead of overwriting.
+* ``csv`` - Output in CSV format. This is the default.
+* ``sep=c`` or ``sep=\xHH`` - Output in 'c' (single byte) separated value
+  format. '\xHH' is a way to specify 'c' via its HEX value ``HH``.
+  Note that ``sep=,`` is not the same as ``csv`` because CSV is a more
+  advanced format.
+* ``bin`` - Output in aq_tool's internal binary format.
+* ``esc`` - Use '\\' to escape the field separator, '"' and '\\' (non binary).
 * ``noq`` - Do not quote string fields (CSV).
 * ``fmt_g`` - Use "%g" as print format for ``F`` type columns. Only use this
   to aid data inspection (e.g., during integrity check or debugging).
-* ``notitle`` - Suppress the column name label row from the output.
-  A label row is normally included by default.
 
-By default, output is in CSV format. Use the ``esc`` and ``noq`` attributes to
-set output characteristics as needed.
+If no output format attribute is given, CSV is assumed.
 
 
 See Also
 ========
 
 * `aq_pp <aq_pp.html>`_ - Record preprocessor
-* `udbd <udbd.html>`_ - User (Bucket) Database server
-* `aq_udb <aq_udb.html>`_ - Interface to Udb server
+* `udbd <udbd.html>`_ - Udb server
+* `aq_udb <aq_udb.html>`_ - Udb server interface
 

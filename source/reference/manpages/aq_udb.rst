@@ -2,6 +2,8 @@
 aq_udb
 ======
 
+Udb server interface
+
 
 Synopsis
 ========
@@ -25,7 +27,7 @@ Synopsis
       [-eval ColName Expr]
       [-filt FilterSpec]
       [-goto DestSpec]
-      [-mod ModSpec]
+      [-mod ModSpec [ModSrc]]
       [-pp TabName
         [-bvar ColName Val]
         [-eval ColName Expr]
@@ -90,7 +92,7 @@ Options
 
    ::
 
-    aq_udb:TagLab rec=Count
+    aq_udb: rec=Count
 
 
 .. _`-db`:
@@ -278,97 +280,12 @@ Options
     can be set using the `-seed`_ option.
 
   ``$RowNum``
-    Represent the per bucket per table row index.
-    Index of the first row is 1.
+    Represent the per bucket per table row index (one-based).
     It is generally used during a table scan to identify the current row number.
 
-  Builtin functions:
+  Standard functions:
 
-  ``ToIP(Val)``
-    Returns the IP address value of ``Val``.
-    ``Val`` can be a string/IP column's name, a `string constant`_,
-    or an expression that evaluates to a string/IP.
-
-  ``ToF(Val)``
-    Returns the floating point value of ``Val``.
-    ``Val`` can be a string/numeric column's name, a string/numeric constant,
-    or an expression that evaluates to a string/number.
-
-  ``ToI(Val)``
-    Returns the integral value of ``Val``.
-    ``Val`` can be a string/numeric column's name, a string/numeric constant,
-    or an expression that evaluates to a string/number.
-
-  ``ToS(Val)``
-    Returns the string representation of ``Val``.
-    ``Val`` can be a numeric column's name, a string/numeric/IP constant,
-    or an expression that evaluates to a string/number/IP.
-
-  ``Min(Val1, Val2 [, Val3 ...])``
-    Returns the smallest among ``Val1``, ``Val2`` and so on.
-    Values can be numeric column names, numbers,
-    or expressions that evaluates to a number.
-
-  ``Max(Val1, Val2 [, Val3 ...])``
-    Returns the greatest among ``Val1``, ``Val2`` and so on.
-    Values can be numeric column names, numbers,
-    or expressions that evaluates to a number.
-
-  ``PatCmp(Val, Pattern [, AtrLst])``
-    Perform a pattern comparison between string value and a pattern.
-    Returns 1 (True) if successful or 0 (False) otherwise.
-    ``Val`` can be a string column's name, a `string constant`_,
-    or an expression that evaluates to a string.
-    ``Pattern`` is a `string constant`_ specifying
-    the pattern to match.
-    ``AtrLst`` is a comma separated string list containing:
-
-    * ``ncas`` - Do case insensitive pattern match (default is case sensitive).
-      This has the same effect as the case insensitive operators below.
-    * ``rx`` - Do Regular Expression matching.
-    * ``rx_extended`` - Do Regular Expression matching.
-      In addition, enable POSIX Extended Regular Expression syntax.
-    * ``rx_newline`` - Do Regular Expression matching.
-      In addition, apply certain newline matching restrictions.
-
-    Without any of the Regular Expression related attributes,
-    ``Pattern`` must be a simple wildcard pattern containing just '*'
-    (matches any number of bytes) and '?' (matches any 1 byte) only;
-    literal '*', '?' and '\\' in the pattern must be '\\' escaped.
-
-    If any of the Regular Expression related attributes is enabled, then
-    the pattern must be a GNU RegEx.
-
-  ``SHash(Val)``
-    Returns the numeric hash value of a string.
-    ``Val`` can be a string column's name, a `string constant`_,
-    or an expression that evaluates to a string.
-
-  ``SLeng(Val)``
-    Returns the length of a string.
-    ``Val`` can be a string column's name, a `string constant`_,
-    or an expression that evaluates to a string.
-
-  ``KDec(Key, DecSpec)``
-    Decode a key previously encoded via ``-kenc`` of `aq_pp <aq_pp.html>`_
-    and place the results in columns.
-    Returns the number of components in ``Key``. If the return value is not
-    needed, invoke function using ``-eval - KDec(...)``.
-    ``Key`` is the previously encoded value.
-    It can be a string column's name, a `string constant`_
-    or an expression that evaluates to a string.
-    ``DecSpec`` is a `string constant`_ specifying
-    how to decode ``Key``. It has the form:
-
-     ::
-
-      ColName;ColName[;ColName...]
-
-    Each ``ColName`` specifies a decode-to column.
-    Note that the decode-to column types must match those used in the
-    original ``-kenc`` spec.
-    If a decode-to value is not needed, specify ``ColType:`` (including
-    the ":") in place of ``ColName``.
+    See `aq-emod <aq-emod.html>`_ for a list of supported functions.
 
   Example:
 
@@ -482,33 +399,41 @@ Options
 
 .. _`-mod`:
 
-``-mod ModSpec``
-  Specify a module to load on the *server side* during an export/count/scan
-  operation.
-  Only one such module can be specified.
-  ``ModSpec`` has the form ``ModName[:argument]`` where ``ModName``
-  is the logical module name and ``argument`` is a module specific
-  parameter string. Udb server will try to load "umod/``ModName``.so"
-  in the directory where ``udbd`` is installed.
-  Module functions are called in each user bucket according to the
+``-mod ModSpec [ModSrc]``
+  Specify a module to be loaded on the *server side* during an
+  export/count/scan operation. A module contains one or more processing
+  functions which are called in each user bucket according to the
   `Data Processing Steps`_.
+  Only one such module can be specified.
 
-  Standard modules:
+  ``ModSpec`` has the form ``ModName`` or ``ModName("Arg1", "Arg2", ...)``
+  where ``ModName`` is the module name and ``Arg*`` are module dependent
+  arguments. Note that the arguments must be string constants;
+  for this reason, they must be quoted according to the
+  `string constant`_ spec.
 
-  ``roi``
-    Module for ROI counting. ROI spec is given in the module argument:
+  ``ModSrc`` is an optional module source file. It can be:
 
-     ::
+  * A module script source file that can be used to build the specified
+    module. See the `Udb module script compiler <mcc.umod.html>`_
+    documentation for more information.
+  * A ready-to-use module object file. It *must* have a ``.so`` extension.
 
-      VecName.Count_Col:TabName.Page_Col:Page_1[,AtrLst]:Page_2[,AtrLst]:...
+  Without ``ModSrc``, the server will look for a preinstalled module matching
+  ``ModName``. Standard modules:
+
+  ``roi("VecName.Count_Col", "TabName.Page_Col", "Page1[,AtrLst]", ...)``
+    Module for ROI counting. ROI spec is given in the module arguments.
+    There are 3 or more arguments:
 
     * ``VecName.Count_Col`` - Column to save matched count to.
       It must have type ``I``.
     * ``TabName.Page_Col`` - Column to get the match value from.
       It must have type ``S``. Rows in the table must already be in the
       desired ROI matching order (usually ascending time order).
-    * Page_N[,AtrLst] - One or more ``Pages`` to match against the
-      ``TabName.Page_Col`` value.
+    * ``PageN[,AtrLst]`` - One or more pages to match against the
+      ``TabName.Page_Col`` value. Each page is given as a separate
+      module argument.
       Optional ``AtrLst`` is a comma separated list containing:
 
       * ``ncas`` - Do case insensitive match.
@@ -725,6 +650,7 @@ Applicable exit codes are:
 * 2 - Command option spec error.
 * 3 - Initialization error.
 * 11 - Input open error.
+* 12 - Input read error.
 * 13 - Input processing error.
 * 21 - Output open error.
 * 22 - Output write error.
@@ -735,31 +661,35 @@ Applicable exit codes are:
 Output File Attributes
 ======================
 
-Some output file can have these comma separated attributes:
+Each output option can have a list of comma separated attributes:
 
-* ``app`` - Append to file; otherwise, file is overwritten by default.
-* ``bin`` - Input in binary format (default is CSV).
-* ``esc`` - Use '\\' to escape ',', '"' and '\\' (CSV).
+* ``notitle`` - Suppress the column name label row from the output.
+  A label row is normally included by default.
+* ``app`` - When outputting to a file, append to it instead of overwriting.
+* ``csv`` - Output in CSV format. This is the default.
+* ``sep=c`` or ``sep=\xHH`` - Output in 'c' (single byte) separated value
+  format. '\xHH' is a way to specify 'c' via its HEX value ``HH``.
+  Note that ``sep=,`` is not the same as ``csv`` because CSV is a more
+  advanced format.
+* ``bin`` - Output in aq_tool's internal binary format.
+* ``esc`` - Use '\\' to escape the field separator, '"' and '\\' (non binary).
 * ``noq`` - Do not quote string fields (CSV).
 * ``fmt_g`` - Use "%g" as print format for ``F`` type columns. Only use this
   to aid data inspection (e.g., during integrity check or debugging).
-* ``notitle`` - Suppress the column name label row from the output.
-  A label row is normally included by default.
 
-By default, output is in CSV format. Use the ``esc`` and ``noq`` attributes to
-set output characteristics as needed.
+If no output format attribute is given, CSV is assumed.
 
 
 String Constant
 ===============
 
 A string constant must be quoted between double or single quotes.
-With *double* quotes, special character sequences can be used to represent
+With *double quotes*, special character sequences can be used to represent
 special characters.
-With *single* quotes, no special sequence is recognized; in other words,
+With *single quotes*, no special sequence is recognized; in other words,
 a single quote cannot occur between single quotes.
 
-Character sequences recognized between *double* quotes are:
+Character sequences recognized between *double quotes* are:
 
 * ``\\`` - represents a literal backslash character.
 * ``\"`` - represents a literal double quote character.
@@ -771,13 +701,10 @@ Character sequences recognized between *double* quotes are:
 * ``\v`` - represents a literal vertical tab character.
 * ``\0`` - represents a NULL character.
 * ``\xHH`` - represents a character whose HEX value is ``HH``.
+* ``\<newline>`` - represents a line continuation sequence; both the backslash
+  and the newline will be removed.
 
-Beyond these, other special sequences may be recognized depending on where
-the string is used. For example, in a simple wildcard pattern
-(see ``PatCmp()``), ``\?`` and ``\*`` represent literal ``?`` and ``*``
-respectively.
-Sequences that are not recognized will be kept as-is. For example, in ``\a``,
-the backslash will not be removed.
+Sequences that are not recognized will be kept as-is.
 
 Two or more quoted strings can be used back to back to form a single string.
 For example,
@@ -874,8 +801,9 @@ data is processed according to the commandline options in this way:
 See Also
 ========
 
+* `aq-emod <aq-emod.html>`_ - aq_tool eval functions.
 * `aq_pp <aq_pp.html>`_ - Record preprocessor
 * `udb.spec <udb.spec.html>`_ - Udb spec file.
-* `udbd <udbd.html>`_ - User (Bucket) Database server
-* :doc:`../../usecases/syntaxexamples/aq_udb-option-examples` - Further examples of aq_udb options.
+* `udbd <udbd.html>`_ - Udb server
+* `mcc.umod <mcc.umod.html>`_ - Udb module script compiler
 

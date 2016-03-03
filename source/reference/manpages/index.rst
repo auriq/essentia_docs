@@ -3,31 +3,49 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-aq_tool manuals
-===============
+Introduction
+============
 
 *aq_tool* is a collection of data processing tools.
-Most are command line tools that operate on an input data set according
-to the command line options and produce an output data set.
-One is a specialized low level database server called the
-*user bucket database*.
-The rest are helper tools that aid processing in general.
+The tool set includes:
+
+* Command line tools that process an input data set into an output set
+  according to the command line options. All the tools, except for the sort
+  command, operate in stream mode.
+* A specialized low level database engine called the
+  *user bucket database* (Udb).
+* The rest are support files and helper tools that aid processing in general.
+
+
+Versions
+========
+
+* `1.2.3 ChangeLog <ChangeLog.html>`_ [Current]
+* `1.2.2 ChangeLog <ChangeLog-1.2.2.html>`_
+
+
+Manuals
+=======
 
 Data processing commands:
 
 * `aq_pp <aq_pp.html>`_ - Record preprocessor
 
-  * `rt.so <aq_pp-emod-rt.html>`_ - aq_pp RT module.
+  * `aq-emod <aq-emod.html>`_ - aq_tool eval functions
+  * `mcc.pmod <mcc.pmod.html>`_ - aq_pp module script compiler
 
 * `aq_udb <aq_udb.html>`_ - Udb server interface
+
+  * `aq-emod <aq-emod.html>`_ - aq_tool eval functions
+  * `mcc.umod <mcc.umod.html>`_ - Udb module script compiler
+
 * `aq_cnt <aq_cnt.html>`_ - Data row/key count
 * `aq_ord <aq_ord.html>`_ - In-memory record sort
 * `aq_sess <aq_sess.html>`_ - Session count
-* `logcnv <logcnv.html>`_ - CLF log converter
-* `jsncnv <jsncnv.html>`_ - JSON log converter. 
-* `objcnv <objcnv.html>`_ - Object converter. 
+* `aq_cat <aq_cat.html>`_ - Input multiplexer
+* `objcnv <objcnv.html>`_ - XML/JSON Field Extractor
 
-User bucket database server:
+User bucket database engine:
 
 * `udbd <udbd.html>`_ - Udb server
 
@@ -37,32 +55,32 @@ User bucket database server:
 Helpers:
 
 * `loginf <loginf.html>`_ - Log analyzer
-* `prtrng <prtrng.html>`_ - File/stream data range dump
+* `smon <smon.html>`_ - System monitor
+* `tmon <tmon.html>`_ - Task monitor
 
-.. * `smon <smon.html>`_ - System monitor
-.. * `tmon <tmon.html>`_ - Task monitor
 
 .. toctree::
    :maxdepth: 1
    :hidden:
 
+   ChangeLog
    aq_pp
-   aq_pp-emod-rt
+   mcc.pmod
    aq_udb
+   mcc.umod
    aq_cnt
    aq_ord
    aq_sess
-   logcnv
-   jsncnv
+   aq_cat
+   aq-emod
    objcnv
    udbd
    udb.spec
    udb-size
    loginf
-   prtrng
-
-..   smon
-..   tmon
+   smon
+   tmon
+   ChangeLog-1.2.2
 
 
 .. Indices and tables

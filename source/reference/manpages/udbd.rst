@@ -2,6 +2,8 @@
 udbd
 ====
 
+Udb server
+
 
 Synopsis
 ========
@@ -15,9 +17,8 @@ Synopsis
 Description
 ===========
 
-The ``udbd`` command is used to perform Udb server start, stop and
-maintenance operations.
-Each operation applys to one or more servers running on the local machine.
+``udbd`` is a Udb server start, stop and maintenance command.
+Each operation applys to one or more server instances on the local machine.
 Which instances to target depend on the `PortSpec`_ supplied at commandline
 (each local Udb server binds to a unique port).
 
@@ -162,7 +163,7 @@ Options
   are saved.
   The default work directory location is determined in this order:
 
-  1) ``udb/`` under the aq tool installation directory.
+  1) ``udb/`` under the aq_tool installation directory.
   2) ``../udb/`` from the directory where ``udbd`` is installed.
      This is usually the same as (1).
   3) The directory where ``udbd`` is installed.
@@ -244,7 +245,8 @@ Server Files
 ============
 
 The Udb server can make use of "modules" (shared objects). These modules must
-be installed under the "mod/" directory in the server work/runtime directory.
+be installed under the "umod/" directory in the server executable's
+installation directory.
 
 Each instant of Udb server is named "udbd-Port" where Port is the port
 number it is associated with. There are 3 files associated with each instant:
@@ -258,6 +260,6 @@ See Also
 ========
 
 * `aq_pp <aq_pp.html>`_ - Record preprocessor
-* `aq_udb <aq_udb.html>`_ - Interface to Udb server
-* `udb.spec <udb.spec.html>`_ - Udb spec file.
+* `aq_udb <aq_udb.html>`_ - Udb server interface
+* `udb.spec <udb.spec.html>`_ - Udb spec file
 

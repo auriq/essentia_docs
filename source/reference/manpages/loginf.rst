@@ -2,6 +2,8 @@
 loginf
 ======
 
+Log analyzer
+
 
 Synopsis
 ========
@@ -176,6 +178,7 @@ Applicable exit codes are:
 * 2 - Command option spec error.
 * 3 - Initialization error.
 * 11 - Input open error.
+* 12 - Input read error.
 * 13 - Input processing error.
 * 21 - Output open error.
 * 22 - Output write error.
@@ -184,11 +187,25 @@ Applicable exit codes are:
 Input File Attributes
 =====================
 
-Each input file can have these comma separated attributes:
+Each input option can have a list of comma separated attributes:
 
 * ``notitle`` - The first record from the input is *not* a label line.
-* ``tsv`` - Input is tab separated (default is comma separated).
-* ``sep=c`` - Use separator 'c' (single byte) as column separactor.
+* ``csv`` - Input is in CSV format. This is the default.
+* ``sep=c`` or ``sep=\xHH`` - Input is in 'c' (single byte) separated value
+  format. '\xHH' is a way to specify 'c' via its HEX value ``HH``.
+  Note that ``sep=,`` is not the same as ``csv`` because CSV is a more
+  advanced format.
+* ``auto`` - Determine input data format automatically.
+  Supported formats are:
+
+  * Delimiter-separated columns. May not work if the number of columns
+    in not fixed.
+  * Blank padded fixed-width columns. Individual columns
+    can be left or right adjusted (but not both on the same column).
+  * JSON, detection only, no further analysis.
+  * XML, detection only, no further analysis.
+  * Default to a line separated format with a single column.
+
 * ``+Num[b|l]`` - Specifies the number of bytes (``b`` suffix)
   or lines (no suffix or ``l`` suffix) to skip before processing.
 
@@ -197,6 +214,6 @@ See Also
 ========
 
 * `aq_pp <aq_pp.html>`_ - Record preprocessor
-* `udbd <udbd.html>`_ - User (Bucket) Database server
-* `aq_udb <aq_udb.html>`_ - Interface to Udb server
+* `udbd <udbd.html>`_ - Udb server
+* `aq_udb <aq_udb.html>`_ - Udb server interface
 

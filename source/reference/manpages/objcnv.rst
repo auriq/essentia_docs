@@ -2,7 +2,7 @@
 objcnv
 ======
 
-Object Field Extractor
+XML/JSON Field Extractor
 
 
 Synopsis
@@ -25,8 +25,6 @@ Synopsis
 
 Description
 ===========
-
-*Takes the place of* :doc:`jsncnv` *in Essentia version 3.1.0.3*.
 
 ``objcnv`` is a stream-based data object field extractor.
 It processes input log files with a given object structure and
@@ -149,7 +147,7 @@ Options
   Define the data columns and their corresponding *object field spec*
   of the input records from all `-f`_ specs.
   ``ColSpec`` has the form ``Type[,AtrLst]:ColName:ObjSpec``.
-  Up to 256 ``ColSpec`` can be defined.
+  Up to 2048 ``ColSpec`` can be defined.
   Supported ``Types`` are:
 
   * ``S`` - String.

@@ -2,6 +2,8 @@
 udb.spec
 ========
 
+Udb spec file
+
 
 Description
 ===========
@@ -252,6 +254,6 @@ See Also
 ========
 
 * `aq_pp <aq_pp.html>`_ - Record preprocessor
-* `udbd <udbd.html>`_ - User (Bucket) Database server
-* `aq_udb <aq_udb.html>`_ - Interface to Udb server
+* `udbd <udbd.html>`_ - Udb server
+* `aq_udb <aq_udb.html>`_ - Udb server interface
 

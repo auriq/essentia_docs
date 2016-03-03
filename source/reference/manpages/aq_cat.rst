@@ -1,8 +1,8 @@
 ======
-aq_ord
+aq_cat
 ======
 
-In-memory record sort
+Input multiplexer
 
 
 Synopsis
@@ -10,16 +10,13 @@ Synopsis
 
 ::
 
-  aq_ord [-h] Global_Opt Input_Spec Sort_Spec Output_Spec
+  aq_cat [-h] Global_Opt Input_Spec Output_Spec
 
   Global_Opt:
       [-verb] [-stat] [-bz ReadBufSiz]
 
   Input_Spec:
       [-f[,AtrLst] File [File ...]] [-d ColSpec [ColSpec ...]]
-
-  Sort_Spec:
-      -sort[,AtrLst] ColTyp:ColNum | -sort[,AtrLst] ColName [ColName ...]
 
   Output_Spec:
       [-o[,AtrLst] File] [-c ColName [ColName ...]]
@@ -28,62 +25,48 @@ Synopsis
 Description
 ===========
 
-``aq_ord`` sorts input records according to the value of the sort columns.
-Sort is done in memory, so it is fast.
-However, the entire data set must fit into a single machine's main memory.
-The program offers two sort modes. One is fast and simple but less flexible.
-The other requires more processing overhead but is more versatile.
+``aq_cat`` is a multiplexer that concatenate multiple input streams into
+a single output stream. The output can then be stored as a single unit or
+piped to another command for further processing. Records from the streams
+can be in delimiter-separated-values (e.g., CSV) format or aq_tool's internal
+binary format.
 
-.. _`Raw sort mode`:
+The tool has two modes of actions:
 
-1) Raw sort mode
+* Without column spec - This is the simplest usage. The iuputs must be
+  records of delimiter-separated-values. The output will be in the same
+  format. All inputs should be in the same format; otherwise, the output
+  will contain mixed format data. Alternative output format
+  (e.g., binary mode) is not supported. Output columns can be selected
+  by column numbers.
 
-   In this mode, raw input rows are stored in memory *as-is*.
-   Column values are not interpreted except for the sort column.
-   Advantages are:
+* With column spec - This mode is more versatile. The iuputs can be
+  in delimiter-separated-values formats, aq_tool's internal binary format
+  or a mix. The output can either be in CSV or aq_tool's internal binary
+  format. Output columns can be selected by names.
 
-   * Simple spec. Only need the sort column index and type.
-   * Fast. Only the sort column's value needs to be interpreted.
-   * Output rows and input rows are identical because rows are stored as-is.
-   * Rows can have varying number of columns as long as the sort column is
-     always at the same position.
+The input *streams* for the tool are usually output from other commands.
+Generally, the streams can be constructed using *named pipes* or ``bash``'s
+*process substition* feature. For example,
 
-   Disadvantages are:
+ ::
 
-   * Only one sort column.
-   * Input cannot be binary (from another aq_* program).
-   * Cannot discard unwanted columns from input.
-   * Cannot select or reposition columns on output.
-   * Cannot output a title row, even if the input has one.
-   * Memory intensive. The entire data set must be buffered, plus an additional
-     sort array.
+  $ mkfifo stream_1 stream_2
+  $ Command_1 > stream_1 &
+  $ Command_2 > stream_2 &
+  $ aq_cat ... -f stream_1 stream_2 | Command_3 ...
+  $ rm -f stream_1 stream_2
 
-.. _`Parsed sort mode`:
+* Directed the output from ``Command_1`` and ``Command_2`` into ``aq_cat``
+  via named pipes.
 
-2) Parsed sort mode
+ ::
 
-   In this mode, a column spec must be defined.
-   Columns are converted before they are stored in memory -
-   numeric and IP address types are stored in binary forms,
-   string type is hashed and the pointer to the hash entry is stored.
-   Advantages are:
+  bash$ aq_cat ... -f <( Command_1 ) <( Command_1 ) | Command_3 ...
 
-   * Support composite sort key.
-   * Input can be binary (from another aq_* program). In this format,
-     the input columns need not be converted, so it is more efficient.
-   * Can discard unwanted columns from input.
-   * Can select and reposition columns on output.
-   * Can control output title row.
-   * Potentially more memory efficient when string values are repetitive.
-
-   Disadvantages are:
-
-   * More complex spec. Require all column types and names.
-   * Slower due to the column conversions during input and output.
-   * Output may not resemble the input. For example, an input numeric column
-     of value "" will become "0" on output.
-   * May use more memory than the size of the input if strings are mostly
-     unique and numbers are small (e.g., integer values less than 1000).
+* This behaves like the previous example except that ``bash``'s
+  process substition has been used to run ``Command_1`` and ``Command_2``
+  and to manage their outputs.
 
 
 Options
@@ -104,7 +87,7 @@ Options
 
    ::
 
-    aq_ord: rec=Count err=Count
+    aq_cat: rec=Count err=Count out=Count
 
 
 .. _`-bz`:
@@ -125,21 +108,22 @@ Options
   If the data come from stdin, set ``File`` to '-' (a single dash).
   Optional ``AtrLst`` is described under `Input File Attributes`_.
   If this option is not given, stdin is assumed.
+  Note that the input files are generally *streams*, as described under
+  `Description`_.
 
   Example:
 
    ::
 
-    $ aq_ord ... -f,+1l,eok file1 -f file2 ...
+    $ aq_cat ... -f,+1l stream_1 -f stream_2 ...
 
-  * File1 and file2 can have different attributes.
+  * Skip the first line from stream_1, but keep the entire stream_2.
 
 
 .. _`-d`:
 
 ``-d ColSpec [ColSpec ...]``
-  Define the columns in the input records from all the `-f`_ specs.
-  Only needed in `Parsed sort mode`_.
+  Optionally define the columns in the input records from all the `-f`_ specs.
   ``ColSpec`` has the form ``Type[,AtrLst]:ColName``.
   Up to 2048 ``ColSpec`` can be defined (excluding ``X`` type columns).
   Supported ``Types`` are:
@@ -182,56 +166,12 @@ Options
 
    ::
 
-    $ aq_ord ... -d s:Col1 s,lo:Col2 i,trm:Col3 ...
+    $ aq_cat ... -d s:Col1 s,lo:Col2 i,trm:Col3 ...
 
   * Col1 is a string. Col2 is also a string, but the input value will be
     converted to lower case. Col3 is an unsigned integer, the ``trm``
     attribute removes blanks around the value before it is converted to
     an internal number.
-
-
-.. _`-sort`:
-
-``-sort[,AtrLst] ColTyp:ColNum``
-  Define the `Raw sort mode`_ sort column.
-  ``ColTyp`` specifies the sort column's data type. See `-d`_ for a list of
-  types,``X`` is not supported.
-  ``ColNum`` specifies the column number (one-based) of the sort column in
-  each row.
-  Optional ``AtrLst`` is a comma separated list containing:
-
-  * ``dec`` - Sort in descending order. Default order is ascending.
-    Descending sort is done by inverting the ascending sort result.
-
-  Example:
-
-   ::
-
-    $ aq_ord ... -sort s:2
-
-  * Sort records according to the string value of the 2nd column in ascending
-    order.
-  * This uses the `Raw sort mode`_, so no column spec is needed.
-
-
-``-sort[,AtrLst] ColName [ColName ...]``
-  Define the `Parsed sort mode`_ sort columns.
-  ``ColNames`` must already be defined under `-d`_.
-  Optional ``AtrLst`` is a comma separated list containing:
-
-  * ``dec`` - Sort in descending order. Default order is ascending.
-    Descending sort is done by inverting the ascending sort result.
-
-  Example:
-
-   ::
-
-    $ aq_ord ... -d i:Col1 s:Col2 ... -sort Col2 Col1
-
-  * Sort records according to the string value of the 2nd column and the
-    numeric value of the 1st column in ascending order.
-  * This uses `Parsed sort mode`_, so more than one sort column can be
-    specified.
 
 
 .. _`-o`:
@@ -241,17 +181,20 @@ Options
   Optional "``-o[,AtrLst] File``" sets the output attributes and file.
   If ``File`` is a '-' (a single dash), data will be written to stdout.
   Optional ``AtrLst`` is described under `Output File Attributes`_.
+  However, if no `-d`_ column spec is given, most output attributes
+  have no effect since the column data cannot be altered.
 
-  In the `Raw sort mode`_, most output attributes have no effect since
-  the records are not altered (only their order).
-  The ``-c`` option is not applicable either.
-
-  In the `Parsed sort mode`_,
-  optional "``-c ColName [ColName ...]``" selects the columns to output.
-  ``ColName`` refers to a column in the data set.
+  Optional "``-c ColName [ColName ...]``" selects the columns to output.
+  Normally, ``ColNames`` are names from the `-d`_ column spec.
+  However, if no column spec is given, the desired column numbers
+  (one-based) can specified instead;
+  column ranges are also accepted (e.g "... -c 5-3 1 2 ...").
   Without ``-c``, all columns are selected by default.
-  If ``-c`` is specified without a previous ``-o``, output to stdout is
-  assumed.
+  If ``-c`` is specified without a previous ``-o``, output will got to stdout.
+
+  Note that this tool supports outputting the same column more than once.
+  For example, both "... -c 1 1 ..." and "... -c Col1 Col1 ..." are valid.
+  Most aq_tools do not support this though.
 
   Multiple sets of "``-o ... -c ...``" can be specified.
 
@@ -259,10 +202,17 @@ Options
 
    ::
 
-    $ aq_ord ... -d s:Col1 s:Col2 s:Col3 ... -o,esc,noq - -c Col2 Col1
+    $ aq_cat ... -d s:Col1 s:Col2 s:Col3 ... -o,esc,noq - -c Col2 Col1
 
   * Output Col2 and Col1 (in that order) to stdout in a format suitable for
     Amazon Cloud.
+
+   ::
+
+    $ aq_cat ...  -o - -c 2 1
+
+  * With no `-d`_ spec, columns can only be selected by their column numbers.
+    Most output attributes are not applicable either.
 
 
 Exit Status
@@ -337,6 +287,5 @@ See Also
 ========
 
 * `aq_pp <aq_pp.html>`_ - Record preprocessor
-* `udbd <udbd.html>`_ - Udb server
 * `aq_udb <aq_udb.html>`_ - Udb server interface
 

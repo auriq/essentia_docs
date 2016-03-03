@@ -2,6 +2,8 @@
 udb-size
 ========
 
+Udb database size estimate
+
 
 Description
 ===========
@@ -210,7 +212,7 @@ Pluskey (+KEY) overhead:
 See Also
 ========
 
-* `udbd <udbd.html>`_ - User (Bucket) Database server
-* `udb.spec <udb.spec.html>`_ - Udb spec file.
+* `udbd <udbd.html>`_ - Udb server
+* `udb.spec <udb.spec.html>`_ - Udb spec file
 * `loginf <loginf.html>`_ - Log analyzer
 

@@ -2,6 +2,8 @@
 smon
 ====
 
+System monitor
+
 
 Synopsis
 ========

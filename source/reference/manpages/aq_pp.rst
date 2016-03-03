@@ -2,6 +2,8 @@
 aq_pp
 =====
 
+Record preprocessor
+
 
 Synopsis
 ========
@@ -21,7 +23,6 @@ Synopsis
       [-ddef]
       [-seed RandSeed]
       [-rownum StartNum]
-      [-emod ModSpec]
       [-var ColSpec Val]
       [-alias ColName AltName]
       [-renam ColName NewName]
@@ -36,12 +37,13 @@ Synopsis
       [-sub[,AtrLst] ColName File [File ...] [ColTag ...]]
       [-grep[,AtrLst] ColName File [File ...] [ColTag ...]]
       [-cmb[,AtrLst] File [File ...] ColSpec [ColSpec ...]]
-      [-pmod ModSpec]
+      [-pmod ModSpec [ModSrc]]
 
   Output_Spec:
       [-o[,AtrLst] File] [-c ColName [ColName ...]]
       [-udb [-spec UdbSpec | -db DbName] -imp [DbName:]TabName
-        [-seg N1[-N2]/N] [-nobnk] [-nonew] [-mod ModSpec]]
+        [-seg N1[-N2]/N] [-nobnk] [-nonew] [-mod ModSpec [ModSrc]]
+      ]
       [-ovar[,AtrLst] File [-c ColName [ColName ...]]]
 
 
@@ -124,7 +126,7 @@ Options
 
    ::
 
-    aq_pp:TagLab rec=Count err=Count out=Count
+    aq_pp: rec=Count err=Count out=Count
 
 
 .. _`-bz`:
@@ -158,9 +160,9 @@ Options
 .. _`-d`:
 
 ``-d ColSpec [ColSpec ...]``
-  Define the columns of the input records from all `-f`_ specs.
+  Define the columns in the input records from all the `-f`_ specs.
   ``ColSpec`` has the form ``Type[,AtrLst]:ColName``.
-  Up to 256 ``ColSpec`` can be defined (excluding ``X`` type columns).
+  Up to 2048 ``ColSpec`` can be defined (excluding ``X`` type columns).
   Supported ``Types`` are:
 
   * ``S`` - String.
@@ -176,6 +178,8 @@ Options
 
   Optional ``AtrLst`` is a comma separated list containing:
 
+  * ``n=Len`` - Extract exactly ``Len`` source bytes. Use this for a fixed
+    length data column.
   * ``esc`` - Denote that the input field uses '\\' as escape character. Data
     exported from databases (e.g. MySQL) sometimes use this format. Be careful
     when dealing with multibyte character set because '\\' can be part of a
@@ -204,9 +208,10 @@ Options
 
     $ aq_pp ... -d s:Col1 s,lo:Col2 i,trm:Col3 ...
 
-  * Col1 is a string. Col2 also a string, but the input value will be converted
-    to lower case. Col3 is an unsigned integer, the ``trm`` attribute removes
-    blanks around the value before it is converted to an internal number.
+  * Col1 is a string. Col2 is also a string, but the input value will be
+    converted to lower case. Col3 is an unsigned integer, the ``trm``
+    attribute removes blanks around the value before it is converted to
+    an internal number.
 
 
 .. _`-cat`:
@@ -262,28 +267,6 @@ Options
   Set the starting value for the ``$RowNum`` evaluation builtin variable.
   ``StartNum`` is the index of the first row.
   Default starting row index is 1.
-
-
-.. _`-emod`:
-
-``-emod ModSpec``
-  *Deprecated in Essentia version 3.1.0.3. Eliminated emod modules and incorporated available functions by default*.
-  
-  Load a module that supplies custom evaluation functions.
-  The supplied functions will be available for use in subsequent `-eval`_
-  specs.
-
-  ``ModSpec`` has the form ``ModName[:argument]`` where ``ModName``
-  is the logical module name and ``argument`` is an optional module specific
-  parameter string.
-  ``aq_pp`` will look for "emod/``ModName``.so" in the directory where it is
-  installed. For example, if it is installed as ``SomeDirectory/aq_pp``,
-  ``SomeDirectory/emod/ModName.so`` will be loaded.
-  Multiple eval modules can be specified.
-  In case a function of the same name is supplied by multiple
-  modules, the one from the most recently loaded module will be used.
-  Each emod is individually documented. See the "aq_pp-emod-\*" manual pages
-  for details.
 
 
 .. _`-var`:
@@ -383,148 +366,9 @@ Options
     First row is 1 by default.
     Its initial value can be set using the `-rownum`_ option.
 
-  Builtin functions:
+  Standard functions:
 
-  ``ToIP(Val)``
-    Returns the IP address value of ``Val``.
-    ``Val`` can be a string/IP column's name, a `string constant`_,
-    or an expression that evaluates to a string/IP.
-
-  ``ToF(Val)``
-    Returns the floating point value of ``Val``.
-    ``Val`` can be a string/numeric column's name, a string/numeric constant,
-    or an expression that evaluates to a string/number.
-
-  ``ToI(Val)``
-    Returns the integral value of ``Val``.
-    ``Val`` can be a string/numeric column's name, a string/numeric constant,
-    or an expression that evaluates to a string/number.
-
-  ``ToS(Val)``
-    Returns the string representation of ``Val``.
-    ``Val`` can be a numeric column's name, a string/numeric/IP constant,
-    or an expression that evaluates to a string/number/IP.
-
-  ``Min(Val1, Val2 [, Val3 ...])``
-    Returns the smallest among ``Val1``, ``Val2`` and so on.
-    Values can be numeric column names, numbers,
-    or expressions that evaluates to a number.
-
-  ``Max(Val1, Val2 [, Val3 ...])``
-    Returns the greatest among ``Val1``, ``Val2`` and so on.
-    Values can be numeric column names, numbers,
-    or expressions that evaluates to a number.
-
-  ``PatCmp(Val, Pattern [, AtrLst])``
-    Perform a pattern comparison between string value and a pattern.
-    Returns 1 (True) if successful or 0 (False) otherwise.
-    ``Val`` can be a string column's name, a `string constant`_,
-    or an expression that evaluates to a string.
-    ``Pattern`` is a `string constant`_ specifying
-    the pattern to match.
-    ``AtrLst`` is a comma separated string list containing:
-
-    * ``ncas`` - Do case insensitive pattern match (default is case sensitive).
-      This has the same effect as the case insensitive operators below.
-    * ``rx`` - Do Regular Expression matching.
-    * ``rx_extended`` - Do Regular Expression matching.
-      In addition, enable POSIX Extended Regular Expression syntax.
-    * ``rx_newline`` - Do Regular Expression matching.
-      In addition, apply certain newline matching restrictions.
-
-    Without any of the Regular Expression related attributes,
-    ``Pattern`` must be a simple wildcard pattern containing just '*'
-    (matches any number of bytes) and '?' (matches any 1 byte) only;
-    literal '*', '?' and '\\' in the pattern must be '\\' escaped.
-
-    If any of the Regular Expression related attributes is enabled, then
-    the pattern must be a GNU RegEx.
-
-  ``SHash(Val)``
-    Returns the numeric hash value of a string.
-    ``Val`` can be a string column's name, a `string constant`_,
-    or an expression that evaluates to a string.
-
-  ``SLeng(Val)``
-    Returns the length of a string.
-    ``Val`` can be a string column's name, a `string constant`_,
-    or an expression that evaluates to a string.
-
-  ``DateToTime(DateVal, DateFmt)``
-    Returns the UNIX time in integral seconds corresponding to ``DateVal``.
-    ``DateVal`` can be a string column's name, a `string constant`_,
-    or an expression that evaluates to a string.
-    ``DateFmt`` is a `string constant`_ specifying
-    the format of ``DateVal``.
-    The format is a sequence of single-letter conversion codes:
-
-    * (a dot) ``.`` - represent a single unwanted character (e.g., a separator).
-    * ``Y`` - 1-4 digit year.
-    * ``y`` - 1-2 digit year.
-    * ``m`` - month in 1-12.
-    * ``b`` - abbreviated English month name ("JAN" ... "DEC", case
-      insensitive).
-    * ``d`` - day of month in 1-31.
-    * ``H`` - hour in 0-23 or 1-12.
-    * ``M`` - minute in 0-59.
-    * ``S`` - second in 0-59.
-    * ``p`` - AM/PM (case insensitive).
-    * ``z`` - timezone as HHMM offset from GMT.
-
-    This conversion is timezone dependent. If there is no timezone information
-    (``z`` conversion) in the ``DateVal``, set the timezone appropriately
-    (TZ environment) when running the program.
-
-  ``TimeToDate(TimeVal, DateFmt)``
-    Returns the date string corresponding to ``TimeVal``.
-    The string's maximum length is 127.
-    ``TimeVal`` can be a numeric column's name, a numeric constant,
-    or an expression that evaluates to a number.
-    ``DateFmt`` is a `string constant`_ specifying
-    the format of the output. See the ``strftime()`` C function manual
-    page regarding the format of ``DateFmt``.
-
-    This conversion is timezone dependent. Set the timezone appropriately
-    (TZ environment) when running the program.
-
-  ``QryParmExt(QryVal, ParmSpec)``
-    Extract query parameters from ``QryVal`` and place the results in columns.
-    Returns the number of parameters extracted. If the return value is not
-    needed, invoke function using ``-eval - QryParmExt(...)``.
-    ``QryVal`` can be a string column's name, a `string constant`_
-    or an expression that evaluates to a string.
-    ``ParmSpec`` is a `string constant`_ specifying
-    the parameters to extract and the destination columns for the result.
-    It has the form:
-
-     ::
-
-      [AtrLst]&Key[:ColName][,AtrLst][&Key[:ColName][,AtrLst]...]
-
-    It can start with a comma separated attribute list:
-
-    * ``beg=c`` - Skip over the initial portion of QryVal up to and including
-      the first 'c' character (single byte). A common value for 'c' is '?'.
-      Without this attribute, the entire QryVal will be used.
-    * ``zero`` - Zero out all destination columns before extraction.
-    * ``dec=Num`` - Number of times to perform URL decode on the extracted
-      values. Num must be between 0 and 99. Default is 1.
-    * ``trm=c`` - Trim one leading and/or trailing 'c' character (single byte)
-      from the decoded extracted values.
-
-    ``Keys`` are the name of the parameters to extract.
-    It should be URL encoded if it contains any special characters.
-    Note that each ``Key`` specification starts with an '&'.
-    The extracted value of Key is stored in a column given by ``ColName``.
-    The column must be a previously defined column. If ``ColName`` is not
-    given, a column with the same name as ``Key`` is assumed.
-    Each ``Key`` can also have a comma separated attribute list:
-
-    * ``zero`` - Zero out the destination column before extraction.
-    * ``dec=Num`` - Number of times to perform URL decode on the extracted
-      value of this Key. Num must be between 0 and 99.
-    * ``trm=c`` - Trim one leading and/or trailing 'c' character (single byte)
-      from the decoded extracted value.
+    See `aq-emod <aq-emod.html>`_ for a list of supported functions.
 
   Example:
 
@@ -805,6 +649,8 @@ Options
     "From" value is assumed constant and no escape is necessary.
   * ``req`` - Discard records not matching any entry in the lookup table.
     Normally, column value will remain unchanged if there is no match.
+  * ``all`` - Use all matches. Normally, only the first match is used.
+    With this attribute, one row is produced for each match.
 
   ``ColTags`` are optional. They specify the columns in the files. Supported
   tags (case insensitive) are:
@@ -904,6 +750,8 @@ Options
   * Standard `Input File Attributes`_.
   * ``ncas`` - Do case insensitive match (default is case sensitive).
   * ``req`` - Discard unmatched records.
+  * ``all`` - Use all matches. Normally, only the first match is used.
+    With this attribute, one row is produced for each match.
 
   ``ColSpecs`` define the columns in the files as with `-d`_.
   In addition to the standard `-d`_ column attributes,
@@ -948,8 +796,8 @@ Options
 
 .. _`-pmod`:
 
-``-pmod ModSpec``
-  Call the processing function in the module to process the current record.
+``-pmod ModSpec [ModSrc]``
+  Use the processing function in the given module to process the current record.
   The function is typically used to implement custom logics.
 
   * Retrieve and/or modify one or more columns in the current data row.
@@ -957,25 +805,26 @@ Options
   * Generate multiple output rows from the current row.
   * Stop processing.
 
-  ``ModSpec`` has the form ``ModName[:argument]`` where ``ModName``
-  is the logical module name and ``argument`` is a module specific
-  parameter string.
-  ``aq_pp`` will look for "pmod/``ModName``.so" in the directory where it is
-  installed. For example, if it is installed as ``/SomeDirectory/aq_pp``,
-  ``/SomeDirectory/pmod/ModName.so`` will be loaded.
-  See the examples under "pmod/" in the source package regarding how this
-  type of module is implemented.
+  ``ModSpec`` has the form ``ModName`` or ``ModName("Arg1", "Arg2", ...)``
+  where ``ModName`` is the module name and ``Arg*`` are module dependent
+  arguments. Note that the arguments must be string constants;
+  for this reason, they must be quoted according to the
+  `string constant`_ spec.
 
-  Standard modules:
+  ``ModSrc`` is an optional module source file. It can be:
 
-  ``unwrap_strv``
+  * A module script source file that can be used to build the specified
+    module. See the `aq_pp module script compiler <mcc.pmod.html>`_
+    documentation for more information.
+  * A ready-to-use module object file. It *must* have a ``.so`` extension.
+
+  Without ``ModSrc``, ``aq_pp`` will look for a preinstalled module matching
+  ``ModName``. Standard modules:
+
+  ``unwrap_strv("From_Col", "From_Sep", "To_Col" [, "AtrLst"])``
     Unwrap a delimiter separated string column into none or more values.
     The row will be replicated for each of the unwrapped values.
-    Module arguments are:
-
-     ::
-
-      From_Col:From_Sep:To_Col[:AtrLst]
+    This module requires 3 or 4 arguments:
 
     * ``From_Col`` - Column containing the string value to unwrap.
       It must have type ``S``.
@@ -985,10 +834,10 @@ Options
       It must have type ``S``. The ``To_Col`` can be the same as the
       ``From_Col`` - the module will remember the original ``From_Col``
       value.
-    * AtrLst - A comma separated attribute list containing:
+    * ``AtrLst`` - Optional. A comma separated attribute list containing:
 
-     * ``relax`` - No trailing delimiter. One is expected by default.
-     * ``noblank`` - Skip blank values.
+      * ``relax`` - No trailing delimiter. One is expected by default.
+      * ``noblank`` - Skip blank values. Blanks are kept by default.
 
 
 .. _`-o`:
@@ -1026,7 +875,7 @@ Options
 
 .. _`-udb`:
 
-``-udb [-spec UdbSpec|-db DbName] -imp [DbName:]TabName [-seg N1[-N2]/N] [-nobnk] [-nonew] [-mod ModSpec]``
+``-udb [-spec UdbSpec|-db DbName] -imp [DbName:]TabName [-seg N1[-N2]/N] [-nobnk] [-nonew] [-mod ModSpec [ModSrc]]``
   Output data directly to Udb (i.e., a Udb import).
   ``-udb`` marks the beginning of Udb import specific options.
   Optional "``-spec UdbSpec``" sets the Udb spec file for the import.
@@ -1060,11 +909,23 @@ Options
   Optional ``-nonew`` tells the server not to create any new user during this
   import. Records belonging to users not yet in the DB are discarded.
 
-  Optional "``-mod ModSpec``" specifies a module to load on the *server side*.
-  ``ModSpec`` has the form ``ModName[:argument]`` where ``ModName``
-  is the logical module name and ``argument`` is a module specific
-  parameter string. Udb server will try to load "umod/``ModName``.so"
-  in the directory where ``udbd`` is installed.
+  Optional "``-mod ModSpec [ModSrc]``" specifies a module to be
+  loaded on the *server side*.
+  ``ModSpec`` has the form ``ModName`` or ``ModName("Arg1", "Arg2", ...)``
+  where ``ModName`` is the module name and ``Arg*`` are module dependent
+  arguments. Note that the arguments must be string constants;
+  for this reason, they must be quoted according to the
+  `string constant`_ spec.
+
+  ``ModSrc`` is an optional module source file. It can be:
+
+  * A module script source file that can be used to build the specified
+    module. See the `Udb module script compiler <mcc.umod.html>`_
+    documentation for more information.
+  * A ready-to-use module object file. It *must* have a ``.so`` extension.
+
+  Without ``ModSrc``, the server will look for a preinstalled module matching
+  ``ModName``.
 
   Multiple sets of "``-udb -spec ... -imp ...``" can be specified.
 
@@ -1115,6 +976,7 @@ Applicable exit codes are:
 * 2 - Command option spec error.
 * 3 - Initialization error.
 * 11 - Input open error.
+* 12 - Input read error.
 * 13 - Input processing error.
 * 21 - Output open error.
 * 22 - Output write error.
@@ -1125,52 +987,63 @@ Applicable exit codes are:
 Input File Attributes
 =====================
 
-Each input file can have these comma separated attributes:
+Each input option can have a list of comma separated attributes:
 
-* ``eok`` - Make error non-fatal. If there is an input error, program will
-  try to skip over bad/broken records. If there is a record processing error,
-  program will just discard the record.
-* ``qui`` - Quiet; i.e., do not print any input/processing error message.
-* ``tsv`` - Input is in TSV format (default is CSV).
-* ``sep=c`` - Use separator 'c' (single byte) as column separactor.
-* ``bin`` - Input is in binary format (default is CSV).
-* ``esc`` - '\\' is an escape character in input fields (CSV or TSV).
+* ``eok`` - Make input error non-fatal. If there is an input parse error,
+  program will try to skip over bad/broken record. If there is an input data
+  processing error, program will just discard the record.
+* ``qui`` - Quiet; i.e., do not print any input error message.
+* ``csv`` - Input is in CSV format. This is the default.
+* ``sep=c`` or ``sep=\xHH`` - Input is in 'c' (single byte) separated value
+  format. '\xHH' is a way to specify 'c' via its HEX value ``HH``.
+  Note that ``sep=,`` is not the same as ``csv`` because CSV is a more
+  advanced format.
+* ``fix`` - Input columns are all fixed width. There is no field separator.
+  Individual column width is specified as a column attribute.
+* ``tab`` - Input is in HTML table format - columns must be enclosed in
+  "``<td>data</td>``" or "``<td ...>data</td>``" and rows must be terminated
+  by a "``</tr>``".
+* ``bin`` - Input is in aq_tool's internal binary format.
+* ``esc`` - '\\' is an escape character in input fields (non binary).
 * ``noq`` - No quotes around fields (CSV).
 * ``+Num[b|r|l]`` - Specifies the number of bytes (``b`` suffix), records (``r``
   suffix) or lines (no suffix or ``l`` suffix) to skip before processing.
 
-By default, input files are assumed to be in formal CSV format. Use the
-``tsv``, ``esc`` and ``noq`` attributes to set input characteristics as needed.
+If no input format attribute is given, CSV is assumed.
 
 
 Output File Attributes
 ======================
 
-Some output file can have these comma separated attributes:
+Each output option can have a list of comma separated attributes:
 
-* ``app`` - Append to file; otherwise, file is overwritten by default.
-* ``bin`` - Input in binary format (default is CSV).
-* ``esc`` - Use '\\' to escape ',', '"' and '\\' (CSV).
+* ``notitle`` - Suppress the column name label row from the output.
+  A label row is normally included by default.
+* ``app`` - When outputting to a file, append to it instead of overwriting.
+* ``csv`` - Output in CSV format. This is the default.
+* ``sep=c`` or ``sep=\xHH`` - Output in 'c' (single byte) separated value
+  format. '\xHH' is a way to specify 'c' via its HEX value ``HH``.
+  Note that ``sep=,`` is not the same as ``csv`` because CSV is a more
+  advanced format.
+* ``bin`` - Output in aq_tool's internal binary format.
+* ``esc`` - Use '\\' to escape the field separator, '"' and '\\' (non binary).
 * ``noq`` - Do not quote string fields (CSV).
 * ``fmt_g`` - Use "%g" as print format for ``F`` type columns. Only use this
   to aid data inspection (e.g., during integrity check or debugging).
-* ``notitle`` - Suppress the column name label row from the output.
-  A label row is normally included by default.
 
-By default, output is in CSV format. Use the ``esc`` and ``noq`` attributes to
-set output characteristics as needed.
+If no output format attribute is given, CSV is assumed.
 
 
 String Constant
 ===============
 
 A string constant must be quoted between double or single quotes.
-With *double* quotes, special character sequences can be used to represent
+With *double quotes*, special character sequences can be used to represent
 special characters.
-With *single* quotes, no special sequence is recognized; in other words,
+With *single quotes*, no special sequence is recognized; in other words,
 a single quote cannot occur between single quotes.
 
-Character sequences recognized between *double* quotes are:
+Character sequences recognized between *double quotes* are:
 
 * ``\\`` - represents a literal backslash character.
 * ``\"`` - represents a literal double quote character.
@@ -1182,13 +1055,10 @@ Character sequences recognized between *double* quotes are:
 * ``\v`` - represents a literal vertical tab character.
 * ``\0`` - represents a NULL character.
 * ``\xHH`` - represents a character whose HEX value is ``HH``.
+* ``\<newline>`` - represents a line continuation sequence; both the backslash
+  and the newline will be removed.
 
-Beyond these, other special sequences may be recognized depending on where
-the string is used. For example, in a simple wildcard pattern
-(see ``PatCmp()``), ``\?`` and ``\*`` represent literal ``?`` and ``*``
-respectively.
-Sequences that are not recognized will be kept as-is. For example, in ``\a``,
-the backslash will not be removed.
+Sequences that are not recognized will be kept as-is.
 
 Two or more quoted strings can be used back to back to form a single string.
 For example,
@@ -1227,8 +1097,21 @@ It has this general syntax:
   ``\%\%not_var\%\%%%my_var%%a_backslash\\others`` -
   If a '%' is used in such a way that resembles an unintended MapFrom spec,
   the '%' must be escaped. Literal '\\' must also be escaped.
-  On the other hand, '\\' has no special meaning within a variable spec
-  (described below).
+  In summary, the following escape sequences are recognized:
+
+  * ``\%`` - represents a literal percent character.
+  * ``\\`` - represents a literal backslash character.
+  * ``\"`` - represents a literal double quote character.
+  * ``\b`` - represents a literal backspace character.
+  * ``\f`` - represents a literal form feed character.
+  * ``\n`` - represents a literal new line character.
+  * ``\r`` - represents a literal carriage return character.
+  * ``\t`` - represents a literal horizontal tab character.
+  * ``\v`` - represents a literal vertical tab character.
+  * ``\0`` - represents a NULL character.
+  * ``\xHH`` - represents a character whose HEX value is ``HH``.
+  * ``\<newline>`` - represents a line continuation sequence; both the backslash
+    and the newline will be removed.
 
 Each ``%%var%%`` variable can have additional attributes. The general form of
 a variable spec is:
@@ -1286,6 +1169,20 @@ Differences between RegEx mapping and RT mapping:
 * RegEx MapFrom does not have named variables for the extracted data. Instead,
   extracted data is put into implicit variables ``%%0%%``, ``%%1%%``, and so on.
   See `-mapc`_ for an usage example.
+* In addition to the standard regular expression escape sequences
+  (``\\``, ``\+``, ``\*``, etc), the following are also recognized:
+
+  * ``\"`` - represents a literal double quote character.
+  * ``\b`` - represents a literal backspace character.
+  * ``\f`` - represents a literal form feed character.
+  * ``\n`` - represents a literal new line character.
+  * ``\r`` - represents a literal carriage return character.
+  * ``\t`` - represents a literal horizontal tab character.
+  * ``\v`` - represents a literal vertical tab character.
+  * ``\0`` - represents a NULL character.
+  * ``\xHH`` - represents a character whose HEX value is ``HH``.
+  * ``\<newline>`` - represents a line continuation sequence; both the backslash
+    and the newline will be removed.
 
 Regular Expression is very powerful but also complex. Please consult the
 GNU RegEx manual for details.
@@ -1309,8 +1206,7 @@ syntax:
   ``\%\%not_var\%\%%%my_var%%a_backslash\\others`` -
   If a '%' is used in such a way that resembles an unintended MapTo spec,
   the '%' must be escaped. Literal '\\' must also be escaped.
-  On the other hand, '\\' has no special meaning within a variable spec
-  (described below).
+  See `RT MapFrom Syntax`_ for all supported escape sequences.
 
 Each ``%%var%%`` variable can have additional attributes. The general form of
 a variable spec is:
@@ -1418,8 +1314,10 @@ Example:
 See Also
 ========
 
-* `udbd <udbd.html>`_ - User (Bucket) Database server
-* `udb.spec <udb.spec.html>`_ - Udb spec file.
-* `aq_udb <aq_udb.html>`_ - Interface to Udb server
-* :doc:`../../usecases/syntaxexamples/aq_pp-option-examples` - Further examples of aq_pp options.
+* `aq-emod <aq-emod.html>`_ - aq_tool eval functions.
+* `mcc.pmod <mcc.pmod.html>`_ - aq_pp module script compiler
+* `udbd <udbd.html>`_ - Udb server
+* `udb.spec <udb.spec.html>`_ - Udb spec file
+* `aq_udb <aq_udb.html>`_ - Udb server interface
+* `mcc.umod <mcc.umod.html>`_ - Udb module script compiler
 
