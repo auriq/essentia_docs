@@ -7,7 +7,7 @@ Manuals
 This section provides a copy of the man pages for the Essentia toolkit.
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
 
    ../manpages/index
    essentia-ref

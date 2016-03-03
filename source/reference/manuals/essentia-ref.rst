@@ -2,7 +2,18 @@
 Essentia Commands
 *****************
 
+-------------------
+*Reference Manuals*
+-------------------
 
+.. toctree::
+   :maxdepth: 1
+
+   generate_essentia_ref
+   
+-------------------
+*Overview*
+-------------------
 
 .. csv-table::
     :header: "Command", "Arguments", "Description"
