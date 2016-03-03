@@ -11,7 +11,7 @@ How to Install Essentia on your Local Machine
 
 .. note::
   
-   You must have root privledges to run the installer. If you do not, please contact your system administrator.
+   You must have root privileges to run the installer. If you do not, please contact your system administrator.
 
 #. Go to the directory where the installer is located.
 

@@ -1,6 +1,6 @@
-**********************
-Selecting your Data
-**********************
+***************************
+Connect to your Data Storage
+***************************
 
 Essentia defines a resource that contains data as a 'datastore'.  Current datastore types that are supported by Essentia
 include: 
@@ -22,7 +22,14 @@ For an AWS S3 bucket you would enter::
 ..  $ ess select s3://asi-public --credentials=~/mycredentials.csv
 
 The ``credentials`` flag can be replaced with ``aws_access_key`` and ``aws_secret_access_key`` to directly enter
-credentials, though we recommend the use of credential files if possible.
+credentials::
+
+  $ ess select s3://bucket_name --aws_access_key=your_access_key --aws_secret_access_key=your_secret_access_key
+
+However, we recommend the use of credential files if possible. To create a credential file, simply save your access and secret access keys in the following format to a csv file with a name of your choice::
+
+    User Name,Access Key Id,Secret Access Key
+    bwaxer,your_access_key,your_secret_access_key
 
 For an Azure Blob datastore you would enter::
 

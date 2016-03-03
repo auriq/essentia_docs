@@ -25,6 +25,14 @@ This is a UNIX-style globular matching pattern to describe what types of files t
 
 *Note:* For a more detailed description of globular matching patterns, see `Glob (programming) <http://en.wikipedia.org/wiki/Glob_%28programming%29>`_
 
+*Note:* **Exclude** further restricts the files included by your **Pattern**.
+
+Exclude
+---------------
+This is a UNIX-style globular matching pattern to describe what types of files to exclude from your category. You can use a series of literal characters combined with wildcards to tell Essentia that any filenames that match this pattern do **NOT** belong in this category. This is a sub-pattern that further restricts the files included by your **Pattern**.
+
+*Note:* For a more detailed description of globular matching patterns, see `Glob (programming) <http://en.wikipedia.org/wiki/Glob_%28programming%29>`_
+
 Comment
 ---------------
 This field can contain any character and is just used to help you make notes about your categories or the files the contain.

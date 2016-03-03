@@ -37,7 +37,7 @@ We save the following commands to ``aqlog.sh``::
     
     ess summary
     
-    ess stream aqlogs "2014-06-13" "2014-08-15" "aq_pp -emod rt -f,+1,eok - -d %cols -filt 'status == 200 || status == 304' -eval i:hitcount '1' \
+    ess stream aqlogs "2014-06-13" "2014-08-15" "aq_pp -f,+1,eok - -d %cols -filt 'status == 200 || status == 304' -eval i:hitcount '1' \
     -if -filt '(PatCmp(page, \"*.html[?,#]?*\", \"ncas\") || PatCmp(page, \"*.htm[?,#]?*\", \"ncas\") || PatCmp(page, \"*.php[?,#]?*\", \"ncas\") || PatCmp(page, \"*.asp[?,#]?*\", \"ncas\") || PatCmp(page, \"*/\", \"ncas\") || PatCmp(page, \"*.php\", \"ncas\"))' -eval i:pagecount '1' -eval s:pageurl 'page' \
     -else -eval pagecount '0' -endif -eval s:month 'TimeToDate(t,\"%B\")' -eval s:day 'TimeToDate(t,\"%d\")' -eval s:dayoftheweek 'TimeToDate(t,\"%a\")' -eval s:hour 'TimeToDate(t,\"%H\")' \
     -ddef -udb -imp aqlogday:aqlogday -imp aqloghour:aqloghour -imp aqlogmonth:aqlogmonth -imp aqlogdayoftheweek:aqlogdayoftheweek" --debug
