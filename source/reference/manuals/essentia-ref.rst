@@ -106,7 +106,7 @@ Essentia Commands
     ess redshift sql,"command","Query data in a redshift database using an SQL command"
     ess redshift gentable,"| category 
     | redshift_table_name 
-    | ``--key \"column = distkey\"``","Create a table in redshift using the column specification derived from an Essentia category"
+    | ``--key 'column = distkey'``","Create a table in redshift using the column specification derived from an Essentia category"
     ess redshift list,,"Get information about all Redshift clusters accessible by Essentia"
     ess redshift deregister,,"Unlink redshift cluster from Essentia"
     ess udbd,"start|stop|restart|status", "direct manipulation of UDB"
