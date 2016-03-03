@@ -806,4 +806,4 @@ See Also
 * `udb.spec <udb.spec.html>`_ - Udb spec file.
 * `udbd <udbd.html>`_ - Udb server
 * `mcc.umod <mcc.umod.html>`_ - Udb module script compiler
-
+* `Example aq_udb Commands <../../usecases/syntaxexamples/aq_udb-option-examples.html>`_ - Additional examples of aq_udb options.
