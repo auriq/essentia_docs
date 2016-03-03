@@ -37,8 +37,81 @@ Comment
 ---------------
 This field can contain any character and is just used to help you make notes about your categories or the files the contain.
 
+Date Regex
+---------------
+This Date-regex option (``--dateregex``) can be used to match a regular expression 
+pattern to the file paths and names in a category in order to extract the corresponding date. 
+This enables Essentia's highly versatile date and number extraction by allowing 
+regular expression patterns that can extract dates from incredibly 
+complex or unique file paths and names.
+
+The key options you can provide it to symbolize each date segment are:
+
+| **Date and Time:**
+| **[:%Y:]** = Four Digit Year 
+| **[:%y:]** = Two Digit Year       
+| **[:%m:]** = Two Digit Month
+| **[:%b:]** = Three Letter Month (Jan, Feb, ..., Dec)
+| **[:%B:]** = Text Month (January, ..., December)
+| **[:%d:]** = Two Digit Day         
+| **[:%H:]** = Two Digit Hour
+| **[:%M:]** = Two Digit Minute
+| **[:%S:]** = Two Digit Second
+| **[:%z:]** = TimeZone
+| **[:%p:]** = Case Insensitive AM or PM.
+
+Alternatively, you can provide the following option to extract just a number from the file path/name as a unique identifier:
+
+| **Number:**
+| **[:%#:]** = Any Single Integer 
+
+| By default Essentia tries to figure out the dates in your filenames using an **auto** setting. 
+| You can also specify a custom **regex** pattern that identifies where the date or number appears in your file paths/names. 
+| For file paths/names that dont have a date or number in them you can also set the Date Regex field to **none**.
+
+**Example Date Format Patterns:** ::
+    
+    auto
+    
+    none
+    
+    .*file_2014-06-09_out.zip:.*
+
+ 	 .*[:%Y:]-[:%m:]-[:%d:].*
+    
+    .*account12345678_20140609.csv:.*
+
+ 	 .*[:%Y:][:%m:][:%d:].csv 
+ 	 
+ 	 Note: Here 'YMD' alone won't work since there is another 8 digit number, therefore we add the '.csv'. 
+  	 
+    .*account12345678_20140609.csv:.*
+    
+         _[:%Y:][:%m:][:%d:]
+         
+         Note: This is another way to extract the date from this filename. Here we added '_' before the date 
+         to help identify the date in the filename.
+ 	 
+    .*account12345678_20140609.csv:.*
+    
+         #_
+         
+         Note: This extracts the number from this filename. Here we added '_' after the number 
+         to help identify the number in the filename.
+         
+    .*account12345678_20140609.csv:.*
+    
+         account#
+         
+         Note: We could also have specified 'account' before the number to identify the number in the filename.
+
+*Note:* For a more detailed description of regex matching patterns, see `Regular Expression <https://en.wikipedia.org/wiki/Regular_expression>`_
+
 Date Format
 ---------------
+
+*Warning: Deprecated after Essentia version 3.1.0.7. Will be removed in the near future. Use Date Regex instead.*
+
 This is a UNIX-style globular matching pattern to describe how a date or number appears in each filename. You can use a series of literal characters combined with wildcards to tell Essentia how to extract the date or number from the filenames so it can obtain the date range or number range over which your category takes place. This allows you to later take a subset of those files by specifying a custom date range or number range that you want to pull data from. The key options you can provide it to symbolize each date/number segment are:
 
 | **Date and Time:**
@@ -58,7 +131,7 @@ This is a UNIX-style globular matching pattern to describe how a date or number 
 | By default Essentia tries to figure out the dates in your filenames using an **auto** setting. 
 | You can also specify a **custom** pattern that identifies where the date or number appears in your filenames. 
 | For filenames that dont have a date or number in them you can also set the Date Format field to **none**.
-
+        
 **Example Date Format Patterns:** ::
     
     auto
@@ -98,32 +171,7 @@ This is a UNIX-style globular matching pattern to describe how a date or number 
         
 *Note:* For a more detailed description of globular matching patterns, see `Glob (programming) <http://en.wikipedia.org/wiki/Glob_%28programming%29>`_
 
-*Note:* To use regular expression patterns to extract the date from your filename, see **Date Regex**.
-
-Date Regex
----------------
-This Date-regex option (``--dateregex``) can be used to match a regular expression 
-pattern to the file paths and names in a category in order to extract the corresponding date. 
-This increases the versatility of Essentia's date extraction by allowing 
-regular expression patterns and will allow date extraction from much more 
-complex or unique file paths and names.
-
-The key options you can provide it to symbolize each date segment are:
-
-| **Date and Time:**
-| **[:%Y:]** = Four Digit Year 
-| **[:%y:]** = Two Digit Year       
-| **[:%m:]** = Two Digit Month
-| **[:%b:]** = Three Letter Month (Jan, Feb, ..., Dec)
-| **[:%B:]** = Text Month (January, ..., December)
-| **[:%d:]** = Two Digit Day         
-| **[:%H:]** = Two Digit Hour
-| **[:%M:]** = Two Digit Minute
-| **[:%S:]** = Two Digit Second
-| **[:%z:]** = TimeZone
-| **[:%p:]** = Case Insensitive AM or PM.
-
-| For filenames that dont have a date or number in them you can also set the Date Regex field to **none**.
+*Note:* In is recommended to use regular expression patterns to extract the date from your filename, see **Date Regex**.
 
 .. %Y, %m, %d, %H, %M, %S, %p, %z -> [:%b:] - Jan, Feb, ..., Dec; [:%B:] - January, ..., December; "None" 
 .. link to **regex** description and date format -> *Note:* For a more detailed description of globular matching patterns, see `Glob (programming) <http://en.wikipedia.org/wiki/Glob_%28programming%29>`_

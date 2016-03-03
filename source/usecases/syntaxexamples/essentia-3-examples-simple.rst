@@ -65,7 +65,7 @@ Manage data stored locally, on an S3 bucket, or on an Azure container
 
     ess scan
 
-    ess category add myfavoritedata "*exampledata*gz" --dateformat "*MM-YY-DD*"
+    ess category add myfavoritedata "*exampledata*gz" --dateformat ".*[:%m:]-[:%y:]-[:%d:].*"
 
     ess category delete myfavoritedata
     

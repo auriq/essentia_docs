@@ -55,7 +55,7 @@ Datastore category setup and management
 * `Comment <../reference/manuals/category-rules.html#comment>`_ - any arbitrary comment.
 * `Delimiter <../reference/manuals/category-rules.html#delimiter>`_ - the type of delimiter (comma, space, tab, etc) used in your data.
 * `Exclude <../reference/manuals/category-rules.html#exclude>`_ - globular matching pattern to describe what files to not include in your category. **Note:** this further restricts the files included by your ``Pattern``.
-* `Date Format <../reference/manuals/category-rules.html#date-format>`_ - matching date format pattern found in filename structure. You can optionally specify a regular expression pattern to extract the date, see `Date Regex <../reference/manuals/category-rules.html#date-regex>`_.
+* `Date Extraction <../reference/manuals/category-rules.html#date-regex>`_ - matching date extraction pattern found in filename structure. Specify a regular expression pattern to extract the date from your file path/name, see `Date Regex <../reference/manuals/category-rules.html#date-regex>`_.
 
 5. Click on the **Save** button to create your category. This may take a few minutes while Essentia scans your data.
 6. After scan is complete, the derived column specifications will be displayed along with metadata about your files. Also, you can now **Define Additional Category Options** (see section 2 for more detail) or choose to **Directly Edit Column Specification** (see section 3 for more detail).
