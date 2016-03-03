@@ -2,11 +2,15 @@
    sphinx-quickstart on Thu Feb 26 17:44:44 2015.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
+   
+********************
+Data Processing Tools
+******************** 
 
 Introduction
 ============
 
-*aq_tool* is a collection of data processing tools.
+The *aq_tools* are a collection of data processing tools.
 The tool set includes:
 
 * Command line tools that process an input data set into an output set
@@ -15,13 +19,6 @@ The tool set includes:
 * A specialized low level database engine called the
   *user bucket database* (Udb).
 * The rest are support files and helper tools that aid processing in general.
-
-
-Versions
-========
-
-* `1.2.3 ChangeLog <ChangeLog.html>`_ [Current]
-* `1.2.2 ChangeLog <ChangeLog-1.2.2.html>`_
 
 
 Manuals
@@ -55,8 +52,6 @@ User bucket database engine:
 Helpers:
 
 * `loginf <loginf.html>`_ - Log analyzer
-* `smon <smon.html>`_ - System monitor
-* `tmon <tmon.html>`_ - Task monitor
 
 
 .. toctree::
