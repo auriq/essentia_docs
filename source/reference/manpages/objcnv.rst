@@ -170,12 +170,8 @@ Options
   * ``trm`` - Trim leading/trailing spaces from input field value.
   * ``lo``, ``up`` - For ``S`` type. Convert input field to lower/upper case.
 
-  ``ColName`` restrictions:
-
-  * Cannot exceed 31 bytes long.
-  * Contain only alphanumeric and '_' characters. The first character
-    cannot be a digit.
-  * It is case insensitive. However, this spec may change in the future.
+  ``ColName`` is case insensitive. It can have up to 31 alphanumeric and '_'
+  characters. The first character must not be a digit.
 
   ``ObjSpec`` specifies which data field to extract for the column.
   It is a list of dot separated elements as in

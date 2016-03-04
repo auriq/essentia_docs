@@ -846,7 +846,7 @@ argument).
   Print a message to the Udb server log.
   If it is called during module initialization, the same message will be
   returned to the client.
-  
+
   Example:
 
    ::

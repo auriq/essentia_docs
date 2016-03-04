@@ -187,12 +187,12 @@ General purpose functions
 * Returns a substring of a string.
 * ``Val`` can be a string column's name, a `string constant`_,
   or an expression that evaluates to a string.
-* ``Start`` is the starting position (zero-based) of the substring in ``Val``. 
+* ``Start`` is the starting position (zero-based) of the substring in ``Val``.
   It can be a numeric column's name, a number,
   or an expression that evaluates to a number.
   If ``Start`` is negative, the length of ``Val`` will be added to it.
   If it is still negative, 0 will be used.
-* Optional ``Length`` specifies the length of the substring in ``Val``. 
+* Optional ``Length`` specifies the length of the substring in ``Val``.
   It can be a numeric column's name, a number,
   or an expression that evaluates to a number.
   Max length is length of ``Val`` minus ``Start``.
@@ -305,7 +305,7 @@ General purpose functions
 * ``DateFmt`` is a `string constant`_ specifying
   the format of the output. See the ``strftime()`` C function manual
   page regarding the format of ``DateFmt``.
-* The ``TimeToDate()`` conversion is timezone dependent. 
+* The ``TimeToDate()`` conversion is timezone dependent.
   It is done using the program's default timezone.
   Set the program's timezone, e.g, via the TZ environment, before execution
   if necessary.
@@ -378,7 +378,7 @@ General purpose functions
     $ aq_command ... -eval - 'QryParmExt(String_Col, "beg=?,zero&k1:Col1&k2:Col2")' ...
 
   * Extracts the values of "``k1``" and "``k2``" into columns ``Col1`` and
-    ``Col2`` respectively from ``String_Col`` after the first "``?``". 
+    ``Col2`` respectively from ``String_Col`` after the first "``?``".
 
 ``KDec(Key, DecSpec)``
 

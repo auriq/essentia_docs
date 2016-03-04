@@ -112,10 +112,10 @@ Options
 
 .. _`-d`:
 
-``-d ColSpec [ColSpec ...]``
+``-d ColSpec [ColSpec ...]`` or ``-d [SepSpec] ColSpec [[SepSpec] ColSpec ...]``
   Define the columns in the input records from all the `-f`_ specs.
-  ``ColSpec`` has the form ``Type[,AtrLst]:ColName``.
   Up to 2048 ``ColSpec`` can be defined (excluding ``X`` type columns).
+  ``ColSpec`` has the form ``Type[,AtrLst]:ColName``.
   Supported ``Types`` are:
 
   * ``S`` - String.
@@ -137,6 +137,13 @@ Options
     exported from databases (e.g. MySQL) sometimes use this format. Be careful
     when dealing with multibyte character set because '\\' can be part of a
     multibyte sequence.
+  * ``clf`` - Denote that the input field uses these encoding methods:
+
+    * Non-printable bytes encoded as '\\xHH' where ``HH`` is the hex value of
+      the byte.
+    * '"' and '\\' encoded as '\\"' and '\\\\'.
+    * Selected whitespaces encoded as '\\r', '\\n', '\\t', '\\v' and '\\f'.
+
   * ``noq`` - Denote that the input field is not quoted. Any quotes in or around
     the field are considered part of the field value.
   * ``hex`` - For numeric type. Denote that the input field is in hexdecimal
@@ -145,12 +152,16 @@ Options
   * ``trm`` - Trim leading/trailing spaces from input field value.
   * ``lo``, ``up`` - For ``S`` type. Convert input field to lower/upper case.
 
-  ``ColName`` restrictions:
+  ``ColName`` is case insensitive. It can have up to 31 alphanumeric and '_'
+  characters. The first character must not be a digit.
 
-  * Cannot exceed 31 bytes long.
-  * Contain only alphanumeric and '_' characters. The first character
-    cannot be a digit.
-  * It is case insensitive. However, this spec may change in the future.
+  The alternate column definition involving ``SepSpec`` is designed for
+  input data that have multibyte separators and/or varying separators from
+  field to field. In these cases, *all* the separators must be individually
+  specified. ``SepSpec`` has the form ``SEP:SepStr`` where ``SEP``
+  (case insensitive) is a keyword and ``SepStr`` is a literal separator of one
+  or more bytes. A ``SepSpec`` is generally needed between any two columns
+  unless the former column has a length spec.
 
   Example:
 
@@ -162,6 +173,12 @@ Options
     converted to lower case. Col3 is an unsigned integer, the ``trm``
     attribute removes blanks around the value before it is converted to
     an internal number.
+
+   ::
+
+    $ aq_sess ... -d sep:' [' s:time_s sep:'] "' s,clf:url sep:'"' ...
+
+  * This parses data of the form: [01/Apr/2016:01:02:03 +0900] "/index.html".
 
 
 .. _`-t`:

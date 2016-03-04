@@ -424,7 +424,7 @@ Module Helpers
 
 These are helpers that are designed specifically for module processing tasks.
 They can be used in any `processing functions`_ or subroutines called
-from these functions (these subroutines must be given a ``ModCntx *mod`` 
+from these functions (these subroutines must be given a ``ModCntx *mod``
 argument).
 
 
