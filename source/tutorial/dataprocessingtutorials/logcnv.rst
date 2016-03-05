@@ -3,8 +3,7 @@ Log Format Conversion
 *********************
 
 Raw data, particularly log data, is often not delimited cleanly but can be made to be so using some simple pattern
-matching rules.  ``logcnv`` was developed to help with this process, with the intent that the parsed output be fed
-directly into ``aq_pp`` for further processing.
+matching rules. ``aq_pp`` was designed to help with this process.
 
 In this tutorial, we will use an Apache web log as an example, since they are among the most common type of logs we
 work with.  You will need the file ``apache.log``, which can be found under ``tutorials/etl-engine`` in the git repository.
@@ -15,20 +14,20 @@ Its first line is::
 Parsing Apache Logs
 ===================
 
-``logcnv`` is similar to ``aq_pp`` in that it defines the column spec using type:name notation, except here we add a
-new option 'sep' which specifies the substring that separates a given column from the one next to it.  The apache log
+For singly-delimited files, ``aq_pp`` defines the column specification using type:name notation. To allow more complex format conversion such as we have here, 
+we make use of the additional option 'sep' which specifies the substring that separates a given column from the one next to it.  The apache log
 for example can be parsed using::
 
-  logcnv -f,eok apache.log -d ip:ip sep:' ' s:rlog sep:' ' \
-  s:rusr sep:' [' i,tim:time sep:'] "' s,clf:req_line1 sep:' ' s,clf:req_line2 sep:' ' s,clf:req_line3 \
+  aq_pp -f,eok apache.log -d ip:ip sep:' ' s:rlog sep:' ' \
+  s:rusr sep:' [' s:time_s sep:'] "' s,clf:req_line1 sep:' ' s,clf:req_line2 sep:' ' s,clf:req_line3 \
   sep:'" ' i:res_status sep:' ' i:res_size sep:' "' \
-  s,clf:referrer sep:'" "' s,clf:user_agent sep:'"'
+  s,clf:referrer sep:'" "' s,clf:user_agent sep:'"' -eval i:time 'DateToTime(time_s, \"d.b.Y.H.M.S.z\")'
 
 
-As in other AQ tools, attributes are used to augment the processing.  Here, we use the 'tim' attribute with the
-column 'time'.  This attribute parses the date and time from this column into a POSIX time, i.e. the number of seconds since January 1st, 1970.
+As in other AQ tools, evaluation functions can be used to augment the processing.  Here, we use the ``DateToTime(...)`` function on the
+column 'time_s'.  This attribute parses the date and time from this string column into an integer POSIX time, i.e. the number of seconds since January 1st, 1970.
 
-Similar to ``aq_pp`` you can specify the columns to output using the ``-c`` option and a list of column names.
+Additionally, in ``aq_pp`` you can specify the columns to output using the ``-c`` option and a list of column names.
 
 You can limit which columns are output in the final result by using the '-c' option. i.e. run::
 

@@ -8,9 +8,14 @@ Essentia's Environment
 In this tutorial we just want to setup a simple Essentia environment, one that runs on our local computer and scans our local 
 filesystem for the aq log data data located in the ``casestudies/aq/aqlogs`` directory. 
 If you are not already in the ``casestudies/aq/`` directory, please switch into it now.
-We save the following commands to ``aqlog.sh``::
+We save the following commands to ``aqlog.sh``:
 
-    ess udbd stop
+.. literalinclude:: ../../EssentiaPublic/casestudies/aq/aqlog.sh
+   :language: bash
+   :linenos:
+   :emphasize-lines: 6,10,14,18,43-48
+
+..    ess udbd stop
     ess server reset
     
     ess create database aqlogday --ports=1

@@ -236,15 +236,15 @@ This will also cause the R integrator to automatically save the filenames of the
 
 **Access Log Data Integration Syntax Examples**
 
-For any more complicated, delimited format you can use ``logcnv`` to convert the format to csv within the ``ess stream`` commmand. All of the following examples have the correct syntax. The data they're acting on is in Extended Apache Log Format. ::
+For any more complicated, delimited format you can use ``aq_pp`` to convert the format to csv within the ``ess stream`` commmand. All of the following examples have the correct syntax. The data they're acting on is in Extended Apache Log Format. ::
 
-    ess stream 125accesslogs "2014-12-07" "2014-12-07" "logcnv -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' i,tim:time sep:'] \"' s,clf:req_line1 sep:' ' s,clf:req_line2 sep:' ' s,clf:req_line3 sep:'\" ' i:res_status sep:' ' i:res_size sep:' \"' s,clf:referrer sep:'\" \"' s,clf:user_agent sep:'\"' X | cat -" #Rinclude
+    ess stream 125accesslogs "2014-12-07" "2014-12-07" "aq_pp -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' s:time_s sep:'] \"' s,clf:req_line1 sep:' ' s,clf:req_line2 sep:' ' s,clf:req_line3 sep:'\" ' i:res_status sep:' ' i:res_size sep:' \"' s,clf:referrer sep:'\" \"' s,clf:user_agent sep:'\"' X | cat -" #Rinclude
     
-    ess stream 125accesslogs "2014-12-07" "2014-12-07" "head -30 | logcnv -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' i,tim:time sep:'] \"' s,clf:req_line1 sep:' ' s,clf:req_line2 sep:' ' s,clf:req_line3 sep:'\" ' i:res_status sep:' ' i:res_size sep:' \"' s,clf:referrer sep:'\" \"' s,clf:user_agent sep:'\"' X | aq_pp -f,qui,eok - -d ip:ip2 s:rlog X X X X X X X X X" #Rinclude
+    ess stream 125accesslogs "2014-12-07" "2014-12-07" "head -30 | aq_pp -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' s:time_s sep:'] \"' s,clf:req_line1 sep:' ' s,clf:req_line2 sep:' ' s,clf:req_line3 sep:'\" ' i:res_status sep:' ' i:res_size sep:' \"' s,clf:referrer sep:'\" \"' s,clf:user_agent sep:'\"' X | aq_pp -f,qui,eok - -d ip:ip2 s:rlog X X X X X X X X X" #Rinclude
     
-    ess stream 125accesslogs "2014-12-07" "2014-12-07" "head -q | logcnv -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' i,tim:time sep:'] \"' s,clf:req_line1 sep:' ' s,clf:req_line2 sep:' ' s,clf:req_line3 sep:'\" ' i:res_status sep:' ' i:res_size sep:' \"' s,clf:referrer sep:'\" \"' s,clf:user_agent sep:'\"' X | aq_pp -f,qui,eok - -d ip:ip2 s:rlog X X X X X X X X X" #Rinclude
+    ess stream 125accesslogs "2014-12-07" "2014-12-07" "head -q | aq_pp -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' s:time_s sep:'] \"' s,clf:req_line1 sep:' ' s,clf:req_line2 sep:' ' s,clf:req_line3 sep:'\" ' i:res_status sep:' ' i:res_size sep:' \"' s,clf:referrer sep:'\" \"' s,clf:user_agent sep:'\"' X | aq_pp -f,qui,eok - -d ip:ip2 s:rlog X X X X X X X X X" #Rinclude
     
-    ess stream 125accesslogs "2014-12-07" "2014-12-07" "logcnv -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' i,tim:time sep:'] \"' s,clf:req_line1 sep:' ' s,clf:req_line2 sep:' ' s,clf:req_line3 sep:'\" ' i:res_status sep:' ' i:res_size sep:' \"' s,clf:referrer sep:'\" \"' s,clf:user_agent sep:'\"' X | aq_pp -f,qui,eok - -d ip:ip2 s:rlog X X X X X X X X X" #Rinclude
+    ess stream 125accesslogs "2014-12-07" "2014-12-07" "aq_pp -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' s:time_s sep:'] \"' s,clf:req_line1 sep:' ' s,clf:req_line2 sep:' ' s,clf:req_line3 sep:'\" ' i:res_status sep:' ' i:res_size sep:' \"' s,clf:referrer sep:'\" \"' s,clf:user_agent sep:'\"' X | aq_pp -f,qui,eok - -d ip:ip2 s:rlog X X X X X X X X X" #Rinclude
 
 **Purchase Data Integration Syntax Examples**
 
@@ -316,15 +316,15 @@ This will also cause the R integrator to automatically save the filenames of the
 
 **Access Log Data Integration Syntax Examples**
 
-For any more complicated, delimited format you can use ``logcnv`` to convert the format to csv within the stream commmand. All of the following examples have the correct syntax. The data they're acting on is in Extended Apache Log Format. ::
+For any more complicated, delimited format you can use ``aq_pp`` to convert the format to csv within the stream commmand. All of the following examples have the correct syntax. The data they're acting on is in Extended Apache Log Format. ::
 
-    essQuery("ess stream 125accesslogs \"2014-12-07\" \"2014-12-07\"", "logcnv -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' i,tim:time sep:'] \\\"' s,clf:req_line1 sep:' ' s,clf:req_line2 sep:' ' s,clf:req_line3 sep:'\\\" ' i:res_status sep:' ' i:res_size sep:' \\\"' s,clf:referrer sep:'\\\" \\\"' s,clf:user_agent sep:'\\\"' X | cat -", "#Rinclude")
+    essQuery("ess stream 125accesslogs \"2014-12-07\" \"2014-12-07\"", "aq_pp -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' s:time_s sep:'] \\\"' s,clf:req_line1 sep:' ' s,clf:req_line2 sep:' ' s,clf:req_line3 sep:'\\\" ' i:res_status sep:' ' i:res_size sep:' \\\"' s,clf:referrer sep:'\\\" \\\"' s,clf:user_agent sep:'\\\"' X | cat -", "#Rinclude")
     
-    essQuery("ess stream 125accesslogs \"2014-12-07\" \"2014-12-07\"", "head -30 | logcnv -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' i,tim:time sep:'] \\\"' s,clf:req_line1 sep:' ' s,clf:req_line2 sep:' ' s,clf:req_line3 sep:'\\\" ' i:res_status sep:' ' i:res_size sep:' \\\"' s,clf:referrer sep:'\\\" \\\"' s,clf:user_agent sep:'\\\"' X | aq_pp -f,qui,eok - -d ip:ip2 s:rlog X X X X X X X X X", "#Rinclude")
+    essQuery("ess stream 125accesslogs \"2014-12-07\" \"2014-12-07\"", "head -30 | aq_pp -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' s:time_s sep:'] \\\"' s,clf:req_line1 sep:' ' s,clf:req_line2 sep:' ' s,clf:req_line3 sep:'\\\" ' i:res_status sep:' ' i:res_size sep:' \\\"' s,clf:referrer sep:'\\\" \\\"' s,clf:user_agent sep:'\\\"' X | aq_pp -f,qui,eok - -d ip:ip2 s:rlog X X X X X X X X X", "#Rinclude")
     
-    essQuery("ess stream 125accesslogs \"2014-12-07\" \"2014-12-07\"", "head -q | logcnv -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' i,tim:time sep:'] \\\"' s,clf:req_line1 sep:' ' s,clf:req_line2 sep:' ' s,clf:req_line3 sep:'\\\" ' i:res_status sep:' ' i:res_size sep:' \\\"' s,clf:referrer sep:'\\\" \\\"' s,clf:user_agent sep:'\\\"' X | aq_pp -f,qui,eok - -d ip:ip2 s:rlog X X X X X X X X X", "#Rinclude")
+    essQuery("ess stream 125accesslogs \"2014-12-07\" \"2014-12-07\"", "head -q | aq_pp -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' s:time_s sep:'] \\\"' s,clf:req_line1 sep:' ' s,clf:req_line2 sep:' ' s,clf:req_line3 sep:'\\\" ' i:res_status sep:' ' i:res_size sep:' \\\"' s,clf:referrer sep:'\\\" \\\"' s,clf:user_agent sep:'\\\"' X | aq_pp -f,qui,eok - -d ip:ip2 s:rlog X X X X X X X X X", "#Rinclude")
     
-    essQuery("ess stream 125accesslogs \"2014-12-07\" \"2014-12-07\"", "logcnv -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' i,tim:time sep:'] \\\"' s,clf:req_line1 sep:' ' s,clf:req_line2 sep:' ' s,clf:req_line3 sep:'\\\" ' i:res_status sep:' ' i:res_size sep:' \\\"' s,clf:referrer sep:'\\\" \\\"' s,clf:user_agent sep:'\\\"' X | aq_pp -f,qui,eok - -d ip:ip2 s:rlog X X X X X X X X X", "#Rinclude")
+    essQuery("ess stream 125accesslogs \"2014-12-07\" \"2014-12-07\"", "aq_pp -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' s:time_s sep:'] \\\"' s,clf:req_line1 sep:' ' s,clf:req_line2 sep:' ' s,clf:req_line3 sep:'\\\" ' i:res_status sep:' ' i:res_size sep:' \\\"' s,clf:referrer sep:'\\\" \\\"' s,clf:user_agent sep:'\\\"' X | aq_pp -f,qui,eok - -d ip:ip2 s:rlog X X X X X X X X X", "#Rinclude")
 
 **Purchase Data Integration Syntax Examples**
 

@@ -7,10 +7,15 @@ Essentia's Environment
 
 In this tutorial we just want to setup a simple Essentia environment, one that runs on our local computer and scans our local 
 filesystem for the apache access log data data located in the ``casestudies/apache/accesslogs`` directory. 
-If you are not already in the ``casestudies/apache/`` directory, please switch into it now.
-We save the following commands to ``my_setup_script.sh``::
+If you are not already in the ``tutorials/woodworking/`` directory, please switch into it now.
+We save the following commands to ``my_setup_script.sh``:
 
-    ess udbd stop
+.. literalinclude:: ../../EssentiaPublic/tutorials/woodworking/my_setup_script.sh
+   :language: bash
+   :linenos:
+   :emphasize-lines: 6,21-25
+
+..  ess udbd stop
     ess server reset
     
     ess create database logsapache1 --ports=1

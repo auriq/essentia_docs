@@ -12,10 +12,12 @@ In this case study we need to setup an Essentia environment on our local compute
 data with Essentia's etl tools, and then send the data into R for more advanced analysis. We save the
 following commands to ``setupapache.sh``
 
-.. code-block:: sh
-   :emphasize-lines: 5,9,13,17,23,29
+.. literalinclude:: ../../EssentiaPublic/casestudies/apache/setupapache.sh
+   :language: bash
+   :linenos:
+   :emphasize-lines: 5,9,13,17,23-24,39-44
    
-    ess udbd stop
+..    ess udbd stop
     ess server reset
     
     ess create database logsapache1 --ports=1

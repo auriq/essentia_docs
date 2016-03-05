@@ -218,7 +218,7 @@ This option allows you to apply a command to the data in your category before Es
 
 *Preprocess Command*::
 
-    logcnv -f,eok,qui - -d ip:ip sep:" " s:rlog sep:" " s:rusr sep:" [" i,tim:time sep:"] \"" s,clf:req_line1 sep:" " s,clf:req_line2 sep:" " s,clf:req_line3 sep:"\" " i:res_status sep:" " i:res_size sep:" \"" s,clf:referrer sep:"\" \"" s,clf:user_agent sep:"\""
+    aq_pp -f,eok,qui - -d ip:ip sep:" " s:rlog sep:" " s:rusr sep:" [" s:time_s sep:"] \"" s,clf:req_line1 sep:" " s,clf:req_line2 sep:" " s,clf:req_line3 sep:"\" " i:res_status sep:" " i:res_size sep:" \"" s,clf:referrer sep:"\" \"" s,clf:user_agent sep:"\"" -eval i:time 'DateToTime(time_s, \"d.b.Y.H.M.S.z\")' -c ip rlog rusr time req_line1 req_line2 req_line3 res_status res_size referrer user_agent
     
 *Sample Output*::
 
@@ -233,7 +233,7 @@ This option allows you to apply a command to the data in your category before Es
 
 *Preprocess Command*::
 
-    logcnv -f,+1,eok - -d s,n=7,trm:stn s,n=7,trm:wban s,n=12,trm:yearmoda s,n=6,trm:temp s,n=5,trm:unlabeled1 s,n=6,trm:dewp s,n=4,trm:unlabeled2 s,n=7,trm:slp s,n=3,trm:unlabeled3 s,n=1,trm:unlabeled4 s,n=7,trm:stp s,n=3,trm:unlabeled5 s,n=7,trm:visib s,n=4,trm:unlabeled6 s,n=6,trm:wdsp s,n=3,trm:unlabeled7 s,n=7,trm:mxspd s,n=1,trm:unlabeled8 s,n=8,trm:gust s,n=8,trm:max s,n=6,trm:min s,n=7,trm:prcp s,n=7,trm:sndp s,n=6,trm:frshtt
+    aq_pp -f,+1,eok - -d s,n=7,trm:stn s,n=7,trm:wban s,n=12,trm:yearmoda s,n=6,trm:temp s,n=5,trm:unlabeled1 s,n=6,trm:dewp s,n=4,trm:unlabeled2 s,n=7,trm:slp s,n=3,trm:unlabeled3 s,n=1,trm:unlabeled4 s,n=7,trm:stp s,n=3,trm:unlabeled5 s,n=7,trm:visib s,n=4,trm:unlabeled6 s,n=6,trm:wdsp s,n=3,trm:unlabeled7 s,n=7,trm:mxspd s,n=1,trm:unlabeled8 s,n=8,trm:gust s,n=8,trm:max s,n=6,trm:min s,n=7,trm:prcp s,n=7,trm:sndp s,n=6,trm:frshtt
 ..    logcnv -f,+1,eok - -d s,n=7:stn s,n=7:wban s,n=12:yearmoda s,n=6:temp s,n=5:unlabeled1 s,n=6:dewp s,n=4:unlabeled2 s,n=7:slp s,n=3:unlabeled3 s,n=1:unlabeled4 s,n=7:stp s,n=3:unlabeled5 s,n=7:visib s,n=4:unlabeled6 s,n=6:wdsp s,n=3:unlabeled7 s,n=7:mxspd s,n=1:unlabeled8 s,n=8:gust s,n=8:max s,n=6:min s,n=7:prcp s,n=7:sndp s,n=6:frshtt
     
 *Sample Output*::
@@ -280,12 +280,12 @@ This option allows you to apply a command to the data in your category before Es
 
 *Preprocess Command*::
 
-    jsncnv -f,eok twitterex.json -d s:coordinates:coordinates s:created_at:created_at s:favorited:favorited s:truncated:truncated s:id_str:id_str s:expanded_url:entities.urls.expanded_url s:url:entities.urls.url i:index0:entities.urls.indices[0] i:index1:entities.urls.indices[1] s:in_reply_to_user_id_str:in_reply_to_user_id_str s:text:text s:profile_sidebar_border_color:user.profile_sidebar_border_color s:name:user.name s:in_reply_to_screen_name:in_reply_to_screen_name s:source:source s:place:place s:in_reply_to_status_id:in_reply_to_status_id
+    objcnv -jsn -f,eok twitterex.json -d s:coordinates:coordinates s:created_at:created_at s:favorited:favorited s:truncated:truncated s:id_str:id_str s:expanded_url:entities.urls.expanded_url s:url:entities.urls.url s:in_reply_to_user_id_str:in_reply_to_user_id_str s:text:text s:profile_sidebar_border_color:user.profile_sidebar_border_color s:name:user.name s:in_reply_to_screen_name:in_reply_to_screen_name s:source:source s:place:place s:in_reply_to_status_id:in_reply_to_status_id
     
 *Sample Output*::
 
-    "coordinates","created_at","favorited","truncated","id_str","expanded_url","url","index0","index1","in_reply_to_user_id_str","text","profile_sidebar_border_color","name","in_reply_to_screen_name","source","place","in_reply_to_status_id"
-    ,"Thu Oct 21 16:02:46 +0000 2010","false","false","28039652140",,"http://gnip.com/success_stories",69,100,,"what we've been up to at @gnip -- delivering data to happy customers http://gnip.com/success_stories","C0DEED","Gnip, Inc.",,"web",,
+    "coordinates","created_at","favorited","truncated","id_str","expanded_url","url","in_reply_to_user_id_str","text","profile_sidebar_border_color","name","in_reply_to_screen_name","source","place","in_reply_to_status_id"
+    ,"Thu Oct 21 16:02:46 +0000 2010","false","false","28039652140",,"http://gnip.com/success_stories",,"what we've been up to at @gnip -- delivering data to happy customers http://gnip.com/success_stories","C0DEED","Gnip, Inc.",,"web",,
     
 .. Compression
 .. ---------------

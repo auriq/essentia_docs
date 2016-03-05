@@ -42,11 +42,12 @@ Primary Lines in this Script
 
 * Export the modified and aggregated data from the database and save the results to a csv file.
 
-.. code-block:: sh
+.. literalinclude:: ../../EssentiaPublic/casestudies/casino/totalwinnings.sh
+   :language: bash
    :linenos:
    :emphasize-lines: 4,8,10,14,16
     
-   ess drop database totalwinnings
+..   ess drop database totalwinnings
    ess create database totalwinnings --ports=1
     
    ess create vector myvector s,pkey:user i,+max:bet f,+add:winnings

@@ -18,7 +18,7 @@ and then select which AWS S3 Bucket our data is located in::
     
 Now we need to create a category to tell Essentia which data in our datastore corresponds to the access logs we want to load into Redshift::
 
-    ess category create April2014 "accesslogs/125-access_log-201404*" --preprocess 'logcnv -f,eok,qui - -d ip:ip sep:" " s:rlog sep:" " s:rusr sep:" [" i,tim:time sep:"] \"" s,clf:req_line1 sep:" " s,clf:req_line2 sep:" " s,clf:req_line3 sep:"\" " i:res_status sep:" " i:res_size sep:" \"" s,clf:referrer sep:"\" \"" s,clf:user_agent sep:"\""'
+    ess category create April2014 "accesslogs/125-access_log-201404*"
 
 Setup Redshift
 ***************
@@ -30,8 +30,9 @@ Now we register and connect to our running Redshift cluster::
 Now we need to create a category with the correct column specification to generate our Redshift SQL Table::
 
     ess category add redtable "accesslogs/125-access_log-20140406" \
-    --preprocess 'logcnv -f,eok,qui - -d ip:ip sep:" " s:rlog sep:" " s:rusr sep:" [" i,tim:time sep:"] \"" s,clf:req_line1 sep:" " s,clf:req_line2 sep:" " s,clf:req_line3 sep:"\" " i:res_status sep:" " i:res_size sep:" \"" s,clf:referrer sep:"\" \"" s,clf:user_agent sep:"\""' \
-    --columnspec "s:day s:hour i:hitcount i:pagecount i:pagebytes ip:ip X X X X X" --overwrite
+     --preprocess 'aq_pp -f,eok,qui - -d ip:ip sep:" " s:rlog sep:" " s:rusr sep:" [" s:time_s sep:"] \"" s,clf:req_line1 sep:" " s,clf:req_line2 sep:" " \
+    s,clf:req_line3 sep:"\" " i:res_status sep:" " i:res_size sep:" \"" s,clf:referrer sep:"\" \"" s,clf:user_agent sep:"\"" -eval i:time "DateToTime(time_s, \"d.b.Y.H.M.S.z\")"' \
+    --columnspec "s:day s:hour i:hitcount i:pagecount i:pagebytes ip:ip X X X X X X" --overwrite
       
 and then use that category to generate a Redshift SQL Table called ``april2014``::
 
@@ -47,7 +48,11 @@ Load Redshift
 
 So far we've created our cloud Essentia cluster, connected to the data we want to load, created an SQL Table to store the data in, and connected to our running Redshift cluster. Now we can load the access log data into that SQL Table using the ``ess redshift stream`` command::
 
-    ess redshift stream April2014 "2014-04-01" "2014-04-30" "logcnv -f,eok,qui - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' i,tim:time sep:'] \"' s,clf:req_line1 sep:' ' s,clf:req_line2 sep:' ' s,clf:req_line3 sep:'\" ' i:res_status sep:' ' i:res_size sep:' \"' s,clf:referrer sep:'\" \"' s,clf:user_agent sep:'\"' -notitle | aq_pp -f,eok - -d ip:ip X X i:time X s:accessedfile X i:httpstatus i:pagebytes X X -filt 'httpstatus == 200 || httpstatus == 304' -eval i:hitcount '1' -if -filt '(PatCmp(accessedfile, \"*.html[?,#]?*\", \"ncas\") || PatCmp(accessedfile, \"*.htm[?,#]?*\", \"ncas\") || PatCmp(accessedfile, \"*.php[?,#]?*\", \"ncas\") || PatCmp(accessedfile, \"*.asp[?,#]?*\", \"ncas\") || PatCmp(accessedfile, \"*/\", \"ncas\") || PatCmp(accessedfile, \"*.php\", \"ncas\"))' -eval i:pagecount '1' -eval s:pageurl 'accessedfile' -else -eval pagecount '0' -endif -eval s:month 'TimeToDate(time,\"%B\")' -eval s:day 'TimeToDate(time,\"%d\")' -eval s:dayoftheweek 'TimeToDate(time,\"%a\")' -eval s:hour 'TimeToDate(time,\"%H\")' \
+    ess redshift stream April2014 "2014-04-01" "2014-04-30" "aq_pp -f,qui,eok - -d ip:ip sep:' ' X sep:' ' X sep:' [' \
+    s:time_s sep:'] \"' X sep:' ' s,clf:accessedfile sep:' ' X sep:'\" ' i:httpstatus sep:' ' i:pagebytes sep:' \"' X \
+    sep:'\" \"' X sep:'\"' X -eval i:time 'DateToTime(time_s, \"d.b.Y.H.M.S.z\")' -filt 'httpstatus == 200 || httpstatus == 304' -eval i:hitcount '1' \
+    -if -filt '(PatCmp(accessedfile, \"*.html[?,#]?*\", \"ncas\") || PatCmp(accessedfile, \"*.htm[?,#]?*\", \"ncas\") || PatCmp(accessedfile, \"*.php[?,#]?*\", \"ncas\") || PatCmp(accessedfile, \"*.asp[?,#]?*\", \"ncas\") || PatCmp(accessedfile, \"*/\", \"ncas\") || PatCmp(accessedfile, \"*.php\", \"ncas\"))' -eval i:pagecount '1' -eval s:pageurl 'accessedfile' -else -eval pagecount '0' -endif \
+    -eval s:month 'TimeToDate(time,\"%B\")' -eval s:day 'TimeToDate(time,\"%d\")' -eval s:dayoftheweek 'TimeToDate(time,\"%a\")' -eval s:hour 'TimeToDate(time,\"%H\")' \
     -c day hour hitcount pagecount pagebytes ip -notitle" april2014 --options TRUNCATECOLUMNS
 
 Query Redshift

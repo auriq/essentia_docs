@@ -17,7 +17,7 @@ The following code block shows how simple this is:
 
    ess select s3://my-gz-data --credentials=mycreds.csv
    ess select s3://my-zip-data --credentials=my-other-creds.csv
-   ess category add zipfiles "*.zip" --dateformat="YYMMDD.zip"
+   ess category add zipfiles "*.zip" --dateregex="[:%y:][:%m:][:%d:].zip"
 
    ess stream zipfiles "*" "*" "gzip -3 -c -" --s3out=my-gz-data:/converted/%path/%file.gz
 

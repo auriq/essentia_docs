@@ -174,7 +174,9 @@ Script setup and management
 2. Click the **Add** button.
 3. Enter the **Owner** of your Github Repository, the name of your **Repository**, and your Personal Access **Token**. If you do not have a Personal Access Token, follow the instructions found `here <https://help.github.com/articles/creating-an-access-token-for-command-line-use/>`_.
 4. Click on the **Save** button to finish adding your Github Repository.
-5. From this point you can view, run, or edit any of the scripts stored in the Github Repository. To commit any changes back to you Github Repository, the Personal Access Token you used to connect to the repository must have had write permissions. If this is the case, you can click **Commit** to push your changes back onto the Github Repository.
+5. From this point you can view, edit, and run any of the scripts stored in the Github Repository. 
+
+.. To commit any changes back to you Github Repository, the Personal Access Token you used to connect to the repository must have had write permissions. If this is the case, you can click **Commit** to push your changes back onto the Github Repository.
 
 *Note:* To view or switch between available Github Repositories or Branches, click on the **Repository** or **Branch** drop down menus.
 

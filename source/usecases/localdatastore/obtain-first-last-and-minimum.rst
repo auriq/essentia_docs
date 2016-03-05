@@ -48,11 +48,12 @@ Primary Lines in this Script
 
 * Export the modified and sorted data from the database and then save the results to a csv file.
 
-.. code-block:: sh
+.. literalinclude:: ../../EssentiaPublic/casestudies/casino/worstloss.sh
+   :language: bash
    :linenos:
    :emphasize-lines: 4,8,10,14,16,17
     
-   ess drop database worstloss
+..   ess drop database worstloss
    ess create database worstloss --ports=1
     
    ess create table grouping s,pkey:country s,+key:user s,+first:time i,+last:bet f,+min:winnings
