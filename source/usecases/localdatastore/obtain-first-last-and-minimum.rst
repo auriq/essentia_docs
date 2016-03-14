@@ -20,38 +20,38 @@ attributes to your data and return the results you want in the order you want th
 Primary Lines in this Script
 ============================
 
-**Line 4**
+**Line 7**
 
 * Store a table called grouping in the database worstloss that keeps track of the first value of the time column, last value of the bet column, and minimum value in the winnings column for each unique 
   value of the country and user columns.
 
-**Line 8**
+**Line 11**
 
 * Tell Essentia to look for data on your local datastore.
 
-**Line 10**
+**Line 13**
 
 * Create a new rule to take any files in your home directory with 'onlinecasino' in their name and put them in the casino category. Also tell Essentia not to look for a date in the filenames.
 
-**Line 14**
+**Line 17**
 
 * Pipe all files in the category casino to the aq_pp command. 
 * In the aq_pp command, tell the preprocessor to take data from stdin, ignoring errors and skipping the first line (the header). 
 * Then define the incoming data's columns and import the data to the vector in the worstloss database so the attributes 
   listed there can be applied.
 
-**Line 16**
+**Line 19**
 
 * Internally sort the records in the database, within each unique country, by winnings. Since this is internal, it has no output.
 
-**Line 17**
+**Line 20**
 
 * Export the modified and sorted data from the database and then save the results to a csv file.
 
 .. literalinclude:: ../../EssentiaPublic/casestudies/casino/worstloss.sh
    :language: bash
    :linenos:
-   :emphasize-lines: 4,8,10,14,16,17
+   :emphasize-lines: 7,11,13,17,19,20
     
 ..   ess drop database worstloss
    ess create database worstloss --ports=1
