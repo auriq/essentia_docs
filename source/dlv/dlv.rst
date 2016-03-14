@@ -71,7 +71,7 @@ Datastore category setup and management
 3. Or click on the options drop down arrow to display category options and define either of the following options:
 
 * `Archive <../reference/manuals/category-rules.html#archive>`_ - matching pattern to describe filenames within a compressed file.
-* `Cache file list <../reference/manuals/category-rules.html#file-list-cache>`_ - store a local file list for the current category that can be used instead of accessing the repository.
+* `Use cached file list <../reference/manuals/category-rules.html#use-cached-file-list>`_ - reference the local file list for the current category instead of accessing the repository.
 
 .. * `Compression <../reference/manuals/category-rules.html#compression>`_ - drop down to select the type of file compression
 
@@ -104,8 +104,10 @@ Query setup and management
 
 1. Click on **Direct Data Query** in the top menu and and select a Repository from the drop down
 2. Enter your SQL like query in the **Input your query here** area. You can optionally enter a label for this query so you can reference it later. 
-3. Click on the **Run** button to view your query results on your screen, download your query results into a file on your instance by clicking **Download** and entering a filename, or generate an OData link for easy loading into Tableau by clicking **OData**.
+3. Click on the **Run** button to view your query results on your screen and then optionally download your query results into a file on your computer by clicking **Download** and entering a filename.
 4. From this point you can access a saved query or run a new query.
+
+.. , or generate an OData link for easy loading into Tableau by clicking **OData**.
 
 *Note:* If you need to view available categories, click on the **Categories** drop down arrow to view a list of available categories.
 
@@ -134,23 +136,24 @@ Query setup and management
     
 To see more examples of the types of queries we allow and work with some sample queries of our public data, please go through our :doc:`./direct-query-examples`
 
-**Transfer Data with Tableau OData**
-
-1. Create a query following the steps above and click the **OData** button to generate an OData link to your query.
-2. Copy this Link using the **Copy** option on the right of the URL box or highlight the URL and copy it to your clipboard.
-3. Open Tableau and go to the "To a server" connection section.
-4. Select **OData**. Note, you need to click "More Servers" to see the OData option if you are using Tableau Desktop.
-5. Paste the URL into the box after "Server:" and select **No Authentication** (this should be the default).
-
-| *Note:* 
-|   Our OData service is still in its Beta version and is currently limited to sending 10,000 lines of data (and 100,000 values) *into* Tableau. However, you can *query* larger amounts of data as long as the *output* is less than 10,000 lines (and 100,000 values). This will be improved in the full version, which will be released in the near future, along with support for OData clients other than Tableau.
+.. **Transfer Data with Tableau OData**
+.. 
+.. 1. Create a query following the steps above and click the **OData** button to generate an OData link to your query.
+.. 2. Copy this Link using the **Copy** option on the right of the URL box or highlight the URL and copy it to your clipboard.
+.. 3. Open Tableau and go to the "To a server" connection section.
+.. 4. Select **OData**. Note, you need to click "More Servers" to see the OData option if you are using Tableau Desktop.
+.. 5. Paste the URL into the box after "Server:" and select **No Authentication** (this should be the default).
+.. 
+.. | *Note:* 
+.. |   Our OData service is still in its Beta version and is currently limited to sending 10,000 lines of data (and 100,000 values) *into* Tableau. However, you can *query* larger amounts of data as long as the *output* is less than 10,000 lines (and 100,000 values). This will be improved in the full version, which will be released in the near future, along with support for OData clients other than Tableau.
 
 **Working with Saved Queries**
 
 1. Select your Saved Query from the dropdown. The query should appear in the "Input your query here" area. If you labeled your query, the label should appear next to the saved query dropdown.
-2. Now you can click the **Run** button to view your query results on your screen, download your query results into a file on your instance by clicking **Download** and entering a filename, access the query via an http link by clicking **HTTP**, or generate an OData link for easy loading into Tableau by clicking **OData**.
+2. Now you can click the **Run** button to view your query results on your screen and optionally download your query results into a file on your computer by clicking **Download** and entering a filename.
 
-You can generate a new HTTP link for your query by clicking **HTTP** and then clicking **Reset**. This is useful if you want to share the link with others, but only want to provide them access for a limited amount of time. 
+.. 2. Now you can click the **Run** button to view your query results on your screen, download your query results into a file on your instance by clicking **Download** and entering a filename, access the query via an http link by clicking **HTTP**, or generate an OData link for easy loading into Tableau by clicking **OData**.
+.. You can generate a new HTTP link for your query by clicking **HTTP** and then clicking **Reset**. This is useful if you want to share the link with others, but only want to provide them access for a limited amount of time. 
 
 You can search your saved queries by entering any parts of your desired queries into the **Search** box. 
 

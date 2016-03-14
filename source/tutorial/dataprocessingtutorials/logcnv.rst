@@ -31,10 +31,10 @@ Additionally, in ``aq_pp`` you can specify the columns to output using the ``-c`
 
 You can limit which columns are output in the final result by using the '-c' option. i.e. run::
 
-  logcnv -f,eok apache.log -d ip:ip sep:' ' s:rlog sep:' ' \
-  s:rusr sep:' [' i,tim:time sep:'] "' s,clf:req_line1 sep:' ' s,clf:req_line2 sep:' ' s,clf:req_line3 \
+  aq_pp -f,eok apache.log -d ip:ip sep:' ' s:rlog sep:' ' \
+  s:rusr sep:' [' s:time_s sep:'] "' s,clf:req_line1 sep:' ' s,clf:req_line2 sep:' ' s,clf:req_line3 \
   sep:'" ' i:res_status sep:' ' i:res_size sep:' "' \
-  s,clf:referrer sep:'" "' s,clf:user_agent sep:'"' \
+  s,clf:referrer sep:'" "' s,clf:user_agent sep:'"' -eval i:time 'DateToTime(time_s, \"d.b.Y.H.M.S.z\")' \
   -c ip time req_line2 res_status res_size
 
   "ip","time","req_line1_f2","res_status","res_size"
