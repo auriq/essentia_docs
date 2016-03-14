@@ -231,4 +231,4 @@ To run your script, navigate to the directory that contains your script and then
 Questions
 ---------
 
-Our tutorials are intended to guide you through the usage of the included tools, but you should feel free to contact us at info@auriq.com with any other questions.
+Our tutorials are intended to guide you through the usage of the included tools, but you should feel free to contact us at essentia@auriq.com with any other questions.

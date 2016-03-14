@@ -4,15 +4,7 @@ IAM Roles
 In order for Essentia to launch worker nodes, it requires authentication credentials.  These can be provided in two
 different ways.
 
-First, users can log into their master node and run the command::
-
-  aws configure
-
-The user will then need to enter their credentials, which will then be stored in a file which Essentia will read when
-it needs them.
-
-A downside of this is that the user needs to worry about credentials, and updating them should they change.  A
-simpler option is to grant the master the authorization to create other ec2 instances.  This is done via an
+First, users can grant the master the authorization to create other ec2 instances.  This is done via an
 `IAM Role <http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/iam-roles-for-amazon-ec2.html>`_.
 
 To create one, follow these steps:
@@ -84,3 +76,12 @@ To create one, follow these steps:
         ]
     }
     
+Alternatively, users can log into their master node and run the command::
+
+  aws configure
+
+The user will then need to enter their credentials, which will then be stored in a file which Essentia will read when
+it needs them.
+
+A downside of this is that the user needs to worry about credentials, and updating them should they change. It is recommended to use IAM Roles instead. 
+If you do not have access to create an IAM Role, contact your AWS Administrator.
