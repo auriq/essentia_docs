@@ -63,7 +63,10 @@ Essentia Commands
     ess category delete,"| ExistingCategory
     | ``[--label name]``","Remove the reference to this category"
     ess category copy,"| ExistingCategory NewCategory
-    | ``[--label name]``","Create a copy of an existing category reference"
+    | ``[--label name]``
+    | ``[--credentials file]``
+    | ``[--aws_access_key publickey]``
+    | ``[--aws_secret_access_key secretkey]``","Create a copy of an existing category reference"
     ess category change,"| columnspec|dateformat|dateregex|usecache|comment
     | NewSpec|NewFormat|NewRegex|NewCache|NewComment","Modify or override details about a category"
     ess cluster create,"| ``[--type NodeType]`` 

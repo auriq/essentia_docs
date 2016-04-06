@@ -8,5 +8,5 @@ You can view any version of the Essentia Documentation by clicking on the corres
 
 * `3.0.9.12 <../3.0.9.12/index.html>`_
 
-* `3.1.0.7 <../index.html>`_
+* `3.1.1 <../index.html>`_
 

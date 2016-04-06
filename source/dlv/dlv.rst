@@ -5,16 +5,18 @@ Getting Started
 
 *This guide will help walk you through the basic setup and use of the Essentia Data Lake Manager.*
 
+To learn more about how to create a category, see :doc:`../reference/manuals/category-rules`.
+
 Repository setup and management
 --------------------------------
 
 .. `Video Demo <https://www.youtube.com/watch?v=G5x4dDazFug&width=640&height=480>`_
 
-`Video Demo <https://youtu.be/Bsoa7psCFgo>`_
+.. `Video Demo <https://youtu.be/Bsoa7psCFgo>`_
 
 **Link to AWS S3**
 
-1. Click on **Data Repository** in the top menu and then the AWS S3 tab.
+1. Click on **Connect** in the top menu and then the AWS S3 tab.
 2. Click on the **+Add** icon to open the input form.
 3. Enter your AWS S3 credentials (bucket name, access key, secret access key) and a label if you prefer to call the bucket by another name.
 4. Click on the **Add** button to add your S3 repository.
@@ -22,7 +24,7 @@ Repository setup and management
 
 **Link to Azure Blob**
 
-1. Click on **Data Repository** in the top menu and then the Azure Blob tab.
+1. Click on **Connect** in the top menu and then the Azure Blob tab.
 2. Click on the **+Add** icon to open the input form.
 3. Enter your Azure Blob credentials (container name, username, password) and a label if you prefer to call the container by another name.
 4. Click on the **Add** button to add your Blob repository.
@@ -30,7 +32,7 @@ Repository setup and management
 
 **Delete Repository**
 
-1. Click on **Data Repository** in the top menu.
+1. Click on **Connect** in the top menu.
 2. Choose the appropriate tab (AWS S3 or Azure Blob).
 3. Click the icon on the right of the table for the repository you want to remove.
 4. Select the delete (trash) icon.
@@ -39,27 +41,27 @@ Repository setup and management
 Datastore category setup and management
 ---------------------------------------
 
-`Video Demo <https://youtu.be/ed0g7uVzEmA>`_
+.. `Video Demo <https://youtu.be/ed0g7uVzEmA>`_
 
 **Create category**
 
-1. Click on **Data Viewer** in the top menu and select a Repository from the drop down.
+1. Click on **Categorize** in the top menu and select a Repository from the drop down.
 2. Click on the **+Add** icon to open the input form.
 3. Define your Category by entering:
 
 * `Category name <../reference/manuals/category-rules.html#category-name>`_ - any arbitrary name (no spaces).
-* `Pattern <../reference/manuals/category-rules.html#pattern>`_ - globular matching pattern to describe what types of files to include in your category.
+* `Pattern <../reference/manuals/category-rules.html#pattern>`_ - globular matching pattern(s) to describe what types of files to include in your category.
 
 4. Optionally define any number of the following options to speed up data scanning or make data management easier:
 
 * `Comment <../reference/manuals/category-rules.html#comment>`_ - any arbitrary comment.
 * `Delimiter <../reference/manuals/category-rules.html#delimiter>`_ - the type of delimiter (comma, space, tab, etc) used in your data.
 * `Exclude <../reference/manuals/category-rules.html#exclude>`_ - globular matching pattern to describe what files to not include in your category. **Note:** this further restricts the files included by your ``Pattern``.
-* `Date Extraction <../reference/manuals/category-rules.html#date-regex>`_ - matching date extraction pattern found in filename structure. Specify a regular expression pattern to extract the date from your file path/name, see `Date Regex <../reference/manuals/category-rules.html#date-regex>`_.
+* `Date Format <../reference/manuals/category-rules.html#date-regex>`_ - matching date extraction pattern found in filename structure. Specify a regular expression pattern to extract the date from your file path/name, see `Date Regex <../reference/manuals/category-rules.html#date-regex>`_.
 
 5. Click on the **Save** button to create your category. This may take a few minutes while Essentia scans your data.
 6. After scan is complete, the derived column specifications will be displayed along with metadata about your files. Also, you can now **Define Additional Category Options** (see section 2 for more detail) or choose to **Directly Edit Column Specification** (see section 3 for more detail).
-7. Your newly added category will be displayed in the category table for the selected repository. From here you can edit, copy or delete a category, view a sample of the data or see the list of files that make up your category.
+7. Your newly added category will be displayed in the category table for the selected repository. From here you can edit, copy, scan, or delete a category, view a sample of the data or see the list of files that make up your category.
 
 **Define Additional Category Options**
 
@@ -86,7 +88,7 @@ Datastore category setup and management
 
 1. Click **Explore**.
 2. Click the **+** next to a directory to navigate through the directories on your Repository.
-3. Your current path is displayed at the top, next to your repository name. This is useful when defining a pattern for the files you want to group into a category.
+3. Your current path is displayed at the top, under your repository name. This is useful when defining a pattern for the files you want to group into a category.
 4. You can click the icon next to any filename to **Download** or **Delete** that file from your Repository.
 
 You can click **Upload** to choose files to upload to the current path on your Repository.
@@ -95,17 +97,20 @@ You can click **Size** to calculate the total number of files and bytes in the c
 
 You can click **Refresh** to get the latest list of files on your Repository.
 
+*Note:* If the Explorer tab does not open when you click **Explore**, you may need to enable pop-ups from the Essentia UI.
+
 Query setup and management
 -----------------------------
 
-`Video Demo <https://youtu.be/jILkSbnPHeg>`_
+.. `Video Demo <https://youtu.be/jILkSbnPHeg>`_
 
 **Create a Query**
 
-1. Click on **Direct Data Query** in the top menu and and select a Repository from the drop down
+1. Click on **Query** in the top menu and and select a Repository from the drop down
 2. Enter your SQL like query in the **Input your query here** area. You can optionally enter a label for this query so you can reference it later. 
 3. Click on the **Run** button to view your query results on your screen and then optionally download your query results into a file on your computer by clicking **Download** and entering a filename.
-4. From this point you can access a saved query or run a new query.
+4. If you do not need the results of your query anymore, you can click **Clear** to delete those results. 
+5. From this point you can access a saved query or run a new query. Running another query will clear the previous query's results.
 
 .. , or generate an OData link for easy loading into Tableau by clicking **OData**.
 
@@ -150,7 +155,7 @@ To see more examples of the types of queries we allow and work with some sample 
 **Working with Saved Queries**
 
 1. Select your Saved Query from the dropdown. The query should appear in the "Input your query here" area. If you labeled your query, the label should appear next to the saved query dropdown.
-2. Now you can click the **Run** button to view your query results on your screen and optionally download your query results into a file on your computer by clicking **Download** and entering a filename.
+2. Now you can click the **Run** button to view your query results on your screen and then optionally download your query results into a file on your computer by clicking **Download** and entering a filename.
 
 .. 2. Now you can click the **Run** button to view your query results on your screen, download your query results into a file on your instance by clicking **Download** and entering a filename, access the query via an http link by clicking **HTTP**, or generate an OData link for easy loading into Tableau by clicking **OData**.
 .. You can generate a new HTTP link for your query by clicking **HTTP** and then clicking **Reset**. This is useful if you want to share the link with others, but only want to provide them access for a limited amount of time. 
@@ -164,16 +169,18 @@ Script setup and management
 
 **Run a Script**
 
-1. Click on **Direct Script** in the top menu.
+1. Click on **Analyze** in the top menu.
 2. Select a Github Repository from the drop down menu or use the Default (DirectScipt - auriq).
 3. Enter your Essentia or unix shell commands in the **Input your script here** area. You can optionally select one of the files from your Github Repository to edit or run. To do this, click the file icon to the left of the filename. 
 4. Click on the **Run** button to view your script's results on your screen.
 
-*Note:* You can also **Stop** running your script or, when it has finished, **Download** the result onto your local machine.
+*Note:* You can also **Stop** running your script or, when it has finished, **Download** the result onto your local machine or **Clear** the results so they are no longer stored.
+
+*Note:* You can also view the status of your master computer and any other machines you are utilizing by clicking on **Cluster Status**. This will show you the connection information and resource usage of each connected machine.
 
 **Connect to a Github Repository**
 
-1. Click on **Direct Script** in the top menu.
+1. Click on **Analyze** in the top menu.
 2. Click the **Add** button.
 3. Enter the **Owner** of your Github Repository, the name of your **Repository**, and your Personal Access **Token**. If you do not have a Personal Access Token, follow the instructions found `here <https://help.github.com/articles/creating-an-access-token-for-command-line-use/>`_.
 4. Click on the **Save** button to finish adding your Github Repository.
@@ -181,14 +188,14 @@ Script setup and management
 
 .. To commit any changes back to you Github Repository, the Personal Access Token you used to connect to the repository must have had write permissions. If this is the case, you can click **Commit** to push your changes back onto the Github Repository.
 
-*Note:* To view or switch between available Github Repositories or Branches, click on the **Repository** or **Branch** drop down menus.
+*Note:* To view or switch between available Github Repositories or Branches, click on the **Github Repository** or **Branch** drop down menus.
 
 Using RStudio
 -------------
 
 .. note::
 
-    R and RStudio-Server are NOT part of our Essentia Platform. They are third party software that we enable users to install and integrate with AT THEIR OWN DISCRETION. This Decision is up to the User and is not required to use any of AuriQ Systems Inc.'s solutions.
+    R and RStudio-Server are NOT part of our Essentia Platform. They are third party software that we enable users to install and integrate with AT THEIR OWN DISCRETION. This decision is up to the User and is not required to use any of AuriQ Systems Inc.'s solutions.
 
 **Setting up RStudio**
 
@@ -203,7 +210,7 @@ If you plan to use our RStudio Integration and you haven't enabled it yet, you n
 
 **Accessing RStudio**
 
-Go to the UI and then click the **RStudio** link in the top menu. 
+Go to the UI and then click the **RStudio** link in the top menu. If you just installed RStudio then you may need to refresh the UI page in order to see the RStudio menu option.
 
 Enter **"essentia"** as the username and enter the **Instance ID** of your instance as your password.
 

@@ -2,7 +2,7 @@
 Data Lake Manager
 ****************
 
-Your Essentia instance provides a web-based UI which we call the 'Data Lake Manager'.  This service allows users to
+Your Essentia instance provides a **web-based UI** which we call the 'Data Lake Manager'.  This service allows users to
 quickly examine and categorize the files within their cloud based data stores.  It also allows SQL style queries 
 as well as running command line scripts on raw data so that quick inspections and analysis of data can be 
 performed without the need of first moving data into another analysis platform.
@@ -12,6 +12,7 @@ performed without the need of first moving data into another analysis platform.
    :maxdepth: 2
 
    dlv
+   source/reference/manuals/category-rules
    direct-query-examples
    
 .. direct-script-examples

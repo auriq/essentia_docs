@@ -1,8 +1,8 @@
 ******************************
-Direct Data Query Examples
+Query
 ******************************
 
-.. Example Direct Data Query Commands
+.. Example Query Commands
 
 .. **Required First Step**
 
@@ -10,13 +10,13 @@ Direct Data Query Examples
 
 **Overview**
 
-Direct Data Query is Essentia's unique method of quering the data in your datastore directly, without loading anything into memory. 
+Query is Essentia's unique method of quering the data in your datastore directly, without loading anything into memory. 
 It allows you to quickly and efficiently explore data in a multitude of formats and is written in a user friendly, SQL-like language.
 
-The Direct Data Query command structure consists of a select statement to define which columns are desired and what operations you want to perform on them, 
-a from statement telling Direct Data Query which category in your repository to pull the data from and over what time period, and a series of filtering and ordering options to modify how the data is output.
+The Query command structure consists of a select statement to define which columns are desired and what operations you want to perform on them, 
+a from statement telling Query which category in your repository to pull the data from and over what time period, and a series of filtering and ordering options to modify how the data is output.
 
-This tutorial will provide sample usage of the currently supported options for Direct Data Query. These options are:
+This tutorial will provide sample usage of the currently supported options for Query. These options are:
 
 * **Select Statement Specifications:** *column_name(s), \*, count(column_name), count(\*), count(distinct column_name)*
 * **From Statement Specifications:** *category_name:start_date:end_date*
@@ -28,40 +28,42 @@ They are subject to the rules listed `here <../dlv/dlv.html#query-setup-and-mana
 
 This tutorial works on the browse data on our *public* cloud storage, **asi-public**. To access this data:
 
-First go to the **Data Repository** tab.
+First go to the **Connect** tab.
 
 
-S3 users then go to the **AWS S3** panel and click the plus button. Enter::
+S3 users then go to the **AWS S3** panel and click the **+Add** button. Enter::
     
     asi-public
+    *Don't enter anything*
     Your_Access_Key
     Your_Secret_Access_Key
     
 and click **Add**. 
 
-Azure users instead go to the **Azure Blob** panel and click the plus button. Enter::
+Azure users instead go to the **Azure Blob** panel and click the **+Add** button. Enter::
 
     asi-public
+    *Don't enter anything*
     asipublic
-    
-    
+    *Don't enter anything*
+
 and click **Add**. 
 
 *Note*: The **Password** field is left empty since this is a *public* bucket.
 
 
 
-Next go to the **Data Viewer** tab and select **asi-public** from the drop down menu.
+Next go to the **Categorize** tab and select **asi-public** from the drop down menu.
 
-Now click the plus button, enter ``browse`` next to **Category**, and the globular pattern ``diy_woodworking/*browse*`` under **Pattern**. 
+Now click the **+Add** button, enter ``browse`` next to **Category**, and the globular pattern ``diy_woodworking/*browse*`` under **Pattern**. 
 Click **Save**. This finds all the files in our repository asi-public whose filenames match our pattern. 
 It also displays the type and name of each column in the matching files. These columns are::
 
     S:eventDate I:userID I:articleID
 
-Now that you have selected your datastore and defined a category, you can click **Direct Data Query** to start exploring your data.
+Now that you have selected your datastore and defined a category, you can click **Query** to start exploring your data.
 
-*The rest of this tutorial highlights various commands you can enter into Direct Data Query. 
+*The rest of this tutorial highlights various commands you can enter into Query. 
 This is not a complete list but provides the building blocks from which you can build more complex queries. 
 We also show the first five lines of the output of each command.*
 

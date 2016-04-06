@@ -19,25 +19,15 @@ How to Install Essentia on your Local Machine
 
 #. Run::
 
-    unzip essentia-linux-x64-310_3.zip
+    unzip essentia-311.zip
     
 #. Read the README and LICENSE.txt files.
 
 #. Run:: 
 
-    sudo ./essentia-linux-x64-310_3.sh
+    sudo bash essentia-311.sh
 
 #. Type ``y`` to install Essentia.
-
-#. Add ``/opt/aq_tool/bin`` in your PATH variable.
-   To do so, add the following two lines in your ~/.bash_profile::
-
-    PATH=$PATH:/opt/aq_tool/bin
-    export PATH
-
-#. Then run:: 
-    
-    source ~/.bash_profile
 
 You can then go through our :doc:`../../tutorial/essentiatutorials/index`, :doc:`../../tutorial/dataprocessingtutorials/index`, and :doc:`../../usecases/index` to get familiar with Essentia.
 
@@ -64,7 +54,7 @@ To **Uninstall Essentia**:
 
 #. Run::
 
-    sudo ./essentia-linux-x64-310_3.sh
+    sudo bash essentia-311.sh
 
 #. Type ``n`` when asked to install Essentia.
 

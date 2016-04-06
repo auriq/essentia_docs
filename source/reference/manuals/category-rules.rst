@@ -23,6 +23,16 @@ This is a UNIX-style globular matching pattern to describe what types of files t
 ..        etldata/five*csv
 ..        etldata/*MOCK*csv
 
+You can include multiple patterns separated by a space to group files that match multiple patterns into the same category. 
+
+**Example of Multiple Patterns:** ::
+
+    'diy_woodworking/*purchase* diy_woodworking/*browse*'
+    # This will include ALL of the tutorial browse and purchase files.
+    
+    'filetypes/b.zip filetypes/"b test.zip"'
+    # You can include a literal space in your pattern by quoting that pattern.
+
 *Note:* For a more detailed description of globular matching patterns, see `Glob (programming) <http://en.wikipedia.org/wiki/Glob_%28programming%29>`_
 
 *Note:* **Exclude** further restricts the files included by your **Pattern**.
@@ -60,14 +70,17 @@ The key options you can provide it to symbolize each date segment are:
 | **[:%z:]** = TimeZone
 | **[:%p:]** = Case Insensitive AM or PM.
 
-Alternatively, you can provide the following option to extract just a number from the file path/name as a unique identifier:
+You can also provide the following option to extract just a number from the file path/name as a unique identifier:
 
 | **Number:**
-| **[:%#:]** = Any Single Integer 
+| **[:%f:{min,max}]** = Any Single Integer. Match from min to max digits. It is required to specify min; however, it is not necessary to specify max. If max is not specified, any number with at least min digits will be used as the unique identifier.
 
 | By default Essentia tries to figure out the dates in your filenames using an **auto** setting. 
 | You can also specify a custom **regex** pattern that identifies where the date or number appears in your file paths/names. 
-| For file paths/names that dont have a date or number in them you can also set the Date Regex field to **none**.
+| For file paths/names that dont have a date or number in them you can also set the Date Regex field to **none**. This will tell Essentia not to extract the date and will set the date field to a default, 1970-01-01.
+
+.. note:: 
+   If you don't specify Date Regex or Date Format (see below), then Essentia uses **auto** to extract the date from your filename. If no date can be extracted, Essentia reverts to the **none** behavior and defaults the date to 1970-01-01. 
 
 **Example Date Format Patterns:** ::
     
@@ -94,16 +107,22 @@ Alternatively, you can provide the following option to extract just a number fro
  	 
     .*account12345678_20140609.csv:.*
     
-         #_
+         [:%f:{8,}]_
          
          Note: This extracts the number from this filename. Here we added '_' after the number 
          to help identify the number in the filename.
          
     .*account12345678_20140609.csv:.*
     
-         account#
+         account[:%f:{8,}]
          
          Note: We could also have specified 'account' before the number to identify the number in the filename.
+         
+    .*account12345678_20140609.csv:.*
+    
+         account[:%f:{4,4}]
+         
+         Note: By specifying the min and max digits to 4, we use only the first four digits ('1234') as the identifying number in the filename.
 
 *Note:* For a more detailed description of regex matching patterns, see `Regular Expression <https://en.wikipedia.org/wiki/Regular_expression>`_
 
@@ -299,7 +318,7 @@ This option allows you to apply a command to the data in your category before Es
 
 Column Headers
 ---------------
-These allow you to name your columns so you can reference them later. They **cannot contain spaces or special characters** and they **cannot start with a number**. These can be used in your sql statement in Direct Data Query to select and perform certain operations on specific columns in your data.
+These allow you to name your columns so you can reference them later. They **cannot contain spaces or special characters** and they **cannot start with a number**. These can be used in your sql statement in Query to select and perform certain operations on specific columns in your data.
 
 Data Types
 ---------------

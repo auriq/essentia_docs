@@ -18,7 +18,7 @@ and then select which AWS S3 Bucket our data is located in::
     
 and create a category to tell Essentia which data in our datastore corresponds to the purchase logs we want to load into Redshift::
     
-    ess category add purchase "woodworking/diy_woodworking/*purchase*"
+    ess category add purchase "diy_woodworking/*purchase*"
 
 Setup Redshift
 ***************    
