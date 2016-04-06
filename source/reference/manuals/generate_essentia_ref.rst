@@ -92,21 +92,22 @@
 
 ::
 
-    usage: ess ls [-h] [--cat CAT] [--label LABEL] [-r] [--dateregex [DATEREGEX]]
-                  [--limit [LIMIT]]
+    usage: ess ls [-h] [--exclude [EXCLUDE]] [--cat CAT] [--label LABEL] [-r]
+                  [--dateregex DATEREGEX] [--limit [LIMIT]]
                   [pattern]
     
     list files based on an expression
     
     positional arguments:
-      pattern               Glob pattern to match for
+      pattern               Glob patterns to match for
     
     optional arguments:
       -h, --help            show this help message and exit
+      --exclude [EXCLUDE]   Glob patterns to exclude files within pattern
       --cat CAT             Name of category to show files for
       --label LABEL         select a datastore
       -r, --recursive       Ascend through sub paths
-      --dateregex [DATEREGEX]
+      --dateregex DATEREGEX
                             regex style pattern used to get date from filename
       --limit [LIMIT]       number of file to fetch
     
@@ -120,7 +121,7 @@
 
 ::
 
-    usage: ess category add [-h] [--dateregex [DATEREGEX]]
+    usage: ess category add [-h] [--exclude [EXCLUDE]] [--dateregex DATEREGEX]
                             [--dateformat DATEFORMAT] [--archive ARCHIVE]
                             [--compression COMPRESSION] [--delimiter DELIMITER]
                             [--columnspec COLUMNSPEC] [--preprocess PREPROCESS]
@@ -130,17 +131,19 @@
     
     positional arguments:
       name                  Name of Category to call these files
-      pattern               GLOB pattern to match files
+      pattern               GLOB patterns to match files
     
     optional arguments:
       -h, --help            show this help message and exit
-      --dateregex [DATEREGEX]
+      --exclude [EXCLUDE]   GLOB patterns to exclude files within pattern
+      --dateregex DATEREGEX
                             Format of the date encoded in the filename by regex
                             style
       --dateformat DATEFORMAT
-                            Format of the date encoded in the filename.
-      --archive ARCHIVE     GLOB pattern to match members within an archive (zip,
-                            tgz)
+                            Format of the date encoded in the filename. Will be
+                            deprecated soon, please use dateregex
+      --archive ARCHIVE     GLOB patterns to match members within an archive (e.g.
+                            zip,tar,tgz,tar.bz2)
       --compression COMPRESSION
                             Force file to be treated as compressed in given format
       --delimiter DELIMITER
@@ -175,7 +178,8 @@
     Category change commands:
       {columnspec,dateformat,dateregex,usecache,comment}
         columnspec          Modify the columnspec
-        dateformat          Modify the dateformat
+        dateformat          Modify the dateformat. Will be deprecated soon, please
+                            use dateregex
         dateregex           Modify the dateregex
         usecache            Modify the usecache
         comment             Modify the comment
@@ -286,7 +290,7 @@
     
     optional arguments:
       -h, --help         show this help message and exit
-      --pattern PATTERN  GLOB pattern to match files
+      --pattern PATTERN  GLOB patterns to match files
       --label LABEL      Select a datastore
     
 --------------------------------
@@ -314,12 +318,20 @@
 ::
 
     usage: ess cluster create [-h] [--number NumberOfWorkers] [--type TYPE]
+                              [--credentials CREDENTIALS | --aws_access_key AWS_ACCESS_KEY]
+                              [--aws_secret_access_key AWS_SECRET_ACCESS_KEY]
     
     optional arguments:
       -h, --help            show this help message and exit
       --number NumberOfWorkers
                             Number of worker nodes
       --type TYPE           Type of worker nodes
+      --credentials CREDENTIALS
+                            Credentials file
+      --aws_access_key AWS_ACCESS_KEY
+                            EC2 access key
+      --aws_secret_access_key AWS_SECRET_ACCESS_KEY
+                            EC2 secret access key
     
 +++++++++++++++++++++++++++++++++
 ``ess cluster terminate``
@@ -371,7 +383,7 @@
 
 ::
 
-    usage: ess query [-h] [--label LABEL] command [command ...]
+    usage: ess query [-h] [--label LABEL] [--check] command [command ...]
     
     SQL-like command.
     
@@ -381,6 +393,7 @@
     optional arguments:
       -h, --help     show this help message and exit
       --label LABEL  Specify the datastore to use
+      --check        check SQL syntax only
     
 --------------------------------
 **ess server**
