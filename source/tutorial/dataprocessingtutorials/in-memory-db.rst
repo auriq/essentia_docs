@@ -56,8 +56,9 @@ Vectors
 
 Vectors are a bit different.  For each unique hash key, there is one vector of data.  This is commonly used to store
 summary information about a key.  In this example, we want to know the total amount of money each user spent,
-and we want to know the last article we imported.  The attributes '+add' and '+last' accomplish this. There are many
-other attributes that can be used. See the :doc:`../../reference/tables/index`.
+and we want to know the last article we imported.  The attributes '+add' and '+last' accomplish this. 
+
+There are many other attributes that can be used. For a full list, please see :doc:`../../reference/tables/index`.
 
 
 Importing data

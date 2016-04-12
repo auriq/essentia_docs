@@ -15,22 +15,23 @@ Running on AWS
 The Amazon cloud is a pay as you need infrastucture, which offers general and specific computing resources,
 as well as reliable data storage.  Essentia primarily uses three key AWS components:
 
-1. Elastic Cloud Computing (EC2).  These are 'virtual machines' running on AWS servers that users can provision for
+1. **Elastic Cloud Computing (EC2).**  These are 'virtual machines' running on AWS servers that users can provision for
 computing.  Once launched, users can log into the machines via the command line (typically `ssh`) or via the Essentia Data Lake Manager GUI 
 and begin their tasks.  The operating system Essentia uses is a form of Linux that AWS maintains.
 
-2. Simple, Secure Storage (S3).  Essentially this is a place to store your files.  The 'simple' part of S3 is that
+2. **Simple, Secure Storage (S3).**  Essentially this is a place to store your files.  The 'simple' part of S3 is that
 for most users, you can think of this as basically a hard drive that is on the cloud.  Data is secure because behind
 the scenes, any files uploaded are copied to multiple drives on site in order to prevent data loss due to any failure.
 It is this redundancy which also allows for scalability in reading data.  For instance, on your desktop or laptop,
 if two files are trying to be read from disk at the same time, the drive has to go back and forth to where the data
 is stored.  This slows down the read.  But with multiple disks, this competition can be avoided.
 
-3. Redshift.  This is one of a few types of databases that AWS offers.  It is common in many applications,
+3. **Redshift.**  This is one of a few types of databases that AWS offers.  It is common in many applications,
 including data warehousing.  Data stored in Redshift can be efficiently queried by standard SQL commands.   Essentia
 can integrate with Redshift to clean massive amounts of raw, dirty data and insert it directly into SQL tables.
 
 Getting started with AWS is typically free, and interested users can get more information by reading our :doc:`../../install/aws/aws-account` document. 
+
 .. `the AWS web page <http://aws.amazon.com>`_.
 
 Scanning and categorizing your data does not require anything other than a single master node.  But the rest of
@@ -63,7 +64,7 @@ However, we recommend the use of credential files if possible. To create a crede
 Parallelizing your Operations
 ==============================
 
-Once the ``ess cluster create ...`` command has been run, Essentia will launch NUMBER of the EC2 virtual machines of type TYPE. 
+Once the ``ess cluster create ...`` command has been run, Essentia will launch **NUMBER** of the EC2 virtual machines of type **TYPE**. 
 The data and operations will be split up and parallelized across all of these 'worker' virtual machines. 
 In particular:
 
@@ -72,7 +73,7 @@ and split these files up across all of the worker virtual machines. The virtual 
 
 ``ess exec command`` will execute 'command' on each of the worker virtual machines.
 
-You can use ``ess stream`` with our Data Processing command ``aq_pp`` to import the data into our :doc:`in-memory-database` to distribute the data across the memory of all of these worker virtual machines. 
+You can use ``ess stream`` with our Data Processing command ``aq_pp`` to import the data into our :doc:`in-memory-db` to distribute the data across the memory of all of these worker virtual machines. 
 It is then easy to analyze or output the data using ``ess exec`` with our Data Processing command ``aq_udb``.
 
 Stopping or Terminating an Essentia Cluster
