@@ -8,9 +8,9 @@ started.
 
 .. They can also be run on our Azure VM Image during the free trial period.
 
-===================
-Essentia Commands
-===================
+.. ===================
+**Essentia Commands**
+.. ===================
 
 The first few tutorials aim to introduce the user to the Essentia commands that control connecting to, grouping, and streaming your data.
 
@@ -28,9 +28,9 @@ Users are encouraged to go through the tutorials in order.
    data_organization
    etl
    
-=========================
-Data Processing Commands
-=========================
+.. =========================
+**Data Processing Commands**
+.. =========================
 
 The next few tutorials introduce users to the incredibly powerful toolset of Data Processing commands that enable easy maniputlation, combination, and analysis of many types of data.
 
@@ -51,9 +51,9 @@ Users are encouraged to go through the tutorials in order.
    ../dataprocessingtutorials/loginf
    ../dataprocessingtutorials/logcnv
    
-=============================
-Example Scripts and Syntax
-=============================
+.. =============================
+**Example Scripts and Syntax**
+.. =============================
 
 This next document details various scripts and example syntax for the Essentia and Data Processing commands.
 
