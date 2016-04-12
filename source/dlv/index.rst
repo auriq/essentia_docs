@@ -14,5 +14,6 @@ performed without the need of first moving data into another analysis platform.
    dlv
    ../reference/manuals/category-rules
    direct-query-examples
+   using-rstudio
    
 .. direct-script-examples

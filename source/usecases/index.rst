@@ -1,8 +1,8 @@
 :tocdepth: 1
 
-************
-Examples
-************
+**********************
+Essentia Examples
+**********************
 
 This section provides various examples of features available in Essentia as well as the Essentia and Data Processing syntaxes. 
 :doc:`localdatastore/index` contains the feature examples and :doc:`syntaxexamples/index` contains the syntax examples.

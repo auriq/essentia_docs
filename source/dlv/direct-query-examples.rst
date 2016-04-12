@@ -1,5 +1,5 @@
 ******************************
-Query
+Query Examples
 ******************************
 
 .. Example Query Commands

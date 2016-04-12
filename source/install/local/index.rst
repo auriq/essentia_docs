@@ -6,7 +6,9 @@ The local version of Essentia will run on Linux systems. It's tested on 6 Linux
 based operating systems including Amazon Linux 2015.09.1, CentOS 7.1, Debian "Jessie",Ubuntu 15.04, 
 Red Hat Enterprise Linux 7.2, and Fedora 23. Installing the local version of Essentia on these systems is simple. 
 
-Essentia's local version is limited to only scale to at most five worker instances and will work without additional licensing for up to one year. This license can be extended by contacting `essentia@auriq.com <mailto:essentia@auriq.com>`_.
+Essentia's local version cannot launch worker instances and thus does not have the full scalability of Essentia. If you need to parallelize your analyis, you can use the cloud version of Essentia or contact `essentia@auriq.com <mailto:essentia@auriq.com>`_.
+
+.. Essentia's local version is limited to only scale to at most five worker instances and will work without additional licensing for up to one year. This license can be extended by contacting `essentia@auriq.com <mailto:essentia@auriq.com>`_.
 
 How to Install Essentia on your Local Machine
 =============================================

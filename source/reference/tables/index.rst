@@ -1,10 +1,12 @@
-:tocdepth: 1
+:tocdepth: 2
 
 ******************
-Tables
+Attributes
 ******************
 
-**Table 1:** UDB attribute flags for tables and vectors
+-------------------------------------------
+UDB attribute flags for tables and vectors
+-------------------------------------------
 
 =========  =============================================
 attribute  use
@@ -21,7 +23,9 @@ tkey       integer sorting key
 +nozero    Ignore values of 0 or an empty string
 =========  =============================================
 
-**Table 2:** Substitution strings for the Essentia 'stream' command.
+--------------------------------------------------------
+Substitution strings for the Essentia 'stream' command.
+--------------------------------------------------------
 
 =========   =======================
 string      provides
@@ -33,7 +37,9 @@ string      provides
 %delim      Delimeter
 =========   =======================
 
-**Table 3 :** Substitution strings for the Essentia 'stream' or 'exec' command.
+-------------------------------------------------------------------
+Substitution strings for the Essentia 'stream' or 'exec' command.
+-------------------------------------------------------------------
 
 ============   =======================================
 string         provides
