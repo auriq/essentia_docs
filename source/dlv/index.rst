@@ -19,3 +19,9 @@ performed without the need of first moving data into another analysis platform.
    using-rstudio
    
 .. direct-script-examples
+
+.. toctree::
+   :hidden:
+   :maxdepth: 2
+   
+   ../screenshots/index
