@@ -35,7 +35,7 @@ extensions = []
 templates_path = ['_templates']
 
 #  The suffix of source filenames.
-source_suffix = ['.rst','.sh']
+source_suffix = ['.rst','.sh','.png']
 
 # The encoding of source files.
 #source_encoding = 'utf-8-sig'
@@ -296,7 +296,7 @@ latex_elements = {
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
   ('index', 'Essentia.tex', u'Essentia Documentation',
-   u'Colin Borys', 'manual'),
+   u'Ben Waxer', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -326,7 +326,7 @@ latex_documents = [
 # (source start file, name, description, authors, manual section).
 man_pages = [
     ('index', 'essentia', u'Essentia Documentation',
-     [u'Colin Borys'], 1)
+     [u'Ben Waxer'], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -340,7 +340,7 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
   ('index', 'Essentia', u'Essentia Documentation',
-   u'Colin Borys', 'Essentia', 'One line description of project.',
+   u'Ben Waxer', 'Essentia', 'One line description of project.',
    'Miscellaneous'),
 ]
 
