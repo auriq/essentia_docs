@@ -9,7 +9,7 @@ In this case study we only utilize ``essQuery`` and ``capture.essentia``. Both f
 loads data into the UDB database.
 
 In this case study we need to setup an Essentia environment on our local computer, preprocess our Apache log
-data with Essentia's etl tools, and then send the data into R for more advanced analysis. We save the
+data with Essentia's Data Processing tools, and then send the data into R for more advanced analysis. We save the
 following commands to ``setupapache.sh``
 
 .. literalinclude:: ../../EssentiaPublic/casestudies/apache/setupapache.sh

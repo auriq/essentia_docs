@@ -11,7 +11,7 @@ Specifically, we needed a framework that would allow us to quickly:
   the data we needed.
 * Clean the data to enable analytics.
 
-Essentia combines scalable, fast, ETL operations with an in-memory NoSQL database to
+Essentia combines scalable, fast, Data Processing operations with an in-memory NoSQL database to
 simplify many common problems encountered by data engineers and
 scientists. The documentation in these pages is meant to train users on how to use
 and integrate Essentia into their data processing workflow. Another useful resource and
@@ -65,10 +65,10 @@ for details. We do offer a single node version that can be run from a desktop; h
 
    source/dlv/index
    source/tutorial/essentiatutorials/index
-   source/tutorial/dataprocessingtutorials/index
    source/usecases/index
    source/integrations/index
 
+..   source/tutorial/dataprocessingtutorials/index
 ..   :ref:`Public Github Repository <https://github.com/auriq/EssentiaPublic>`_
 ..   :ref:`Essentia Forums <http://forum.auriq.com>`_
 

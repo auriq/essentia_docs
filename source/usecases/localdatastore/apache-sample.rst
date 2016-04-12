@@ -4,12 +4,12 @@ Analyze Apache Web Log Data
 
 One common type of log file are those that are collected from Apache web servers.  However in many cases the raw log
 needs some preprocessing before it can be properly used.  Here we will demonstrate the use of ``aq_pp``, a powerful
-application in the Essentia toolkit that allows us to perform ETL and analysis of Apache data in a fluid manner.
+application in the Essentia toolkit that allows us to perform processing and analysis of Apache data in a fluid manner.
 
 The script and the data used in this brief demo can be found on the git repository under ``casestudies/apache``.  The script
 is called ``apache.sh`` and is designed to find out the most popular 'referrers'.
 It uses ``aq_pp`` to parse each line from the log and turn it into a CSV record.  Then ``aq_pp`` performs
-additional ETL operations and finally feeds the modified data into the UDB database. We use the UDB to sort and count the number of
+additional Data Processing operations and finally feeds the modified data into the UDB database. We use the UDB to sort and count the number of
 records for each referrer.
 
 Primary Lines in this Script

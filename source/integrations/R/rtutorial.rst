@@ -87,7 +87,7 @@ to tell R to use the installed RESS package. Then we run ::
 to import the browse files into R and save them as a dataframe called browsedata. 
 
 Here ``essentia_command`` is an ``ess stream`` 
-command pulling all of the browse data and sending it to aq_command. This aq_command then uses the ETL Engine's preprocessor, aq_pp, to import the files with the columns defined in the scan 
+command pulling all of the browse data and sending it to aq_command. This aq_command then uses the Data Processing Tools' preprocessor, aq_pp, to import the files with the columns defined in the scan 
 of the data (from the Essentia's Environment step) and export them in csv format with no header line. The ``#Rinclude`` flag tells **essQuery** to take the output of this statement and return it to R.
 
 Similarly we run ::

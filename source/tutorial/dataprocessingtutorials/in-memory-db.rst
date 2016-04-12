@@ -39,7 +39,7 @@ Tables
 ------
 
 The first is a table, which is completely analagous to a TABLE in MySQL (for example).  This table will store all of the sales data.  The
-schema for this uses a variant of the column specification we saw in the ETL tutorial.
+schema for this uses a variant of the column specification we saw in the Data Processing tutorial.
 
 ``s,pkey:userid`` indicates that the first column has the label 'userid', that it stores string data,
 and will be the data we hash on.  This means that the UDB will store the data in such a way that all entries for a
@@ -79,8 +79,8 @@ We can now populate the 'allsales' table using::
   -endif \
   -imp wood:allsales"
 
-This is basically the same as the ETL example in the previous tutorial, with the addition of the
-``-imp wood:allsales`` directive.  As with the ETL tutorial, the ``eok`` means to ignore errors (but still report
+This is basically the same as the Data Processing example in the previous tutorial, with the addition of the
+``-imp wood:allsales`` directive.  As with the Data Processing tutorial, the ``eok`` means to ignore errors (but still report
 them).  In this case, a message will be triggered for some of the data because it was designed to have corrupted
 fields.  The messages can be used to examine bad records directly, or they can be turned off entirely using the
 ``qui`` attribute.

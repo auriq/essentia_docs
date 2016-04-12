@@ -52,7 +52,7 @@ The second set of logs record all purchases, and have 5 columns of data:
 
 Again, the data have problems.   Due to a glitch in the billing system the articleIDs in all files dated on and after
 September 15 are off by one, and we need to add this back to the reported ID.  These data issues are contrived,
-but will serve to illustrate some of the ETL power of Essentia.
+but will serve to illustrate some of the Data Processing power of Essentia.
 
-To demonstrate the ``aq_pp`` ETL command, we will also use a set of smaller files that help illustrate its usage.
+To demonstrate the ``aq_pp`` Data Processing command, we will also use a set of smaller files that help illustrate its usage.
 These are found in the ``tutorials/etl-engine`` directory
