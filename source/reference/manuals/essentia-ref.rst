@@ -11,6 +11,12 @@ Essentia Commands
 
    generate_essentia_ref
    
+------------------------------------
+*Working With Categories*
+------------------------------------
+
+To learn more about creating and using categories, see :doc:`category-rules`.
+
 -------------------
 *Overview*
 -------------------

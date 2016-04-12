@@ -1,11 +1,9 @@
 ***********************
-ETL Engine: Part 1
+Data Processing: Part 1
 ***********************
 
 The goal of this tutorial is to highlight how to perform complex data transformation and validation operations,
-and output the results to either to disk or a database.  This is commonly referred to as **ETL** for
-Extract-Transform-Load.
-
+and output the results either to disk or a database. 
 
 Getting Started
 ===============
@@ -15,10 +13,10 @@ Again we'll use the ``tutorials/woodworking`` directory from the git repository.
 Essentia treats data as a **stream**, similar to Unix pipes.  As an example, let's simply count the lines in one week of
 the log files that we classified in the previous tutorial::
 
-  $ for i in {1..7}; do funzip ./diy_woodworking/browse_2014090${i}.gz | wc -l ; done
+  $ for i in {1..7}; do gunzip ./diy_woodworking/browse_2014090${i}.gz | wc -l ; done
 
 
-On some systems, you may use ``zcat`` instead of ``funzip``.
+On some systems, you may use ``zcat`` instead of ``gunzip``.
 
 The Essentia equivalent is::
 
@@ -31,4 +29,4 @@ piping it to the command you specify.  All you need to do is specify the **categ
 Since we are in **local** mode, each file is processed sequentially.  If we had worker nodes (i.e. the **cloud** version),
 the processing would be done in parallel, with each node responsible for a subset of the files.
 
-This tutorial continues here: :doc:`../dataprocessingtutorials/etl`. That tutorial involves more complex ETL examples and uses our **Data Processing (AQ) commands**.
+This tutorial continues here: :doc:`../dataprocessingtutorials/etl`. That tutorial involves more complex Data Processing examples and uses our **Data Processing (AQ) commands**.

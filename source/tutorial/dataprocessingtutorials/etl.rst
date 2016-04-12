@@ -1,25 +1,24 @@
 ********************
-ETL Engine: Part 2
+Data Processing: Part 2
 ********************
 
 The goal of this tutorial is to highlight how to perform complex data transformation and validation operations,
-and output the results to either to disk or a database.  This is commonly referred to as **ETL** for
-Extract-Transform-Load.
+and output the results either to disk or a database. 
 
-Essentia ETL and the aq_pp command
-======================================
+Essentia Data Processing and the aq_pp command
+================================================
 
-This tutorial is a continuation of :doc:`../essentiatutorials/etl`. That tutorial involved a rather trivial ETL example.  
+This tutorial is a continuation of :doc:`../essentiatutorials/etl`. That tutorial involved a rather trivial Data Processing example involving counting the number of lines in a series of files.  
 
 More typical cases involve validating the data, filtering data, and
-deriving entirely new columns based on some math operations or string processing. For that,
+deriving entirely new columns based on some mathematical operations or string processing. For that,
 we developed a set of command line programs called the "**AQ tools**", which are part of the Essentia distribution.
 
 Written in ``C`` to achieve a high level of performance, the AQ tools are able to manipulate and transform raw input
 data into a format more easily handled by other AQ or third party tools.  
 
 In particular,
-the ``aq_pp`` program does the heavy lifting for all ETL operations.
+the ``aq_pp`` program does the heavy lifting for all Data Processing operations.
 
 
 The command structure of ``aq_pp`` consists of:
@@ -340,13 +339,11 @@ leaving the others untouched::
   3,"Malone","Peter",97.200000000000003,"A+"
 
 
-ETL at Scale
-============
+Data Processing at Scale
+=========================
 
-At the start of this tutorial, we demonstrated how we can use Essentia to select a set of log files and pipe the
-contents to the unix ``wc`` command.  In a similar manner, we can do with with ``aq_pp``,
-enabling us to apply more complex ETL operations on a large set of files.  In this tutorial we will focus on
-'extract and transform', and detail how to load the data onto other platforms in other sections.
+In the first part of this tutorial, we demonstrated how we can use Essentia to select a set of log files and pipe the
+contents to the unix ``wc`` command.  In a similar manner, we can pipe the data to ``aq_pp`` to apply more complex Data Processing operations on a large set of files. 
 
 Cleaning the 'browse' data
 --------------------------

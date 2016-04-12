@@ -1,6 +1,6 @@
-****************
-Data Lake Manager
-****************
+*********************
+Data Lake Manager GUI
+*********************
 
 Your Essentia instance provides a **web-based UI** which we call the 'Data Lake Manager'.  This service allows users to
 quickly examine and categorize the files within their cloud based data stores.  It also allows SQL style queries 
@@ -12,7 +12,7 @@ performed without the need of first moving data into another analysis platform.
    :maxdepth: 2
 
    dlv
-   source/reference/manuals/category-rules
+   ../reference/manuals/category-rules
    direct-query-examples
    
 .. direct-script-examples
