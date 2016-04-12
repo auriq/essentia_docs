@@ -1,3 +1,7 @@
+.. |<br>| raw:: html
+
+   <br>
+
 ======
 aq_ord
 ======
@@ -137,7 +141,7 @@ Options
 
 .. _`-d`:
 
-``-d ColSpec [ColSpec ...]`` or ``-d [SepSpec] ColSpec [[SepSpec] ColSpec ...]``
+``-d ColSpec [ColSpec ...]`` or |<br>| ``-d [SepSpec] ColSpec [[SepSpec] ColSpec ...]``
   Define the columns in the input records from all the `-f`_ specs.
   Only needed in `Parsed sort mode`_.
   Up to 2048 ``ColSpec`` can be defined (excluding ``X`` type columns).
@@ -155,7 +159,9 @@ Options
     Type is optional. It can be one of the above (default is ``S``).
     ColName is also optional. Such a name is simply discarded.
 
-  Optional ``AtrLst`` is a comma separated list containing:
+  Optional ``AtrLst`` is used in conjunction with the `input file attributes`_
+  to determine how column data are to be extracted from the input.
+  It is a comma separated list containing:
 
   * ``n=Len`` - Extract exactly ``Len`` source bytes. Use this for a fixed
     length data column.
@@ -186,8 +192,8 @@ Options
   field to field. In these cases, *all* the separators must be individually
   specified. ``SepSpec`` has the form ``SEP:SepStr`` where ``SEP``
   (case insensitive) is a keyword and ``SepStr`` is a literal separator of one
-  or more bytes. A ``SepSpec`` is generally needed between any two columns
-  unless the former column has a length spec.
+  or more bytes. A ``SepSpec`` is generally needed between two adjacent
+  ``ColSpec`` unless the former column has a length spec.
 
   Example:
 
@@ -303,29 +309,44 @@ Applicable exit codes are:
 Input File Attributes
 =====================
 
-Each input option can have a list of comma separated attributes:
+Each input option can have a list of comma separated attributes that control
+input processing.
+
+Positioning the start of input:
+
+* ``+Num[b|r|l]`` - Specifies the number of bytes (``b`` suffix), records (``r``
+  suffix) or lines (``l`` suffix) to skip before processing.
+  Line is the default.
+
+Error handling:
 
 * ``eok`` - Make input error non-fatal. If there is an input parse error,
   program will try to skip over bad/broken record. If there is an input data
   processing error, program will just discard the record.
 * ``qui`` - Quiet; i.e., do not print any input error message.
-* ``csv`` - Input is in CSV format. This is the default.
+
+Input formats  - these attributes are mutually exclusive except for
+``sep=c`` and ``csv`` that can be used together:
+
 * ``sep=c`` or ``sep=\xHH`` - Input is in 'c' (single byte) separated value
-  format. '\xHH' is a way to specify 'c' via its HEX value ``HH``.
-  Note that ``sep=,`` is not the same as ``csv`` because CSV is a more
-  advanced format.
-* ``fix`` - Input columns are all fixed width. There is no field separator.
-  Individual column width is specified as a column attribute.
-* ``tab`` - Input is in HTML table format - columns must be enclosed in
+  format. '\\xHH' is a way to specify 'c' via its HEX value ``HH``.
+* ``csv`` - Input is in CSV format. This is the only format that supports
+  quoted data fields. Although CSV implies *comma separated*,
+  ``sep=c`` can be used to override this.
+* ``fix`` - Input columns are all fixed width *without* any separator.
+  Individual column widths are set in the ``n=Len``
+  `column spec attribute <-d_>`_.
+* ``tab`` - Input is in HTML table format. Columns must be enclosed in
   "``<td>data</td>``" or "``<td ...>data</td>``" and rows must be terminated
   by a "``</tr>``".
 * ``bin`` - Input is in aq_tool's internal binary format.
-* ``esc`` - '\\' is an escape character in input fields (non binary).
-* ``noq`` - No quotes around fields (CSV).
-* ``+Num[b|r|l]`` - Specifies the number of bytes (``b`` suffix), records (``r``
-  suffix) or lines (no suffix or ``l`` suffix) to skip before processing.
 
-If no input format attribute is given, CSV is assumed.
+These are used in conjunction with the `column spec attributes <-d_>`_:
+
+* ``esc`` - '\\' is an escape character in input fields.
+* ``noq`` - No quotes around fields in ``csv`` format.
+
+If no input format attribute is given, ``csv`` is assumed.
 
 
 Output File Attributes
@@ -336,18 +357,17 @@ Each output option can have a list of comma separated attributes:
 * ``notitle`` - Suppress the column name label row from the output.
   A label row is normally included by default.
 * ``app`` - When outputting to a file, append to it instead of overwriting.
-* ``csv`` - Output in CSV format. This is the default.
 * ``sep=c`` or ``sep=\xHH`` - Output in 'c' (single byte) separated value
-  format. '\xHH' is a way to specify 'c' via its HEX value ``HH``.
-  Note that ``sep=,`` is not the same as ``csv`` because CSV is a more
-  advanced format.
+  format. '\\xHH' is a way to specify 'c' via its HEX value ``HH``.
+* ``csv`` - Output in CSV format. Strings will be quoted. The default
+  separator is comma, but ``sep=c`` can be used to override this.
 * ``bin`` - Output in aq_tool's internal binary format.
 * ``esc`` - Use '\\' to escape the field separator, '"' and '\\' (non binary).
-* ``noq`` - Do not quote string fields (CSV).
+* ``noq`` - Do not quote string fields in ``csv`` format.
 * ``fmt_g`` - Use "%g" as print format for ``F`` type columns. Only use this
   to aid data inspection (e.g., during integrity check or debugging).
 
-If no output format attribute is given, CSV is assumed.
+If no output format attribute is given, ``csv`` is assumed.
 
 
 See Also

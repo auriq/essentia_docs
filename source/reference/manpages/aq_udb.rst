@@ -23,11 +23,6 @@ Synopsis
       [-seed RandSeed]
       [-lim_usr Num] [-lim_rec Num]
       [-var ColName Val]
-      [-bvar ColName Val]
-      [-eval ColName Expr]
-      [-filt FilterSpec]
-      [-goto DestSpec]
-      [-mod ModSpec [ModSrc]]
       [-pp TabName
         [-bvar ColName Val]
         [-eval ColName Expr]
@@ -35,6 +30,11 @@ Synopsis
         [-goto DestSpec]
         [-end_of_scan DestSpec]
       -endpp]
+      [-bvar ColName Val]
+      [-eval ColName Expr]
+      [-filt FilterSpec]
+      [-goto DestSpec]
+      [-mod ModSpec [ModSrc]]
       [-sort[,AtrLst] [ColName ...] [-top Num]]
       [-o[,AtrLst] File] [-c ColName [ColName ...]]
 
@@ -42,7 +42,7 @@ Synopsis
       -ord[,AtrLst] [DbName:]TabName [ColName ...]
 
   Mnt_Spec:
-      -clr [DbName:]TabName | -probe
+      -clr [DbName:]TabName | -probe [DbName:]
 
 
 Description
@@ -239,6 +239,8 @@ Options
 
   This rule can also be used within a `-pp`_ group. In this case,
   the target table becomes the ``-pp`` table.
+  Note that ``-eval`` rules inside `-pp`_ groups are evaluated before those
+  for the target table/vector. See `Data Processing Steps`_ for details.
 
   ``Expr`` is the expression to evaluate.
   Data type of the evaluated result must be compatible with the data type of
@@ -308,10 +310,10 @@ Options
 
   This rule can also be used within a `-pp`_ group. In this case,
   the target table becomes the ``-pp`` table.
+  Note that ``-filt`` rules inside `-pp`_ groups are evaluated before those
+  for the target table/vector. See `Data Processing Steps`_ for details.
 
   ``FilterSpec`` is the filter to evaluate.
-  It is evaluated on each data row in the target table according to the
-  `Data Processing Steps`_.
   It has the basic form ``[!] LHS [<compare> RHS]`` where:
 
   * The negation operator ``!`` negates the result of the comparison.
@@ -455,17 +457,18 @@ Options
 ``-pp TabName [-bvar ... -eval ... -filt ... -goto ... -end_of_scan ...] -endpp``
   ``-pp`` groups one or more `-bvar`_, `-eval`_, `-filt`_ and/or `-goto`_
   actions together.
-  Each group performs pre-processing at the user bucket level before
+  Each group performs pre-processing at the user bucket level *before*
   data in the bucket is exported/counted/scanned.
+  See `Data Processing Steps`_ for details.
 
   ``TabName`` sets the target table/vector for the rules in the ``-pp`` group.
   It may refer to a table/vector or the user bucket itself.
   To target a table/vector, specify its name.
-  To target the "PKEY" (bucket key), specify  a "." (a dot).
+  To target the user bucket itself, specify  a "." (a dot).
   "." is a pseudo vector containing a single read only "PKEY" column.
 
-  The list of `-eval`_, `-filt`_ and `-goto`_ rules are generally
-  executed in order. See `Data Processing Steps`_ for details.
+  The `-bvar`_ rules in the group are always executed first.
+  Then the list of `-eval`_, `-filt`_ and `-goto`_ rules are executed in order.
   Rule executions can also be made conditional by adding "if-else" controls.
   See `Rule Execution Controls`_ for details.
 
@@ -628,13 +631,15 @@ Options
 
 .. _`-probe`:
 
-``-probe``
+``-probe [DbName:]``
   Probe the servers and exit.
+  Optional ``DbName`` sets the Udb spec file as in the `-db`_ option.
+  This is typically used to check if all the target servers are up and ready.
 
   * If all servers responded *successful*, the exit code will be 0.
   * If a connection failed or a server responded *failure*,
     the exit code will be non-zero.
-    Usually, an error message will also be printed to stderr.
+    Usually, an error message will be printed on stderr.
   * Use this with `-verb`_ to get more info.
 
 
@@ -777,10 +782,10 @@ data is processed according to the commandline options in this way:
 
     * When all the rows are exhausted, execute the `-end_of_scan`_ rule.
 
-  * Initialize Var columns according the `-bvar`_ rules for the target table.
+  * Initialize Var columns according the `-bvar`_ rules.
 
-  * If a module is specified (see `-mod`_), call its user bucket processing
-    function (if any).
+  * If a module is specified (see `-mod`_) and it has a user bucket processing
+    function, the fuction is called.
     This function can inspect and/or modify arbitrary data in the bucket.
     It can also tell the server to skip the current bucket so that it will
     not be exported/counted/scanned.
@@ -790,8 +795,8 @@ data is processed according to the commandline options in this way:
 
     * Execute the list of `-eval`_, `-filt`_ and `-goto`_ rules
       (including any "-if-elif-else-endif" controls) in order.
-    * If a module is specified (see `-mod`_), call its row processing
-      function (if any).
+    * If a module is specified (see `-mod`_) and it has a row processing
+      function, the function is called.
       This function can inspect and/or modify the current data row.
       It can also tell the server to skip the current row so that it will
       not be exported/counted/scanned.
