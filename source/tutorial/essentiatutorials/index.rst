@@ -43,13 +43,13 @@ Users are encouraged to go through the tutorials in order.
 .. toctree::
    :maxdepth: 2
 
-   etl
-   in-memory-db
-   how-to-scale
-   query
-   udbsql
-   loginf
-   logcnv
+   ../dataprocessingtutorials/etl
+   ../dataprocessingtutorials/in-memory-db
+   ../dataprocessingtutorials/how-to-scale
+   ../dataprocessingtutorials/query
+   ../dataprocessingtutorials/udbsql
+   ../dataprocessingtutorials/loginf
+   ../dataprocessingtutorials/logcnv
    
 =============================
 Example Scripts and Syntax

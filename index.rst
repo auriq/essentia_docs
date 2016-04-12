@@ -65,7 +65,6 @@ for details. We do offer a single node version that can be run from a desktop; h
 
    source/dlv/index
    source/tutorial/essentiatutorials/index
-   source/usecases/index
    source/integrations/index
 
 ..   source/tutorial/dataprocessingtutorials/index
@@ -76,8 +75,10 @@ for details. We do offer a single node version that can be run from a desktop; h
    :hidden:
    :maxdepth: 3
    
-   source/reference/manuals/index
-   source/reference/tables/index
+   source/reference/index
+
+..   source/reference/manuals/index
+..   source/reference/tables/index
 
 .. toctree::
    :maxdepth: 1
