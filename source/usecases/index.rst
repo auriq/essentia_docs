@@ -15,5 +15,5 @@ This section provides various examples of features available in Essentia as well
    localdatastore/index
    syntaxexamples/index
    
-* `Tutorial Scripts Github Repository <https://github.com/auriq/EssentiaPublic>`_
+* `Tutorial Scripts Github Repository <https://github.com/auriq/EssentiaPublic/tree/beta-ess3.1.1>`_
 * `Sample Scripts Github Repository <https://github.com/auriq/DirectScript>`_
