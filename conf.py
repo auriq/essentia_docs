@@ -132,6 +132,7 @@ html_theme_options = {
     #    ("Link", "http://example.com", True),
     #],
     'navbar_links': [
+        ("AuriQ", "http://www.auriq.com", True),
         ("Github", "https://github.com/auriq/EssentiaPublic", True),
         ("Forums", "http://forum.auriq.com", True),
     ],
