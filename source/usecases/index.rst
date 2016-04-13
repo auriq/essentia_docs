@@ -14,6 +14,5 @@ This section provides various examples of features available in Essentia as well
 
    localdatastore/index
    syntaxexamples/index
-
-.. redshift
-.. rapache
+   `Tutorial Scripts Github Repository <https://github.com/auriq/EssentiaPublic>`_
+   `Sample Scripts Github Repository <https://github.com/auriq/DirectScript>`_
