@@ -115,7 +115,8 @@ html_sidebars = {
 # theme further.
 html_theme_options = {
     # Navigation bar title. (Default: ``project`` value)
-    'navbar_title': "Home",
+#    'navbar_title': "Home",
+    'navbar_title': "",
 
     # Tab name for entire site. (Default: "Site")
     'navbar_site_name': "Topics",
@@ -132,6 +133,7 @@ html_theme_options = {
     #    ("Link", "http://example.com", True),
     #],
     'navbar_links': [
+        ("Home", "index"),
         ("AuriQ", "http://www.auriq.com", True),
         ("Github", "https://github.com/auriq/EssentiaPublic", True),
         ("Forums", "http://forum.auriq.com", True),
