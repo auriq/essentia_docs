@@ -3,6 +3,7 @@ Data Lake Manager GUI
 *********************
 
 .. image:: ../screenshots/home.png
+   :align: center
    :scale: 50
    :target: ../screenshots/home.png
 
@@ -22,9 +23,3 @@ performed without the need of first moving data into another analysis platform.
    using-rstudio
    
 .. direct-script-examples
-
-.. toctree::
-   :hidden:
-   :maxdepth: 1
-   
-   ../screenshots/index

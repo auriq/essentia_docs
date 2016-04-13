@@ -23,6 +23,10 @@ Repository setup and management
 5. Your newly added repository will be displayed in the AWS S3 table.
 
 .. image:: ../screenshots/connect_aws_add.png
+   :align: center
+   :scale: 30
+   :target: ../screenshots/connect_aws_add.png
+
 
 **Link to Azure Blob**
 
@@ -33,6 +37,9 @@ Repository setup and management
 5. Your newly added repository will be displayed in the Azure Blob table.
 
 .. image:: ../screenshots/connect_azure_add.png
+   :align: center
+   :scale: 30
+   :target: ../screenshots/connect_azure_add.png
 
 **Delete Repository**
 
@@ -43,7 +50,10 @@ Repository setup and management
 5. Confirm to delete your setting.
 
 .. image:: ../screenshots/connect_delete.png
-
+   :align: center
+   :scale: 30
+   :target: ../screenshots/connect_delete.png
+   
 Datastore category setup and management
 ---------------------------------------
 
@@ -66,7 +76,10 @@ Datastore category setup and management
 * `Date Format <../reference/manuals/category-rules.html#date-regex>`_ - matching date extraction pattern found in filename structure. Specify a regular expression pattern to extract the date from your file path/name, see `Date Regex <../reference/manuals/category-rules.html#date-regex>`_.
 
 .. image:: ../screenshots/categorize_options.png
-
+   :align: center
+   :scale: 30
+   :target: ../screenshots/categorize_options.png
+   
 5. Click on the **Save** button to create your category. This may take a few minutes while Essentia scans your data.
 6. After scan is complete, the derived column specifications will be displayed along with metadata about your files. Also, you can now **Define Additional Category Options** (see section 2 for more detail) or choose to **Directly Edit Column Specification** (see section 3 for more detail).
 7. Your newly added category will be displayed in the category table for the selected repository. From here you can edit, copy, scan, or delete a category, view a sample of the data or see the list of files that make up your category.
@@ -100,7 +113,10 @@ Datastore category setup and management
 4. You can click the icon next to any filename to **Download** or **Delete** that file from your Repository.
 
 .. image:: ../screenshots/categorize_explore_dwnld.png
-
+   :align: center
+   :scale: 30
+   :target: ../screenshots/categorize_explore_dwnld.png
+   
 You can click **Upload** to choose files to upload to the current path on your Repository.
 
 You can click **Size** to calculate the total number of files and bytes in the current path on your Repository.
@@ -123,13 +139,19 @@ Query setup and management
 5. From this point you can access a saved query or run a new query. Running another query will clear the previous query's results.
 
 .. image:: ../screenshots/query_run.png
-
+   :align: center
+   :scale: 30
+   :target: ../screenshots/query_run.png
+   
 .. , or generate an OData link for easy loading into Tableau by clicking **OData**.
 
 *Note:* If you need to view available categories, click on the **Categories** drop down arrow to view a list of available categories.
 
 .. image:: ../screenshots/query_categories.png
-
+   :align: center
+   :scale: 30
+   :target: ../screenshots/query_categories.png
+   
 `Query Format <../dlv/direct-query-examples.html>`_ ::
 
     select [column_name] | [*] from [category_name]:[start_date | *]:[end_date | *] where ... order by ... limit ...
@@ -189,11 +211,17 @@ Script setup and management
 4. Click on the **Run** button to view your script's results on your screen.
 
 .. image:: ../screenshots/analyze_script.png
-
+   :align: center
+   :scale: 30
+   :target: ../screenshots/analyze_script.png
+   
 *Note:* You can also **Stop** running your script or, when it has finished, **Download** the result onto your local machine or **Clear** the results so they are no longer stored.
 
 .. image:: ../screenshots/analyze_script_run.png
-
+   :align: center
+   :scale: 30
+   :target: ../screenshots/analyze_script_run.png
+   
 *Note:* You can also view the status of your master computer and any other machines you are utilizing by clicking on **Cluster Status**. This will show you the connection information and resource usage of each connected machine.
 
 **Connect to a Github Repository**
