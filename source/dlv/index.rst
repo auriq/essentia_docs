@@ -25,6 +25,6 @@ performed without the need of first moving data into another analysis platform.
 
 .. toctree::
    :hidden:
-   :maxdepth: 2
+   :maxdepth: 1
    
    ../screenshots/index

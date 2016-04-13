@@ -69,15 +69,15 @@ Here is an example of a policy that allows access to EC2 Instances as well as Re
 Moving data
 ===========
 
-Transferring data is very straightforward.  First register the Redshift cluster with Essentia, then optionally generate a table using Essentia, 
-and then provide the ETL operation which is in a format very similar to the 'stream' command as described in the
-:doc:`ETL tutorial <../../tutorial/etl>` to load the data into the table::
+Transferring data is very straightforward.  First register the Redshift cluster with Essentia and then optionally generate a table using Essentia. 
+Then provide the necesary Data Processing operation, which is in a format very similar to the 'stream' command described in
+:doc:`../../tutorial/essentiatutorials/etl`, to load the data into the table::
 
   $ ess redshift register redshift_cluster_name redshift_database_name username password
   $ ess redshift gentable table_name category_name --key "column_name = distkey"
   $ ess redshift stream category_name start_date end_date "command" table_name --options TRUNCATECOLUMNS
   
-Here, 'command' is typically ``aq_pp``, but it can also be any other program that accepts text data from the stdin
+Here, 'command' is typically ``aq_pp`` (see :doc:`../../tutorial/dataprocessingtutorials/etl`), but it can also be any other program that accepts text data from the stdin
 and outputs the results to stdout.
 
 Querying Data

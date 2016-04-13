@@ -61,7 +61,7 @@ for details. We do offer a single node version that can be run from a desktop; h
 
 .. toctree::
    :hidden:
-   :maxdepth: 3
+   :maxdepth: 2
 
    source/dlv/index
    source/tutorial/essentiatutorials/index
@@ -73,7 +73,7 @@ for details. We do offer a single node version that can be run from a desktop; h
 
 .. toctree::
    :hidden:
-   :maxdepth: 3
+   :maxdepth: 2
    
    source/reference/index
 
@@ -87,7 +87,7 @@ for details. We do offer a single node version that can be run from a desktop; h
    
 .. toctree::
    :hidden:
-   :maxdepth: 3
+   :maxdepth: 2
    
    updateddate
 
