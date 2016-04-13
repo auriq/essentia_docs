@@ -145,6 +145,7 @@ Query setup and management
    
 .. , or generate an OData link for easy loading into Tableau by clicking **OData**.
 
+| 
 *Note:* If you need to view available categories, click on the **Categories** drop down arrow to view a list of available categories.
 
 .. image:: ../screenshots/query_categories.png
