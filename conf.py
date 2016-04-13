@@ -44,7 +44,8 @@ source_suffix = ['.rst','.sh'] #,'.png'
 master_doc = 'index'
 
 # General information about the project.
-project = u'Essentia'
+#project = u'Essentia'
+project = u''
 copyright = u'2016, AuriQ Systems Inc.'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -107,7 +108,8 @@ html_theme = 'bootstrap'
 html_theme_path = sphinx_bootstrap_theme.get_html_theme_path()
 # (Optional) Logo. Should be small enough to fit the navbar (ideally 24x24).
 # Path should be relative to the ``_static`` files directory.
-############# IM TAKING THIS OUT, REPLACE? ---> ############### html_logo = "esslogo.png"
+############# IM TAKING THIS OUT, REPLACE? ---> ############### 
+html_logo = "esslogo.png"
 html_sidebars = {
    '**': ['localtoc.html']
 }
