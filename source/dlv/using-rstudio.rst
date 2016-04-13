@@ -2,9 +2,7 @@
 Using RStudio
 ***************
 
-.. note::
-
-    R and RStudio-Server are NOT part of our Essentia Platform. They are third party software that we enable users to install and integrate with AT THEIR OWN DISCRETION. This decision is up to the User and is not required to use any of AuriQ Systems Inc.'s solutions.
+*Disclaimer:* R and RStudio-Server are NOT part of our Essentia Platform. They are third party software that we enable users to install and integrate with AT THEIR OWN DISCRETION. This decision is up to the User and is not required to use any of AuriQ Systems Inc.'s solutions.
 
 **Setting up RStudio**
 

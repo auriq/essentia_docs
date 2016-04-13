@@ -1,7 +1,7 @@
 :tocdepth: 1
 
 ************************
-How To Scale
+How To Scale Up
 ************************
 
 In this tutorial, we concentrate on using Essentia within the AWS cloud service. 

@@ -63,9 +63,7 @@ Manage data stored locally, on an S3 bucket, or on an Azure container
     
     ess summary
 
-    ess scan
-
-    ess category add myfavoritedata "*exampledata*gz" --dateformat ".*[:%m:]-[:%y:]-[:%d:].*"
+    ess category add myfavoritedata "*exampledata*gz" --dateregex ".*[:%m:]-[:%y:]-[:%d:].*"
 
     ess category delete myfavoritedata
     
@@ -80,11 +78,21 @@ Manage data stored locally, on an S3 bucket, or on an Azure container
 Execute commands on master or worker nodes
 ==========================================
 
+**On the MASTER Node:**
+
 ::
 
     ess stream myfavoritedata "2013-10-01" "2014-09-30" "aq_pp -f,+1,eok - -d %cols -eval i:usercount '0' -udb largecount -imp mytable -imp countrytotals" --debug --master --thread=4
     
     ess exec "aq_udb -exp largecount:mytable" --debug --master
+
+**On the WORKER Nodes:**
+
+::
+
+    ess stream myfavoritedata "2013-10-01" "2014-09-30" "aq_pp -f,+1,eok - -d %cols -eval i:usercount '0' -udb largecount -imp mytable -imp countrytotals" --debug --thread=4
+    
+    ess exec "aq_udb -exp largecount:mytable" --debug
 
 --------------------------------------------------------------------------------
 
@@ -97,6 +105,10 @@ Manage the Essentia cluster
 
     ess cluster terminate
 
+    ess cluster stop
+    
+    ess cluster start
+    
     ess cluster status
      	 	 	 	 	 	 	 	
 
@@ -117,9 +129,9 @@ Link Essentia and Redshift clusters
 
 ::
 
-    ess redshift register MyRed
+    ess redshift register MyRed MyRed_database essentia DEMOpassword999
 
-    ess redshift stream myfavoritedata '*' '*' "aq_pp -f,+1,eok - -d %cols -eval i:usercount '0'" --debug --master --threads=2 -U bwaxer -d redcount -p mysecret
+    ess redshift stream myfavoritedata '*' '*' "aq_pp -f,+1,eok - -d %cols -eval i:usercount '0'" --debug --master --threads=2 MyRed_table --options TRUNCATECOLUMNS
 
     ess redshift status
 
@@ -139,7 +151,7 @@ Send the contents of a file from your datastore to standout output on your scree
 
 ::
 
-    ess cat path_to_data/exampledata.csv
+    ess cat /path_to_data/exampledata.csv
     
 --------------------------------------------------------------------------------
 	

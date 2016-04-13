@@ -24,7 +24,7 @@ Repository setup and management
 
 .. image:: ../screenshots/connect_aws_add.png
    :align: center
-   :scale: 30
+   :scale: 10
    :target: ../screenshots/connect_aws_add.png
 
 
@@ -38,7 +38,7 @@ Repository setup and management
 
 .. image:: ../screenshots/connect_azure_add.png
    :align: center
-   :scale: 30
+   :scale: 10
    :target: ../screenshots/connect_azure_add.png
 
 **Delete Repository**
@@ -51,7 +51,7 @@ Repository setup and management
 
 .. image:: ../screenshots/connect_delete.png
    :align: center
-   :scale: 30
+   :scale: 10
    :target: ../screenshots/connect_delete.png
    
 Datastore category setup and management
@@ -77,7 +77,7 @@ Datastore category setup and management
 
 .. image:: ../screenshots/categorize_options.png
    :align: center
-   :scale: 30
+   :scale: 10
    :target: ../screenshots/categorize_options.png
    
 5. Click on the **Save** button to create your category. This may take a few minutes while Essentia scans your data.
@@ -114,7 +114,7 @@ Datastore category setup and management
 
 .. image:: ../screenshots/categorize_explore_dwnld.png
    :align: center
-   :scale: 30
+   :scale: 10
    :target: ../screenshots/categorize_explore_dwnld.png
    
 You can click **Upload** to choose files to upload to the current path on your Repository.
@@ -140,7 +140,7 @@ Query setup and management
 
 .. image:: ../screenshots/query_run.png
    :align: center
-   :scale: 30
+   :scale: 10
    :target: ../screenshots/query_run.png
    
 .. , or generate an OData link for easy loading into Tableau by clicking **OData**.
@@ -150,7 +150,7 @@ Query setup and management
 
 .. image:: ../screenshots/query_categories.png
    :align: center
-   :scale: 30
+   :scale: 10
    :target: ../screenshots/query_categories.png
    
 `Query Format <../dlv/direct-query-examples.html>`_ ::
@@ -213,14 +213,14 @@ Script setup and management
 
 .. image:: ../screenshots/analyze_script.png
    :align: center
-   :scale: 30
+   :scale: 10
    :target: ../screenshots/analyze_script.png
    
 *Note:* You can also **Stop** running your script or, when it has finished, **Download** the result onto your local machine or **Clear** the results so they are no longer stored.
 
 .. image:: ../screenshots/analyze_script_run.png
    :align: center
-   :scale: 30
+   :scale: 10
    :target: ../screenshots/analyze_script_run.png
    
 *Note:* You can also view the status of your master computer and any other machines you are utilizing by clicking on **Cluster Status**. This will show you the connection information and resource usage of each connected machine.
