@@ -5,7 +5,8 @@ Essentia Examples
 **********************
 
 This section provides various examples of features available in Essentia as well as the Essentia and Data Processing syntaxes. 
-:doc:`localdatastore/index` contains the feature examples and :doc:`syntaxexamples/index` contains the syntax examples.
+:doc:`localdatastore/index` contains the feature examples and :doc:`syntaxexamples/index` contains the syntax examples. 
+There are also links to the github repositories containing the scripts used in our documentation tutorials as well as some extremely useful sample scripts.
 
 .. For the most part they can be executed with just a single node setup.  
 

@@ -107,7 +107,7 @@ html_theme = 'bootstrap'
 html_theme_path = sphinx_bootstrap_theme.get_html_theme_path()
 # (Optional) Logo. Should be small enough to fit the navbar (ideally 24x24).
 # Path should be relative to the ``_static`` files directory.
-html_logo = "esslogo.png"
+############# IM TAKING THIS OUT, REPLACE? ---> ############### html_logo = "esslogo.png"
 html_sidebars = {
    '**': ['localtoc.html']
 }
