@@ -8,6 +8,9 @@ Essentia's Environment
 In this case study we only utilize ``essQuery`` and ``capture.essentia``. Both functions require a ``bash`` script to be executed that sets up the Essentia environment and optionally
 loads data into the UDB database.
 
+The script and the data used in this brief demo can be found on the git repository under ``casestudies/apache``.  The script
+is called ``setupapache.sh``.
+
 In this case study we need to setup an Essentia environment on our local computer, preprocess our Apache log
 data with Essentia's Data Processing tools, and then send the data into R for more advanced analysis. We save the
 following commands to ``setupapache.sh``
