@@ -13,7 +13,7 @@ Users can also evaluate the software using a local version that can be run on th
    :maxdepth: 2
 
    aws/index
-   azure/index
    local/index
 
 
+..   azure/index

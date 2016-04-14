@@ -13,7 +13,7 @@ Again we'll use the ``tutorials/woodworking`` directory from the git repository.
 Essentia treats data as a **stream**, similar to Unix pipes.  As an example, let's simply count the lines in one week of
 the log files that we classified in the previous tutorial::
 
-  $ for i in {1..7}; do gunzip ./diy_woodworking/browse_2014090${i}.gz | wc -l ; done
+  $ for i in {1..7}; do gunzip -c ./diy_woodworking/browse_2014090${i}.gz | wc -l ; done
 
 
 On some systems, you may use ``zcat`` instead of ``gunzip``.

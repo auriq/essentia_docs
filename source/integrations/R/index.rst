@@ -7,7 +7,7 @@ These next tutorials demonstrate how to read data from various sources into R us
 Installing the R Package
 ========================
 
-In order to use R with Essentia, you must install the RESS package from C-RAN. Open R and then run::
+In order to use R with Essentia, you must install the RESS package from C-RAN. The t2.micro AWS intance does not have sufficient memory to install the RESS package, we recommend at least an m3.medium. Once you have an instance of sufficient size, open R and then run::
 
    install.packages("RESS")
 
@@ -27,6 +27,20 @@ All three functions require an Essentia Bash script to be executed that sets up 
     sh **load_script_name**.sh
 
 Examples of Essentia Environments are given in each of the tutorials below, as well as how to read the resulting data into R.
+
+Tutorial Data
+=============
+
+We maintain a `GitHub repository <https://github.com/auriq/EssentiaPublic>`_ that contains test data and source code for
+some of the tutorials you will find in this documentation.  
+
+.. For AWS users, we also have a public S3 bucket (s3://asi-public) that stores the larger and more complex datasets used for training purposes.
+
+To get started, pull the tutorial repository via::
+
+  $ git clone https://github.com/auriq/EssentiaPublic.git
+
+The data and scripts relevant for most of the tutorials are under ``tutorials`` and ``case studies``. This data is required in order to run any of the example code provided in this section.
 
 Tutorials
 =========

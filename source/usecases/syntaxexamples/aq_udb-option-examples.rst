@@ -20,13 +20,13 @@ This tutorial assumes you already imported the following data into udb::
 
 This data was imported using aq_pp and the example data provided in the aq_pp documentation. To get this data imported you can run the following commands::
 
-    ess spec create database my_database --ports=1
-    ess spec create vector country_vector "s,hash:country s,+first:last_name s,+first:first_name i,+add:integer_col f,+max:float_col f,+min:float_2 s:grade s:extra_column"
-    ess spec create table country_table "s,hash:country s:last_name s:first_name i:integer_col f:float_col f:float_2 s:grade s:extra_column"
-    ess spec create variable "i:defined_integer_var s:defined_string_var"
+    ess create database my_database --ports=1
+    ess create vector country_vector "s,pkey:country s,+first:last_name s,+first:first_name i,+add:integer_col f,+max:float_col f,+min:float_2 s:grade s:extra_column"
+    ess create table country_table "s,pkey:country s:last_name s:first_name i:integer_col f:float_col f:float_2 s:grade s:extra_column"
+    ess create variable "i:defined_integer_var s:defined_string_var"
     ess udbd start
-    aq_pp -f,+1 exampledata.csv -d f:float_col i:integer_col s:last_name s:first_name s:country -ddef -udb_imp my_database:country_table
-    aq_pp -f,+1 lookup.csv -d s:grade f:float_2 s:last_name s:first_name s:country -ddef -udb_imp my_database:country_table
+    aq_pp -f,+1 exampledata.csv -d f:float_col i:integer_col s:last_name s:first_name s:country -ddef -udb -imp my_database:country_table
+    aq_pp -f,+1 lookup.csv -d s:grade f:float_2 s:last_name s:first_name s:country -ddef -udb -imp my_database:country_table
 
 
 

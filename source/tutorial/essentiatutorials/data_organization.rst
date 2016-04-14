@@ -47,8 +47,8 @@ uses regular expression classes such as **[:%Y:], [:%m:], and [:%d:]** to design
   Also note that we used **[:%H:], [:%M:], [:%S:]** to designate *hour, minute, and second fields*.
 
 .. tip::
-  ``ess ls "glob_pattern"`` can be used to list all the files that match a glob pattern.  That same pattern can
-  then be used as a rule pattern. **Ex:** ``ess ls "*browse*"``.
+  ``ess ls -r "glob_pattern"`` can be used to list all the files that match a glob pattern.  That same pattern can
+  then be used as a rule pattern. The ``-r`` lists files recursively. **Ex:** ``ess ls -r "$HOME/*browse*"``.
 
 
 With some files now categorized, we can introduce the summary command to get an overview of our data::

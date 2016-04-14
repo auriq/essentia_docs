@@ -52,12 +52,11 @@ To get started, go to :doc:`source/tutorial/essentiatutorials/index`.
 The Essentia Platform
 ********************
 
-.. While we do offer a single node version that can be run from a desktop, the power of Essentia lies in the cloud.
-
 Essentia is made to be run on the cloud, where we can spin up as many worker nodes as needed to scale to difficult problems.  
-Currently Amazon and Microsoft clouds are supported.  
+Currently the Amazon cloud is supported.  
 Essentia can also be used for an on premise cluster; `contact us <mailto:essentia@auriq.com>`_
-for details. We do offer a single node version that can be run from a desktop; however, the power of Essentia lies in the cloud.
+for details. We do offer a single node version that can be run from a desktop; however, the power of Essentia lies in the cloud. 
+You can install this single node version of Essentia on an Azure Linux VM if you want to run Essentia on the Microsoft cloud.
 
 .. toctree::
    :hidden:
@@ -97,7 +96,7 @@ for details. We do offer a single node version that can be run from a desktop; h
 
    The tutorials assume you are using the ``bash`` shell.
 
-.. note::
-
-   The Azure version does not support worker nodes.  A release in the near future will sync up all the capabilities of
-   both the Azure and Amazon versions of Essentia.
+.. .. note::
+.. 
+..    The Azure version does not support worker nodes.  A release in the near future will sync up all the capabilities of
+..    both the Azure and Amazon versions of Essentia.

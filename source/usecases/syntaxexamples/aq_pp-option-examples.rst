@@ -193,10 +193,10 @@ placeholders for the extracted data; The placeholders are implicit:
 The output of both of these commands is::
  
     "last_name","first_name","full_name"
-    "Lawrence","Lois","Lawrence Lois"
-    "Hamilton","Evelyn","Hamilton Evelyn"
-    "Wheeler","Sarah","Wheeler Sarah"
-    "Kelley","Jacqueline","Kelley Jacqueline"
+    "Lawrence","Lois","Lois Lawrence"
+    "Hamilton","Evelyn","Evelyn Hamilton"
+    "Wheeler","Sarah","Sarah Wheeler"
+    "Kelley","Jacqueline","Jacqueline Kelley"
 
 The first two sets of mapping functions allow you to take data from various columns and put them into other columns, however this isnt always necessary. Sometimes, all you want to do is **modify an existing column**. 
 

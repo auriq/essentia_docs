@@ -20,7 +20,7 @@ How to Launch Essentia in the Amazon Cloud
 #. Click on the **'Launch Instance'** button.  This will take you to a site where
    you can select what OS and software you would like to access.
 #. Select the **'Marketplace'** tab, and search for **'AuriQ'**
-#. The list of results should include the latest release of Essentia.  Click on it to start.
+#. The list of results should include the latest release of Essentia. Currently this is "Essentia (HVM)" version 3.1.1. Click on it to start.
 #. You will be asked to select a node type.  For most users,
    an ``m3.medium`` is the safest choice, but the ``t2`` line is OK for
    testing or other work that does not require high performance. 
@@ -45,11 +45,11 @@ How to Launch Essentia in the Amazon Cloud
    
    Remaining options are OK. Click **NEXT** at the bottom of the screen.
    
-#. Add Storage section: defaults are fine. (click **NEXT**)
-#. Tag Instance.  Not required but useful to name your instance. Do this and click **NEXT**.
-#. Configure Security Group. We need to create a new group to handle the firewall between the internet
+8. Add Storage section: defaults are fine. (click **NEXT**)
+9. Tag Instance.  Not required but useful to name your instance. Do this and click **NEXT**.
+10. Configure Security Group. We need to create a new group to handle the firewall between the internet
    and an Essentia Master node.  Please refer to our walk through: :doc:`security-group`
-#. Once your security group is setup, click **REVIEW AND LAUNCH**, and then **LAUNCH**.  You will be asked
+11. Once your security group is setup, click **REVIEW AND LAUNCH**, and then **LAUNCH**.  You will be asked
    to generate a new access key pair, or use an existing one.  The file created in this process is
    critical because it is the only way to gain access via SSH to your worker node.
 

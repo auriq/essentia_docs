@@ -13,7 +13,7 @@ Setup UDB databases and schemas
 
     ess create database largecount 
 
-    ess create table mytable "s,pkey:country s,+key:user s,+first:time s,+last:time i,+add:payment"
+    ess create table mytable "s,pkey:country s,+key:user s,+first:start_time s,+last:end_time i,+add:payment"
 
     ess create vector countrytotals "s,pkey:country i,+add:usercount i,+add:payment"
 
