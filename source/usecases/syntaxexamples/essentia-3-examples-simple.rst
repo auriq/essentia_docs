@@ -70,8 +70,8 @@ Manage data stored locally, on an S3 bucket, or on an Azure container
     ess category change comment myfavoritedata "This category deserves a comment"
 
     ess ls "*"
-  
-    ess ls -r --cat myfavoritedata "*"
+    ess ls -r --cat myfavoritedata
+    ess ls -r --cat myfavoritedata "*MY_PATTERN*"
 
 --------------------------------------------------------------------------------
 
