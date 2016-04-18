@@ -48,10 +48,10 @@ How to Launch Essentia in the Amazon Cloud
 8. Add Storage section: defaults are fine. (click **NEXT**)
 9. Tag Instance.  Not required but useful to name your instance. Do this and click **NEXT**.
 10. Configure Security Group. We need to create a new group to handle the firewall between the internet
-   and an Essentia Master node.  Please refer to our walk through: :doc:`security-group`
+    and an Essentia Master node.  Please refer to our walk through: :doc:`security-group`
 11. Once your security group is setup, click **REVIEW AND LAUNCH**, and then **LAUNCH**.  You will be asked
-   to generate a new access key pair, or use an existing one.  The file created in this process is
-   critical because it is the only way to gain access via SSH to your worker node.
+    to generate a new access key pair, or use an existing one.  The file created in this process is
+    critical because it is the only way to gain access via SSH to your worker node.
 
 Once the instance is launched, you can connect to the web based UI by entering the IP address into your web browser. The default account username is "essentia" and password is your 'Instance ID'. 
 Instructions for getting started with the viewer are found in :doc:`../../dlv/dlv`.

@@ -216,7 +216,7 @@ Script setup and management
    :scale: 10
    :target: ../screenshots/analyze_script.png
    
-*Note:* You can also **Stop** running your script or, when it has finished, **Download** the result onto your local machine or **Clear** the results so they are no longer stored.
+*Note:* You can also **Stop** running your script or, when it has finished, **Download** the result onto your local machine or **Clear** the results so they are no longer stored. You must terminate any worker cluster before running **Clear** or you will have to terminate those nodes manually (without Essentia).
 
 .. image:: ../screenshots/analyze_script_run.png
    :align: center
