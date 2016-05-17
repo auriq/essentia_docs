@@ -51,11 +51,21 @@ instance and launch Essentia.
 Configuring the Web UI
 **********************
 
-Assuming deployment is successfull, a VM will be created.  Typically the access point will be of the form ``http://yyy.cloudapp.net`` where
-``yyy`` is the VM name chosen in step 1 above.
+.. Assuming deployment is successfull, a VM will be created.  Typically the access point will be of the form ``http://yyy.cloudapp.net`` where
+..   ``yyy`` is the VM name chosen in step 1 above.
 
-Once the VM is running, a web server will start. Connect to your instance via any web browser and you will be asked to provide a UI admin
-username and password.  This can be the same as in step 1 above, but does not have to be.
+Once the VM is running, a web server will start. You can access this web server by typing in the IP or DNS of your instance. To find your VM's IP or DNS:
+
+#. Go to the Microsoft Azure Portal (**portal.azure.com**)
+#. Click on **Virtual Machines** on the left menu
+#. Click on the VM you just launched
+#. Find your IP or DNS listed under the **Public IP address/DNS name** lable.
+
+Connect to your instance via any web browser and you will be asked to provide a UI admin
+username and password.  This can be the same as in step 1 above, but does not have to be. 
+
+Every time you login to the UI you will use the username and password you specify when you first login to the UI. 
+You can change your password by clicking on your account in the top right portion of the UI and specifying a new password.
 
 
 
