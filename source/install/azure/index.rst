@@ -22,25 +22,32 @@ requiring configuration information from the user.
 Configuring the VM
 ******************
 The instructions below are meant to get Azure subscribers up and running with Essentia quickly. Users are encouraged to review
-the Azure documentation for a more full explanation of some of the settings.  The five sections below represent the 5 creation steps
+the Azure documentation for a more full explanation of some of the settings.  
+
+1. Go to AuriQ Essentia's VM listing on the Azure Marketplace by clicking 
+   on `this direct link <http://azure.microsoft.com/en-us/marketplace/partners/auriq-systems/essentia-data-viewer/>`_ 
+   or going to the Azure Marketplace, searching for **"auriq"**, and clicking on **"Essentia"**. 
+2. Click on **Create Virtual Machine** and then **Create**.
+
+The five sections below represent the 5 creation steps
 listed in the Azure blade during provisioning.  After each step, clicking OK will move to the next step in the chain.
 
-1.  **BASICS**:
+3.  **BASICS**:
 
 * name:   Name of the VM.
 * User name:  Pick the name of the admin user for the VM
 * Authentication type: Can be Password or key based.  Password is easier, key-based is more secure (see `this note <https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-linux-use-ssh-key/>`_.
 * Resource Group: Can be an existing group, but preferably a new one should be created.
 
-2. **SIZE**:
+4. **SIZE**:
    The Data Lake Viewer requires only modest computing, which is why the A1 and D1 series of VMs are recommended.  Larger
    instance types can be provisioned, but do not add much to performance.  **A1 Standard** should be selected if possible.  Users
    who want to make extensive use of the file migration tool may prefer the D1 series.
-3. **SETTINGS**:
+5. **SETTINGS**:
    All of these can be left to their default settings unless specific networking and storage setups are required.
-4. **SUMMARY**:
+6. **SUMMARY**:
    Simply provides a summary of the VM settings.
-5. **BUY**:
+7. **BUY**:
    Provides a final note and the 'buy' button.  Until 'Buy' is pressed, no charges to your Azure account have been made.
 
 
