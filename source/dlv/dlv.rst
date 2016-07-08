@@ -19,6 +19,9 @@ Repository setup and management
 1. Click on **Connect** in the top menu and then the AWS S3 tab.
 2. Click on the **+Add** icon to open the input form.
 3. Enter your AWS S3 credentials (bucket name, access key, secret access key) and a label if you prefer to call the bucket by another name.
+
+**Note:** If you are running the AWS Marketplace version of Essentia 3.1.2, you do not need to enter your AWS credentials. Instead, setup an IAM role as described in :doc:`../install/aws/iam-role`.
+
 4. Click on the **Add** button to add your S3 repository.
 5. Your newly added repository will be displayed in the AWS S3 table.
 

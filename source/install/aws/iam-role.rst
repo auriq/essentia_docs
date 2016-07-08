@@ -35,6 +35,15 @@ To create one, follow these steps:
                 "Resource": [
                     "*"
                 ]
+            },
+            {
+                "Effect": "Allow",
+                "Action": [
+                    "s3:*"
+                ],
+                "Resource": [
+                    "*"
+                ]
             }
         ]
     }
@@ -44,7 +53,7 @@ To create one, follow these steps:
 .. caution::
 
    Improperly created roles pose a security risk.  The above role is very liberal in granting permissions to spin up
-   new ec2 instances. Consult with your AWS experts, or contact us if there are any questions or concerns.
+   new ec2 instances and access s3 files. Consult with your AWS experts, or contact us if there are any questions or concerns.
    
 .. note::
 
@@ -59,6 +68,15 @@ To create one, follow these steps:
                 "Effect": "Allow",
                 "Action": [
                     "ec2:*"
+                ],
+                "Resource": [
+                    "*"
+                ]
+            },
+            {
+                "Effect": "Allow",
+                "Action": [
+                    "s3:*"
                 ],
                 "Resource": [
                     "*"
