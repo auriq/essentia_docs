@@ -10,7 +10,7 @@ The Azure version is hosted on the Azure Marketplace, and users can use
 .. note::
 
    Users are required to have an Azure account to launch this or any other Virtual Machine on the Azure cloud.  Details on
-   Azure and the sign up process are available fro Microsoft's `Azure Web Page <https://azure.microsoft.com/en-us/>`_.
+   Azure and the sign up process are available from Microsoft's `Azure Web Page <https://azure.microsoft.com/en-us/>`_.
 
 The Essentia Data Lake Viewer is run on a standalone virtual machine which you can provision and control.  Access is available
 via a web based UI and via an SSH connection.  At the Azure store, click on the *Create Virtual Machine* button to start the
@@ -36,7 +36,7 @@ listed in the Azure blade during provisioning.  After each step, clicking OK wil
 
 * name:   Name of the VM.
 * User name:  Pick the name of the admin user for the VM
-* Authentication type: Can be Password or key based.  Password is easier, key-based is more secure (see `this note <https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-linux-use-ssh-key/>`_.
+* Authentication type: Can be Password or key based.  Password is easier, key-based is more secure (see `this note <https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-linux-use-ssh-key/>`_).
 * Resource Group: Can be an existing group, but preferably a new one should be created.
 
 4. **SIZE**:
