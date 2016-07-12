@@ -39,6 +39,15 @@ To create one, follow these steps:
             {
                 "Effect": "Allow",
                 "Action": [
+                    "iam:PassRole"
+                ],
+                "Resource": [
+                    "*"
+                ]
+            },
+            {
+                "Effect": "Allow",
+                "Action": [
                     "s3:*"
                 ],
                 "Resource": [
@@ -68,6 +77,15 @@ To create one, follow these steps:
                 "Effect": "Allow",
                 "Action": [
                     "ec2:*"
+                ],
+                "Resource": [
+                    "*"
+                ]
+            },
+            {
+                "Effect": "Allow",
+                "Action": [
+                    "iam:PassRole"
                 ],
                 "Resource": [
                     "*"
