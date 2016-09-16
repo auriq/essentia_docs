@@ -1,4 +1,4 @@
-#git pull https://bwaxer:dragon911@github.com/auriq/essentia_docs.git beta-ess3.1.1
+#git pull https://bwaxer:dragon911@github.com/auriq/essentia_docs.git ess3.2.0
 #rm -R _build/html/*
 #make html
 #sudo cp -R _build/html/* /var/www/html/documentation/.
