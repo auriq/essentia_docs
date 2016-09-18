@@ -33,10 +33,12 @@ To learn more about creating and using categories, see :doc:`category-rules`.
     | ``[--account_name AzureAccount]``
     | ``[--aws_secret_access_key secretkey]``
     | ``[--account_key AzureKey]``
-    | ``[--label name]``","Select a data source"
+    | ``[--label name]``
+    | ``[--overwrite]``","Select a data source"
     ess summary,"| ``[category]``
     | ``[--label name]``
-    | ``[--scan]``","Provide a summary of the categories in the current datastore, or a deep summary of a single category"
+    | ``[--scan]``
+    | ``[--short]``","Provide a summary of the categories in the current datastore, or a deep summary of a single category"
     ess purge,label,"Delete the reference to the datastore (not the datastore itself)"
     ess ls,"| ``[pattern]`` 
     | ``[--exclude subpattern]``
@@ -44,7 +46,8 @@ To learn more about creating and using categories, see :doc:`category-rules`.
     | ``[--label name]`` 
     | ``[-r]``
     | ``[--dateregex regex_pattern]``
-    | ``[--limit number]``","list the contents of the source datastore"
+    | ``[--limit number]``
+    | ``[--short]``","list the contents of the source datastore"
     ess probe,"| category
     | ``[--file filename]``
     | ``[--label name]``
@@ -76,9 +79,13 @@ To learn more about creating and using categories, see :doc:`category-rules`.
     ess category change,"| columnspec|dateformat|dateregex|usecache|comment
     | NewSpec|NewFormat|NewRegex|NewCache|NewComment","Modify or override details about a category"
     ess cluster create,"| ``[--type NodeType]`` 
-    | ``[--number Number]``","Create worker nodes"
-    ess cluster terminate,,"Shutdown all worker nodes"
-    ess cluster status,,"Summarizes the state of all workers"
+    | ``[--number Number]``
+    | ``[--add]``","Create worker nodes"
+    ess cluster add,"| ReservationIDs","Add worker nodes to cluster by Reservation ID"
+    ess cluster remove,"| ReservationIDs","Remove worker nodes from cluster by Reservation ID"
+    ess cluster terminate,"| ``[--all]``
+    | ``[-y]``","Shutdown all worker nodes, optionally deleting all pem files and security groups with or without confirmation"
+    ess cluster status,,"Summarizes the state of all workers and shows their Reservations IDs"
     ess cluster stop,,"Suspend worker nodes (i.e. stop the EC2 instances)"
     ess cluster start,,"Restart suspended worker nodes"
     ess cluster set,"local|cloud","Force essentia into master node only (local) or not."
@@ -95,7 +102,8 @@ To learn more about creating and using categories, see :doc:`category-rules`.
     | ``[--s3out label:path]``
     | ``[--label name]`` 
     | ``[--progress]`` 
-    | ``[--limit number]``","stream data in given range to given command (cat being default)"
+    | ``[--limit number]``
+    | ``[--quitonerror]``","stream data in given range to given command (cat being default)"
     ess exec,"| command 
     | ``[--master]`` 
     | ``[--debug]`` 
@@ -108,7 +116,8 @@ To learn more about creating and using categories, see :doc:`category-rules`.
     ess drop,"database|table|vector|variable name", "delete the object"
     ess use,database, "select the given database for queries"
     ess cat,"| filename 
-    | ``[--label name]``", "read file and print to stdout"
+    | ``[--label name]``
+    | ``[--decompress]``", "read file and print to stdout"
     ess lsa,"| filename 
     | ``[--label name]`` 
     | ``[--pattern]``", "List the files within an archive file with optional filtering."
@@ -131,3 +140,17 @@ To learn more about creating and using categories, see :doc:`category-rules`.
     ess redshift deregister,,"Unlink redshift cluster from Essentia"
     ess udbd,"start|stop|restart|status", "direct manipulation of UDB"
     ess udbd,"ckmem|cklog", "check memory or logs of UDB daemons on workers"
+
+-------------------
+*Advanced Options*
+-------------------
+
+.. csv-table::
+    :header: "Environment Variable", "Default", "Description"
+    :widths: 15, 35, 30
+
+    "AWS_CACHE_DIR","| ``GUI and RStudio:`` /var/www/html/mydmp/aws/1/.ess
+    | ``Command Line:`` ~/.ess","Directory path where repository settings files will be stored. This is used to manage the local and cloud repositories associated with the instance you are on. The first default is for files created by the Graphical User Interface or RStudio and the second default is for files created via the command line."
+    "AWS_WORK_DIR","| ``All Access Methods:`` ./.conf","Directory path where udb settings files will be stored. This is used to manage the UDB databases and ports associated with the instance you are on. The default is always a **.conf** folder in your current directory."
+    "AWS_AWS_DIR","| ``GUI and RStudio:`` /var/www/html/mydmp/aws/1/.aws
+    | ``Command Line:`` ~/.aws","Directory path where pem files will be stored. This is used to manage the computer clusters associated with the instance you are on. The first default is for files created by the Graphical User Interface or RStudio and the second default is for files created via the command line."
