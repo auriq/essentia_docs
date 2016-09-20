@@ -7,7 +7,7 @@
     usage: ess select [-h] [--region REGION]
                       [--credentials CREDENTIALS | --aws_access_key AWS_ACCESS_KEY | --account_name ACCOUNT_NAME]
                       [--aws_secret_access_key AWS_SECRET_ACCESS_KEY | --account_key ACCOUNT_KEY]
-                      [--label LABEL]
+                      [--label LABEL] [--overwrite]
                       source
     
     Choose a datastore
@@ -29,6 +29,7 @@
       --account_key ACCOUNT_KEY
                             Azure account key
       --label LABEL         Assign a label to the datastore
+      --overwrite           Overwrite credential information
     
 --------------------------------
 **ess summary**
@@ -36,7 +37,7 @@
 
 ::
 
-    usage: ess summary [-h] [--label [LABEL]] [--scan] [category]
+    usage: ess summary [-h] [--label [LABEL]] [--scan] [--short] [category]
     
     Summarize datastore
     
@@ -47,6 +48,7 @@
       -h, --help       show this help message and exit
       --label [LABEL]  select a datastore
       --scan           scan and update stats on datastore
+      --short          return total file count and size only. used with --scan
     
 --------------------------------
 **ess probe**
@@ -93,7 +95,7 @@
 ::
 
     usage: ess ls [-h] [--exclude [EXCLUDE]] [--cat CAT] [--label LABEL] [-r]
-                  [--dateregex DATEREGEX] [--limit [LIMIT]]
+                  [--dateregex DATEREGEX] [--limit [LIMIT]] [--short]
                   [pattern]
     
     list files based on an expression
@@ -108,8 +110,10 @@
       --label LABEL         select a datastore
       -r, --recursive       Ascend through sub paths
       --dateregex DATEREGEX
-                            regex style pattern used to get date from filename
+                            regex style pattern used to get date from filename.
+                            Option: [auto|none|custom]
       --limit [LIMIT]       number of file to fetch
+      --short               return file names only
     
 --------------------------------
 **ess category**
@@ -137,8 +141,8 @@
       -h, --help            show this help message and exit
       --exclude [EXCLUDE]   GLOB patterns to exclude files within pattern
       --dateregex DATEREGEX
-                            Format of the date encoded in the filename by regex
-                            style
+                            regex style pattern used to get date from filename.
+                            Option: [auto|none|custom]
       --dateformat DATEFORMAT
                             Format of the date encoded in the filename. Will be
                             deprecated soon, please use dateregex
@@ -268,7 +272,7 @@
 
 ::
 
-    usage: ess cat [-h] [--label LABEL] filename
+    usage: ess cat [-h] [--label LABEL] [--decompress] filename
     
     positional arguments:
       filename       Filename to dump contents of
@@ -276,6 +280,7 @@
     optional arguments:
       -h, --help     show this help message and exit
       --label LABEL  Select a datastore
+      --decompress   decompress file if supported
     
 --------------------------------
 **ess lsa**
@@ -303,13 +308,15 @@
 
 ::
 
-    usage: ess cluster set [-h] {local,cloud}
+    usage: ess cluster set [-h] {local,cloud,custom}
     
     positional arguments:
-      {local,cloud}
+      {local,cloud,custom}
     
     optional arguments:
-      -h, --help     show this help message and exit
+      -h, --help            show this help message and exit
+    
+See Also: :doc:`./essentia_ref#advanced-options`
     
 +++++++++++++++++++++++++++++++++
 ``ess cluster create``
@@ -318,6 +325,7 @@
 ::
 
     usage: ess cluster create [-h] [--number NumberOfWorkers] [--type TYPE]
+                              [--add]
                               [--credentials CREDENTIALS | --aws_access_key AWS_ACCESS_KEY]
                               [--aws_secret_access_key AWS_SECRET_ACCESS_KEY]
     
@@ -326,6 +334,7 @@
       --number NumberOfWorkers
                             Number of worker nodes
       --type TYPE           Type of worker nodes
+      --add                 create additional worker nodes
       --credentials CREDENTIALS
                             Credentials file
       --aws_access_key AWS_ACCESS_KEY
@@ -333,16 +342,22 @@
       --aws_secret_access_key AWS_SECRET_ACCESS_KEY
                             EC2 secret access key
     
+See Also: :doc:`./essentia_ref#advanced-options`
+    
 +++++++++++++++++++++++++++++++++
 ``ess cluster terminate``
 +++++++++++++++++++++++++++++++++
 
 ::
 
-    usage: ess cluster terminate [-h]
+    usage: ess cluster terminate [-h] [--all] [-y]
     
     optional arguments:
       -h, --help  show this help message and exit
+      --all       delete all worker nodes, security group, keys
+      -y          confirm to terminate all
+    
+See Also: :doc:`./essentia_ref#advanced-options`
     
 +++++++++++++++++++++++++++++++++
 ``ess cluster stop``
@@ -355,6 +370,8 @@
     optional arguments:
       -h, --help  show this help message and exit
     
+See Also: :doc:`./essentia_ref#advanced-options`
+    
 +++++++++++++++++++++++++++++++++
 ``ess cluster start``
 +++++++++++++++++++++++++++++++++
@@ -366,6 +383,8 @@
     optional arguments:
       -h, --help  show this help message and exit
     
+See Also: :doc:`./essentia_ref#advanced-options`
+    
 +++++++++++++++++++++++++++++++++
 ``ess cluster status``
 +++++++++++++++++++++++++++++++++
@@ -376,6 +395,53 @@
     
     optional arguments:
       -h, --help  show this help message and exit
+    
+See Also: :doc:`./essentia_ref#advanced-options`
+    
++++++++++++++++++++++++++++++++++
+``ess cluster remove``
++++++++++++++++++++++++++++++++++
+
+::
+
+    usage: ess cluster remove [-h] reservation [reservation ...]
+    
+    positional arguments:
+      reservation  reservation ids to remove
+    
+    optional arguments:
+      -h, --help   show this help message and exit
+    
+See Also: :doc:`./essentia_ref#advanced-options`
+    
++++++++++++++++++++++++++++++++++
+``ess cluster add``
++++++++++++++++++++++++++++++++++
+
+::
+
+    usage: ess cluster add [-h] reservation [reservation ...]
+    
+    positional arguments:
+      reservation  reservation ids to add
+    
+    optional arguments:
+      -h, --help   show this help message and exit
+    
+See Also: :doc:`./essentia_ref#advanced-options`
+    
++++++++++++++++++++++++++++++++++
+``ess cluster reset``
++++++++++++++++++++++++++++++++++
+
+::
+
+    usage: ess cluster reset [-h]
+    
+    optional arguments:
+      -h, --help  show this help message and exit
+    
+See Also: :doc:`./essentia_ref#advanced-options`
     
 --------------------------------
 **ess query**
@@ -412,6 +478,8 @@
     optional arguments:
       -h, --help  show this help message and exit
     
+See Also: :doc:`./essentia_ref#advanced-options`
+    
 +++++++++++++++++++++++++++++++++
 ``ess server restart``
 +++++++++++++++++++++++++++++++++
@@ -424,6 +492,8 @@
     
     optional arguments:
       -h, --help  show this help message and exit
+    
+See Also: :doc:`./essentia_ref#advanced-options`
     
 +++++++++++++++++++++++++++++++++
 ``ess server commit``
@@ -438,6 +508,8 @@
     optional arguments:
       -h, --help  show this help message and exit
     
+See Also: :doc:`./essentia_ref#advanced-options`
+    
 +++++++++++++++++++++++++++++++++
 ``ess server summary``
 +++++++++++++++++++++++++++++++++
@@ -449,6 +521,8 @@
     optional arguments:
       -h, --help     show this help message and exit
       --name [NAME]  Select database to show
+    
+See Also: :doc:`./essentia_ref#advanced-options`
     
 --------------------------------
 **ess create**
@@ -595,7 +669,7 @@
 
     usage: ess stream [-h] [--exclude EXCLUDE] [--master] [--debug] [--bulk]
                       [--threads THREADS] [--archive ARCHIVE] [--s3out S3OUT]
-                      [--label LABEL] [--progress] [--limit LIMIT]
+                      [--label LABEL] [--progress] [--limit LIMIT] [--quitonerror]
                       category lower upper [command]
     
     Import data
@@ -618,6 +692,9 @@
       --label LABEL      Assign a label to the datastore
       --progress         Show a progress bar
       --limit LIMIT      Limit # of files streamed
+      --quitonerror      Stop stream when error occurs
+    
+See Also: :doc:`../tables/index`
     
 --------------------------------
 **ess exec**
@@ -637,6 +714,8 @@
       --master       where to run
       --debug        debug mode
       --s3out S3OUT  send output to an s3 bucket
+    
+See Also: :doc:`../tables/index`
     
 --------------------------------
 **ess udbd**

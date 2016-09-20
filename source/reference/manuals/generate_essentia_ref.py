@@ -31,6 +31,12 @@ for subcommand in subcommands.split(','):
             if len(essoutput)!=0:
                print "::\n"
             print "    "+essoutput.replace("\n","\n    ")
+            if subcommand == "cluster" or subcommand == "server":
+               print "See Also: :doc:`./essentia_ref#advanced-options`\n    "
+            elif subcommand == "stream" or subcommand == "exec":
+               print "See Also: :doc:`../tables/index`\n    "
+
+
     else:
       print "--------------------------------"
       print "**ess {0}**".format(subcommand)
@@ -38,3 +44,9 @@ for subcommand in subcommands.split(','):
       if len(essoutput)!=0:
          print "::\n"
       print "    "+essoutput.replace("\n","\n    ")
+      if subcommand == "cluster" or subcommand == "server":
+         print "See Also: :doc:`./essentia_ref#advanced-options`\n    "
+      elif subcommand == "stream" or subcommand == "exec":
+         print "See Also: :doc:`../tables/index`\n    "
+
+
