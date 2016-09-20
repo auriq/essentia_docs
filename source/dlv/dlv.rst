@@ -44,6 +44,10 @@ Repository setup and management
    :scale: 10
    :target: ../screenshots/connect_azure_add.png
 
+**Explore Your Data Repository**
+
+To explore your new repository or any repository that you've already connected to, follow the steps in `Exploring Your Data Repository`_.
+
 **Delete Repository**
 
 1. Click on **Connect** in the top menu.
@@ -108,9 +112,10 @@ Datastore category setup and management
 3. From here, you can change `column headers <../reference/manuals/category-rules.html#column-headers>`_ (no spaces) and assign `data types <../reference/manuals/category-rules.html#data-types>`_ in case the scan was not correct.
 4. Click on the **Save** button to save your changes.
 
-**Exploring Your Data Repository**
+Exploring Your Data Repository
+-------------------------------
 
-1. Click **Explore**.
+1. Click the folder icon in the **Connect** tab of the UI or click **Explore** in the **Categorize** tab of the UI.
 2. Click the **+** next to a directory to navigate through the directories on your Repository.
 3. Your current path is displayed at the top, under your repository name. This is useful when defining a pattern for the files you want to group into a category.
 4. You can click the icon next to any filename to **Download** or **Delete** that file from your Repository.
