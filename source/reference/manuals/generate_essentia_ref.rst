@@ -316,7 +316,7 @@
     optional arguments:
       -h, --help            show this help message and exit
     
-See Also: :doc:`./essentia_ref#advanced-options`
+**See Also:** `Advanced Options <essentia-ref.html#advanced-options>`_
     
 +++++++++++++++++++++++++++++++++
 ``ess cluster create``
@@ -342,7 +342,7 @@ See Also: :doc:`./essentia_ref#advanced-options`
       --aws_secret_access_key AWS_SECRET_ACCESS_KEY
                             EC2 secret access key
     
-See Also: :doc:`./essentia_ref#advanced-options`
+**See Also:** `Advanced Options <essentia-ref.html#advanced-options>`_
     
 +++++++++++++++++++++++++++++++++
 ``ess cluster terminate``
@@ -357,7 +357,7 @@ See Also: :doc:`./essentia_ref#advanced-options`
       --all       delete all worker nodes, security group, keys
       -y          confirm to terminate all
     
-See Also: :doc:`./essentia_ref#advanced-options`
+**See Also:** `Advanced Options <essentia-ref.html#advanced-options>`_
     
 +++++++++++++++++++++++++++++++++
 ``ess cluster stop``
@@ -370,7 +370,7 @@ See Also: :doc:`./essentia_ref#advanced-options`
     optional arguments:
       -h, --help  show this help message and exit
     
-See Also: :doc:`./essentia_ref#advanced-options`
+**See Also:** `Advanced Options <essentia-ref.html#advanced-options>`_
     
 +++++++++++++++++++++++++++++++++
 ``ess cluster start``
@@ -383,7 +383,7 @@ See Also: :doc:`./essentia_ref#advanced-options`
     optional arguments:
       -h, --help  show this help message and exit
     
-See Also: :doc:`./essentia_ref#advanced-options`
+**See Also:** `Advanced Options <essentia-ref.html#advanced-options>`_
     
 +++++++++++++++++++++++++++++++++
 ``ess cluster status``
@@ -396,7 +396,7 @@ See Also: :doc:`./essentia_ref#advanced-options`
     optional arguments:
       -h, --help  show this help message and exit
     
-See Also: :doc:`./essentia_ref#advanced-options`
+**See Also:** `Advanced Options <essentia-ref.html#advanced-options>`_
     
 +++++++++++++++++++++++++++++++++
 ``ess cluster remove``
@@ -412,7 +412,7 @@ See Also: :doc:`./essentia_ref#advanced-options`
     optional arguments:
       -h, --help   show this help message and exit
     
-See Also: :doc:`./essentia_ref#advanced-options`
+**See Also:** `Advanced Options <essentia-ref.html#advanced-options>`_
     
 +++++++++++++++++++++++++++++++++
 ``ess cluster add``
@@ -428,7 +428,7 @@ See Also: :doc:`./essentia_ref#advanced-options`
     optional arguments:
       -h, --help   show this help message and exit
     
-See Also: :doc:`./essentia_ref#advanced-options`
+**See Also:** `Advanced Options <essentia-ref.html#advanced-options>`_
     
 +++++++++++++++++++++++++++++++++
 ``ess cluster reset``
@@ -441,7 +441,7 @@ See Also: :doc:`./essentia_ref#advanced-options`
     optional arguments:
       -h, --help  show this help message and exit
     
-See Also: :doc:`./essentia_ref#advanced-options`
+**See Also:** `Advanced Options <essentia-ref.html#advanced-options>`_
     
 --------------------------------
 **ess query**
@@ -478,7 +478,7 @@ See Also: :doc:`./essentia_ref#advanced-options`
     optional arguments:
       -h, --help  show this help message and exit
     
-See Also: :doc:`./essentia_ref#advanced-options`
+**See Also:** `Advanced Options <essentia-ref.html#advanced-options>`_
     
 +++++++++++++++++++++++++++++++++
 ``ess server restart``
@@ -493,7 +493,7 @@ See Also: :doc:`./essentia_ref#advanced-options`
     optional arguments:
       -h, --help  show this help message and exit
     
-See Also: :doc:`./essentia_ref#advanced-options`
+**See Also:** `Advanced Options <essentia-ref.html#advanced-options>`_
     
 +++++++++++++++++++++++++++++++++
 ``ess server commit``
@@ -508,7 +508,7 @@ See Also: :doc:`./essentia_ref#advanced-options`
     optional arguments:
       -h, --help  show this help message and exit
     
-See Also: :doc:`./essentia_ref#advanced-options`
+**See Also:** `Advanced Options <essentia-ref.html#advanced-options>`_
     
 +++++++++++++++++++++++++++++++++
 ``ess server summary``
@@ -522,7 +522,7 @@ See Also: :doc:`./essentia_ref#advanced-options`
       -h, --help     show this help message and exit
       --name [NAME]  Select database to show
     
-See Also: :doc:`./essentia_ref#advanced-options`
+**See Also:** `Advanced Options <essentia-ref.html#advanced-options>`_
     
 --------------------------------
 **ess create**
@@ -694,7 +694,7 @@ See Also: :doc:`./essentia_ref#advanced-options`
       --limit LIMIT      Limit # of files streamed
       --quitonerror      Stop stream when error occurs
     
-See Also: :doc:`../tables/index`
+**See Also:** :doc:`../tables/index`
     
 --------------------------------
 **ess exec**
@@ -715,7 +715,7 @@ See Also: :doc:`../tables/index`
       --debug        debug mode
       --s3out S3OUT  send output to an s3 bucket
     
-See Also: :doc:`../tables/index`
+**See Also:** :doc:`../tables/index`
     
 --------------------------------
 **ess udbd**
