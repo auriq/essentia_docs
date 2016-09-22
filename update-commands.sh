@@ -23,7 +23,21 @@ then
   $c2
   $c3
   $c4
-  # $c5
+
+ elif [ "$1" = "screenshots" ]
+ then
+
+  $c5
+
+ elif [ "$1" = "pull" ]
+ then
+
+  $c1
+
+ elif [ "$1" = "push" ]
+ then
+
+  $c6
 
  elif [ "$1" = "sync" ]
  then
@@ -31,11 +45,11 @@ then
   $c1
   $c6
 
+ else
+
+  echo "Version: $version"; echo "Argument Options are: echo, update, screenshots, pull, push, and sync";
+
  fi
-
-else
-
- echo "Version: $version"; echo "Argument Options are: echo, update, and sync";
 
 fi
 

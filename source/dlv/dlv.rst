@@ -115,23 +115,32 @@ Datastore category setup and management
 Exploring Your Data Repository
 -------------------------------
 
-1. Click the folder icon in the **Connect** tab of the UI or click **Explore** in the **Categorize** tab of the UI.
-2. Click the **+** next to a directory to navigate through the directories on your Repository.
+..  in the **Connect** tab of the UI or click **Explore** in the **Categorize** tab of the UI.
+
+1. Click the folder icon next to your respository in the **Connect** or **Categorize** tabs of the UI. A new tab will open, allowing you to explore your Data Repository.
+2. In the new tab, click the **+** next to a directory to navigate through the directories on your Repository.
 3. Your current path is displayed at the top, under your repository name. This is useful when defining a pattern for the files you want to group into a category.
-4. You can click the icon next to any filename to **Download** or **Delete** that file from your Repository.
+4. You can click the icon next to any filename to **Download** or **Delete** that file from your Repository. You can also click the icon and then **Preview file content** to view an uncompressed sample of the raw data in the file.
 
 .. image:: ../screenshots/categorize_explore_dwnld.png
    :align: center
    :scale: 10
    :target: ../screenshots/categorize_explore_dwnld.png
+
+| 
+| *Note:* If the Explorer tab does not open, you may need to enable pop-ups from the Essentia UI.
    
+You can click **Search** to look for files matching a globular pattern within the current path on your Repository.
+
+*Note:* For a more detailed description of globular matching patterns, see `Glob (programming) <http://en.wikipedia.org/wiki/Glob_%28programming%29>`_
+
 You can click **Upload** to choose files to upload to the current path on your Repository.
 
 You can click **Size** to calculate the total number of files and bytes in the current path on your Repository.
 
 You can click **Refresh** to get the latest list of files on your Repository.
 
-*Note:* If the Explorer tab does not open when you click **Explore**, you may need to enable pop-ups from the Essentia UI.
+.. *Note:* If the Explorer tab does not open when you click **Explore**, you may need to enable pop-ups from the Essentia UI.
 
 Query setup and management
 -----------------------------
