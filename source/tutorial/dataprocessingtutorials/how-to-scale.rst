@@ -5,8 +5,9 @@ How To Scale Up
 ************************
 
 In this tutorial, we concentrate on using Essentia within the AWS cloud service. 
-This tutorial requires one of the cloud based versions of Essentia, 
-since the local install of Essentia does not have the ability to create worker nodes and construct an Essentia cluster.
+This tutorial requires one of the cloud based versions of Essentia. 
+
+To create worker nodes and construct an Essentia cluster using the local install of Essentia, go through :doc:`configure-cluster`.
 
 ==============================
 Running on AWS
