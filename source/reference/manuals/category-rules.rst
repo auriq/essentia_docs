@@ -304,7 +304,7 @@ This option allows you to apply a command to the data in your category before Es
 
 *Preprocess Command*::
 
-    objcnv -jsn -f,eok twitterex.json -d s:coordinates:coordinates s:created_at:created_at s:favorited:favorited s:truncated:truncated s:id_str:id_str s:in_reply_to_user_id_str:in_reply_to_user_id_str s:text:text s:profile_sidebar_border_color:user.profile_sidebar_border_color s:name:user.name s:in_reply_to_screen_name:in_reply_to_screen_name s:source:source s:place:place s:in_reply_to_status_id:in_reply_to_status_id
+    aq_pp -f,eok,jsn twitterex.json -d s:coordinates:coordinates s:created_at:created_at s:favorited:favorited s:truncated:truncated s:id_str:id_str s:in_reply_to_user_id_str:in_reply_to_user_id_str s:text:text s:profile_sidebar_border_color:user.profile_sidebar_border_color s:name:user.name s:in_reply_to_screen_name:in_reply_to_screen_name s:source:source s:place:place s:in_reply_to_status_id:in_reply_to_status_id
     
 *Sample Output*::
 
