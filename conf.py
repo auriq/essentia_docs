@@ -139,6 +139,7 @@ html_theme_options = {
         ("AuriQ", "http://www.auriq.com", True),
         ("Github", "https://github.com/auriq/EssentiaPublic", True),
         ("Forums", "http://forum.auriq.com", True),
+	("Manuals", "source/reference/manuals/index"),
     ],
 
     # Render the next and previous page links in navbar. (Default: true)

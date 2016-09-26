@@ -20,7 +20,37 @@ No Existing Clusters, Creating First Cluster
 
    **Ex:** ``ess cluster add r-6b1f57d5``
 
-Existing Clusters, 
+Existing Clusters, Adding Additional Worker Nodes
+-------------------------------------------------
+
+First you must stop importing any data into your existing worker node instances so that Essentia's UDB Database can be redistributed. Then, to add additional worker nodes onto your existing cluster:
+
+1. Create additional worker nodes on Amazon EC2 to add to your existing cluster by running ``ess cluster create --add --number=YOUR_NUMBER --type=YOUR_TYPE``. 
+   This command will create and add **YOUR_NUMBER** of **YOUR_TYPE** instances on Amazon EC2 to your cluster.
+
+   **Ex:** ``ess cluster create --add --number=2 --type=m3.medium``
+
+2. Add existing computers to your existing cluster by referencing their Reservation ID using ``ess cluster add RESERVATION_ID``.
+
+   **Ex:** ``ess cluster add r-6b1f57d5``
+
+Finding Existing Clusters
+-------------------------
+
+To find information about the cluster you are currently running from the directory you started it from, run ``ess cluster status``. This will show you connection and resource information about each of the computers currently connected to in that cluster as well as show you those computers' Reservation ID(s) so that you can reuse them in the future.
+
+To find information about all of the clusters you have connected to and kept the information of, look in the ESS_AWS_DIR. If you are not familiar with this directory please see `Advanced Options <../../reference/manuals/essentia-ref.html#advanced-options>`_. This directory contains all of the pem files that you've used to connect to your clusters as well as the Reservation ID's for the computers in those clusters.
+
+Cleaning up Existing Clusters
+-----------------------------
+
+
+
+.. caution::
+   Stop or Terminate your cluster(s) with Essentia before running ``ess cluster remove`` or you will have to stop or terminate them from the Amazon Console.
+
+
+
 
 Allow  to reuse worker nodes.
 
