@@ -1,3 +1,7 @@
+.. |<br>| raw:: html
+
+   <br>
+
 ======
 aq_udb
 ======
@@ -10,39 +14,43 @@ Synopsis
 
 ::
 
-  aq_udb [-h] Global_Opt Export_Spec|Order_Spec|Mnt_Spec
+  aq_udb [-h] Global_Opt Mnt_Spec|Order_Spec|Export_Spec
 
   Global_Opt:
-      [-test] [-verb] [-stat]
-      [-spec UdbSpec | -db DbName]
+      [-verb] [-stat] [-test]
       [-server AdrSpec [AdrSpec ...]]
       [-local]
 
+  Mnt_Spec:
+      -crt[,AtrLst] DbName |
+      -clr[,AtrLst] DbName:TabName |
+      -probe[,AtrLst] DbName
+
+  Order_Spec:
+      -ord[,AtrLst] DbName:TabName [ColName ...]
+
   Export_Spec:
-      -exp [DbName:]TabName | -cnt [DbName:]TabName | -scn [DbName:]TabName
+      -exp[,AtrLst] DbName:TabName |
+      -cnt[,AtrLst] DbName:TabName |
+      -scn[,AtrLst] DbName:TabName
       [-seed RandSeed]
-      [-lim_usr Num] [-lim_rec Num]
       [-var ColName Val]
       [-pp TabName
         [-bvar ColName Val]
         [-eval ColName Expr]
         [-filt FilterSpec]
         [-goto DestSpec]
-        [-end_of_scan DestSpec]
+        [-del_row | -del_usr]
       -endpp]
       [-bvar ColName Val]
       [-eval ColName Expr]
       [-filt FilterSpec]
       [-goto DestSpec]
+      [-del_row | -del_usr]
       [-mod ModSpec [ModSrc]]
+      [-lim_usr Num] [-lim_rec Num]
       [-sort[,AtrLst] [ColName ...] [-top Num]]
       [-o[,AtrLst] File] [-c ColName [ColName ...]]
-
-  Order_Spec:
-      -ord[,AtrLst] [DbName:]TabName [ColName ...]
-
-  Mnt_Spec:
-      -clr [DbName:]TabName | -probe [DbName:]
 
 
 Description
@@ -95,22 +103,6 @@ Options
     aq_udb: rec=Count
 
 
-.. _`-db`:
-
-``-spec UdbSpec`` | ``-db DbName``
-  Set the Udb spec file to ``UdbSpec``.
-  Alternatively, "``-db DbName``" indirectly sets the spec file to
-  to ".conf/``DbName``.spec" in the current work directory.
-  If neither option is given,  ``DbName`` can be given in a later
-  `-exp`_, `-cnt`_, `-scn`_, `-ord`_  or `-clr`_ option.
-  If no spec file is given at all, "udb.spec" in the current work directory
-  is assumed.
-
-  The spec file contains server IPs (or domain names) and table/vector
-  definitions.
-  See `udb.spec <udb.spec.html>`_ for details.
-
-
 .. _`-server`:
 
 ``-server AdrSpec [AdrSpec ...]``
@@ -129,40 +121,117 @@ Options
   IP of the machine the program is running on.
 
 
+.. _`-crt`:
+
+``-crt[,AtrLst] DbName``
+  Create a database explicitly. Normally, a database is created automatically
+  during an import (see `aq_pp <aq_pp.html>`_).
+  ``DbName`` is the database name (see `Target Database`_).
+  Note that it is not an error to create a database that already exists as
+  long as the database definition is identical.
+
+  Optional ``AtrLst`` is a comma separated list containing:
+
+  * ``spec=UdbSpec`` - Set the spec file directly (see `Target Database`_).
+
+
+.. _`-clr`:
+
+``-clr[,AtrLst] DbName:TabName``
+  Remove/reset the data of a table/vector.
+  ``DbName`` is the database name (see `Target Database`_).
+  ``TabName`` is a table/vector name in the database.
+  Specific clear actions are:
+
+  * For a table, its records are removed.
+  * For a vector, its columns are reset to 0/blank.
+  * For the Var vector (i.e., when ``TabName`` is "var"), its columns are reset
+    to 0/blank.
+  * If ``TabName`` is a "." (a dot), *everything* will be cleared -
+    tables, vectors, the "var" vector, user buckets and the database
+    definition are all be removed,
+
+  Optional ``AtrLst`` is a comma separated list containing:
+
+  * ``spec=UdbSpec`` - Set the spec file directly (see `Target Database`_).
+
+
+.. _`-probe`:
+
+``-probe[,AtrLst] DbName``
+  Check if the servers associated with ``DbName`` are heathly and that
+  ``DbName`` has been defined on the servers.
+
+  * If all servers responded *successful*, the exit code will be 0.
+  * If a connection failed or ``DbName`` is not defined,
+    the exit code will be non-zero.
+    Usually, an error message will be printed on stderr.
+  * Use this with `-verb`_ and/or `-stat`_ to get more info if desired.
+
+  ``DbName`` is the database name (see `Target Database`_).
+  Optional ``AtrLst`` is a comma separated list containing:
+
+  * ``spec=UdbSpec`` - Set the spec file directly (see `Target Database`_).
+
+
+.. _`-ord`:
+
+``-ord[,AtrLst] DbName:TabName [ColName ...]``
+  Sort records in a table within each bucket. The default sort order is
+  ascending. The records are sorted internally; not output will be generated.
+  ``DbName`` is the database name (see `Target Database`_).
+  ``TabName`` is a table name in the database.
+  ``ColName`` sets the desired sort columns.
+  If no ``ColName`` is given, the "TKEY" column is assumed
+  (see `udb.spec <udb.spec.html>`_).
+  If ``TabName`` is a "." (a dot), all tables with a "TKEY" will be sorted.
+  No ``ColName`` is needed in this case.
+
+  Optional ``AtrLst`` is a comma separated list containing:
+
+  * ``spec=UdbSpec`` - Set the spec file directly (see `Target Database`_).
+  * ``dec`` - Sort in descending order. Default is ascending.
+
+
 .. _`-exp`:
 
-``-exp [DbName:]TabName``
-  Export data from ``TabName``.
-  ``TabName`` refers to a table/vector defined in the Udb spec file
-  (see `udb.spec <udb.spec.html>`_).
+``-exp[,AtrLst] DbName:TabName``
+  Export data.
+  ``DbName`` is the database name (see `Target Database`_).
+  ``TabName`` is a table/vector name in the database.
   To export the "PKEY" (bucket key) only, specify  a "." (a dot) as ``TabName``.
-  Optional ``DbName`` sets the Udb spec file as in the `-db`_ option.
+  Optional ``AtrLst`` is a comma separated list containing:
+
+  * ``spec=UdbSpec`` - Set the spec file directly (see `Target Database`_).
 
 
 .. _`-cnt`:
 
-``-cnt [DbName:]TabName``
-  Retrieve the unique "PKEY" count and row count for ``TabName``.
-  ``TabName`` refers to a table/vector defined in the Udb spec file
-  (see `udb.spec <udb.spec.html>`_).
-  To do a "PKEY" (bucket key) count only, specify  a "." (a dot) as ``TabName``.
-  Optional ``DbName`` defines UdbSpec indirectly as in the `-db`_ option.
+``-cnt[,AtrLst] DbName:TabName``
+  Count unique "PKEY" and rows.
+  ``DbName`` is the database name (see `Target Database`_).
+  ``TabName`` is a table/vector name in the database.
+  To count "PKEY" (bucket key) only, specify  a "." (a dot) as ``TabName``.
+  Optional ``AtrLst`` is a comma separated list containing:
+
+  * ``spec=UdbSpec`` - Set the spec file directly (see `Target Database`_).
 
 
 .. _`-scn`:
 
-``-scn [DbName:]TabName``
-  Scan data in ``TabName``.
-  ``TabName`` refers to a table/vector defined in the Udb spec file
-  (see `udb.spec <udb.spec.html>`_).
-  To scan the user buckets only, specify  a "." (a dot) as ``TabName``.
-  Optional ``DbName`` sets the Udb spec file as in the `-db`_ option.
+``-scn[,AtrLst] DbName:TabName``
+  Scan data only.
+  This option is typically used along with certain data processing rules
+  (see `Data Processing Steps`_) and/or a data processing module (see `-mod`_).
+  There is no default output. However, if a module is used, it can output
+  custom data.
 
-  There is no default output.
-  However, if used with a module (see `-mod`_),
-  the module can optionally output custom data.
-  This option is typically used with certain data inspection/modification
-  rules/module.
+  ``DbName`` is the database name (see `Target Database`_).
+  ``TabName`` is a table/vector name in the database.
+  To scan the user buckets only, specify  a "." (a dot) as ``TabName``.
+  Optional ``AtrLst`` is a comma separated list containing:
+
+  * ``spec=UdbSpec`` - Set the spec file directly (see `Target Database`_).
 
 
 .. _`-seed`:
@@ -170,18 +239,6 @@ Options
 ``-seed RandSeed``
   Set the seed of random sequence used by the ``$Random``
   `-eval`_ builtin variable.
-
-
-.. _`-lim_usr`:
-
-``-lim_usr Num``
-  Limit export output to the given Num users. Default is 0, meaning no limit.
-
-
-.. _`-lim_rec`:
-
-``-lim_rec Num``
-  Limit export output to the given Num records. Default is 0, meaning no limit.
 
 
 .. _`-var`:
@@ -387,8 +444,6 @@ Options
   * ``next_bucket`` - Skip the current user bucket entirely.cw
     The export/count/scan processing on this bucket will also be skipped.
   * ``next_row`` - Skip the current data row and start over on the next row.
-  * ``+Num`` - Jump over Num `-eval`_, `-filt`_ and `-goto`_ rules.
-    ``Num=0`` means the next rule, ``Num=1`` means skip over one rule, and so.
 
   This rule can also be used within a `-pp`_ group. In this case,
   these additional destinations are supported:
@@ -397,6 +452,41 @@ Options
     stop the current ``-pp`` group and skip all pending ``-pp`` groups)
     and start the export/count/scan operation in the current user bucket.
   * ``next_pp`` - Stop the current ``-pp`` group and start the next one.
+
+
+.. _`-del_row`:
+
+``-del_row[,AtrLst]``
+  Delete the current row in the database. No more processing on the current
+  row will be done.
+
+  Optional ``AtrLst`` is a comma separated list containing:
+
+  * ``post=DestSpec`` - Set the action to take after the delete.
+    ``DestSpec`` is one of:
+
+    * ``next_bucket`` - Stop processing the current user bucket.
+      Any export/count/scan processing on the remaining rows of this bucket
+      will be skipped.
+    * ``proc_bucket`` - Skip all pending ``-pp`` groups
+      and start the export/count/scan operation in the current user bucket.
+    * ``next_row`` - Start processing the next row. This is the default
+      behavior.
+
+
+.. _`-del_usr`:
+
+``-del_usr[,AtrLst]``
+  Delete the current user bucket in the database. No more processing on the
+  current bucket will be done.
+
+  Optional ``AtrLst`` is a comma separated list containing:
+
+  * ``post=DestSpec`` - Set the action to take after the delete.
+    ``DestSpec`` is one of:
+
+    * ``next_bucket`` - Start processing the next bucket. This is the default
+      behavior.
 
 
 .. _`-mod`:
@@ -408,13 +498,11 @@ Options
   `Data Processing Steps`_.
   Only one such module can be specified.
 
-  ``ModSpec`` has the form ``ModName`` or ``ModName("Arg1", "Arg2", ...)``
+  ``ModSpec`` has the form ``ModName`` or ``ModName(Arg1, Arg2, ...)``
   where ``ModName`` is the module name and ``Arg*`` are module dependent
-  arguments. Note that the arguments must be string constants;
-  for this reason, they must be quoted according to the
-  `string constant`_ spec.
-
-  ``ModSrc`` is an optional module source file. It can be:
+  arguments. Note that the arguments must be literals -
+  `string constants <#string-constant>`_ (quoted), numbers or IP addresses.
+  ``ModSrc`` is an optional module source file containing:
 
   * A module script source file that can be used to build the specified
     module. See the `Udb module script compiler <mcc.umod.html>`_
@@ -452,11 +540,10 @@ Options
 
 
 .. _`-pp`:
-.. _`-end_of_scan`:
 
-``-pp TabName [-bvar ... -eval ... -filt ... -goto ... -end_of_scan ...] -endpp``
-  ``-pp`` groups one or more `-bvar`_, `-eval`_, `-filt`_ and/or `-goto`_
-  actions together.
+``-pp[,AtrLst] TabName [-bvar ... -eval ... -filt ... -goto ... -del_row ...] -endpp``
+  ``-pp`` groups one or more `-bvar`_, `-eval`_, `-filt`_, `-goto`_,
+  `-del_row`_ and `-del_usr`_ actions together.
   Each group performs pre-processing at the user bucket level *before*
   data in the bucket is exported/counted/scanned.
   See `Data Processing Steps`_ for details.
@@ -465,30 +552,25 @@ Options
   It may refer to a table/vector or the user bucket itself.
   To target a table/vector, specify its name.
   To target the user bucket itself, specify  a "." (a dot).
-  "." is a pseudo vector containing a single read only "PKEY" column.
+  "." is a pseudo vector containing the "PKEY" columns.
+
+  Optional ``AtrLst`` is a comma separated list containing:
+
+  * ``post=DestSpec`` - Set the action to take after all the rows in
+    the target table has been exhausted.
+    ``DestSpec`` is one of:
+
+    * ``next_bucket`` - Skip the current user bucket entirely.
+      The export/count/scan processing on this bucket will also be skipped.
+    * ``proc_bucket`` - Skip all pending ``-pp`` groups
+      and start the export/count/scan operation in the current user bucket.
+    * ``next_pp`` - Start the next ``-pp`` group. This is the default behavior.
 
   The `-bvar`_ rules in the group are always executed first.
-  Then the list of `-eval`_, `-filt`_ and `-goto`_ rules are executed in order.
-  Rule executions can also be made conditional by adding "if-else" controls.
-  See `Rule Execution Controls`_ for details.
-
-  ``-end_of_scan DestSpec`` - a special rule that defines the
-  action to take after all the rows in the target table has been exhausted.
-  The default action is to start the next ``-pp`` group.
-  Use ``DestSpec`` to control the exact behavior:
-
-  * ``next_bucket`` - Skip the current user bucket entirely.
-    The export/count/scan processing on this bucket will also be skipped.
-  * ``proc_bucket`` - Skip all pending ``-pp`` groups
-    and start the export/count/scan operation in the current user bucket.
-  * ``next_pp`` - Start the next ``-pp`` group. This is the default behavior
-    at the end of a ``-pp`` table scan.
-  * ``+Num`` - Jump over Num ``-pp`` groups. ``Num=0`` is equivalent to
-    ``next_pp``,
-    ``Num=1`` means skip over the next ``-pp`` group as well, and so.
-
-  This option is not position dependent - it can be specified anywhere
-  within a ``-pp`` group.
+  Then the list of `-eval`_, `-filt`_, `-goto`_, `-del_row`_ and `-del_usr`_
+  rules are executed in order.
+  Rule executions can also be made conditional by adding "if-else" controls,
+  see `Rule Execution Controls`_ for details.
 
   ``-endpp`` marks the end of a ``-pp`` group.
 
@@ -497,15 +579,14 @@ Options
    ::
 
     $ aq_udb -exp Test1
-        -pp 'Test2'
+        -pp,post=next_bucket 'Test2'
           -goto proc_bucket
-          -end_of_scan next_bucket
 
   * Only export Test1 from buckets whose Test2 table is not empty. If Test2 is
     not empty, the ``-goto`` rule will be executed on the first row, causing
-    execution to jump to export processing; in this way, the end-of-scan
-    condition is not triggered. However, if Test2 is empty, ``-goto``
-    is not executed and end-of-scan is triggered.
+    execution to jump to export processing; in this way, the ``post``
+    action is not triggered. However, if Test2 is empty, ``-goto``
+    is not executed and ``post`` is triggered.
 
    ::
 
@@ -521,18 +602,32 @@ Options
     2nd ``-filt``.
 
 
+.. _`-lim_usr`:
+
+``-lim_usr Num``
+  Limit export output to the given Num users. Default is 0, meaning no limit.
+
+  **Note**: If the data is distributed over multiple servers, the result
+  exported can be less than expected if ``Num`` is close to
+  ``Total_Num_Users / Num_Servers``.
+
+
+.. _`-lim_rec`:
+
+``-lim_rec Num``
+  Limit export output to the given Num records. Default is 0, meaning no limit.
+
+  **Note**: If the data is distributed over multiple servers, the result
+  exported can be less than expected if ``Num`` is close to
+  ``Total_Num_Records / Num_Servers``.
+
+
 .. _`-sort`:
 
-``-sort[,AtrLst] [ColName ...] [-top Num]``
-  `-exp`_ output post processing option.
-
-  When exporting a table/vector,
-  use ``ColName`` to set the desired sort columns.
-  If no ``ColName`` is given, the "PKEY" column is assumed.
-  The sort columns must be in the output columns.
-
-  When exporting the "PKEY" (bucket key) only, no ``ColName`` is needed.
-  Sort is always done by the "PKEY".
+``-sort[,AtrLst] ColName ... [-top Num]``
+  `-exp`_ export output post processing option.
+  This sets the output sort columns.
+  Note that the sort columns must be in the output columns.
 
   Optional ``AtrLst`` is a comma separated list containing:
 
@@ -549,9 +644,7 @@ Options
 ``-o[,AtrLst] File``
   Export output option.
   Set the output attributes and file.
-  If ``File`` is a '-' (a single dash), data will be written to stdout.
-  Optional ``AtrLst`` is described under `Output File Attributes`_.
-
+  See the `aq_tool output specifications <aq-output.html>`_ manual for details.
   If this option is not used with an export, data is written to stdout.
 
   Example:
@@ -568,17 +661,17 @@ Options
 ``-c ColName [ColName ...]``
   Select columns to output during an export.
 
-  * When exporting an user table/vector, columns from the target table/vector,
+  * For a table/vector export, columns from the target table/vector,
     columns from other user vectors, and/or columns from the Var vector can
     be selected.
     Default output includes all target table/vector columns.
 
-  * When exporting the "PKEY" (bucket key), the "PKEY" column,
+  * For a "PKEY" (bucket key) export, the "PKEY" columns,
     columns from any user vectors, and/or columns from the Var vector can
     be selected.
-    Default output includes the "PKEY" column only.
+    Default output includes the "PKEY" columns only.
 
-  * When exporting the Var vector, only columns from the Var vector can
+  * For a Var vector export, only columns from the Var vector can
     be selected.
     Default output includes all Var vector columns.
 
@@ -595,52 +688,6 @@ Options
   * Output Var vector columns along with columns from Test.
     Even though Test_Col* are normally exported by default, they must be
     listed explicitly in order to include any Var_Col*.
-
-
-.. _`-ord`:
-
-``-ord[,AtrLst] [DbName:]TabName [ColName ...]``
-  Sort records in table ``TabName`` within each bucket.
-  Optional ``DbName`` sets the Udb spec file as in the `-db`_ option.
-  ``ColName`` sets the desired sort columns.
-  If no ``ColName`` is given, the "TKEY" column is assumed
-  (see `udb.spec <udb.spec.html>`_).
-  Optional ``AtrLst`` is a comma separated list containing:
-
-  * ``dec`` - Sort in descending order. Default order is ascending.
-
-  If ``TabName`` is a "." (a dot), all tables with a "TKEY" will be sorted.
-  No ``ColName`` is needed in this case.
-
-
-.. _`-clr`:
-
-``-clr [DbName:]TabName``
-  Remove/reset ``TabName`` data in the database.
-  Optional ``DbName`` sets the Udb spec file as in the `-db`_ option.
-
-  * For a table, the records are removed.
-  * For a vector, the columns are reset to 0/blank.
-  * For the Var vector (i.e., when ``TabName`` is "var"), the columns are reset
-    to 0/blank.
-
-  If ``TabName`` is a "." (a dot), all user buckets will be removed,
-  along with all tables/vectors in the buckets.
-  The Var vector will be reset as well.
-
-
-.. _`-probe`:
-
-``-probe [DbName:]``
-  Probe the servers and exit.
-  Optional ``DbName`` sets the Udb spec file as in the `-db`_ option.
-  This is typically used to check if all the target servers are up and ready.
-
-  * If all servers responded *successful*, the exit code will be 0.
-  * If a connection failed or a server responded *failure*,
-    the exit code will be non-zero.
-    Usually, an error message will be printed on stderr.
-  * Use this with `-verb`_ to get more info.
 
 
 Exit Status
@@ -661,28 +708,6 @@ Applicable exit codes are:
 * 22 - Output write error.
 * 31 - Udb connect error.
 * 32 - Udb communication error.
-
-
-Output File Attributes
-======================
-
-Each output option can have a list of comma separated attributes:
-
-* ``notitle`` - Suppress the column name label row from the output.
-  A label row is normally included by default.
-* ``app`` - When outputting to a file, append to it instead of overwriting.
-* ``csv`` - Output in CSV format. This is the default.
-* ``sep=c`` or ``sep=\xHH`` - Output in 'c' (single byte) separated value
-  format. '\xHH' is a way to specify 'c' via its HEX value ``HH``.
-  Note that ``sep=,`` is not the same as ``csv`` because CSV is a more
-  advanced format.
-* ``bin`` - Output in aq_tool's internal binary format.
-* ``esc`` - Use '\\' to escape the field separator, '"' and '\\' (non binary).
-* ``noq`` - Do not quote string fields (CSV).
-* ``fmt_g`` - Use "%g" as print format for ``F`` type columns. Only use this
-  to aid data inspection (e.g., during integrity check or debugging).
-
-If no output format attribute is given, CSV is assumed.
 
 
 String Constant
@@ -719,6 +744,26 @@ For example,
   'a "b" c'" d 'e' f" => a "b" c d 'e' f
 
 
+Target Database
+===============
+
+``aq_udb`` obtains information about the target database from a spec file.
+The spec file contains server IPs (or domain names) and table/vector
+definitions. See `udb.spec <udb.spec.html>`_ for details.
+``aq_udb`` finds the relevant spec file in several ways:
+
+* The spec file path can be given explicitly via the ``spec=UdbSpec`` attribute
+  of the `-crt`_, `-ord`_, `-exp`_, `-cnt`_, `-scn`_, `-clr`_ or `-probe`_
+  option.
+* The spec file path can be deduced implicitly from the ``DbName`` parameters
+  of the `-crt`_, `-ord`_, `-exp`_, `-cnt`_, `-scn`_, `-clr`_ or `-probe`_
+  option.
+  This method sets the spec file to "``.conf/DbName.spec``" in the current
+  work directory of ``aq_udb``.
+* If none of the above information is given, the spec file is assumed to be
+  "``udb.spec``" in the current work directory of ``aq_udb``.
+
+
 Rule Execution Controls
 =======================
 
@@ -739,7 +784,8 @@ Rule Execution Controls
   -endif
 
 Sypported ``RuleToCheck`` are `-eval`_ and `-filt`_.
-Suppoeted ``RuleToRun`` are `-eval`_, `-filt`_ and `-goto`_.
+Suppoeted ``RuleToRun`` are `-eval`_, `-filt`_, `-goto`_, `-del_row`_ and
+`-del_usr`_.
 
 Example:
 
@@ -777,10 +823,12 @@ data is processed according to the commandline options in this way:
     * Initialize Var columns according the `-bvar`_ rules.
     * Scan the ``-pp`` table. For each row in the table:
 
-      * Execute the list of `-eval`_, `-filt`_ and `-goto`_ rules
-        (including any "-if-elif-else-endif" controls) in order.
+      * Execute the list of `-eval`_, `-filt`_, `-goto`_, `-del_row`_ and
+        `-del_usr`_ rules (including any "-if-elif-else-endif" controls)
+        in order.
 
-    * When all the rows are exhausted, execute the `-end_of_scan`_ rule.
+    * When all the rows are exhausted, follow the ``post`` attribute
+      setting or start the next group by default.
 
   * Initialize Var columns according the `-bvar`_ rules.
 
@@ -793,8 +841,9 @@ data is processed according to the commandline options in this way:
   * Process the target export/count/scan table.
     For each data row in the target table:
 
-    * Execute the list of `-eval`_, `-filt`_ and `-goto`_ rules
-      (including any "-if-elif-else-endif" controls) in order.
+    * Execute the list of `-eval`_, `-filt`_, `-goto`_, `-del_row`_ and 
+      `-del_usr`_ rules (including any "-if-elif-else-endif" controls)
+      in order.
     * If a module is specified (see `-mod`_) and it has a row processing
       function, the function is called.
       This function can inspect and/or modify the current data row.
@@ -806,9 +855,11 @@ data is processed according to the commandline options in this way:
 See Also
 ========
 
+* `aq-output <aq-output.html>`_ - aq_tool output specifications
 * `aq-emod <aq-emod.html>`_ - aq_tool eval functions.
 * `aq_pp <aq_pp.html>`_ - Record preprocessor
 * `udb.spec <udb.spec.html>`_ - Udb spec file.
 * `udbd <udbd.html>`_ - Udb server
 * `mcc.umod <mcc.umod.html>`_ - Udb module script compiler
 * `Example aq_udb Commands <../../usecases/syntaxexamples/aq_udb-option-examples.html>`_ - Additional examples of aq_udb options.
+

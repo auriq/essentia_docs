@@ -60,6 +60,10 @@ To access your essenta docker container via the command line, secure shell into 
 
 This starts an interactive shell for the docker container so that you can enter and use the Essentia commands. 
 
+**Note:** Always check your version of Essentia by running ``ess -v``.
+If this version does not match the version of this documentation listed in the top-left of this page,
+click the **Versions** link next to our documentation version and navigate to the documentation version that matches your version of Essentia.
+
 Additional Notes
 ================
 

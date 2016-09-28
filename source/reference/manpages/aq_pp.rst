@@ -17,14 +17,14 @@ Synopsis
   aq_pp [-h] Global_Opt Input_Spec Prep_Spec Process_Spec Output_Spec
 
   Global_Opt:
-      [-test] [-verb] [-stat] [-bz ReadBufSiz]
+      [-verb] [-stat] [-test]
 
   Input_Spec:
-      [-f[,AtrLst] File [File ...]] [-d ColSpec [ColSpec ...]]
+      [-f[,AtrLst] File [File ...]] [-d ColSpec [ColSpec ...]] |
+      [-exp[,AtrLst] DbName:TabName [ExpOpts ...] --]
       [-cat[,AtrLst] File [File ...] ColSpec [ColSpec ...]]
 
   Prep_Spec:
-      [-ddef]
       [-seed RandSeed]
       [-rownum StartNum]
       [-var ColSpec Val]
@@ -38,17 +38,15 @@ Synopsis
       [-kdec ColName ColSpec|ColName[+] [ColSpec|ColName[+] ...]]
       [-filt FilterSpec]
       [-map[,AtrLst] ColName MapFrom MapTo]
-      [-sub[,AtrLst] ColName File [File ...] [ColTag ...]]
-      [-grep[,AtrLst] ColName File [File ...] [ColTag ...]]
+      [-sub[,AtrLst] ColName File [File ...] [ColSPec ...]]
+      [-grep[,AtrLst] ColName File [File ...] [ColSPec ...]]
       [-cmb[,AtrLst] File [File ...] ColSpec [ColSpec ...]]
       [-pmod ModSpec [ModSrc]]
 
   Output_Spec:
       [-o[,AtrLst] File] [-c ColName [ColName ...]]
-      [-udb [-spec UdbSpec | -db DbName] -imp [DbName:]TabName
-        [-seg N1[-N2]/N] [-nobnk] [-nonew] [-mod ModSpec [ModSrc]]
-      ]
       [-ovar[,AtrLst] File [-c ColName [ColName ...]]]
+      [-imp[,AtrLst] DbName:TabName [-mod ModSpec [ModSrc]]
 
 
 Description
@@ -133,40 +131,27 @@ Options
     aq_pp: rec=Count err=Count out=Count
 
 
-.. _`-bz`:
-
-``-bz ReadBufSiz``
-  Set input buffer length.
-  It is also the maxium record length. If a record exceeds this length, it is
-  considered broken and will cause the program to abort or the record to be
-  discarded.
-  Default length is 64KB. Use this option if a longer record is expected.
-  ``ReadBufSiz`` is a number in bytes.
-
-
 .. _`-f`:
 
 ``-f[,AtrLst] File [File ...]``
   Set the input attributes and files.
-  If the data come from stdin, set ``File`` to '-' (a single dash).
-  Optional ``AtrLst`` is described under `Input File Attributes`_.
-  If this option is not given, stdin is assumed.
+  See the `aq_tool input specifications <aq-input.html>`_ manual for details.
 
   Example:
 
    ::
 
-    $ aq_pp ... -f,+1l,eok file1 -f file2 ...
+    $ aq_pp ... -f,+1l file1 file2 ...
 
-  * File1 and file2 can have different attributes.
+  * Skip the first line from both files before loading.
 
 
 .. _`-d`:
 
-``-d ColSpec [ColSpec ...]`` or |<br>| ``-d [SepSpec] ColSpec [[SepSpec] ColSpec ...]``
-  Define the columns in the input records from all the `-f`_ specs.
-  Up to 2048 ``ColSpec`` can be defined (excluding ``X`` type columns).
-  ``ColSpec`` has the form ``Type[,AtrLst]:ColName``.
+``-d ColSpec [ColSpec ...]``
+  Define the input data columns.
+  See the `aq_tool input specifications <aq-input.html>`_ manual for details.
+  In general, ``ColSpec`` has the form ``Type[,AtrLst]:ColName``.
   Supported ``Types`` are:
 
   * ``S`` - String.
@@ -176,45 +161,10 @@ Options
   * ``I`` - 32-bit unsigned integer.
   * ``IS`` - 32-bit signed integer.
   * ``IP`` - v4/v6 address.
-  * ``X[Type]`` - marks an unwanted input column.
-    Type is optional. It can be one of the above (default is ``S``).
-    ColName is also optional. Such a name is simply discarded.
 
-  Optional ``AtrLst`` is used in conjunction with the `input file attributes`_
-  to determine how column data are to be extracted from the input.
-  It is a comma separated list containing:
-
-  * ``n=Len`` - Extract exactly ``Len`` source bytes. Use this for a fixed
-    length data column.
-  * ``esc`` - Denote that the input field uses '\\' as escape character. Data
-    exported from databases (e.g. MySQL) sometimes use this format. Be careful
-    when dealing with multibyte character set because '\\' can be part of a
-    multibyte sequence.
-  * ``clf`` - Denote that the input field uses these encoding methods:
-
-    * Non-printable bytes encoded as '\\xHH' where ``HH`` is the hex value of
-      the byte.
-    * '"' and '\\' encoded as '\\"' and '\\\\'.
-    * Selected whitespaces encoded as '\\r', '\\n', '\\t', '\\v' and '\\f'.
-
-  * ``noq`` - Denote that the input field is not quoted. Any quotes in or around
-    the field are considered part of the field value.
-  * ``hex`` - For numeric type. Denote that the input field is in hexdecimal
-    notation. Starting ``0x`` is optional. For example, ``100`` is
-    converted to 256 instead of 100.
-  * ``trm`` - Trim leading/trailing spaces from input field value.
-  * ``lo``, ``up`` - For ``S`` type. Convert input field to lower/upper case.
-
-  ``ColName`` is case insensitive. It can have up to 31 alphanumeric and '_'
-  characters. The first character must not be a digit.
-
-  The alternate column definition involving ``SepSpec`` is designed for
-  input data that have multibyte separators and/or varying separators from
-  field to field. In these cases, *all* the separators must be individually
-  specified. ``SepSpec`` has the form ``SEP:SepStr`` where ``SEP``
-  (case insensitive) is a keyword and ``SepStr`` is a literal separator of one
-  or more bytes. A ``SepSpec`` is generally needed between two adjacent
-  ``ColSpec`` unless the former column has a length spec.
+  Optional ``AtrLst`` is a comma separated list of column specific attributes.
+  ``ColName`` is the column name (case insensitive). It can contain up to
+  31 alphanumeric and '_' characters. Its first character cannot be a digit.
 
   Example:
 
@@ -227,24 +177,40 @@ Options
     attribute removes blanks around the value before it is converted to
     an internal number.
 
-   ::
 
-    $ aq_pp ... -d sep:' [' s:time_s sep:'] "' s,clf:url sep:'"' ...
+.. _`-exp`:
 
-  * This parses data of the form: [01/Apr/2016:01:02:03 +0900] "/index.html".
+``-exp[,AtrLst] DbName:TabName [ExpOpts ...] --``
+  Get the input data from an Udb export. This will set the data source as
+  well as the column definitions (for this reason, this option is not
+  compatible with the -f`_ and/or `-d`_ option(s)).
+  ``DbName`` is the database name (see `Target Udb Database`_).
+  ``TabName`` is a table/vector name in the database to export.
+  To export the "PKEY" (bucket key) only, specify  a "." (a dot) as ``TabName``.
+  Optional ``AtrLst`` is a comma separated list containing:
+
+  * ``spec=UdbSpec`` - Set the spec file directly (see `Target Udb Database`_).
+
+  ``ExpOpts`` are the ``-exp`` related options decribed in
+  `aq_udb <aq_udb.html>`_ (except ``-o`` which is not applicable here).
+  Interpretation of ``ExpOpts`` ends at ``--`` or the first option not
+  recognized as an ``aq_udb`` export option.
 
 
 .. _`-cat`:
 
 ``-cat[,AtrLst] File [File ...] ColSpec [ColSpec ...]``
-  Add rows from ``Files`` to the current data set.
-  If the data come from stdin, set ``File`` to '-' (a single dash).
-  Optional ``AtrLst`` is described under `Input File Attributes`_.
-  ``ColSpecs`` define the columns in the files as with `-d`_.
-  The columns may differ from those of the current data set.
-  The new data set will contain unique columns from both sets.
-  Columns that do not exist in a data set will be set to zero or blank when
-  that data set is loaded.
+  Add rows from ``Files`` to the `-f`_ data set.
+  The file and column specifications are the same as in the `-f`_ and `-d`_
+  options.
+  See the `aq_tool input specifications <aq-input.html>`_ manual for details.
+
+  Note that the columns need not be the same as those from `-d`_ (by name).
+  If they differ, a super set is constructed.
+  Multiple ``-cat`` can be used such that the final data set will contain
+  unique columns from `-d`_ and all `-cat`_.
+  Columns that do not exist in a data set will be set to zero or blank
+  when that data set is loaded.
 
   Example:
 
@@ -254,24 +220,12 @@ Options
         -cat more.csv i:Col3 s:Col1 s:Col5 s:Col6
         ...
 
-  * Add data from more.csv. Column Col3 and Col1 are common. The original data
-    set does not have Col5 and Col6, so they are set to blank in rows from the
-    original inputs. On the other hand, more.csv does not have Col2 and Col4,
-    so they are set to blank in rows from more.csv. The resulting data set will
-    have columns Col1, Col2, Col3, Col4, Col5 and Col6.
-
-
-.. _`-ddef`:
-
-``-ddef``
-  Turns on implicit column support for Udb import. If a column
-  required by the target Udb table is not defined in the data set,
-  its value will be set to 0 or blank during import.
-
-  * Instead of (or in addition to) this option, `-var`_ and/or `-eval`_
-    can be used to add the required columns to the data set.
-  * The "PKEY" column cannot be implicit.
-  * This option applies to all Udb imports.
+  * Add data from "``more.csv``". Column Col3 and Col1 are common,
+    so the resulting data set will have Col1, Col2, Col3, Col4, Col5 and Col6.
+    Since the main data set does not have Col5 and Col6, they are set to
+    blank when it is loaded.
+    Similarly, since "``more.csv``" does not have Col2 and Col4,
+    they are set to blank when it is loaded.
 
 
 .. _`-seed`:
@@ -655,14 +609,13 @@ Options
 
 .. _`-sub`:
 
-``-sub[,AtrLst] ColName File [File ...] [ColTag ...]``
-  Update the value of a string column/variable according to a lookup table.
-  ``ColName`` is a previously defined column/variable.
-  ``Files`` contain the lookup table.
-  If the input comes from stdin, set ``File`` to '-' (a single dash).
+``-sub[,AtrLst] ColName File [File ...] [ColSpec ...]``
+  Replace the values of ``ColName``, a string column in the current data set,
+  with values from a lookup table loaded from ``Files``.
   Optional ``AtrLst`` is a comma separated list containing:
 
-  * Standard `Input File Attributes`_.
+  * Standard `input attributes <aq-input.html#input-file-option>`_ described
+    in the `aq_tool input specifications <aq-input.html>`_ manual.
   * ``ncas`` - Do case insensitive match (default is case sensitive).
   * ``pat`` - Support '?' and '*' wild cards in the "From" value. Literal '?',
     '*' and '\\' must be escaped by a '\\'. Without this attribute,
@@ -672,21 +625,19 @@ Options
   * ``all`` - Use all matches. Normally, only the first match is used.
     With this attribute, one row is produced for each match.
 
-  ``ColTags`` are optional. They specify the columns in the files. Supported
-  tags (case insensitive) are:
+  ``ColSpecs`` define the `input columns <aq-input.html#column-spec>`_ as
+  described in the `aq_tool input specifications <aq-input.html>`_ manual.
+  The spec is optional, default is "``S:from S:to``" (or just "``from to``").
+  If a spec is defined, it must include these 2 columns (by name):
 
-  * ``FROM`` - marks the column used to match the value of ColName.
-  * ``TO`` - marks the column used as the new value of ColName.
-  * ``X`` - marks an unused column.
+  * ``from`` - Marks the column used to match the value of ``ColName``.
+    It must have a string type.
+  * ``to`` - Marks the column used as the new value of ``ColName``.
+    It must have a string type.
 
-  If ``ColTag`` is used, both the ``FROM`` and ``TO`` tags must be given.
-  Any number of ``X`` can be specified.
-  If ``ColTag`` is not used, the files are assumed to contain
-  *exactly 2 columns* - the ``FROM`` and ``TO`` columns, in that order.
-
-  The ``FROM`` value is generally a literal. Patterns can also be used,
-  see the ``pat`` attribute description above.
-  The ``TO`` value is always a literal.
+  The *from* values are generally literals. Patterns can be used if
+  the ``pat`` attribute description above is set.
+  The *to* values are always literals.
   Matches are carried out according to the order of the match value in the
   files. Match stops when the first match is found. If the files contain both
   exact value and pattern, then:
@@ -694,49 +645,42 @@ Options
   * Exact values are matched first, skipping over any interleaving patterns.
   * Patterns are matched next, skipping over any interleaving fixed values.
 
-  **Note**: If a file name happens to be one of ``FROM``, ``TO`` or ``X``
-  (case insensitive), prepend the name with a path (e.g., "./X")
-  to avoid misinterpretation.
-
   Example:
 
    ::
 
-    $ aq_pp ... -d s:Col1 ... -sub Col1 lookup.csv ...
+    $ aq_pp ... -d s:Col1 ... -sub Col1 lookup.csv TO X FROM ...
 
-  * Substitute Col1 according to lookup table.
+  * Substitute Col1 according to lookup table. The data in the lookup table
+    is not in the default "``from to``" format, so the column spec must be
+    given. The ``X`` in the spec marks an unneeded column.
 
 
 .. _`-grep`:
 
-``-grep[,AtrLst] ColName File [File ...] [ColTag ...]``
-  Like filtering, but matches a single column/variable against a list of
-  values from a lookup table.
-  ``ColName`` is a previously defined column/variable.
-  ``Files`` contain the lookup table.
-  If the input comes from stdin, set ``File`` to '-' (a single dash).
+``-grep[,AtrLst] ColName File [File ...] [ColSpec ...]``
+  Filter by matching the value of ``ColName``, a string column in the current
+  data set, against the values loaded from ``Files``.
   Optional ``AtrLst`` is a comma separated list containing:
 
-  * Standard `Input File Attributes`_.
+  * Standard `input attributes <aq-input.html#input-file-option>`_ described
+    in the `aq_tool input specifications <aq-input.html>`_ manual.
   * ``ncas`` - Do case insensitive match (default is case sensitive).
   * ``pat`` - Support '?' and '*' wild cards in the "From" value. Literal '?',
     '*' and '\\' must be escaped by a '\\'. Without this attribute,
     match value is assumed constant and no escape is necessary.
   * rev - Reverse logic, select records that do not match.
 
-  ``ColTags`` are optional. They specify the columns in the files. Supported
-  tags (case insensitive) are:
+  ``ColSpecs`` define the `input columns <aq-input.html#column-spec>`_ as
+  described in the `aq_tool input specifications <aq-input.html>`_ manual.
+  The spec is optional, default is "``S:from``" (or just "``from``").
+  If a spec is defined, it must include 1 column (by name):
 
-  * ``FROM`` - marks the column used to match the value of ColName.
-  * ``X`` - marks an unwanted column.
+  * ``from`` - Marks the column used to match the value of ``ColName``.
+    It must have a string type.
 
-  If ``ColTag`` is used, the ``FROM`` tag must be given.
-  Any number of ``X`` can be specified.
-  If ``ColTag`` is not used, the files are assumed to contain
-  *exactly 1 column* - the ``FROM`` column.
-
-  The ``FROM`` value is generally a literal. Patterns can also be used,
-  see the ``pat`` attribute description above.
+  The *from* values are generally literals. Patterns can be used if
+  the ``pat`` attribute description above is set.
   Matches are carried out according to the order of the match value in the
   files. Match stops when the first match is found. If the files contain both
   exact value and pattern, then:
@@ -744,47 +688,42 @@ Options
   * Exact values are matched first, skipping over any interleaving patterns.
   * Patterns are matched next, skipping over any interleaving fixed values.
 
-  **Note**: If a file name happens to be one of ``FROM`` or ``X``
-  (case insensitive), prepend the name with a path (e.g., "./X")
-  to avoid misinterpretation.
-
   Example:
 
    ::
 
-    $ aq_pp ... -d s:Col1 ... -grep,rev Col1 lookup.csv ...
+    $ aq_pp ... -d s:Col1 ... -grep,rev Col1 lookup.csv X X FROM ...
 
   * Select (or retain) only records whose Col1 values are not in lookup table.
+    The data in the lookup table is not in the default format, so the column
+    spec must be given. The ``X``'s in the spec mark the unneeded columns.
 
 
 .. _`-cmb`:
 
 ``-cmb[,AtrLst] File [File ...] ColSpec [ColSpec ...]``
-  Combine data from lookup table into the current data set by joining rows
-  from both data sets based on common key column values.
-  The new data set will contain unique columns from both sets.
-  ``Files`` contain the lookup table.
-  If the data come from stdin, set ``File`` to '-' (a single dash).
+  Combine data from ``Files`` into the current data set by joining rows
+  from both data sets. The new data set will contain unique columns from
+  both sets. Common columns are automatically used as the join keys
+  (see ``ColSpec`` description on how to customize join keys).
   Optional ``AtrLst`` is a comma separated list containing:
 
-  * Standard `Input File Attributes`_.
+  * Standard `input attributes <aq-input.html#input-file-option>`_ described
+    in the `aq_tool input specifications <aq-input.html>`_ manual.
   * ``ncas`` - Do case insensitive match (default is case sensitive).
   * ``req`` - Discard unmatched records.
   * ``all`` - Use all matches. Normally, only the first match is used.
     With this attribute, one row is produced for each match.
 
-  ``ColSpecs`` define the columns in the files as with `-d`_.
-  In addition to the standard `-d`_ column attributes,
-  the followings are supported:
+  ``ColSpecs`` define the `input columns <aq-input.html#column-spec>`_ as
+  described in the `aq_tool input specifications <aq-input.html>`_ manual.
+  with these column attribute extensions:
 
-  * ``key`` - Mark a key column. This column must exist in the current
-    data set.
-  * ``cmb`` - Mark a column to be combined into the current data set. If this
-    column does not exist, one will be added.
-
-  If a column has neither the ``key`` nor ``cmb`` attribute, it will be
-  implicitly used as a combine key if a column with the same name already
-  existed in the current data set.
+  * ``key`` - Marks a column as being a join key. It must be a common column.
+    This is the default for a common column.
+  * ``cmb`` - Marks a column to be combined into the current data set.
+    This is the default for a non-common column.
+    It is typically used to mark a common column as *not* a join key.
 
   Example:
 
@@ -865,8 +804,7 @@ Options
 ``[-o[,AtrLst] File] [-c ColName [ColName ...]]``
   Output data rows.
   Optional "``-o[,AtrLst] File``" sets the output attributes and file.
-  If ``File`` is a '-' (a single dash), data will be written to stdout.
-  Optional ``AtrLst`` is described under `Output File Attributes`_.
+  See the `aq_tool output specifications <aq-output.html>`_ manual for details.
 
   Optional "``-c ColName [ColName ...]``" selects the columns to output.
   ``ColName`` refers to a previously defined column/variable.
@@ -893,73 +831,13 @@ Options
     Amazon Cloud.
 
 
-.. _`-udb`:
-
-``-udb [-spec UdbSpec|-db DbName] -imp [DbName:]TabName [-seg N1[-N2]/N] [-nobnk] [-nonew] [-mod ModSpec [ModSrc]]``
-  Output data directly to Udb (i.e., a Udb import).
-  ``-udb`` marks the beginning of Udb import specific options.
-  Optional "``-spec UdbSpec``" sets the Udb spec file for the import.
-  Alternatively, "``-db DbName``" indirectly sets the spec file to
-  ".conf/``DbName``.spec" in the current work directory.
-  If neither option is given, "udb.spec" in the current work directory
-  is assumed.
-  See the "udb.spec" manual page for details.
-
-  "``-imp [DbName:]TabName``" specifies an import operation.
-
-  * ``TabName`` set the table in the spec to import data to.
-  * ``TabName`` is case insensitive. It must not exceed 31 bytes long.
-  * Optional ``DbName`` defines ``UdbSpec`` indirectly as in the ``-db`` option.
-  * Columns from the current data set, including variables, matching the
-    columns of ``TabName`` are automatically selected for import.
-    In case certain columns in the current data set are named
-    differently from tbe columns of ``TabName``, use `-alias`_ or `-renam`_
-    to remap those columns manually.
-  * See `-ddef`_ if any column in the target table is missing from the
-    current data set.
-
-  Optional "``-seg N1[-N2]/N``" applies sampling by selecting segment N1 or
-  segment N1 to N2 (inclusive) out of N segments of unique users from the
-  input data to import. Users are segmented based on the hash value of the
-  user key. For example, "``-seg 2-4/10``" will divide user pool into 10
-  segments and import segments 2, 3 and 4; segments 1 and 5-10 are discarded.
-
-  Optional ``-nobnk`` excludes records with a blank user key from the import.
-
-  Optional ``-nonew`` tells the server not to create any new user during this
-  import. Records belonging to users not yet in the DB are discarded.
-
-  Optional "``-mod ModSpec [ModSrc]``" specifies a module to be
-  loaded on the *server side*.
-  ``ModSpec`` has the form ``ModName`` or ``ModName("Arg1", "Arg2", ...)``
-  where ``ModName`` is the module name and ``Arg*`` are module dependent
-  arguments. Note that the arguments must be string constants;
-  for this reason, they must be quoted according to the
-  `string constant`_ spec.
-
-  ``ModSrc`` is an optional module source file. It can be:
-
-  * A module script source file that can be used to build the specified
-    module. See the `Udb module script compiler <mcc.umod.html>`_
-    documentation for more information.
-  * A ready-to-use module object file. It *must* have a ``.so`` extension.
-
-  Without ``ModSrc``, the server will look for a preinstalled module matching
-  ``ModName``.
-
-  Multiple sets of "``-udb -spec ... -imp ...``" can be specified.
-
-
 .. _`-ovar`:
 
 ``-ovar[,AtrLst] File [-c ColName [ColName ...]]``
-  Output the final variable values.
-  Variables are those defined using the `-var`_ option.
+  Output the *final* values of all variables defined via the `-var`_ option.
   Only a single data row is output.
-
   "``-ovar[,AtrLst] File``" sets the output attributes and file.
-  If ``File``` is a '-' (a single dash), data will be written to stdout.
-  Optional ``AtrLst`` is described under `Output File Attributes`_.
+  See the `aq_tool output specifications <aq-output.html>`_ manual for details.
 
   Optional "``-c ColName [ColName ...]``" selects the variables to output.
   ``ColName`` refers to a previously defined variable.
@@ -984,6 +862,55 @@ Options
   * Calculate sums and output their evaluates at the end of processing.
 
 
+.. _`-imp`:
+
+``-imp[,AtrLst] DbName:TabName [-mod ModSpec [ModSrc]]``
+  Output data to Udb (i.e., perform an Udb import).
+  ``DbName`` is the database name (see `Target Udb Database`_).
+  ``TabName`` is a table/vector name in the database.
+  Columns (including `variables <#var>`_) from the current data set matching
+  the column names of ``TabName`` are automatically selected for import.
+  In case certain desired columns in the current data set are named
+  differently from tbe columns of ``TabName``, use `-alias`_ or `-renam`_
+  to remap their names manually.
+
+  Optional ``AtrLst`` is a comma separated list containing:
+
+  * ``spec=UdbSpec`` - Set the spec file directly (see `Target Udb Database`_).
+  * ``ddef`` - Allow missing target columns. Normally, it is an error when
+    a target column is missing from the current data set. With this attribute,
+    0 or blank will be imported to the missing columns.
+  * ``nodelay`` - Send records to Udb servers as soon as possible.
+    Otherwise, up to 16KB of data may be buffered before an output occurs.
+  * ``seg=N1[-N2]/N`` - Apply sampling by selecting segment N1 or
+    segment N1 to N2 (inclusive) out of N segments of unique users from the
+    input data to import. Users are segmented based on the hash value of the
+    user key. For example, ``seg=2-4/10`` will divide user pool into 10
+    segments and import segments 2, 3 and 4; segments 1 and 5-10 are discarded.
+  * ``nobnk`` - Exclude records with a blank user key from the import.
+  * ``nonew`` - Tell the server not to create any new user during this
+    import. In other words, records belonging to users *not yet* in the DB are
+    discarded.
+
+  Optional "``-mod ModSpec [ModSrc]``" specifies a module to be
+  loaded on the *server side*.
+  ``ModSpec`` has the form ``ModName`` or ``ModName(Arg1, Arg2, ...)``
+  where ``ModName`` is the module name and ``Arg*`` are module dependent
+  arguments. Note that the arguments must be literals -
+  `string constants <#string-constant>`_ (quoted), numbers or IP addresses.
+  ``ModSrc`` is an optional module source file containing:
+
+  * A module script source file that can be used to build the specified
+    module. See the `Udb module script compiler <mcc.umod.html>`_
+    documentation for more information.
+  * A ready-to-use module object file. It *must* have a ``.so`` extension.
+
+  Without ``ModSrc``, the server will look for a preinstalled module matching
+  ``ModName``.
+
+  Multiple sets of Udb import options can be specified.
+
+
 Exit Status
 ===========
 
@@ -1002,70 +929,6 @@ Applicable exit codes are:
 * 22 - Output write error.
 * 31 - Udb connect error.
 * 32 - Udb communication error.
-
-
-Input File Attributes
-=====================
-
-Each input option can have a list of comma separated attributes that control
-input processing.
-
-Positioning the start of input:
-
-* ``+Num[b|r|l]`` - Specifies the number of bytes (``b`` suffix), records (``r``
-  suffix) or lines (``l`` suffix) to skip before processing.
-  Line is the default.
-
-Error handling:
-
-* ``eok`` - Make input error non-fatal. If there is an input parse error,
-  program will try to skip over bad/broken record. If there is an input data
-  processing error, program will just discard the record.
-* ``qui`` - Quiet; i.e., do not print any input error message.
-
-Input formats  - these attributes are mutually exclusive except for
-``sep=c`` and ``csv`` that can be used together:
-
-* ``sep=c`` or ``sep=\xHH`` - Input is in 'c' (single byte) separated value
-  format. '\\xHH' is a way to specify 'c' via its HEX value ``HH``.
-* ``csv`` - Input is in CSV format. This is the only format that supports
-  quoted data fields. Although CSV implies *comma separated*,
-  ``sep=c`` can be used to override this.
-* ``fix`` - Input columns are all fixed width *without* any separator.
-  Individual column widths are set in the ``n=Len``
-  `column spec attribute <-d_>`_.
-* ``tab`` - Input is in HTML table format. Columns must be enclosed in
-  "``<td>data</td>``" or "``<td ...>data</td>``" and rows must be terminated
-  by a "``</tr>``".
-* ``bin`` - Input is in aq_tool's internal binary format.
-
-These are used in conjunction with the `column spec attributes <-d_>`_:
-
-* ``esc`` - '\\' is an escape character in input fields.
-* ``noq`` - No quotes around fields in ``csv`` format.
-
-If no input format attribute is given, ``csv`` is assumed.
-
-
-Output File Attributes
-======================
-
-Each output option can have a list of comma separated attributes:
-
-* ``notitle`` - Suppress the column name label row from the output.
-  A label row is normally included by default.
-* ``app`` - When outputting to a file, append to it instead of overwriting.
-* ``sep=c`` or ``sep=\xHH`` - Output in 'c' (single byte) separated value
-  format. '\\xHH' is a way to specify 'c' via its HEX value ``HH``.
-* ``csv`` - Output in CSV format. Strings will be quoted. The default
-  separator is comma, but ``sep=c`` can be used to override this.
-* ``bin`` - Output in aq_tool's internal binary format.
-* ``esc`` - Use '\\' to escape the field separator, '"' and '\\' (non binary).
-* ``noq`` - Do not quote string fields in ``csv`` format.
-* ``fmt_g`` - Use "%g" as print format for ``F`` type columns. Only use this
-  to aid data inspection (e.g., during integrity check or debugging).
-
-If no output format attribute is given, ``csv`` is assumed.
 
 
 String Constant
@@ -1272,6 +1135,23 @@ where
 See `-mapc`_ for an usage example.
 
 
+Target Udb Database
+===================
+
+``aq_pp`` obtains information about the target Udb database from a spec file.
+The spec file contains server IPs (or domain names) and table/vector
+definitions. See `udb.spec <udb.spec.html>`_ for details.
+``aq_pp`` finds the relevant spec file in several ways:
+
+* The spec file path can be given explicitly via the ``spec=UdbSpec`` attribute
+  of the `-imp`_ or `-exp`_ option.
+* The spec file path can be deduced implicitly from the ``DbName`` parameters
+  of the `-imp`_ or `-exp`_ option. This method sets the spec file to
+  "``.conf/DbName.spec``" in the current work directory of ``aq_pp``.
+* If none of the above information is given, the spec file is assumed to be
+  "``udb.spec``" in the current work directory of ``aq_pp``.
+
+
 Conditional Processing Groups
 =============================
 
@@ -1296,7 +1176,7 @@ Groups can be nested to form more complex conditions.
 Supported ``RuleToCheck`` and ``RuleToRun`` are
 `-eval`_, `-mapf`_, `-mapc`_, `-kenc`_, `-kdec`_,
 `-filt`_, `-map`_, `-sub`_, `-grep`_, `-cmb`_, `-pmod`_,
-`-o`_ and `-udb`_. Note that some of these rules may be responsible for the
+`-o`_ and `-imp`_. Note that some of these rules may be responsible for the
 initialization of dynamically created columns. If such rules get skipped
 conditionally, numeric 0 or blank string will be assigned to the
 uninitialized columns.
@@ -1348,6 +1228,8 @@ Example:
 See Also
 ========
 
+* `aq-input <aq-input.html>`_ - aq_tool input specifications
+* `aq-output <aq-output.html>`_ - aq_tool output specifications
 * `aq-emod <aq-emod.html>`_ - aq_tool eval functions.
 * `mcc.pmod <mcc.pmod.html>`_ - aq_pp module script compiler
 * `udbd <udbd.html>`_ - Udb server

@@ -1,3 +1,7 @@
+.. |<br>| raw:: html
+
+   <br>
+
 ========
 mcc.pmod
 ========
@@ -64,7 +68,7 @@ Module Commands
 Module commands abstract and hide most of the module API details.
 They resemble C macros, as in ``COMMAND(parameters)``.
 The commands consist of `declaration statements`_,
-`processing function <processing functions_>`_ specifications and
+`processing function <#processing-functions>`_ specifications and
 `module helpers`_.
 They tell the module compiler what code to generate
 before building the final dynamic module.
@@ -280,7 +284,7 @@ variable declarations will result in variable handling code, and so on.
   Mark the end of module declarations. The compiler will generated and
   insert the module data declaration code.
   If this is not given, declaration code will be inserted in front of the
-  first `processing function <processing functions_>`_.
+  first `processing function <#processing-functions>`_.
 
 
 Processing Functions
@@ -470,14 +474,34 @@ argument).
   * Examine and change column values.
 
 
+.. _`MOD_CDAT_S_NSET()`:
+
+``void MOD_CDAT_S_NSET(ColName, const char *b, unsigned int n)``
+  Set the value of a string column represented by ``ColName`` to a
+  hash string based on string buffer ``b`` and length ``n``.
+
+  Example:
+
+   ::
+
+    DECL_COLUMN(StrColumn_1, S);
+    MOD_PROC_FUNC()
+    {
+      MOD_CDAT_S_NSET(StrColumn_1, "abc", 3);
+      ...
+    }
+
+  * Alter the value of a string column.
+
+
 .. _`MOD_CDAT_S_SET()`:
 
 ``void MOD_CDAT_S_SET(ColName, CDAT_S_T hs)``
-  Set the value of a string column represented by ``ColName``
-  to hash string ``hs``.
+  Set the value of a string column represented by ``ColName`` to a
+  copy of hash string ``hs``.
 
-  * ``hs`` can be the value of another string column (e.g., ``$StrColumn``)
-    or a hash string created using `HStrNAdd()`_.
+  * ``hs`` is an existing hash string (e.g., the value of another string
+    column).
 
   Example:
 
@@ -485,37 +509,20 @@ argument).
 
     DECL_COLUMN(StrColumn_1, S);
     DECL_COLUMN(StrColumn_2, S);
-    DECL_COLUMN(StrColumn_3, S);
     MOD_PROC_FUNC()
     {
-      CDAT_S_T str;
-      str = HStrNAdd("abc", 3);
-      MOD_CDAT_S_SET(StrColumn_1, str);
-      MOD_CDAT_S_SET(StrColumn_2, $StrColumn_3);
-      ...
-    }
-
-  * Alter the value of two string columns.
-
-
-.. _`MOD_CDAT_S_NADD()`:
-
-``void MOD_CDAT_S_NADD(ColName, const char *b, unsigned int n)``
-  Set the value of a string column represented by ``ColName``
-  to a hash string based on string buffer ``b`` of length ``n``.
-
-  Example:
-
-   ::
-
-    DECL_COLUMN(StrColumn_1, S);
-    MOD_PROC_FUNC()
-    {
-      MOD_CDAT_S_NADD(StrColumn_1, "abc", 3);
+      MOD_CDAT_S_SET(StrColumn_1, $StrColumn_2);
       ...
     }
 
   * Alter the value of a string column.
+
+
+.. _`MOD_CDAT_S_DEL()`:
+
+``void MOD_CDAT_S_DEL(ColName)``
+  Set the value of a string column represented by ``ColName`` to a
+  generic *blank* hash string.
 
 
 .. _`MOD_CDEF()`:
@@ -759,15 +766,17 @@ datatype handling.
       of ``b`` will be used as the data length.
 
 
-.. _`HStrNAdd()`:
+.. _`HStrNSet()`:
 
-``CDAT_S_T HStrNAdd(const char *b, unsigned int n)``
-  Create/retrieve a hash string based on string buffer ``b`` of length ``n``.
+``void HStrNSet(const ColDefn *col, CDAT_S_T *hs, const char *b, unsigned int n)``
+  Replace hash string ``hs`` with one based on string buffer ``b`` and
+  length ``n``.
 
-  * Use this to initialize program variables only (e.g., during module
-    initialization in `MOD_INIT_FUNC()`_).
-  * To set a string column's value during row processing,
-    use `MOD_CDAT_S_SET()`_ or `MOD_CDAT_S_NADD()`_ instead.
+  * ``hs`` must have a value on input - either a valid hash string or 0.
+  * If ``hs`` is the value of a column, specify the relevant column definition
+    as ``col``. This is similar to what `MOD_CDAT_S_NSET()`_ does.
+  * If ``hs`` is not the value of a column, set ``col`` to 0.
+  * Use `HStrSet()`_ and `HStrDel()`_ for further hash string operations.
 
   Example:
 
@@ -776,11 +785,43 @@ datatype handling.
     DECL_DATA(CDAT_S_T my_str);
     MOD_INIT_FUNC()
     {
-      MOD_DATA(my_str) = HStrNAdd("abc", 3);
+      HStrNSet(0, &MOD_DATA(my_str), "abc", 3);
+      ...
+    }
+    ...
+    MOD_DONE_FUNC()
+    {
+      HStrDel(0, &MOD_DATA(my_str));
       ...
     }
 
-  * Set a global variable's value to a hash string.
+  * Initialize a global variable's value to a hash string. Then delete at the
+    end.
+
+
+.. _`HStrSet()`:
+
+``void HStrSet(const ColDefn *col, CDAT_S_T *hs, CDAT_S_T s)``
+  Replace hash string ``hs`` with a copy of ``s``.
+
+  * ``hs`` must have a value on input - either a valid hash string or 0.
+  * If ``hs`` is the value of a column, specify the relevant column definition
+    as ``col``. This is similar to what `MOD_CDAT_S_SET()`_ does.
+  * If ``hs`` is not the value of a column, set ``col`` to 0.
+  * Use `HStrNSet()`_ and `HStrDel()`_ for further hash string operations.
+
+
+.. _`HStrDel()`:
+
+``void HStrDel(const ColDefn *col, CDAT_S_T *hs)``
+  Delete (dereference) hash string ``hs``. ``hs`` will be set to a generic
+  *blank* hash string on return.
+
+  * ``hs`` must have a value on input - either a valid hash string or 0.
+  * If ``hs`` is the value of a column, specify the relevant column definition
+    as ``col``. This is similar to what `MOD_CDAT_S_DEL()`_ does.
+  * If ``hs`` is not the value of a column, set ``col`` to 0.
+  * Use `HStrNSet()`_ and `HStrSet()`_ for further hash string operations.
 
 
 Additional Supports

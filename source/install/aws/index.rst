@@ -20,7 +20,7 @@ How to Launch Essentia in the Amazon Cloud
 #. Click on the **'Launch Instance'** button.  This will take you to a site where
    you can select what OS and software you would like to access.
 #. Select the **'Marketplace'** tab, and search for **'AuriQ'**
-#. The list of results should include the latest release of Essentia. Currently this is "Essentia (HVM)" version 3.1.1. Click on it to start.
+#. The list of results should include the latest release of Essentia. Currently this is "Essentia (HVM)" version 3.2.0. Click on it to start.
 #. You will be asked to select a node type.  For most users,
    an ``m3.medium`` is the safest choice, but the ``t2`` line is OK for
    testing or other work that does not require high performance. 
@@ -55,6 +55,10 @@ How to Launch Essentia in the Amazon Cloud
 
 Once the instance is launched, you can connect to the web based UI by entering the IP address into your web browser. The default account username is "essentia" and password is your 'Instance ID'. 
 Instructions for getting started with the viewer are found in :doc:`../../dlv/dlv`.
+
+**Note:** Always check your version of Essentia by running ``ess -v``.
+If this version does not match the version of this documentation listed in the top-left of this page,
+click the **Versions** link next to our documentation version and navigate to the documentation version that matches your version of Essentia.
 
 AWS additional notes
 ====================

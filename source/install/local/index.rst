@@ -51,6 +51,10 @@ https://pip.pypa.io/en/stable/installing/
 
 Alternatively, the installation script provides an option to automatically install pip and wget 
 for the above listed operating systems.
+
+**Note:** Always check your version of Essentia by running ``ess -v``.
+If this version does not match the version of this documentation listed in the top-left of this page,
+click the **Versions** link next to our documentation version and navigate to the documentation version that matches your version of Essentia.
     
 To **Uninstall Essentia**: 
 

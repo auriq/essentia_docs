@@ -1,3 +1,7 @@
+.. |<br>| raw:: html
+
+   <br>
+
 ========
 mcc.umod
 ========
@@ -64,7 +68,7 @@ Module Commands
 Module commands abstract and hide most of the module API details.
 They resemble C macros, as in ``COMMAND(parameters)``.
 The commands consist of `declaration statements`_,
-`processing function <processing functions_>`_ specifications and
+`processing function <#processing-functions>`_ specifications and
 `module helpers`_.
 They tell the module compiler what code to generate
 before building the final dynamic module.
@@ -118,12 +122,7 @@ types/*typedefs*:
   | type      | typedef   | typedef   |                                              |
   +-----------+-----------+-----------+----------------------------------------------+
   | S         | HStr *    | CDAT_S_T  | A pointer to a hash string data structure.   |
-  |           |           |           | It represents stored column strings.         |
-  |           |           |           | Not for input strings during imports.        |
-  +-----------+-----------+-----------+----------------------------------------------+
-  | S         | const     | CDAT_SB_T | A pointer to a constant temporary string.    |
-  |           | StrData * |           | It represents input strings during imports,  |
-  |           |           |           | see `MOD_IMP_CDAT()`_ for details.           |
+  |           |           |           | It represents a stored string value.         |
   +-----------+-----------+-----------+----------------------------------------------+
   | F         | double    | CDAT_F_T  | A double precision floating point number.    |
   +-----------+-----------+-----------+----------------------------------------------+
@@ -196,13 +195,16 @@ variable declarations will result in variable handling code, and so on.
   * ``TabName.ColName`` is a column in the database.
     The given name and type will be verified at run time
     during module initialization to ensure that the spec is valid.
+  * To declare a column from the ``Var`` table, set ``TabName`` to ``Var``.
+  * To declare a key column, set ``TabName`` to the special name ``PKEY``
+    (all uppercase).
   * Although table and column names are normally case insensitive, they are
     *case sensitive* within the script. This is because table and column names
     are used to compose variable names in the generated code.
     For example, if "MyTable" is a valid table, any case insensitive
     forms of the name (e.g., "mytable") can be used to reference it in the
-    script. However, once a form is chosen, no other forms should be used
-    to reference the same object.
+    script. However, once a form is chosen, the same form should be used
+    throughout the script.
   * Use multiple declarations as needed.
 
   Example:
@@ -290,7 +292,7 @@ variable declarations will result in variable handling code, and so on.
   Mark the end of module declarations. The compiler will generated and
   insert the module data declaration code.
   If this is not given, declaration code will be inserted in front of the
-  first `processing function <processing functions_>`_.
+  first `processing function <#processing-functions>`_.
 
 
 Processing Functions
@@ -460,6 +462,7 @@ A module function is defined like a C function:
     However, table access is not applicable if:
 
     * The user bucket corresponding to the input bucket key does not yet exist.
+      This can be determined using `MOD_HAS_USR`_.
     * The import is being done on the global ``Var`` table.
 
   * It is called with this implicit argument:
@@ -695,32 +698,6 @@ argument).
   * Examine and change column values.
 
 
-``CDAT_S_T MOD_CDAT(PKEY)``, ``CDAT_S_T $PKEY``
-  Use either form like a ``CDAT_S_T`` variable to address the
-  current bucket key.
-
-  * There is *no need* to declare PKEY via
-    `DECL_COLUMN()`_ or `DECL_COLUMN_DYNAMIC()`_ in advance.
-  * Applicable within `MOD_BUCKET_FUNC()`_, `MOD_ROW_FUNC()`_ and
-    `MOD_MERGE_FUNC()`_.
-  * Also available in`MOD_VALUE_FUNC()`_; however, the value can be 0 (or NULL)
-    if the target user bucket does not yet exist.
-  * Not applicable when the target table is the global ``Var`` table.
-    PKEY will be 0 (or NULL).
-
-  Example:
-
-   ::
-
-    MOD_BUCKET_FUNC()
-    {
-      if (ModDifHStrPat($PKEY, "a*c", 3, 0) != 0) return 0;
-      ...
-    }
-
-  * Skip bucket if its key does not match the given pattern.
-
-
 .. _`MOD_IMP_CDAT()`:
 
 ``CDAT_*_T MOD_IMP_CDAT(TabName.ColName)``
@@ -729,10 +706,6 @@ argument).
 
   * The variable will have a ``CDAT_*_T`` type (see `column datatypes`_)
     derived from the ``ColType`` in the declaration.
-    The only exception is that the input value of a string column will
-    be ``CDAT_SB_T`` instead of ``CDAT_S_T``. The reason is that input
-    strings are held in temporary buffers until they have actually been
-    imported.
   * Only applicable within `MOD_VALUE_FUNC()`_ and `MOD_MERGE_FUNC()`_.
 
   Example:
@@ -748,38 +721,40 @@ argument).
   * Test an input column value to determine whether to import.
 
 
-``CDAT_SB_T MOD_IMP_CDAT(PKEY)``
-  Use this like a ``CDAT_SB_T`` variable to address the input bucket key.
+.. _`MOD_HAS_USR`:
 
-  * There is *no need* to declare PKEY via
-    `DECL_COLUMN()`_ or `DECL_COLUMN_DYNAMIC()`_ in advance.
-  * Only applicable within `MOD_VALUE_FUNC()`_ and `MOD_MERGE_FUNC()`_.
-  * Not applicable when the target table is the global ``Var`` table.
-    PKEY will be 0 (or NULL).
+``int MOD_HAS_USR``
+  A marco that evaluates to 1 if a relevant user bucket exists, 0 otherwise.
+
+
+.. _`MOD_CDAT_S_NSET()`:
+
+``void MOD_CDAT_S_NSET(TabName.ColName, const char *b, unsigned int n)``
+  Set the value of a string column represented by ``TabName.ColName`` to a
+  hash string based on string buffer ``b`` and length ``n``.
 
   Example:
 
    ::
 
-    MOD_VALUE_FUNC()
+    DECL_COLUMN(TabName_1.StrColumn_1, S);
+    MOD_ROW_FUNC(TabName_1)
     {
-      CDAT_SB_T pkey_new;
-      pkey_new = MOD_IMP_CDAT(PKEY);
-      if (pkey_new->n == 0) return 0;
+      MOD_CDAT_S_NSET(TabName_1.StrColumn_1, "abc", 3);
       ...
     }
 
-  * Test input PKEY value to determine whether to import.
+  * Alter the value of a string column.
 
 
 .. _`MOD_CDAT_S_SET()`:
 
 ``void MOD_CDAT_S_SET(TabName.ColName, CDAT_S_T hs)``
-  Set the value of a string column represented by ``TabName.ColName``
-  to hash string ``hs``.
+  Set the value of a string column represented by ``TabName.ColName`` to a
+  copy of hash string ``hs``.
 
-  * ``hs`` can be the value of another string column
-    (e.g., ``$TabName.StrColumn``) or a hash string created using `HStrNAdd()`_.
+  * ``hs`` is an existing hash string (e.g., the value of another string
+    column).
 
   Example:
 
@@ -787,37 +762,20 @@ argument).
 
     DECL_COLUMN(TabName_1.StrColumn_1, S);
     DECL_COLUMN(TabName_1.StrColumn_2, S);
-    DECL_COLUMN(TabName_1.StrColumn_3, S);
     MOD_ROW_FUNC(TabName_1)
     {
-      CDAT_S_T str;
-      str = HStrNAdd("abc", 3);
-      MOD_CDAT_S_SET(TabName_1.StrColumn_1, str);
-      MOD_CDAT_S_SET(TabName_1.StrColumn_2, $TabName_1.StrColumn_3);
-      ...
-    }
-
-  * Alter the value of two string columns.
-
-
-.. _`MOD_CDAT_S_NADD()`:
-
-``void MOD_CDAT_S_NADD(TabName.ColName, const char *b, unsigned int n)``
-  Set the value of a string column represented by ``TabName.ColName``
-  to a hash string based on string buffer ``b`` of length ``n``.
-
-  Example:
-
-   ::
-
-    DECL_COLUMN(TabName_1.StrColumn_1, S);
-    MOD_ROW_FUNC(TabName_1)
-    {
-      MOD_CDAT_S_NADD(TabName_1.StrColumn_1, "abc", 3);
+      MOD_CDAT_S_SET(TabName_1.StrColumn_1, $TabName_1.StrColumn_2);
       ...
     }
 
   * Alter the value of a string column.
+
+
+.. _`MOD_CDAT_S_DEL()`:
+
+``void MOD_CDAT_S_DEL(TabName.ColName)``
+  Set the value of a string column represented by ``TabName.ColName`` to a
+  generic *blank* hash string.
 
 
 .. _`MOD_CDEF()`:
@@ -1080,15 +1038,17 @@ Note that any memory allocated by the module must be deallocated with
       of ``b`` will be used as the data length.
 
 
-.. _`HStrNAdd()`:
+.. _`HStrNSet()`:
 
-``CDAT_S_T HStrNAdd(const char *b, unsigned int n)``
-  Create/retrieve a hash string based on string buffer ``b`` of length ``n``.
+``void HStrNSet(const ColDefn *col, CDAT_S_T *hs, const char *b, unsigned int n)``
+  Replace hash string ``hs`` with one based on string buffer ``b`` and
+  length ``n``.
 
-  * Use this to initialize program variables only (e.g., during module
-    initialization in `MOD_INIT_FUNC()`_).
-  * To set a string column's value during row processing,
-    use `MOD_CDAT_S_SET()`_ or `MOD_CDAT_S_NADD()`_ instead.
+  * ``hs`` must have a value on input - either a valid hash string or 0.
+  * If ``hs`` is the value of a column, specify the relevant column definition
+    as ``col``. This is similar to what `MOD_CDAT_S_NSET()`_ does.
+  * If ``hs`` is not the value of a column, set ``col`` to 0.
+  * Use `HStrSet()`_ and `HStrDel()`_ for further hash string operations.
 
   Example:
 
@@ -1097,11 +1057,43 @@ Note that any memory allocated by the module must be deallocated with
     DECL_DATA(CDAT_S_T my_str);
     MOD_INIT_FUNC()
     {
-      MOD_DATA(my_str) = HStrNAdd("abc", 3);
+      HStrNSet(0, &MOD_DATA(my_str), "abc", 3);
+      ...
+    }
+    ...
+    MOD_DONE_FUNC()
+    {
+      HStrDel(0, &MOD_DATA(my_str));
       ...
     }
 
-  * Set a global variable's value to a hash string.
+  * Initialize a global variable's value to a hash string. Then delete at the
+    end.
+
+
+.. _`HStrSet()`:
+
+``void HStrSet(const ColDefn *col, CDAT_S_T *hs, CDAT_S_T s)``
+  Replace hash string ``hs`` with a copy of ``s``.
+
+  * ``hs`` must have a value on input - either a valid hash string or 0.
+  * If ``hs`` is the value of a column, specify the relevant column definition
+    as ``col``. This is similar to what `MOD_CDAT_S_SET()`_ does.
+  * If ``hs`` is not the value of a column, set ``col`` to 0.
+  * Use `HStrNSet()`_ and `HStrDel()`_ for further hash string operations.
+
+
+.. _`HStrDel()`:
+
+``void HStrDel(const ColDefn *col, CDAT_S_T *hs)``
+  Delete (dereference) hash string ``hs``. ``hs`` will be set to a generic
+  *blank* hash string on return.
+
+  * ``hs`` must have a value on input - either a valid hash string or 0.
+  * If ``hs`` is the value of a column, specify the relevant column definition
+    as ``col``. This is similar to what `MOD_CDAT_S_DEL()`_ does.
+  * If ``hs`` is not the value of a column, set ``col`` to 0.
+  * Use `HStrNSet()`_ and `HStrSet()`_ for further hash string operations.
 
 
 Additional Supports

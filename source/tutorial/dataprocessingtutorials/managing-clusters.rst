@@ -34,55 +34,38 @@ First you must stop importing any data into your existing worker node instances 
 
    **Ex:** ``ess cluster add r-6b1f57d5``
 
+Existing Clusters, Removing Worker Nodes
+-------------------------------------------------
+
+Again, you must first stop importing any data into your existing worker node instances so that Essentia's UDB Database can be redistributed. Then, to remove worker nodes from your existing cluster:
+
+1. Remove computers from your existing cluster by referencing their Reservation ID using ``ess cluster remove RESERVATION_ID``.
+
+   **Ex:** ``ess cluster remove r-6b1f57d5``
+
 Finding Existing Clusters
 -------------------------
 
-To find information about the cluster you are currently running from the directory you started it from, run ``ess cluster status``. This will show you connection and resource information about each of the computers currently connected to in that cluster as well as show you those computers' Reservation ID(s) so that you can reuse them in the future.
+To find information about the cluster you are currently running from the directory you started it from, run ``ess cluster status``. 
+This will show you connection and resource information about each of the computers currently connected to in that cluster as well as 
+show you those computers' Reservation ID(s) so that you can reuse them in the future.
 
-To find information about all of the clusters you have connected to and kept the information of, look in the ESS_AWS_DIR. If you are not familiar with this directory please see `Advanced Options <../../reference/manuals/essentia-ref.html#advanced-options>`_. This directory contains all of the pem files that you've used to connect to your clusters as well as the Reservation ID's for the computers in those clusters.
+You can find information about all of the clusters you have connected to and kept the information of by looking in the ESS_AWS_DIR. 
+If you are not familiar with this directory please see `Advanced Options <../../reference/manuals/essentia-ref.html#advanced-options>`_. 
+This directory contains all of the pem files that you've used to connect to your clusters as well as the Reservation ID's for the computers in those clusters.
+
+.. Not sure about the Reservation ID info for all clusters or just in ess cluster status
 
 Cleaning up Existing Clusters
 -----------------------------
 
+You can **Stop** or **Terminate** the cluster you are connected to in your current directory using ``ess cluster stop`` or ``ess cluster terminate``. 
+By default, Essentia will remember your connection information for the computers you used for this cluster so you can reuse those computers easily in the future.
 
+You can choose to have Essentia both **terminate** and **forget** you cluster's computers by running either of the following::
 
-.. caution::
-   Stop or Terminate your cluster(s) with Essentia before running ``ess cluster remove`` or you will have to stop or terminate them from the Amazon Console.
+ ess cluster terminate --all       # Terminate and forget your cluster
+ ess cluster terminate --all -y    # Terminate and forget your cluster without requiring the user's confirmation
 
-
-
-
-Allow  to reuse worker nodes.
-
-Options for creating new instances and reuse existing ones
-
-Allow adding or removing instances from a cluster
-
-Enable synchronizing the Essentia version of a cluster with the master
-
-
-ess cluster
-  - in .conf/reservation.json (for 'custom')
-    i. add 'user' parameter (default: 'ec2-user')
-    ii. support for no 'pem' file (access worker nodes without log in)
-  - ess cluster create --add: create additional worker nodes
-  - ess cluster add: add worker nodes to cluster by reservation id
-  - ess cluster remove: remove worker nodes from cluster by reservation id
-  - ess cluster terminate: won't delete pem file, and security groups
-  - ess cluter terminate --all: delete worker nodes, pem file, and security groups
-  - ESS_AWS_DIR for storing pem files (default: ~/.aws)
-* ess cluster status
-  - add reservation id information
-
-ess cluster		
-	ess cluster create -add	create additional worker nodes
-	ess cluster add	add worker nodes to cluster by reservation id
-	ess cluster remove	remove worker nodes from cluster by reservation id
-	ess cluster terminate	won't delete pem file, and security groups
-	ess cluter terminate --all	delete all worker nodes, pem file, and security groups
-	ess cluter terminate --all -y	terminate without user's confirmation
-	ess cluster status	add reservation id information
-	ess cluster reset	remove reservation.json file
-	ESS_AWS_DIR	for storing pem files (default: ~/.aws)
-	.conf/reservation.json	add 'user' parameter (default: 'ec2-user')
-	.conf/reservation.json	support for no 'pem' file (access worker nodes without log in)
+.. .. caution::
+..    Stop or Terminate your cluster(s) with Essentia before running ``ess cluster remove`` or you will have to stop or terminate them from the Amazon Console.

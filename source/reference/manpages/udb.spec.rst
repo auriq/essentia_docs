@@ -1,3 +1,7 @@
+.. |<br>| raw:: html
+
+   <br>
+
 ========
 udb.spec
 ========
@@ -74,13 +78,20 @@ Sample Spec
   @Port:10010
 
   #
-  # "@PKey:" sets the primary key (a.k.a. user key) of the database.
+  # "@DB:DbName:" sets the database name.
+  # o Optional, default is the DbName given in the command parameter.
+  #   If neither is given, a blank DB name will be assigned.
+  #
+  @Db:MyUdb
+
+  #
+  # "@PKey:" sets the primary keys (a.k.a. user keys) of the database.
   # o Required.
-  # o Must be a string type key of the form:
-  #     S:KeyName
+  # o Specify each key like a table column (see below).
   #
   @PKey:
-    s:user_cookie
+    s:KeyStr
+    i:KeyNum
 
   #
   # "@Table:TabName" starts a table spec:
@@ -88,7 +99,7 @@ Sample Spec
   #   up to 31 alphanumeric and '_' characters. The first character cannot
   #   be a digit.
   # o Subsequent lines are column specs in the form "Type[,Atr]:ColName".
-  #   Up to 255 columns can be specified.
+  #   Do not include the PKey columns here. Max columns is (2048 - #Pkeys).
   # o Column Types are:
   #   o S - String.
   #   o F - Double precision floating point.
@@ -98,9 +109,6 @@ Sample Spec
   #   o IS - 32-bit signed integer.
   #   o IP - v4/v6 address.
   # o Column Atr's are:
-  #   o TKEY - Mark a single column as the table's default sort key
-  #            (e.g., time). This is for convenience only. Sort column(s)
-  #            can be selected at run time via aq_udb.
   #   o +KEY - Mark a column as part of a merge key. Merge key is checked
   #            during import. If the key in a pending import row is not
   #            found in any existing row, the row will be added as new.
@@ -120,22 +128,11 @@ Sample Spec
   #   be a digit.
   #
   @Table:MyTable
-    i,tkey:t
-    l:c1
-    l:c2
-    i:c3
-    s:c5
-    i:c6
-    i:c7
-    i:c8
-    s:c9
-    s:c10
-    s:page
-    s:query
-    s:c13
-    s:c14
-    s:referrer_site
-    s:search_key
+    i:Time
+    s:Page
+    s:Query
+    s:Referrer
+    s:SearchKey
 
   #
   # "@Vector:TabName" starts a vector table spec.
@@ -199,7 +196,7 @@ An Udb server constructs its database according to the spec in this manner:
   +------------+------+
 
   +=================+=======+
-  | User key (PKEY) | key1  |
+  | User key (PKEY) | keys1 |
   +=================+=======+
   | +---------+-----------+ |
   | | Table1  | row1 cols | |
@@ -221,7 +218,7 @@ An Udb server constructs its database according to the spec in this manner:
   | +---------+------+      |
   |                         |
   +=================+=======+
-  | User key (PKEY) | key2  |
+  | User key (PKEY) | keys2 |
   +=================+=======+
   | +---------+-----------+ |
   | | Table1  | row1 cols | |
@@ -243,7 +240,7 @@ An Udb server constructs its database according to the spec in this manner:
   | +---------+------+      |
   |                         |
   +=================+=======+
-  | User key (PKEY) | key3  |
+  | User key (PKEY) | keys3 |
   +=================+=======+
   | ...                     |
   |                         |

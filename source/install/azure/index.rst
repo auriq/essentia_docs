@@ -54,6 +54,9 @@ listed in the Azure blade during provisioning.  After each step, clicking OK wil
 Once the 'BUY" option is worked through, the 'CREATE' button in the remaining blade will be opened.  Press this to provision the
 instance and launch Essentia.
 
+**Note:** Always check your version of Essentia by running ``ess -v``. 
+If this version does not match the version of this documentation listed in the top-left of this page, 
+click the **Versions** link next to our documentation version and navigate to the documentation version that matches your version of Essentia.
 
 Configuring the Web UI
 **********************
