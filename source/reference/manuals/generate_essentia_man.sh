@@ -2,6 +2,8 @@ essmain=""
 #echo -e $essmain
 confman="man_pages = [\n
     ('ess', 'ess', u'',\n
+     [u'AuriQ Systems Inc.'], 1),\n
+    ('essfull', 'essfull', u'',\n
      [u'AuriQ Systems Inc.'], 1),\n"
 #echo -e $confman
 #'generate_essentia_ref'
@@ -23,7 +25,11 @@ confman="$confman
 echo -e $essmain >> ess.rst
 echo -e $confman
 
-
+essfull="********************************\n
+**ess**\n
+********************************\n\n"
+echo -e $essfull > essfull.rst
+cat generate_essentia_ref.rst >> essfull.rst
 
 # remove old form of this from conf.py then run this script and copy the output to the end of conf.py
 # make man

@@ -1,12 +1,12 @@
 #!/bin/python
 import subprocess as sp
 essoutput=(sp.Popen('ess -h',stdout=sp.PIPE,shell=True)).communicate()[0]
-# print "--------------------------------"
-# print "**ess**"
-# print "--------------------------------\n"
-# if len(essoutput)!=0:
-#    print "::\n"
-# print "    "+essoutput.replace("\n","\n    ")
+print "--------------------------------"
+print "**ess**"
+print "--------------------------------\n"
+if len(essoutput)!=0:
+   print "::\n"
+print "    "+essoutput.replace("\n","\n    ")
 if '{' in essoutput and '}' in essoutput:
     subcommands = essoutput.partition('{')[2].partition('}')[0]
     # print(subcommands)

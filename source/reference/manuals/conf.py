@@ -370,6 +370,8 @@ texinfo_documents = [
 man_pages = [
  ('ess', 'ess', u'',
  [u'AuriQ Systems Inc.'], 1),
+ ('essfull', 'essfull', u'',
+ [u'AuriQ Systems Inc.'], 1),
  ('ess-category', 'ess-category', u'',
  [u'AuriQ Systems Inc.'], 1),
  ('ess-cat', 'ess-cat', u'',
