@@ -11,13 +11,13 @@
     usage: ess [-h] [-v]
                {select,summary,probe,purge,ls,category,file,cat,lsa,cluster,query,server,create,drop,use,stream,exec,udbd,redshift}
                ...
-
+    
     The Essentia ETL Engine
-
+    
     optional arguments:
       -h, --help            show this help message and exit
       -v, --version         show program's version number and exit
-
+    
     Subcommands:
       {select,summary,probe,purge,ls,category,file,cat,lsa,cluster,query,server,create,drop,use,stream,exec,udbd,redshift}
         select              Choose a datastore
@@ -39,7 +39,7 @@
         exec                Execute command
         udbd                udbd commands
         redshift            Link essentia to redshift
-
+    
 --------------------------------
 **ess select**
 --------------------------------
