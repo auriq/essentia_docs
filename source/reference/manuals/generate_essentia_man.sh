@@ -1,5 +1,5 @@
-essmain=`ess -h`
-
+essmain=""
+#echo -e $essmain
 confman="man_pages = [\n
     ('ess', 'ess', u'',\n
      [u'AuriQ Systems Inc.'], 1),\n"
@@ -20,7 +20,7 @@ confman="$confman
 \n
 # If true, show URL addresses after external links.\n
 #man_show_urls = False\n"
-echo -e $essmain > ess.rst
+echo -e $essmain >> ess.rst
 echo -e $confman
 
 

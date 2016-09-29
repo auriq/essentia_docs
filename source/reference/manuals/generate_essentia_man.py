@@ -7,6 +7,13 @@ essoutput=(sp.Popen('ess -h',stdout=sp.PIPE,shell=True)).communicate()[0]
 # if len(essoutput)!=0:
 #    print "::\n"
 # print "    "+essoutput.replace("\n","\n    ")
+with open('{0}.rst'.format("ess"), 'w+') as f:
+  f.write("--------------------------------\n")
+  f.write("**ess**\n")
+  f.write("--------------------------------\n\n")
+  if len(essoutput)!=0:
+   f.write("::\n\n")
+  f.write("    "+essoutput.replace("\n","\n    "))
 if '{' in essoutput and '}' in essoutput:
     subcommands = essoutput.partition('{')[2].partition('}')[0]
     # print(subcommands)
