@@ -55,9 +55,9 @@ confreplace=(sp.Popen(startend,stdout=sp.PIPE,shell=True)).communicate()[0]
 essmain = ""
 confman = """man_pages = [
     ('ess', 'ess', u'',
-     [u'AuriQ Systems Inc.'], 1),\n"""
+    [u'AuriQ Systems Inc.'], 1),\n"""
 #    ('essfull', 'essfull', u'',
-#     [u'AuriQ Systems Inc.'], 1),\n"""
+#    [u'AuriQ Systems Inc.'], 1),\n"""
 
 if '{' in essoutput and '}' in essoutput:
     subcommands = essoutput.partition('{')[2].partition('}')[0]
@@ -71,7 +71,7 @@ for subcommand in subcommands.split(','):
     file="ess-{0}".format(subcommand)
     addtoess="* :manpage:`{0}(1)`\n".format(file)
     addtoconf="""    ('{0}', {1}', u'',
-     [u'AuriQ Systems Inc.'], 1),\n""".format(file,file)
+    [u'AuriQ Systems Inc.'], 1),\n""".format(file,file)
     essmain="{0}{1}".format(essmain,addtoess)
     confman="{0}{1}".format(confman,addtoconf)
 
