@@ -70,7 +70,7 @@ for subcommand in subcommands.split(','):
     # print essoutput
     file="ess-{0}".format(subcommand)
     addtoess="* :manpage:`{0}(1)`\n".format(file)
-    addtoconf="""    ('{0}', {1}', u'',
+    addtoconf="""    ('{0}', '{1}', u'',
     [u'AuriQ Systems Inc.'], 1),\n""".format(file,file)
     essmain="{0}{1}".format(essmain,addtoess)
     confman="{0}{1}".format(confman,addtoconf)
