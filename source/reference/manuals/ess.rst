@@ -7,46 +7,46 @@ Synopsis
 
 ::
 
-usage: ess [-h] [-v]
-           {select,summary,probe,purge,ls,category,file,cat,lsa,cluster,query,server,create,drop,use,stream,exec,udbd,redshift}
-           ...
-
+    usage: ess [-h] [-v]
+               {select,summary,probe,purge,ls,category,file,cat,lsa,cluster,query,server,create,drop,use,stream,exec,udbd,redshift}
+               ...
+    
 Description
 ===========
 
-The Essentia ETL Engine
-
+    The Essentia ETL Engine
+    
 Command Summary
 ==============
 
 ::
 
-optional arguments:
-  -h, --help            show this help message and exit
-  -v, --version         show program's version number and exit
-
-Subcommands:
-  {select,summary,probe,purge,ls,category,file,cat,lsa,cluster,query,server,create,drop,use,stream,exec,udbd,redshift}
-    select              Choose a datastore
-    summary             Summarize datastore
-    probe               Probe category
-    purge               Delete database
-    ls                  File commands
-    category            Category commands
-    file                File transfer with workers
-    cat                 dump file contents to stdout
-    lsa                 list contents of an archive
-    cluster             manage a cluster of worker nodes
-    query               SQL-like query command
-    server              Modify server files for udbd
-    create              Adds fields to config file
-    drop                Removes fields from config file
-    use                 Change active database
-    stream              Import data
-    exec                Execute command
-    udbd                udbd commands
-    redshift            Link essentia to redshift
-
+    optional arguments:
+      -h, --help            show this help message and exit
+      -v, --version         show program's version number and exit
+    
+    Subcommands:
+      {select,summary,probe,purge,ls,category,file,cat,lsa,cluster,query,server,create,drop,use,stream,exec,udbd,redshift}
+        select              Choose a datastore
+        summary             Summarize datastore
+        probe               Probe category
+        purge               Delete database
+        ls                  File commands
+        category            Category commands
+        file                File transfer with workers
+        cat                 dump file contents to stdout
+        lsa                 list contents of an archive
+        cluster             manage a cluster of worker nodes
+        query               SQL-like query command
+        server              Modify server files for udbd
+        create              Adds fields to config file
+        drop                Removes fields from config file
+        use                 Change active database
+        stream              Import data
+        exec                Execute command
+        udbd                udbd commands
+        redshift            Link essentia to redshift
+    
 See Also
 =========
 

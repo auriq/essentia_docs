@@ -30,9 +30,9 @@ with open('{0}.rst'.format("ess"), 'w+') as f:
   f.write("Synopsis\n========\n\n")
   if len(essoutput)!=0:
    f.write("::\n\n")
-  f.write(grablines("ess -h","usage*","*...*"))
+  f.write("    "+grablines("ess -h","usage*","*...*").replace("\n","\n    "))
   f.write("\nDescription\n===========\n\n")
-  f.write(grablines("ess -h","The*","The*"))
+  f.write("    "+grablines("ess -h","The*","The*").replace("\n","\n    "))
   f.write("\n")
   f.write("Command Summary\n==============\n\n")
   if len(essoutput)!=0:
@@ -40,7 +40,7 @@ with open('{0}.rst'.format("ess"), 'w+') as f:
   corelastline=(sp.Popen("ess -h | tail -1 | tr -d '\n'",stdout=sp.PIPE,shell=True)).communicate()[0]
   lastline = "*" + corelastline + "*"
 #  print lastline
-  f.write(grablines("ess -h","optional*",lastline))
+  f.write("    "+grablines("ess -h","optional*",lastline).replace("\n","\n    "))
 #  f.write("    "+essoutput.replace("\n","\n    "))
   f.write("\nSee Also\n=========\n\n")
 
