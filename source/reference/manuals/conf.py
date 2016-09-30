@@ -330,13 +330,6 @@ latex_documents = [
 
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
-man_pages = [
-    ('index', 'essentia', u'Essentia Documentation',
-     [u'Ben Waxer'], 1)
-]
-
-# If true, show URL addresses after external links.
-#man_show_urls = False
 
 
 # -- Options for Texinfo output -------------------------------------------
@@ -368,50 +361,47 @@ texinfo_documents = [
 # (source start file, name, description, authors, manual section).
 
 man_pages = [
- ('ess', 'ess', u'',
- [u'AuriQ Systems Inc.'], 1),
- ('essfull', 'essfull', u'',
- [u'AuriQ Systems Inc.'], 1),
- ('ess-category', 'ess-category', u'',
- [u'AuriQ Systems Inc.'], 1),
- ('ess-cat', 'ess-cat', u'',
- [u'AuriQ Systems Inc.'], 1),
- ('ess-cluster', 'ess-cluster', u'',
- [u'AuriQ Systems Inc.'], 1),
- ('ess-create', 'ess-create', u'',
- [u'AuriQ Systems Inc.'], 1),
- ('ess-drop', 'ess-drop', u'',
- [u'AuriQ Systems Inc.'], 1),
- ('ess-exec', 'ess-exec', u'',
- [u'AuriQ Systems Inc.'], 1),
- ('ess-file', 'ess-file', u'',
- [u'AuriQ Systems Inc.'], 1),
- ('ess-lsa', 'ess-lsa', u'',
- [u'AuriQ Systems Inc.'], 1),
- ('ess-ls', 'ess-ls', u'',
- [u'AuriQ Systems Inc.'], 1),
- ('ess-probe', 'ess-probe', u'',
- [u'AuriQ Systems Inc.'], 1),
- ('ess-purge', 'ess-purge', u'',
- [u'AuriQ Systems Inc.'], 1),
- ('ess-query', 'ess-query', u'',
- [u'AuriQ Systems Inc.'], 1),
- ('ess-redshift', 'ess-redshift', u'',
- [u'AuriQ Systems Inc.'], 1),
- ('ess-select', 'ess-select', u'',
- [u'AuriQ Systems Inc.'], 1),
- ('ess-server', 'ess-server', u'',
- [u'AuriQ Systems Inc.'], 1),
- ('ess-stream', 'ess-stream', u'',
- [u'AuriQ Systems Inc.'], 1),
- ('ess-summary', 'ess-summary', u'',
- [u'AuriQ Systems Inc.'], 1),
- ('ess-udbd', 'ess-udbd', u'',
- [u'AuriQ Systems Inc.'], 1),
- ('ess-use', 'ess-use', u'',
- [u'AuriQ Systems Inc.'], 1),
- ]
+    ('ess', 'ess', u'',
+     [u'AuriQ Systems Inc.'], 1),
+    ('ess-select', ess-select', u'',
+     [u'AuriQ Systems Inc.'], 1),
+    ('ess-summary', ess-summary', u'',
+     [u'AuriQ Systems Inc.'], 1),
+    ('ess-probe', ess-probe', u'',
+     [u'AuriQ Systems Inc.'], 1),
+    ('ess-purge', ess-purge', u'',
+     [u'AuriQ Systems Inc.'], 1),
+    ('ess-ls', ess-ls', u'',
+     [u'AuriQ Systems Inc.'], 1),
+    ('ess-category', ess-category', u'',
+     [u'AuriQ Systems Inc.'], 1),
+    ('ess-file', ess-file', u'',
+     [u'AuriQ Systems Inc.'], 1),
+    ('ess-cat', ess-cat', u'',
+     [u'AuriQ Systems Inc.'], 1),
+    ('ess-lsa', ess-lsa', u'',
+     [u'AuriQ Systems Inc.'], 1),
+    ('ess-cluster', ess-cluster', u'',
+     [u'AuriQ Systems Inc.'], 1),
+    ('ess-query', ess-query', u'',
+     [u'AuriQ Systems Inc.'], 1),
+    ('ess-server', ess-server', u'',
+     [u'AuriQ Systems Inc.'], 1),
+    ('ess-create', ess-create', u'',
+     [u'AuriQ Systems Inc.'], 1),
+    ('ess-drop', ess-drop', u'',
+     [u'AuriQ Systems Inc.'], 1),
+    ('ess-use', ess-use', u'',
+     [u'AuriQ Systems Inc.'], 1),
+    ('ess-stream', ess-stream', u'',
+     [u'AuriQ Systems Inc.'], 1),
+    ('ess-exec', ess-exec', u'',
+     [u'AuriQ Systems Inc.'], 1),
+    ('ess-udbd', ess-udbd', u'',
+     [u'AuriQ Systems Inc.'], 1),
+    ('ess-redshift', ess-redshift', u'',
+     [u'AuriQ Systems Inc.'], 1),
+]
 
- # If true, show URL addresses after external links.
- #man_show_urls = False
-
+# If true, show URL addresses after external links.
+#man_show_urls = False
