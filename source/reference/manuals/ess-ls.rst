@@ -5,7 +5,8 @@
 ::
 
     usage: ess ls [-h] [--exclude [EXCLUDE]] [--cat CAT] [--label LABEL] [-r]
-                  [--dateregex DATEREGEX] [--limit [LIMIT]] [--short]
+                  [--dateregex DATEREGEX] [--limit [LIMIT]]
+                  [--nameonly | --nosize | --nodate]
                   [pattern]
     
     list files based on an expression
@@ -23,5 +24,7 @@
                             regex style pattern used to get date from filename.
                             Option: [auto|none|custom]
       --limit [LIMIT]       number of file to fetch
-      --short               return file names only
+      --nameonly            return file names only
+      --nosize              return file names and dates
+      --nodate              return file names and sizes
     

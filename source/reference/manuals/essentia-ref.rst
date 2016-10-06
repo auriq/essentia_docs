@@ -47,7 +47,9 @@ To learn more about creating and using categories, see :doc:`category-rules`.
     | ``[-r]``
     | ``[--dateregex regex_pattern]``
     | ``[--limit number]``
-    | ``[--short]``","list the contents of the source datastore"
+    | ``[--nameonly]``
+    | ``[--nosize]``
+    | ``[--nodate]``","list the contents of the source datastore"
     ess probe,"| category
     | ``[--file filename]``
     | ``[--label name]``
