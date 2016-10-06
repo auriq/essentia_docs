@@ -1,6 +1,6 @@
 .\" Man page generated from reStructuredText.
 .
-.TH "ESS-LS" "1" "September 30, 2016" "3.2.0" ""
+.TH "ESS-LS" "1" "October 06, 2016" "3.2.0" ""
 .SH NAME
 ess-ls \- 
 .
@@ -36,7 +36,8 @@ level margin: \\n[rst2man-indent\\n[rst2man-indent-level]]
 .nf
 .ft C
 usage: ess ls [\-h] [\-\-exclude [EXCLUDE]] [\-\-cat CAT] [\-\-label LABEL] [\-r]
-              [\-\-dateregex DATEREGEX] [\-\-limit [LIMIT]] [\-\-short]
+              [\-\-dateregex DATEREGEX] [\-\-limit [LIMIT]]
+              [\-\-nameonly | \-\-nosize | \-\-nodate]
               [pattern]
 
 list files based on an expression
@@ -54,7 +55,9 @@ optional arguments:
                         regex style pattern used to get date from filename.
                         Option: [auto|none|custom]
   \-\-limit [LIMIT]       number of file to fetch
-  \-\-short               return file names only
+  \-\-nameonly            return file names only
+  \-\-nosize              return file names and dates
+  \-\-nodate              return file names and sizes
 .ft P
 .fi
 .UNINDENT
