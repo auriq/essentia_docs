@@ -92,7 +92,7 @@ This is a sample script that normalizes a column:
     if (!MOD_COLUMN_BIND(Tab.Col_in_out, arg[0])) return 0;
     return 1;
   }
-  MOD_BUCKET_FUNC()
+  MOD_KEY_FUNC()
   {
     CDAT_F_T sum;
     sum = 0;
@@ -357,14 +357,14 @@ A module function is defined like a C function:
     are implicit variables in the function).
 
 
-.. _`MOD_BUCKET_FUNC()`:
+.. _`MOD_KEY_FUNC()`:
 
-``MOD_BUCKET_FUNC()``
-  Define a function for user bucket processing
+``MOD_KEY_FUNC()``
+  Define a function for key-level processing
   during an Udb export/count/scan operation.
 
-  * It is called for each user bucket being processed.
-  * Use it to scan tables in the current user bucket, examine and/or modify
+  * It is called as each key is processed.
+  * Use it to scan tables associated with the current key, examine and/or modify
     column values, and so on.
   * It is called with this implicit argument:
 
@@ -374,14 +374,14 @@ A module function is defined like a C function:
   * It must return an integer that tells Udb what to do:
 
     * 1 - Success. Udb will continue normal processing.
-    * 0 - Failure. Udb will stop processing the current user bucket
+    * 0 - Failure. Udb will stop processing the current key
       and skip to the next one.
 
   Example:
 
    ::
 
-    MOD_BUCKET_FUNC()
+    MOD_KEY_FUNC()
     {
       CDAT_F_T sum;
       sum = 0;
@@ -396,7 +396,7 @@ A module function is defined like a C function:
       return 1;
     }
 
-  * Convert the value of numeric column ``Tab.Col_in_out`` to a per-bucket
+  * Convert the value of numeric column ``Tab.Col_in_out`` to a per-key
     average.
   * Note the use of ``$TabName.ColName`` (or `MOD_CDAT()`_) to address a
     column's value.
@@ -408,7 +408,7 @@ A module function is defined like a C function:
   Define a function for row processing during
   an Udb export/count/scan operation on ``TabName``.
 
-  * It is called for each row of ``TabName`` in each user bucket.
+  * It is called for each row of ``TabName`` for each key.
   * Use it examine and/or modify column values of the row being
     exported/counted/scanned.
   * Within the processing code, tables can be scanned, column values can be
@@ -452,7 +452,7 @@ A module function is defined like a C function:
   Define a function that checks whether to import the input values
   of a new row during an Udb import operation on ``TabName``.
 
-  * It is called *before* a new row is added to ``TabName`` in a user bucket.
+  * It is called *before* a new row is added to ``TabName`` for a key.
   * Use it to examine the new input values and determine whether to add a
     new row.
     The input values are available via the `MOD_IMP_CDAT()`.
@@ -461,8 +461,8 @@ A module function is defined like a C function:
     examined and/or modified, and so on.
     However, table access is not applicable if:
 
-    * The user bucket corresponding to the input bucket key does not yet exist.
-      This can be determined using `MOD_HAS_USR`_.
+    * The key corresponding to the input does not yet exist.
+      This can be determined using `MOD_HAS_KEY`_.
     * The import is being done on the global ``Var`` table.
 
   * It is called with this implicit argument:
@@ -499,7 +499,7 @@ A module function is defined like a C function:
   ``TabName``.
 
   * It is called *before* the input values are merged into an existing row
-    in ``TabName`` in a user bucket.
+    in ``TabName`` for a key.
   * Use it to examine the new input values as well as existing column values
     and determine whether to merge in the new values.
     The input values are available via `MOD_IMP_CDAT()`.
@@ -599,7 +599,7 @@ argument).
   * There is an implicit row iterator. References to any column values
     within the loop implicitly refer to the row iterator's values.
   * Usually followed by the loop content - a code block enclosed in "{ ... }".
-  * See `MOD_BUCKET_FUNC()`_ for an usage example.
+  * See `MOD_KEY_FUNC()`_ for an usage example.
 
 
 .. _`MOD_TABLE_SET()`:
@@ -619,7 +619,7 @@ argument).
 
     DECL_COLUMN(TabName_1.ColName_1, I);
     DECL_COLUMN(VecName_2.ColName_1, I);
-    MOD_BUCKET_FUNC()
+    MOD_KEY_FUNC()
     {
       CDAT_I_T sum;
       sum = 0;
@@ -653,15 +653,14 @@ argument).
    ::
 
     DECL_COLUMN(TabName_1.ColName_1, I);
-    MOD_BUCKET_FUNC()
+    MOD_KEY_FUNC()
     {
       MOD_TABLE_SET(TabName_1);
       if (!MOD_ROW(TabName_1)) return 0;
       ...
     }
 
-  * With this logic, a user bucket is skipped if it's ``TabName_1`` is
-    empty.
+  * With this logic, a key is skipped if it's ``TabName_1`` is empty.
 
 
 .. _`MOD_CDAT()`:
@@ -721,10 +720,10 @@ argument).
   * Test an input column value to determine whether to import.
 
 
-.. _`MOD_HAS_USR`:
+.. _`MOD_HAS_KEY`:
 
-``int MOD_HAS_USR``
-  A marco that evaluates to 1 if a relevant user bucket exists, 0 otherwise.
+``int MOD_HAS_KEY``
+  A marco that evaluates to 1 if a relevant key exists, 0 otherwise.
 
 
 .. _`MOD_CDAT_S_NSET()`:

@@ -211,12 +211,14 @@ Options
   See the `aq_tool output specifications <aq-output.html>`_ manual for details.
 
   In the `Raw sort mode`_, most output attributes have no effect since
-  the records are not altered (only their order).
+  the records cannot be altered (only their order).
   The ``-c`` option is not applicable either.
 
   In the `Parsed sort mode`_,
   optional "``-c ColName [ColName ...]``" selects the columns to output.
-  ``ColName`` refers to a column in the data set.
+  ``ColName`` refers to a column defined under `-d`_.
+  A ``ColName`` can be preceeded with a ``~`` (or ``!``) negation mark.
+  This means that the column is to be excluded.
   Without ``-c``, all columns are selected by default.
   If ``-c`` is specified without a previous ``-o``, output to stdout is
   assumed.
@@ -244,6 +246,8 @@ Applicable exit codes are:
 * 1 - Memory allocation error.
 * 2 - Command option spec error.
 * 3 - Initialization error.
+* 4 - System error.
+* 5 - Missing or invalid license.
 * 11 - Input open error.
 * 12 - Input read error.
 * 13 - Input processing error.

@@ -17,8 +17,16 @@ The tool set includes:
   according to the command line options. All the tools, except for the sort
   command, operate in stream mode.
 * A specialized low level database engine called the
-  *user bucket database* (Udb).
+  *user key database* (Udb).
 * The rest are support files and helper tools that aid processing in general.
+
+
+..      Versions
+	========
+	
+	* `1.2.4 ChangeLog <ChangeLog.html>`_ [Current]
+	* `1.2.3 ChangeLog <ChangeLog-1.2.3.html>`_
+	* `1.2.2 ChangeLog <ChangeLog-1.2.2.html>`_
 
 Manuals
 =======
@@ -45,7 +53,7 @@ Common:
 * `aq-output <aq-output.html>`_ - aq_tool output specifications
 * `aq-emod <aq-emod.html>`_ - aq_tool eval functions
 
-User bucket database engine:
+User key database engine:
 
 * `udbd <udbd.html>`_ - Udb server
 
@@ -54,6 +62,8 @@ User bucket database engine:
 Helpers:
 
 * `loginf <loginf.html>`_ - Log analyzer
+.. * `smon <smon.html>`_ - System monitor
+.. * `tmon <tmon.html>`_ - Task monitor
 
 
 .. toctree::
@@ -86,13 +96,4 @@ Helpers:
    * :ref:`genindex`
    * :ref:`modindex`
    * :ref:`search`
-
-..	Versions
-	========
-	
-	* `1.2.4 ChangeLog <ChangeLog.html>`_ [Current]
-	* `1.2.3 ChangeLog <ChangeLog-1.2.3.html>`_
-	* `1.2.2 ChangeLog <ChangeLog-1.2.2.html>`_
-
-
 

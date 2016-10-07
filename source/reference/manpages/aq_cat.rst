@@ -151,16 +151,14 @@ Options
   See the `aq_tool output specifications <aq-output.html>`_ manual for details.
 
   Optional "``-c ColName [ColName ...]``" selects the columns to output.
-  Normally, ``ColNames`` are names from the `-d`_ column spec.
-  However, if no column spec is given, the desired column numbers
-  (one-based) can specified instead;
-  column ranges are also accepted (e.g "... -c 5-3 1 2 ...").
+  ``ColName`` refers to a column defined under `-d`_.
+  A ``ColName`` can be preceeded with a ``~`` (or ``!``) negation mark.
+  This means that the column is to be excluded.
+  If no `-d`_ is given, the desired column numbers or number ranges
+  (one-based) can specified instead (e.g "... -c 5-3 1 2 ...").
+  Negation does not work on column number spec.
   Without ``-c``, all columns are selected by default.
   If ``-c`` is specified without a previous ``-o``, output will got to stdout.
-
-  Note that this tool supports outputting the same column more than once.
-  For example, both "... -c 1 1 ..." and "... -c Col1 Col1 ..." are valid.
-  Most aq_tools do not support this though.
 
   Multiple sets of "``-o ... -c ...``" can be specified.
 
@@ -192,6 +190,8 @@ Applicable exit codes are:
 * 1 - Memory allocation error.
 * 2 - Command option spec error.
 * 3 - Initialization error.
+* 4 - System error.
+* 5 - Missing or invalid license.
 * 11 - Input open error.
 * 12 - Input read error.
 * 13 - Input processing error.

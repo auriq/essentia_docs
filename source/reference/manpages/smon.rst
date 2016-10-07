@@ -26,7 +26,7 @@ Description
 It normally runs as a daemon and collects system statistics at
 regular interval in the background.
 Collected result is saved in a stats log "smon.out" in the
-daemon's work directory.
+daemon's runtime directory.
 
 ``smon`` can also run in the foreground and output stats as soon as they
 are collected.

@@ -21,7 +21,7 @@ Synopsis
 
   Input_Spec:
       [-f[,AtrLst] File [File ...]] [-d ColSpec [ColSpec ...]] |
-      [-exp[,AtrLst] DbName:TabName [ExpOpts ...] --]
+      [-exp[,AtrLst]|-cnt[,AtrLst] DbName[:TabName] [ExpOpts ...] --]
       [-cat[,AtrLst] File [File ...] ColSpec [ColSpec ...]]
 
   Prep_Spec:
@@ -46,7 +46,7 @@ Synopsis
   Output_Spec:
       [-o[,AtrLst] File] [-c ColName [ColName ...]]
       [-ovar[,AtrLst] File [-c ColName [ColName ...]]]
-      [-imp[,AtrLst] DbName:TabName [-mod ModSpec [ModSrc]]
+      [-imp[,AtrLst] DbName[:TabName] [-mod ModSpec [ModSrc]]
 
 
 Description
@@ -180,13 +180,15 @@ Options
 
 .. _`-exp`:
 
-``-exp[,AtrLst] DbName:TabName [ExpOpts ...] --``
-  Get the input data from an Udb export. This will set the data source as
-  well as the column definitions (for this reason, this option is not
-  compatible with the -f`_ and/or `-d`_ option(s)).
+``-exp[,AtrLst]|-cnt[,AtrLst] DbName[:TabName] [ExpOpts ...] --``
+  Get the input data from an Udb export or count operation.
+  This will set the data source as well as the column definitions.
+  For these reasons, this option is not compatible with the -f`_ and
+  `-d`_ options.
   ``DbName`` is the database name (see `Target Udb Database`_).
   ``TabName`` is a table/vector name in the database to export.
-  To export the "PKEY" (bucket key) only, specify  a "." (a dot) as ``TabName``.
+  If ``TabName`` is not given or if it is a "." (a dot), the primary keys
+  will be exported/counted.
   Optional ``AtrLst`` is a comma separated list containing:
 
   * ``spec=UdbSpec`` - Set the spec file directly (see `Target Udb Database`_).
@@ -808,6 +810,8 @@ Options
 
   Optional "``-c ColName [ColName ...]``" selects the columns to output.
   ``ColName`` refers to a previously defined column/variable.
+  A ``ColName`` can be preceeded with a ``~`` (or ``!``) negation mark.
+  This means that the column is to be excluded.
   Without ``-c``, all columns are selected by default. Variables are not
   automatically included though.
   If ``-c`` is specified without a previous ``-o``, output to stdout is
@@ -817,7 +821,6 @@ Options
   appropriate, use `-alias`_ or `-renam`_ before the ``-o`` to remap the
   name of those columns manually.
   With `-alias`_, the alternate names must be explicitly selected with ``-c``.
-  With `-renam`_, ``-c`` is optional.
 
   Multiple sets of "``-o ... -c ...``" can be specified.
 
@@ -841,13 +844,14 @@ Options
 
   Optional "``-c ColName [ColName ...]``" selects the variables to output.
   ``ColName`` refers to a previously defined variable.
+  A ``ColName`` can be preceeded with a ``~`` (or ``!``) negation mark.
+  This means that the variable is to be excluded.
   Without ``-c``, all variables are selected by default.
 
   In case a title line is desired but certain variable names are not
   appropriate, use `-alias`_ or `-renam`_ before ``-ovar`` to remap the
   name of those variables manually.
   With `-alias`_, the alternate names must be explicitly selected with ``-c``.
-  With `-renam`_, ``-c`` is optional.
 
   Multiple sets of "``-ovar ... -c ...``" can be specified.
 
@@ -864,10 +868,12 @@ Options
 
 .. _`-imp`:
 
-``-imp[,AtrLst] DbName:TabName [-mod ModSpec [ModSrc]]``
+``-imp[,AtrLst] DbName[:TabName] [-mod ModSpec [ModSrc]]``
   Output data to Udb (i.e., perform an Udb import).
   ``DbName`` is the database name (see `Target Udb Database`_).
   ``TabName`` is a table/vector name in the database.
+  If ``TabName`` is not given or if it is a "." (a dot), a primary key-only
+  import will be performed.
   Columns (including `variables <#var>`_) from the current data set matching
   the column names of ``TabName`` are automatically selected for import.
   In case certain desired columns in the current data set are named
@@ -883,14 +889,16 @@ Options
   * ``nodelay`` - Send records to Udb servers as soon as possible.
     Otherwise, up to 16KB of data may be buffered before an output occurs.
   * ``seg=N1[-N2]/N`` - Apply sampling by selecting segment N1 or
-    segment N1 to N2 (inclusive) out of N segments of unique users from the
-    input data to import. Users are segmented based on the hash value of the
-    user key. For example, ``seg=2-4/10`` will divide user pool into 10
+    segment N1 to N2 (inclusive) out of N segments of unique keys from the
+    input data to import. Keys are segmented based on their hash values.
+    For example, ``seg=2-4/10`` will divide the keys into 10
     segments and import segments 2, 3 and 4; segments 1 and 5-10 are discarded.
-  * ``nobnk`` - Exclude records with a blank user key from the import.
-  * ``nonew`` - Tell the server not to create any new user during this
-    import. In other words, records belonging to users *not yet* in the DB are
+  * ``nobnk`` - Exclude records with a blank key from the import.
+    This only applies with the primary key is made up of a single string column.
+  * ``nonew`` - Tell the server not to create any new key during the
+    import. In other words, records belonging to keys *not yet* in the DB are
     discarded.
+  * ``noold`` - The opposite of ``nonew``.
 
   Optional "``-mod ModSpec [ModSrc]``" specifies a module to be
   loaded on the *server side*.
@@ -922,6 +930,8 @@ Applicable exit codes are:
 * 1 - Memory allocation error.
 * 2 - Command option spec error.
 * 3 - Initialization error.
+* 4 - System error.
+* 5 - Missing or invalid license.
 * 11 - Input open error.
 * 12 - Input read error.
 * 13 - Input processing error.
@@ -1143,13 +1153,13 @@ The spec file contains server IPs (or domain names) and table/vector
 definitions. See `udb.spec <udb.spec.html>`_ for details.
 ``aq_pp`` finds the relevant spec file in several ways:
 
-* The spec file path can be given explicitly via the ``spec=UdbSpec`` attribute
+* The spec file path is taken from the ``spec=UdbSpec`` attribute
   of the `-imp`_ or `-exp`_ option.
-* The spec file path can be deduced implicitly from the ``DbName`` parameters
+* The spec file path is deduced implicitly from the ``DbName`` parameters
   of the `-imp`_ or `-exp`_ option. This method sets the spec file to
-  "``.conf/DbName.spec``" in the current work directory of ``aq_pp``.
+  "``.conf/DbName.spec``" in the runtime directory of ``aq_pp``.
 * If none of the above information is given, the spec file is assumed to be
-  "``udb.spec``" in the current work directory of ``aq_pp``.
+  "``udb.spec``" in the runtime directory of ``aq_pp``.
 
 
 Conditional Processing Groups
@@ -1236,5 +1246,4 @@ See Also
 * `udb.spec <udb.spec.html>`_ - Udb spec file
 * `aq_udb <aq_udb.html>`_ - Udb server interface
 * `mcc.umod <mcc.umod.html>`_ - Udb module script compiler
-* `Example aq_pp Commands <../../usecases/syntaxexamples/aq_pp-option-examples.html>`_ - Additional examples of aq_pp options.
 

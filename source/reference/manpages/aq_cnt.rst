@@ -214,6 +214,8 @@ Applicable exit codes are:
 * 1 - Memory allocation error.
 * 2 - Command option spec error.
 * 3 - Initialization error.
+* 4 - System error.
+* 5 - Missing or invalid license.
 * 11 - Input open error.
 * 12 - Input read error.
 * 13 - Input processing error.

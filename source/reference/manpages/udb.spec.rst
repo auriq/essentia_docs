@@ -14,13 +14,12 @@ Description
 
 A Udb spec file holds a Udb database specification.
 It contains target server specs that form the server pool and
-table/vector/variable specs that form the data definition.
+key/table/vector/variable specs that form the primary key and
+associated data definition.
 It is used by the Udb client programs `aq_pp <aq_pp.html>`_ and
 `aq_udb <aq_udb.html>`_ to determine which servers to send requests to and
-what data definition to pass to them.
-Recall that an Udb server is not tied to any particular data definition
-until instructed by a client; after which the definition remains until
-the its database is cleared.
+what data definition to pass to them. See the commands' documentation on
+how to set the spec file for the commands.
 
 The spec file contains multiple sections.
 Each section starts with a keyword followed by the relevant spec.
@@ -43,7 +42,11 @@ Basic file format is:
 
 See the sample below for a complete description.
 Note that the indentation and blank lines in the sample are optional.
-Line breaks are also optional; however, they are recommended for readability.
+Line breaks are also optional; however, they are recommended for readability
+and to prevent a line from exceeding 2046 bytes.
+
+**Important**: Do not change the database spec after it has been created on
+the server side.
 
 
 Sample Spec
@@ -54,14 +57,16 @@ Sample Spec
   #
   # "@Server:" starts a server spec section.
   # o Required.
-  # o One or more lines of target server spec.
+  # o One or more target server specs that form the database's server pool.
   # o Each server spec has the form:
-  #     IP_or_Domain[|IP_or_Domain_Alt][:Port]
-  # o Port is needed when a non-default port is used (see "@Port" below).
+  #     IP_or_Domain[|IP_or_Domain_Alt][:Port][*Weight]
   # o "IP_or_Domain" is the address used by client programs (aq_pp and
   #   aq_udb) to communicate with the server. "IP_or_Domain_Alt" is the
   #   server's local/private IP; it is only needed if it is different
   #   from the first one.
+  # o Port is needed when a non-default port is used (see "@Port" below).
+  # o Weight is an integer that sets the approx. data share of this server.
+  #   Default is 1, max is 1000.
   #
   @Server:
     127.0.0.1
@@ -78,16 +83,21 @@ Sample Spec
   @Port:10010
 
   #
-  # "@DB:DbName:" sets the database name.
-  # o Optional, default is the DbName given in the command parameter.
-  #   If neither is given, a blank DB name will be assigned.
-  #
-  @Db:MyUdb
-
-  #
-  # "@PKey:" sets the primary keys (a.k.a. user keys) of the database.
+  # "@PKey:" sets the primary key columns of the database.
   # o Required.
-  # o Specify each key like a table column (see below).
+  # o Subsequent lines are key column specs in the form "Type:ColName".
+  #   Max columns is 2048.
+  # o Column Types are:
+  #   o S - String.
+  #   o F - Double precision floating point.
+  #   o L - 64-bit unsigned integer.
+  #   o LS - 64-bit signed integer.
+  #   o I - 32-bit unsigned integer.
+  #   o IS - 32-bit signed integer.
+  #   o IP - v4/v6 address.
+  # o ColName is the name of the key column (case insensitive). It can contain
+  #   up to 31 alphanumeric and '_' characters. The first character cannot
+  #   be a digit.
   #
   @PKey:
     s:KeyStr
@@ -135,10 +145,10 @@ Sample Spec
     s:SearchKey
 
   #
-  # "@Vector:TabName" starts a vector table spec.
-  # o A vector is a table that has only one data row. It is often used to
-  #   store bucket level profile data.
-  # o Vectors are automatically created when a user bucket is created.
+  # "@Vector:TabName" starts a vector spec.
+  # o A vector has only one data row. It is often used to store key specific
+  #   profile data.
+  # o Vectors are automatically created when a key is created.
   #   Their columns are initialized to either 0/blank depending on the
   #   data type.
   # o Vector spec is identical to that of a table except that "+KEY" is
@@ -152,24 +162,27 @@ Sample Spec
     l,+add:sum_2
 
   #
+  # Specify more tables and vectors as needed.
+  #
+
+  #
   # "@Var:" starts the Var vector spec.
-  # o A Var vector holds a single row of data. The columns (or vars) are
-  #   global and NOT bucket specific.
-  # o It does not need a name since there can only be one Var vector spec.
-  #   However, it does have the implicit name of "var".
-  # o Var columns can be used in most "aq_udb" operations. See the "aq_udb"
-  #   manual for details.
-  # o Columns in this vector are initialized to 0/blank. They can also be
-  #   reset to 0/blank at any time using "aq_udb -clr var".
-  # o Columns in this vector can be set using:
-  #     $ aq_udb -scn var -var ColName ColVal -var ColName ColVal ...
+  # o Var holds a single row of data like a vector.
+  # o Only one such definition can be specified.
+  # o The spec is identical to that of a vector except that a name can be be
+  #   assigned - its name is always "var".
+  # o Var columns are NOT key specific. There is one set of Var columns
+  #   per database per Udb server.
+  # o Unlike a regular vector, the "merge" operation is only done during an
+  #   export to combine column values from the servers in a database pool.
+  # o Var columns are initialized to 0/blank. They can also be reset to
+  #   0/blank at any time using "aq_udb -clr var".
+  # o Var columns  can be set using:
+  #     $ aq_udb -scn var -var VarName VarVal -var VarName VarVal ...
   #   or
-  #     $ aq_pp -f var_val.csv -udb -imp my_db:var
-  # o Columns in this vector can be exported using "aq_udb -exp var"
-  # o Vector spec is identical to that of a regular vector.
-  # o The "merge" operation is done differently from that of a regular
-  #   vector - it is done during an export to combine data from separate
-  #   Udb servers.
+  #     $ aq_pp -f var_val.csv -imp my_db:var
+  # o Var columns can be used in most "aq_udb" operations.
+  # o Var columns can be exported using "aq_udb -exp var".
   #
   @Var:
     s:g_str_1
@@ -177,74 +190,6 @@ Sample Spec
     l,+bor:g_flag_2
     l,+add:g_sum_1
     l,+add:g_sum_2
-
-  #
-  # Specify more tables/vectors as needed. But there can only be one Var
-  # vector. The order of the definitions is not important.
-  #
-
-
-Udb Data Arrangement
-====================
-
-An Udb server constructs its database according to the spec in this manner:
-
- ::
-
-  +------------+------+
-  | Var vector | cols |
-  +------------+------+
-
-  +=================+=======+
-  | User key (PKEY) | keys1 |
-  +=================+=======+
-  | +---------+-----------+ |
-  | | Table1  | row1 cols | |
-  | |         | row2 cols | |
-  | |         | ...       | |
-  | +---------+-----------+ |
-  | | Table2  | row1 cols | |
-  | |         | row2 cols | |
-  | |         | ...       | |
-  | +---------+-----------+ |
-  | | ...                 | |
-  | +---------+-----------+ |
-  | +---------+------+      |
-  | | Vector1 | cols |      |
-  | +---------+------+      |
-  | | Vector2 | cols |      |
-  | +---------+------+      |
-  | | ...            |      |
-  | +---------+------+      |
-  |                         |
-  +=================+=======+
-  | User key (PKEY) | keys2 |
-  +=================+=======+
-  | +---------+-----------+ |
-  | | Table1  | row1 cols | |
-  | |         | row2 cols | |
-  | |         | ...       | |
-  | +---------+-----------+ |
-  | | Table2  | row1 cols | |
-  | |         | row2 cols | |
-  | |         | ...       | |
-  | +---------+-----------+ |
-  | | ...                 | |
-  | +---------+-----------+ |
-  | +---------+------+      |
-  | | Vector1 | cols |      |
-  | +---------+------+      |
-  | | Vector2 | cols |      |
-  | +---------+------+      |
-  | | ...            |      |
-  | +---------+------+      |
-  |                         |
-  +=================+=======+
-  | User key (PKEY) | keys3 |
-  +=================+=======+
-  | ...                     |
-  |                         |
-  +-------------------------+
 
 
 See Also

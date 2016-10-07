@@ -16,123 +16,69 @@ Synopsis
 
   udbd [-h|-v] [-q]
     [-mem LimitEach | -memx LimitTotal]
-    start|stop|restart|status|cklog|ckmem [PortSpec ...] [WorkDir]
+    start|stop|restart|status|ckmem [PortSpec ...] [RunDir]
 
 
 Description
 ===========
 
-``udbd`` is a Udb server start, stop and maintenance command.
-Each operation applys to one or more server instances on the local machine.
-Which instances to target depend on the `PortSpec`_ supplied at commandline
-(each local Udb server binds to a unique port).
+``udbd`` is used to manage (start, stop, check, etc) local Udb servers.
+Usually, one Udb server per machine is sufficient because each server can
+manage multiple databases. Then, multiple machines can be combined to form a
+server pool for the databases
+(see `udb.spec <udb.spec.html>`_ on how to define a database).
 
-Usually, a machine only runs a single Udb server.
-However, multiple servers can be started if there are sufficient memory and
-CPU cores. These servers can be used as part of a parallel pool for one
-database or as separate pools for independent databases.
-More `about Udb`_ below.
+``udbd`` can also manage multiple local servers.
+Which servers to target depends on the `PortSpec`_ - each port in the
+spec corresponds to a separate server.
 
 
 About Udb
 =========
 
-Udb is an in-memory database.
-It is designed for *keyed* data such as those associated with an *user key*.
-In fact, Udb is short for *User (Bucket) Database*. The *bucket* structure is
-illustrated in the diagram below. In this arrangement, each key is associated
-with a bucket. Inside the bucket are the database tables (multi-row) and
-vectors (single row) - the data inside these tables/vectors are specific to
-the bucket's key. See `udb.spec <udb.spec.html>`_ on how to define a database.
+Udb stands for *User Key Database*. It is an in-memory database designed to
+group user specific data together into small keyed units.
+In this arrangement, each key has a set of associated data:
 
-Udb servers usually work together in a pool to distribute data storage
-as well as facilitate parallel processing.
+* The key itself. It can contain one or more columns.
+* Mini tables (multi-row). The table rows are specific to the key.
+* Vectors (single row). The vectors are specific to the key.
+
+See `udb.spec <udb.spec.html>`_ on how to define a database.
+
+Udb servers usually work together in a pool to distribute the keyed units
+for storage consideration as well as to facilitate parallel processing.
 Each server pool can hold and process one or more databases.
-Technically, all relevant data sharing the same *keys* can be placed in the
-same database. Data that are keyed differently can be managed in another
-database.
-
-A typical database is stored in this way:
-
- ::
-
-  Server1                         ...     ServerN
-
-  +------------+------+                   +------------+------+
-  | Var vector | cols |           ...     | Var vector | cols |
-  +------------+------+                   +------------+------+
-
-  +=================+=======+             +=================+=======+
-  | User key (PKEY) | key11 |     ...     | User key (PKEY) | keyN1 |
-  +=================+=======+             +=================+=======+
-  | +---------+-----------+ |             | +---------+-----------+ |
-  | | Table1  | row1 cols | |             | | Table1  | row1 cols | |
-  | |         | row2 cols | |             | |         | row2 cols | |
-  | |         | ...       | |             | |         | ...       | |
-  | +---------+-----------+ |             | +---------+-----------+ |
-  | | Table2  | row1 cols | |             | | Table2  | row1 cols | |
-  | |         | row2 cols | |             | |         | row2 cols | |
-  | |         | ...       | |             | |         | ...       | |
-  | +---------+-----------+ |             | +---------+-----------+ |
-  | | ...                 | |             | | ...                 | |
-  | +---------+-----------+ |             | +---------+-----------+ |
-  | +---------+------+      |             | +---------+------+      |
-  | | Vector1 | cols |      |             | | Vector1 | cols |      |
-  | +---------+------+      |             | +---------+------+      |
-  | | Vector2 | cols |      |             | | Vector2 | cols |      |
-  | +---------+------+      |             | +---------+------+      |
-  | | ...            |      |             | | ...            |      |
-  | +---------+------+      |             | +---------+------+      |
-  |                         |             |                         |
-  +=================+=======+             +=================+=======+
-  | User key (PKEY) | key12 |             | User key (PKEY) | keyN2 |
-  +=================+=======+             +=================+=======+
-  | +---------+-----------+ |             | +---------+-----------+ |
-  | | Table1  | row1 cols | |             | | Table1  | row1 cols | |
-  | |         | row2 cols | |             | |         | row2 cols | |
-  | |         | ...       | |             | |         | ...       | |
-  | +---------+-----------+ |             | +---------+-----------+ |
-  | | Table2  | row1 cols | |             | | Table2  | row1 cols | |
-  | |         | row2 cols | |             | |         | row2 cols | |
-  | |         | ...       | |             | |         | ...       | |
-  | +---------+-----------+ |             | +---------+-----------+ |
-  | | ...                 | |             | | ...                 | |
-  | +---------+-----------+ |             | +---------+-----------+ |
-  | +---------+------+      |             | +---------+------+      |
-  | | Vector1 | cols |      |             | | Vector1 | cols |      |
-  | +---------+------+      |             | +---------+------+      |
-  | | Vector2 | cols |      |             | | Vector2 | cols |      |
-  | +---------+------+      |             | +---------+------+      |
-  | | ...            |      |             | | ...            |      |
-  | +---------+------+      |             | +---------+------+      |
-  |                         |             |                         |
-  +=================+=======+             +=================+=======+
-  | User key (PKEY) | key13 |             | User key (PKEY) | keyN3 |
-  +=================+=======+             +=================+=======+
-  | ...                     |             | ...                     |
-  |                         |             |                         |
-  +-------------------------+             +-------------------------+
-
-In general, data is first imported into the database via client program
-`aq_pp <aq_pp.html>`_. If there are multiple data sources and that data
-order in the database is not important, import can be done in parallel.
-One or more parallel imports per Udb server can often be used
-to maximize throughput.
-After an import, the data can be manipulated and/or exported via client program
-`aq_udb <aq_udb.html>`_ and `aq_pp <aq_pp.html>`_.
-
-With its parallel import support and in-memory database design,
-raw data can be transformed into final or intermediate forms quickly.
-There is generally no need to *warehouse* data in the database -
-data can be left in their raw form (e.g., compressed log files) and only
-loaded on-demand. After processing, the database can simply be destroyed,
-releasing memory back to the operating system. Once a database is cleared,
-it can be used to handle a new data set.
+Technically, all relevant data sharing the same *key* can be placed in the
+same database. Data that are keyed differently can be managed in separate
+databases.
 
 The server does not require any configuration to operate.
 Its actions are completely controlled by the client programs
 `aq_pp <aq_pp.html>`_ and `aq_udb <aq_udb.html>`_.
-Even the database definition comes from the client.
+Even the database definition comes from the clients.
+
+In general, data is first imported into one or more databases via client program
+`aq_pp <aq_pp.html>`_. If there are multiple data sources, a parallel import
+can be done by running multiple `aq_pp <aq_pp.html>`_ concurrently.
+The `aq_pp <aq_pp.html>`_ import can run on any machines, including the Udb
+machines. After all the data has been imported, the databases can be further
+processed or counted/exported using client program `aq_udb <aq_udb.html>`_.
+
+Udb can be used in serveral ways:
+
+* On-demand - Data are left in their raw forms (e.g., compressed log files),
+  then only loaded, processed, counted/exported and cleared as needed.
+* Long term storage - For example, a database can be used to store a
+  moving window set of data by importing live data streams into the database
+  continuously and deleting old data from the database periodically.
+* A combination of on-demand and long term storage - In this case, on-demand
+  databases are used in conjunction with long term databases to perform
+  transient processing. The same Udb server pool can manage all the
+  databases as appropriate.
+
+Databases can be cleared individually to release their associated resources
+when they are no longer needed.
 
 
 Options
@@ -165,56 +111,52 @@ Options
 
 .. _`start`:
 
-``start [PortSpec ...] [WorkDir]``
+``start [PortSpec ...] [RunDir]``
   Start Udb servers at the given `PortSpec`_.
-  `PortSpec`_ determines which server to start.
   If no port is given, a single server will be started at port 10010.
-  `WorkDir`_ sets the servers' work/runtime directory.
+  `RunDir`_ sets a custom server directory.
 
 
 .. _`stop`:
 
 ``stop [PortSpec ...]``
   Stop (kill) Udb servers running at the given ports.
-  If no port is given, try to detect and stop all running Udb servers.
+  If no port is given, the command will try to detect and stop all running
+  Udb servers.
 
 
 .. _`restart`:
 
-``restart [PortSpec ...] [WorkDir]``
+``restart [PortSpec ...] [RunDir]``
   Equivalent to a `stop`_ and `start`_ operation.
   That is, stop Udb servers running at the given `PortSpec`_, then start those
   servers again.
-  If no port is given, try to detect and stop all running Udb servers,
-  then start the detected servers again.
-  `WorkDir`_ sets the servers' work/runtime directory.
+  If no port is given, the command will try to detect and stop all running
+  Udb servers, then start the detected servers again.
+  `RunDir`_ sets a custom server directory.
 
 
 .. _`status`:
 
 ``status [PortSpec ...]``
   Report the status of Udb servers running at the given `PortSpec`_.
-  If no port is given, try to detect and list all running Udb servers.
-
-
-.. _`cklog`:
-
-``cklog [PortSpec ...]``
-  Get error/warning messages from the logs of Udn servers running at the given
-  `PortSpec`_.
-  If no port is given, action applies to all running Udb servers.
+  If no port is given, the command will try to detect and list all running
+  Udb servers.
 
 
 .. _`ckmem`:
 
 ``ckmem [PortSpec ...]``
-  Get the memory usage of Udn servers running at the given `PortSpec`_.
-  If no port is given, action applies to all running Udb servers.
+  Check the memory usages of Udb servers running at the given `PortSpec`_.
+  If no port is given, the command will try to detect and check all running
+  Udb servers.
 
 
 .. _`PortSpec`:
 
 ``PortSpec``
+  Ports are used to identify the target servers to apply the action to
+  (each port is tied to a separate server).
   All options can take one or more port specifications.
   Each ``PortSpec`` has the form:
 
@@ -227,34 +169,32 @@ Options
     and ending at ``PortStart+(NumPort-1)``.
 
 
-.. _`WorkDir`:
+.. _`RunDir`:
 
-``WorkDir``
+``RunDir``
   The `start`_ and `restart`_ actions can take an optional
-  work directory parameter.
-  It is the server's work/runtime directory where its log file and pid file
-  are saved.
-  The default work directory location is determined in this order:
-
-  1) ``udb/`` under the aq_tool installation directory.
-  2) ``../udb/`` from the directory where ``udbd`` is installed.
-     This is usually the same as (1).
-  3) The directory where ``udbd`` is installed.
+  runtime directory parameter. It is only needed when starting Udb in a custom
+  location. If given, the `server files`_ will be stored in the given
+  ``RunDir``.
 
 
 Server Files
 ============
 
-The Udb server can make use of "modules" (shared objects). These modules must
-be installed under the "umod/" directory in the server executable's
-installation directory.
+Each Udb server is named "``udbd-Port``" where ``Port`` is the port
+number it binds to. There are 3 files associated with each server:
 
-Each instant of Udb server is named "udbd-Port" where Port is the port
-number it is associated with. There are 3 files associated with each instant:
+* ``udbd-Port`` - Server executable (usually a symbolic link).
+* ``udbd-Port.log`` - Server activity log.
+* ``udbd-Port.pid`` - Server PID file (if it is running).
 
-* udbd-Port - Server executable (usually a symbolic link).
-* udbd-Port.log - Server activity log.
-* udbd-Port.pid - Server PID file (if it is running).
+Server files are kept in the server's runtime directory.
+By default, the runtime directory is one of these locations:
+
+1) ``/opt/aq_tool/udb/``
+2) ``../udb/`` from the directory where ``udbd`` is installed.
+
+The location can be overriden by the `RunDir`_ option.
 
 
 See Also

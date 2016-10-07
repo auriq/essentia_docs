@@ -906,16 +906,16 @@ These functions are specific to Udb. They can only be used with
 .. _`RowCount()`:
 
 ``RowCount(TabName)``
-  Returns the row count of the given table in a user bucket.
+  Returns the row count of the given table belonging to the current key.
   For a vector, it returns 1 if the verctor has been initialized, 0 otherwise.
 
   Example:
 
    ::
 
-    $ aq_udb ... -pp . -if -filt 'RowCount(MyTable) < 10' -goto next_bucket -endif -endpp ...
+    $ aq_udb ... -pp . -if -filt 'RowCount(MyTable) < 10' -goto next_key -endif -endpp ...
 
-  * Skip any buckets that have less than 10 rows in ``MyTable``.
+  * Skip any keys that have less than 10 rows in ``MyTable``.
 
 
 String Constant
