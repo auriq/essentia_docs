@@ -32,14 +32,14 @@ How to Install Essentia using Docker
 
     docker run --privileged -itd -e "container=docker"  -v /sys/fs/cgroup:/sys/fs/cgroup --name essentia -p 80:80 auriqsystems/essentia /usr/sbin/init
 
-#. Check that the docker conatiner is running. Run:: 
+#. Check that the docker container is running. Run:: 
 
     docker ps -a
 
     # CONTAINER ID        IMAGE                   COMMAND                  CREATED             STATUS              PORTS             NAMES
     # 3c2cc851df58        auriqsystems/essentia   "/home/start_server.s"   17 hours ago        Up 17 hours         3306/tcp, 0.0.0.0:80->80/tcp, 10010-10079/tcp   essentia
 
-#. Login to the Essentia Data Lake Manage UI by accessing the url of the instance and entering the following login information::
+#. Login to the Essentia Data Lake Manager UI by accessing the url of the instance and entering the following login information::
 
     Username: essentia
     Password: essentia
@@ -54,7 +54,7 @@ You can then go through :doc:`../../dlv/dlv`, :doc:`../../tutorial/essentiatutor
 
 **Command Line Access**
 
-To access your essenta docker container via the command line, secure shell into your instance and then run::
+To access your essentia docker container via the command line, secure shell into your instance and then run::
 
     docker exec -it essentia bash
 
