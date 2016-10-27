@@ -30,6 +30,7 @@ builtin evaluation and filtering operators provide. Supported fubnctions are:
 * `General data conversion functions`_
 * `Date/Time conversion functions`_
 * `Character set encoding conversion functions`_
+* `Speciality functions`_
 * `RTmetrics functions`_
 * `Udb specific functions`_
 
@@ -750,6 +751,26 @@ Run "``iconv --list``" to see the supported encodings.
   * Converts ``Japanese_Col`` from either SJIS or EUC into UTF8.
     The first example enforces that the result be UTF8.
     The second is more relaxed, its result may not be UTF8.
+
+
+Speciality functions
+====================
+
+.. _`Set()`:
+
+``Set(Str, Val)``
+  Sets a column of name ``Str`` to value ``Val``. Note that the target
+  column is determined at runtime during each evaluation.
+
+  * Returns 1 if successful, 0 if the column cannot be found or if there is
+    a datatype mismatch so that the assignment cannot be done.
+    ``Pattern`` must match the *entire* ``Val`` to be successful.
+  * ``Str`` is the column name. It can be a string column's name,
+    or an expression that evaluates to a string.
+    It can also be a `string constant`_; however, if this is the case,
+    the standard ``-eval`` assignment should be used instead.
+  * ``Val`` can be a string column's name, a `string constant`_,
+    or an expression that evaluates to a string.
 
 
 RTmetrics functions

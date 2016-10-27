@@ -151,8 +151,8 @@ To learn more about creating and using categories, see :doc:`category-rules`.
     :header: "Environment Variable", "Default", "Description"
     :widths: 15, 35, 30
 
-    "AWS_CACHE_DIR","| ``GUI and RStudio:`` /var/www/html/mydmp/aws/1/.ess
+    "ESS_CACHE_DIR","| ``GUI and RStudio:`` /var/www/html/mydmp/aws/1/.ess
     | ``Command Line:`` ~/.ess","Directory path where repository settings files will be stored. This is used to manage the local and cloud repositories associated with the instance you are on. The first default is for files created by the Graphical User Interface or RStudio and the second default is for files created via the command line."
-    "AWS_WORK_DIR","| ``All Access Methods:`` ./.conf","Directory path where udb settings files will be stored. This is used to manage the UDB databases and ports associated with the instance you are on. The default is always a **.conf** folder in your current directory."
-    "AWS_AWS_DIR","| ``GUI and RStudio:`` /var/www/html/mydmp/aws/1/.aws
+    "ESS_WORK_DIR","| ``All Access Methods:`` ./.conf","Directory path where udb settings files will be stored. This is used to manage the UDB databases and ports associated with the instance you are on. The default is always a **.conf** folder in your current directory."
+    "ESS_AWS_DIR","| ``GUI and RStudio:`` /var/www/html/mydmp/aws/1/.aws
     | ``Command Line:`` ~/.aws","Directory path where pem files will be stored. This is used to manage the computer clusters associated with the instance you are on. The first default is for files created by the Graphical User Interface or RStudio and the second default is for files created via the command line."

@@ -21,13 +21,13 @@ How to Install Essentia on your Local Machine
 
 #. Run::
 
-    unzip essentia-311.zip
+    unzip essentia-320.zip
     
 #. Read the README and LICENSE.txt files.
 
 #. Run:: 
 
-    sudo bash essentia-311.sh
+    sudo bash essentia-320.sh
 
 #. Type ``y`` to install Essentia.
 
@@ -60,7 +60,7 @@ To **Uninstall Essentia**:
 
 #. Run::
 
-    sudo bash essentia-311.sh
+    sudo bash essentia-320.sh
 
 #. Type ``n`` when asked to install Essentia.
 

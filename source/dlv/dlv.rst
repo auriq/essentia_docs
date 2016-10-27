@@ -17,10 +17,10 @@ Repository setup and management
 **Link to AWS S3**
 
 1. Click on **Connect** in the top menu and then the AWS S3 tab.
-2. Click on the **+Add** icon to open the input form.
+2. Click on the **+** icon to open the input form.
 3. Enter your AWS S3 credentials (bucket name, access key, secret access key) and a label if you prefer to call the bucket by another name.
 
-**Note:** If you are running the AWS Marketplace version of Essentia 3.1.2, you do not need to enter your AWS credentials. Instead, setup an IAM role as described in :doc:`../install/aws/iam-role`.
+**Note:** If you are running the AWS Marketplace version of Essentia, you do not need to enter your AWS credentials. Instead, setup an IAM role as described in :doc:`../install/aws/iam-role`.
 
 4. Click on the **Add** button to add your S3 repository.
 5. Your newly added repository will be displayed in the AWS S3 table.
@@ -34,7 +34,7 @@ Repository setup and management
 **Link to Azure Blob**
 
 1. Click on **Connect** in the top menu and then the Azure Blob tab.
-2. Click on the **+Add** icon to open the input form.
+2. Click on the **+** icon to open the input form.
 3. Enter your Azure Blob credentials (container name, username, password) and a label if you prefer to call the container by another name.
 4. Click on the **Add** button to add your Blob repository.
 5. Your newly added repository will be displayed in the Azure Blob table.
@@ -53,7 +53,7 @@ To explore your new repository or any repository that you've already connected t
 1. Click on **Connect** in the top menu.
 2. Choose the appropriate tab (AWS S3 or Azure Blob).
 3. Click the icon on the right of the table for the repository you want to remove.
-4. Select the delete (trash) icon.
+4. Select the Remove (trash) icon.
 5. Confirm to delete your setting.
 
 .. image:: ../screenshots/connect_delete.png
@@ -68,7 +68,7 @@ Exploring Your Data Repository
 
 1. Click the folder icon next to your respository in the **Connect** or **Categorize** tabs of the UI. A new tab will open, allowing you to explore your Data Repository.
 2. In the new tab, click the **+** next to a directory to navigate through the directories on your Repository.
-3. Your current path is displayed at the top, under your repository name. This is useful when defining a pattern for the files you want to group into a category.
+3. Your current path is displayed at the top, under your repository name. This is useful when defining a pattern for the files you want to group into a category. You can click the blue icon to the right of the displayed path to copy that path to your clipboard.
 4. You can click the icon next to any filename to **Download** or **Delete** that file from your Repository. You can also click the icon and then **Preview file content** to view an uncompressed sample of the raw data in the file.
 
 .. image:: ../screenshots/categorize_explore_dwnld.png
@@ -79,15 +79,19 @@ Exploring Your Data Repository
 |
 | *Note:* If the Explorer tab does not open, you may need to enable pop-ups from the Essentia UI.
 
-You can click **Search** to look for files matching a globular pattern within the current path on your Repository.
+You can click the **Search** icon to look for files matching a globular pattern within the current path on your Repository.
 
 *Note:* For a more detailed description of globular matching patterns, see `Glob (programming) <http://en.wikipedia.org/wiki/Glob_%28programming%29>`_
 
-You can click **Upload** to choose files to upload to the current path on your Repository.
+You can click the **Download** icon to choose files or folders to download from the current path on your Repository.
 
-You can click **Size** to calculate the total number of files and bytes in the current path on your Repository.
+You can click the **Upload** icon to choose files to upload to the current path on your Repository.
 
-You can click **Refresh** to get the latest list of files on your Repository.
+You can click the **Folder** icon to create a new folder in the current path on your Repository.
+
+You can click the **Information** icon to calculate the total number of files and bytes in the current path on your Repository.
+
+You can click the **Refresh** icon to get the latest list of files on your Repository.
 
 .. *Note:* If the Explorer tab does not open when you click **Explore**, you may need to enable pop-ups from the Essentia UI.
 
@@ -99,7 +103,7 @@ Datastore category setup and management
 **Create category**
 
 1. Click on **Categorize** in the top menu and select a Repository from the drop down.
-2. Click on the **+Add** icon to open the input form.
+2. Click on the **+** icon to open the input form.
 3. Define your Category by entering:
 
 * `Category name <../reference/manuals/category-rules.html#category-name>`_ - any arbitrary name (no spaces).

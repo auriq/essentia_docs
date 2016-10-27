@@ -127,7 +127,7 @@ Sample Spec
   #            "merge" action is "+LAST". See "+*" below for details.
   #   o +FIRST - Keep the old value.
   #   o +LAST - Use the pending value. This is the default merge action.
-  #   o +ADD - Add/append (numeric/string) pending value to existing value.
+  #   o +ADD - Add (numeric) pending value to existing value.
   #   o +BOR - Bitwise-OR (numeric) pending value with existing value.
   #   o +MIN - Use the lesser (numeric) of pending and existing value.
   #   o +MAX - Use the greater (numeric) of pending and existing value.

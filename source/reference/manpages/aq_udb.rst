@@ -356,7 +356,7 @@ Options
 
    ::
 
-    $ aq_udb -exp Test
+    $ aq_udb -exp mydb:Test
         -eval c_delta 'c1 - c2'
 
   * Calculate c_delta before exporting.
@@ -426,14 +426,14 @@ Options
 
    ::
 
-    $ aq_udb -exp Test
+    $ aq_udb -exp mydb:Test
         -filt 't > 123456789'
 
   * Export only rows of Test with 't > 123456789'.
 
    ::
 
-    $ aq_udb -exp Test
+    $ aq_udb -exp mydb:Test
         -filt 'Eval($Random % 100) == 0'
 
   * Randomly select roughly 1/100th of the rows for export.
@@ -584,7 +584,7 @@ Options
 
    ::
 
-    $ aq_udb -exp Test1
+    $ aq_udb -exp mydb:Test1
         -pp,post=next_key 'Test2'
           -goto proc_key
 
@@ -657,7 +657,7 @@ Options
 
    ::
 
-    $ aq_udb -exp Test ... -o,esc,noq -
+    $ aq_udb -exp mydb:Test ... -o,esc,noq -
 
   * Output to stdout in a format suitable for Amazon Cloud.
 
@@ -692,7 +692,7 @@ Options
 
    ::
 
-    $ aq_udb -exp Test ... -c Test_Col1 ... Test_ColN Var_Col1 ... Var_ColN
+    $ aq_udb -exp mydb:Test ... -c Test_Col1 ... Test_ColN Var_Col1 ... Var_ColN
 
   * Output Var vector columns along with columns from Test.
     Even though Test_Col* are normally exported by default, they must be
@@ -802,7 +802,7 @@ Example:
 
  ::
 
-  $ aq_udb -exp Test
+  $ aq_udb -exp mydb:Test
       -pp Test
         -bvar v_seq 0
         -if -filt 'flag == "yes"'

@@ -182,9 +182,8 @@ Options
 
 ``-exp[,AtrLst]|-cnt[,AtrLst] DbName[:TabName] [ExpOpts ...] --``
   Get the input data from an Udb export or count operation.
-  This will set the data source as well as the column definitions.
-  For these reasons, this option is not compatible with the -f`_ and
-  `-d`_ options.
+  This will set the data source as well as the column definitions,
+  so -f`_ and `-d`_ are *not* needed.
   ``DbName`` is the database name (see `Target Udb Database`_).
   ``TabName`` is a table/vector name in the database to export.
   If ``TabName`` is not given or if it is a "." (a dot), the primary keys
@@ -193,10 +192,21 @@ Options
 
   * ``spec=UdbSpec`` - Set the spec file directly (see `Target Udb Database`_).
 
-  ``ExpOpts`` are the ``-exp`` related options decribed in
+  ``ExpOpts`` are the ``-exp`` or ``-cnt`` related options as decribed in
   `aq_udb <aq_udb.html>`_ (except ``-o`` which is not applicable here).
-  Interpretation of ``ExpOpts`` ends at ``--`` or the first option not
-  recognized as an ``aq_udb`` export option.
+  A ``--`` must be specified following the last ``ExpOpts``. Options given
+  after ``--`` will be interpreted as ``aq_pp`` options.
+
+  Example:
+
+   ::
+
+    $ aq_pp ... -exp mydb:Test -filt 'Col3 > 123456789' -- ...
+    $ aq_pp ... -exp mydb:Test -- -filt 'Col3 > 123456789' ...
+
+  * Use Test's data as the input. The two examples produce the same result.
+    However, the first form is more efficient because the filter is done
+    inside Udb so that less data is processed by ``aq_pp``.
 
 
 .. _`-cat`:
@@ -885,7 +895,7 @@ Options
   * ``spec=UdbSpec`` - Set the spec file directly (see `Target Udb Database`_).
   * ``ddef`` - Allow missing target columns. Normally, it is an error when
     a target column is missing from the current data set. With this attribute,
-    0 or blank will be imported to the missing columns.
+    0 or blank will be used as the missing columns' value.
   * ``nodelay`` - Send records to Udb servers as soon as possible.
     Otherwise, up to 16KB of data may be buffered before an output occurs.
   * ``seg=N1[-N2]/N`` - Apply sampling by selecting segment N1 or
@@ -917,6 +927,14 @@ Options
   ``ModName``.
 
   Multiple sets of Udb import options can be specified.
+
+  Example:
+
+   ::
+
+    $ aq_pp ... -d s:Col1 s:Col2 i:Col3 s:Col4 ... -imp mydb:Test
+
+  * Import data set into Test.
 
 
 Exit Status

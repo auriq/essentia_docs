@@ -20,14 +20,6 @@ The tool set includes:
   *user key database* (Udb).
 * The rest are support files and helper tools that aid processing in general.
 
-
-..      Versions
-	========
-	
-	* `1.2.4 ChangeLog <ChangeLog.html>`_ [Current]
-	* `1.2.3 ChangeLog <ChangeLog-1.2.3.html>`_
-	* `1.2.2 ChangeLog <ChangeLog-1.2.2.html>`_
-
 Manuals
 =======
 
@@ -65,6 +57,12 @@ Helpers:
 .. * `smon <smon.html>`_ - System monitor
 .. * `tmon <tmon.html>`_ - Task monitor
 
+Version Changes
+===============
+
+* `1.2.4 ChangeLog <ChangeLog.html>`_ [Current]
+* `1.2.3 ChangeLog <ChangeLog-1.2.3.html>`_
+* `1.2.2 ChangeLog <ChangeLog-1.2.2.html>`_
 
 .. toctree::
    :maxdepth: 1

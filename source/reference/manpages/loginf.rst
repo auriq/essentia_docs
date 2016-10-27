@@ -17,14 +17,16 @@ Synopsis
   loginf [-h] Global_Opt Input_Spec Output_Spec
 
   Global_Opt:
-      [-test] [-verb] [-bz ReadBufSiz]
+      [-verb]
+      [-cmax ColNumMax]
 
   Input_Spec:
-      [-f[,AtrLst] File [File ...]] [-lim Num]
+      [-f[,AtrLst] File [File ...]] [-d ColId [ColId ...]]
       [-f_raw File [File ...]]
 
   Output_Spec:
-      [-o File]
+      [-pp_eok Percent]
+      [-o File [-b64]]
       [-o_raw File]
       [-o_pp_col File]
 
@@ -45,16 +47,6 @@ column uniquness estimates, and so on.
 Options
 =======
 
-.. _`-test`:
-
-``-test``
-  Test command line arguments and exit.
-
-  * If all specs are good, the exit code will be 0.
-  * If there is an error, the exit code will be non-zero. Usually, an error
-    message will also be printed to stderr.
-
-
 .. _`-verb`:
 
 ``-verb``
@@ -62,15 +54,11 @@ Options
   Usually, a marker is printed for each 10,000,000 records processed.
 
 
-.. _`-bz`:
+.. _`-cmax`:
 
-``-bz ReadBufSiz``
-  Set input buffer length.
-  It is also the maxium record length. If a record exceeds this length, it is
-  considered broken and will cause the program to abort or the record to be
-  discarded.
-  Default length is 64KB. Use this option if a longer record is expected.
-  ``ReadBufSiz`` is a number in bytes.
+``-cmax ColNumMax``
+  The maximum number of columns to process. Default is 4096.
+  Processing will stop if this limit is exceeded.
 
 
 .. _`-f`:
@@ -78,8 +66,33 @@ Options
 ``-f[,AtrLst] File [File ...] [-lim Num]``
   Set the input attributes and log files to analyze.
   If the data come from stdin, set ``File`` to '-' (a single dash).
-  Optional ``AtrLst`` is described under `Input File Attributes`_.
   If no `-f`_ or `-f_raw`_ is given, log from stdin is assumed.
+  Optional ``AtrLst`` is a list of comma separated attributes:
+
+  * ``+Num[b|l]`` - Specifies the number of bytes (``b`` suffix)
+    or lines (no suffix or ``l`` suffix) to skip before processing.
+  * ``bz=BufSize`` - Set the per-record buffer size to ``BufSize`` bytes.
+    It must be big enough to hold the data of all the columns in a record.
+    Default size is 64KB.
+  * ``notitle`` - The first record from the input is *not* a label line.
+  * ``csv`` - Input is in CSV format. This is the default.
+  * ``sep=c`` or ``sep=\xHH`` - Input is in 'c' (single byte) separated value
+    format. '\xHH' is a way to specify 'c' via its HEX value ``HH``.
+  * ``tab`` - Input is in HTML table format. Each row has the form
+    "``...<td>Column1</td>...<td>Column2</td>...</tr>``".
+    In other words, a row begins at the first "``<td ...>``" tag and
+    ends at a "``</tr>``" tag.
+  * ``rx=RecLimit`` - Set the maximum number of records to process.
+  * ``auto`` - Determine input data format automatically.
+    Supported formats are:
+
+    * Delimiter-separated columns. May not work if the number of columns
+      in not fixed.
+    * Blank padded fixed-width columns. Individual columns
+      can be left or right adjusted (but not both on the same column).
+    * JSON, detection only, no further analysis.
+    * XML, detection only, no further analysis.
+    * Default to a line separated format with a single column.
 
   The ``-lim`` option sets the maximum number of records to load from *each*
   input file to ``Num``.
@@ -91,6 +104,13 @@ Options
     $ loginf ... -f file1 file2 ...
 
   * Load and analyze logs file1 and file2.
+
+
+.. _`-d`:
+
+``-d ColId [ColId ...]``
+  Select the columns to analyze. Other columns will be ignored.
+  ``ColId`` is one-based.
 
 
 .. _`-f_raw`:
@@ -117,15 +137,29 @@ Options
     file3 and file4 and combine all the results together.
 
 
+.. _`-pp_eok`:
+
+``-pp_eok Percent``
+  Acceptable error percentage when determining column data type. Default is 0.
+  Column data type is determined based on the column values. If more than one
+  types are detected in a column, the type detected the most will be chosen
+  if the percentage of all the other types combined is less than or equal to
+  this threshold. Otherwise, a string type will be assigned when there is an
+  inconsistency.
+
+
 .. _`-o`:
 
-``-o File``
+``-o File [-b64]``
   Output a text report of the result.
   Report is written in JSON format.
   If ``File`` is a '-' (a single dash), data will be written to stdout.
   Note that the file will be overwritten if it contains any data.
   If no `-o`_, `-o_raw`_ or `-o_pp_col`_ is given, a report will be written
   to stdout.
+
+  With the ``-b64`` option, the strings in the JSON report will be encoded
+  in a base64 format.
 
   Example:
 
@@ -188,32 +222,6 @@ Applicable exit codes are:
 * 13 - Input processing error.
 * 21 - Output open error.
 * 22 - Output write error.
-
-
-Input File Attributes
-=====================
-
-Each input option can have a list of comma separated attributes:
-
-* ``notitle`` - The first record from the input is *not* a label line.
-* ``csv`` - Input is in CSV format. This is the default.
-* ``sep=c`` or ``sep=\xHH`` - Input is in 'c' (single byte) separated value
-  format. '\xHH' is a way to specify 'c' via its HEX value ``HH``.
-  Note that ``sep=,`` is not the same as ``csv`` because CSV is a more
-  advanced format.
-* ``auto`` - Determine input data format automatically.
-  Supported formats are:
-
-  * Delimiter-separated columns. May not work if the number of columns
-    in not fixed.
-  * Blank padded fixed-width columns. Individual columns
-    can be left or right adjusted (but not both on the same column).
-  * JSON, detection only, no further analysis.
-  * XML, detection only, no further analysis.
-  * Default to a line separated format with a single column.
-
-* ``+Num[b|l]`` - Specifies the number of bytes (``b`` suffix)
-  or lines (no suffix or ``l`` suffix) to skip before processing.
 
 
 See Also
