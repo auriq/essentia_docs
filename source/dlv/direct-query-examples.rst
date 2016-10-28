@@ -31,7 +31,7 @@ This tutorial works on the browse data on our *public* cloud storage, **asi-publ
 First go to the **Connect** tab.
 
 
-S3 users then go to the **AWS S3** panel and click the **+Add** button. Enter::
+S3 users then go to the **AWS S3** panel and click the **+** button. Enter::
     
     asi-public
     *Don't enter anything*
@@ -40,7 +40,7 @@ S3 users then go to the **AWS S3** panel and click the **+Add** button. Enter::
     
 and click **Add**. 
 
-Azure users instead go to the **Azure Blob** panel and click the **+Add** button. Enter::
+Azure users instead go to the **Azure Blob** panel and click the **+** button. Enter::
 
     asi-public
     *Don't enter anything*
@@ -55,7 +55,7 @@ and click **Add**.
 
 Next go to the **Categorize** tab and select **asi-public** from the drop down menu.
 
-Now click the **+Add** button, enter ``browse`` next to **Category**, and the globular pattern ``diy_woodworking/*browse*`` under **Pattern**. 
+Now click the **+** button, enter ``browse`` next to **Name**, and the globular pattern ``diy_woodworking/*browse*`` under **Pattern**. 
 Click **Save**. This finds all the files in our repository asi-public whose filenames match our pattern. 
 It also displays the type and name of each column in the matching files. These columns are::
 

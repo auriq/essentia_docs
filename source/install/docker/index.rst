@@ -44,7 +44,7 @@ How to Install Essentia using Docker
     Username: essentia
     Password: essentia
 
-#. Change your username and password using the UI.
+#. Change your password using the UI.
 
 You can then go through :doc:`../../dlv/dlv`, :doc:`../../tutorial/essentiatutorials/index`, :doc:`../../tutorial/dataprocessingtutorials/index`, and :doc:`../../usecases/index` to get familiar with Essentia.
 

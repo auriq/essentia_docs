@@ -48,7 +48,7 @@ Repository setup and management
 
 To explore your new repository or any repository that you've already connected to, follow the steps in `Exploring Your Data Repository`_.
 
-**Delete Repository**
+**Remove Repository**
 
 1. Click on **Connect** in the top menu.
 2. Choose the appropriate tab (AWS S3 or Azure Blob).
@@ -142,7 +142,7 @@ Datastore category setup and management
 **Directly Edit Column Specification**
 
 1. Follow steps 1-5 of creating a category.
-2. Click on the **Direct Edit** checkbox to allow the current column spec to be edited.
+2. Choose the table or text display icon on the far right of **Column Spec Details** to display the determined Column Specifcation in your chosen format.
 3. From here, you can change `column headers <../reference/manuals/category-rules.html#column-headers>`_ (no spaces) and assign `data types <../reference/manuals/category-rules.html#data-types>`_ in case the scan was not correct.
 4. Click on the **Save** button to save your changes.
 
@@ -171,13 +171,13 @@ In particular, File Size is an important metric since as the File Size increases
 
 By clicking the icon in the right-most column of the category table, you can access additional options to gain information about or manage each category:
 
-* **File List:** View a list of the files currently matched by your category pattern.
+* **List Files:** View a list of the files currently matched by your category pattern.
 * **Sample:** View a sample of the raw data in the category.
 * **Scan:** Run a deep scan of the category to determine detailed information such as type and number of unique elements for each column in that category's data.
+* **Download Files:** Save up to 1GB of files from your category onto your local computer.
 * **Copy:** Create a new category from your existing category. The new category will need to be named and will use the same file pattern and column specification as the original category by default.
 * **Export:** Save your category defintion for your Repository to an Essentia settings file. This file can then be shared with others or imported to other computers you use to load your category definition.
-* **Download:** Save up to 1GB of files from your category onto your local computer. 
-* **Delete:** Remove your category definition. This step cannot be undone!
+* **Remove:** Remove your category definition. This step cannot be undone!
 
 Query setup and management
 -----------------------------
@@ -290,7 +290,7 @@ You can view the last 1000 lines of the essentia log file (where debug informati
 **Connect to a Github Repository**
 
 1. Click on **Analyze** in the top menu.
-2. Click the **Add** button.
+2. Click the **+** button.
 3. Enter the **Owner** of your Github Repository, the name of your **Repository**, and your Personal Access **Token**. If you do not have a Personal Access Token, follow the instructions found `here <https://help.github.com/articles/creating-an-access-token-for-command-line-use/>`_.
 4. Click on the **Save** button to finish adding your Github Repository.
 5. From this point you can view, edit, and run any of the scripts stored in the Github Repository. 

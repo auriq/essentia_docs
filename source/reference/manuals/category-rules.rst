@@ -96,7 +96,7 @@ You can also provide the following option to extract just a number from the file
 
  	 .*[:%Y:][:%m:][:%d:].csv 
  	 
- 	 Note: Here 'YMD' alone won't work since there is another 8 digit number, therefore we add the '.csv'. 
+ 	 Note: Here '[:%Y:][:%m:][:%d:]' alone won't work since there is another 8 digit number, therefore we add the '.csv'. 
   	 
     .*account12345678_20140609.csv:.*
     
@@ -199,7 +199,7 @@ Delimiter
 ---------------
 The type of delimiter that your data uses. You can choose any single delimiter for your files. 
 
-Selecting **NA** will cause Essentia not to attempt to determine your files' format. This allows you to select broad categories of files that may not be related or in a single format, or files that are in complicated formats either with many delimiters or no delimiter whatsoever. **NA** is a very useful option for simply exploring your datastore and discovering what files it contains.
+Selecting **noprobe** will cause Essentia not to attempt to determine your files' format. This allows you to select broad categories of files that may not be related or in a single format, or files that are in complicated formats either with many delimiters or no delimiter whatsoever. **noprobe** is a very useful option for simply exploring your datastore and discovering what files it contains.
 
 Archive
 ---------------
@@ -322,7 +322,7 @@ These allow you to name your columns so you can reference them later. They **can
 
 Data Types
 ---------------
-The type of your data column. The options are **String**, **Unsigned Integer**, **Float**, **IP**, **X**, **C**, **Unsigned Long**, **Integer**, and **Long**. 
+The type of your data column. The options are **String**, **Unsigned Integer**, **Float**, **IP**, **X**, **Unsigned Long**, **Integer**, and **Long**. 
 
 **X** is used to ignore an unwanted column and is highly recommended if you don't need a certain column or columns as it will speed up your queries even further.
 
