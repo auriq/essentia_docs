@@ -10,7 +10,7 @@ Query Examples
 
 **Overview**
 
-Query is Essentia's unique method of quering the data in your datastore directly, without loading anything into memory. 
+Query is Essentia's unique method of querying the data in your datastore directly, without loading anything into memory. 
 It allows you to quickly and efficiently explore data in a multitude of formats and is written in a user friendly, SQL-like language.
 
 The Query command structure consists of a select statement to define which columns are desired and what operations you want to perform on them, 

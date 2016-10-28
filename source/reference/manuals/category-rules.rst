@@ -45,7 +45,7 @@ This is a UNIX-style globular matching pattern to describe what types of files t
 
 Comment
 ---------------
-This field can contain any character and is just used to help you make notes about your categories or the files the contain.
+This field can contain any character and is just used to help you make notes about your categories or the files they contain.
 
 Date Regex
 ---------------
@@ -77,7 +77,7 @@ You can also provide the following option to extract just a number from the file
 
 | By default Essentia tries to figure out the dates in your filenames using an **auto** setting. 
 | You can also specify a custom **regex** pattern that identifies where the date or number appears in your file paths/names. 
-| For file paths/names that dont have a date or number in them you can also set the Date Regex field to **none**. This will tell Essentia not to extract the date and will set the date field to a default, 1970-01-01.
+| For file paths/names that don't have a date or number in them you can also set the Date Regex field to **none**. This will tell Essentia not to extract the date and will set the date field to a default, 1970-01-01.
 
 .. note:: 
    If you don't specify Date Regex or Date Format (see below), then Essentia uses **auto** to extract the date from your filename. If no date can be extracted, Essentia reverts to the **none** behavior and defaults the date to 1970-01-01. 
@@ -149,7 +149,7 @@ This is a UNIX-style globular matching pattern to describe how a date or number 
 
 | By default Essentia tries to figure out the dates in your filenames using an **auto** setting. 
 | You can also specify a **custom** pattern that identifies where the date or number appears in your filenames. 
-| For filenames that dont have a date or number in them you can also set the Date Format field to **none**.
+| For filenames that don't have a date or number in them you can also set the Date Format field to **none**.
         
 **Example Date Format Patterns:** ::
     
@@ -190,7 +190,7 @@ This is a UNIX-style globular matching pattern to describe how a date or number 
         
 *Note:* For a more detailed description of globular matching patterns, see `Glob (programming) <http://en.wikipedia.org/wiki/Glob_%28programming%29>`_
 
-*Note:* In is recommended to use regular expression patterns to extract the date from your filename, see **Date Regex**.
+*Note:* It is recommended to use regular expression patterns to extract the date from your filename, see **Date Regex**.
 
 .. %Y, %m, %d, %H, %M, %S, %p, %z -> [:%b:] - Jan, Feb, ..., Dec; [:%B:] - January, ..., December; "None" 
 .. link to **regex** description and date format -> *Note:* For a more detailed description of globular matching patterns, see `Glob (programming) <http://en.wikipedia.org/wiki/Glob_%28programming%29>`_
