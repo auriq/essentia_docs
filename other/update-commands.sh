@@ -5,6 +5,7 @@ echo -e "\nRunning $1 for essentia docs version $version\n"
 if [ -n "$version" ]
 then
 
+ cd ~/essentia_docs
  c1="git pull https://bwaxer:dragon911@github.com/auriq/essentia_docs.git $version"
  c2="rm -R _build/html/*"
  c3="make html"

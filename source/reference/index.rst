@@ -9,3 +9,4 @@ This section provides the man pages and attributes of the Essentia toolkit.
 
    manuals/index
    tables/index
+   release/index

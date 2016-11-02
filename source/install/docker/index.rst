@@ -17,7 +17,7 @@ How to Install Essentia using Docker
 
 #. Install Docker. For a CentOs system, follow the steps under "Install with yum" and then "Create a docker group" here: https://docs.docker.com/engine/installation/linux/centos/. For other systems, follow the steps to install docker for your system by going to that link and navigating to your system's installation instructions using the left navigation bar.
 
-#. Run::
+#. Make sure any existing applications running on port 80 have been stopped. If you have apache server running, run::
 
     sudo apachectl stop
 
@@ -36,15 +36,19 @@ How to Install Essentia using Docker
 
     docker ps -a
 
-    # CONTAINER ID        IMAGE                   COMMAND                  CREATED             STATUS              PORTS             NAMES
-    # 3c2cc851df58        auriqsystems/essentia   "/home/start_server.s"   17 hours ago        Up 17 hours         3306/tcp, 0.0.0.0:80->80/tcp, 10010-10079/tcp   essentia
+    # CONTAINER ID        IMAGE                   COMMAND             CREATED              STATUS              PORTS                                           NAMES
+    # 4473d64057fa        auriqsystems/essentia   "/usr/sbin/init"    About a minute ago   Up 59 seconds       3306/tcp, 0.0.0.0:80->80/tcp, 10010-10079/tcp   essentia
+
+#. Start the apache server by running::
+
+    docker exec -dt essentia /home/start_server.sh
 
 #. Login to the Essentia Data Lake Manager UI by accessing the url of the instance and entering the following login information::
 
     Username: essentia
     Password: essentia
 
-#. Change your password using the UI.
+#. Change your password for the UI by clicking on **Account** in the topright of the UI and following the instructions.
 
 You can then go through :doc:`../../dlv/dlv`, :doc:`../../tutorial/essentiatutorials/index`, :doc:`../../tutorial/dataprocessingtutorials/index`, and :doc:`../../usecases/index` to get familiar with Essentia.
 
