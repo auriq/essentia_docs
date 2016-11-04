@@ -106,42 +106,55 @@ Datastore category setup and management
 2. Click on the **+** icon to open the input form.
 3. Define your Category by entering:
 
-* `Category name <../reference/manuals/category-rules.html#category-name>`_ - any arbitrary name (no spaces).
+* `Category Name <../reference/manuals/category-rules.html#category-name>`_ - any arbitrary name (no spaces).
 * `Pattern <../reference/manuals/category-rules.html#pattern>`_ - globular matching pattern(s) to describe what types of files to include in your category.
 
 4. Optionally define any number of the following options to speed up data scanning or make data management easier:
 
 * `Comment <../reference/manuals/category-rules.html#comment>`_ - any arbitrary comment.
-* `Delimiter <../reference/manuals/category-rules.html#delimiter>`_ - the type of delimiter (comma, space, tab, etc) used in your data.
 * `Exclude <../reference/manuals/category-rules.html#exclude>`_ - globular matching pattern to describe what files to not include in your category. **Note:** this further restricts the files included by your ``Pattern``.
-* `Date Format <../reference/manuals/category-rules.html#date-regex>`_ - matching date extraction pattern found in filename structure. Specify a regular expression pattern to extract the date from your file path/name, see `Date Regex <../reference/manuals/category-rules.html#date-regex>`_.
+* `Use cached file list <../reference/manuals/category-rules.html#use-cached-file-list>`_ - reference the local file list for the current category instead of accessing the repository.
 
 .. image:: ../screenshots/categorize_options.png
    :align: center
    :scale: 10
    :target: ../screenshots/categorize_options.png
-   
-5. Click on the **Save** button to create your category. This may take a few minutes while Essentia scans your data.
-6. After scan is complete, the derived column specifications will be displayed along with metadata about your files. Also, you can now **Define Additional Category Options** (see section 2 for more detail) or choose to **Directly Edit Column Specification** (see section 3 for more detail).
-7. Your newly added category will be displayed in the category table for the selected repository. From here you can edit, copy, scan, or delete a category, view a sample of the data or see the list of files that make up your category.
 
-**Define Additional Category Options**
+5. Or click on the **Advanced Options** drop down arrow to display additional category options and define either or both of the following options:
 
-1. Follow steps 1-5 of creating a category.
-2. Click on the preprocess drop down to **Check** or save a command to preprocess your data:
+* `Date Format <../reference/manuals/category-rules.html#date-regex>`_ - matching date extraction pattern found in filename structure. Specify a regular expression pattern to extract the date from your file path/name, see `Date Regex <../reference/manuals/category-rules.html#date-regex>`_.
+* `Delimiter <../reference/manuals/category-rules.html#delimiter>`_ - the type of delimiter (comma, space, tab, etc) used in your data.
+ 
+6. Click on the **Save** button to create your category. This may take a few minutes while Essentia scans your data.
+7. After the scan is complete, the derived column specifications will be displayed along with metadata about your files. Also, you can now choose to do any of the following:
+
+   * **Define a Preprocess Command**
+   * **Select an Archive Pattern for Zip Files**
+   * **Directly Edit Column Specification**
+
+8. Your newly added category will be displayed in the category table for the selected repository. From here you can edit, copy, scan, or delete a category, view a sample of the data or see the list of files that make up your category.
+
+**Define a Preprocess Command**
+
+1. Follow steps 1-6 of creating a category.
+2. Click on the **Advanced Options** drop down and enter a Preprocess Command next to **Preprocess**. You can then **Check** or save this command to preprocess your data:
 
 * `Preprocess <../reference/manuals/category-rules.html#preprocess>`_ - command to modify your raw data before it is scanned by Essentia.
 
-3. Or click on the options drop down arrow to display category options and define either of the following options:
+.. 3. If your category contains zip files, you canOr click on the options drop down arrow to display category options and define either of the following options:
+
+**Select an Archive Pattern for Zip Files**
+
+1. Follow steps 1-6 of creating a category.
+2. Click on the **Advanced Options** drop down and enter a pattern next to **Archive**.
 
 * `Archive <../reference/manuals/category-rules.html#archive>`_ - matching pattern to describe filenames within a compressed file.
-* `Use cached file list <../reference/manuals/category-rules.html#use-cached-file-list>`_ - reference the local file list for the current category instead of accessing the repository.
 
 .. * `Compression <../reference/manuals/category-rules.html#compression>`_ - drop down to select the type of file compression
 
 **Directly Edit Column Specification**
 
-1. Follow steps 1-5 of creating a category.
+1. Follow steps 1-6 of creating a category.
 2. Choose the table or text display icon on the far right of **Column Spec Details** to display the determined Column Specifcation in your chosen format.
 3. From here, you can change `column headers <../reference/manuals/category-rules.html#column-headers>`_ (no spaces) and assign `data types <../reference/manuals/category-rules.html#data-types>`_ in case the scan was not correct.
 4. Click on the **Save** button to save your changes.
