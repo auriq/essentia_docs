@@ -12,7 +12,8 @@ Change Log - V1.2.4
 :Revision: V1.2.4-2 2016-08-09
 :Revision: V1.2.4-3 2016-09-06
 :Revision: V1.2.4-4 2016-09-29
-:Revision: V1.2.4-5 2016-10-14
+:Revision: V1.2.4-5 2016-10-26
+:Revision: V1.2.4-6 2016-11-03
 
 
 Introduction
@@ -108,13 +109,13 @@ Common
 ======
 Cf: `aq_cat <aq_cat.html>`_, `aq_cnt <aq_cnt.html>`_, `aq_ord <aq_ord.html>`_, `aq_pp <aq_pp.html>`_, `aq_udb <aq_udb.html>`_, etc.
 
-* [Critical] 1.2.4-1 |<br>|
-  Depreciated ``-notitle`` option no longer recognized. Set the ``notitle``
-  attribute on the appropriate output option instead. That is,
+* [Critical] 1.2.4-1/3: |<br>|
+  Some depreciated options no longer supported. Use the newer specs:
 
   * ``-o File -notitle`` --> ``-o,notitle File``
+  * ``-evlc`` --> ``-eval``
 
-* [Critical] 1.2.4-1 |<br>|
+* [Critical] 1.2.4-1: |<br>|
   The ``-bz`` option has been replaced by an ``bz=BufSize`` attribute of the
   ``-f`` option. In fact, each input related option can have its own
   ``bz`` attribute. This option is rarely needed since the default is usually
@@ -122,12 +123,12 @@ Cf: `aq_cat <aq_cat.html>`_, `aq_cnt <aq_cnt.html>`_, `aq_ord <aq_ord.html>`_, `
 
   * ``-bz 100 -f File`` --> ``-f,bz=100 File``
 
-* [Critical] 1.2.4-1 |<br>|
+* [Critical] 1.2.4-1: |<br>|
   Some aspects of the ``-f`` (input source) option have changed. They were
   changed to accommodate several new features.
 
-  * Multiple ``-f`` (input source) option no longer supported.
-    All files must be specifed under the same ``-f`` option. That is,
+  * Multiple ``-f`` no longer supported. All inputs must be specifed under the
+    same ``-f`` option. That is,
 
     * ``-f File1 File2 ... -f File3 ...`` --> ``-f File1 File2 File3 ... ...``
 
@@ -141,7 +142,7 @@ Cf: `aq_cat <aq_cat.html>`_, `aq_cnt <aq_cnt.html>`_, `aq_ord <aq_ord.html>`_, `
 
     * ``-f ... -d ... SEP:"sep1" ...`` --> ``-f,div ... -d ... SEP:"sep1" ...``
 
-* [Critical] 1.2.4-1 |<br>|
+* [Critical] 1.2.4-1: |<br>|
   The ``noq`` attribute of ``-f``, ``-o`` and individual column spec has been
   removed because it produces the wrong result on CSV data. Use one of these
   approaches instead:
@@ -150,12 +151,7 @@ Cf: `aq_cat <aq_cat.html>`_, `aq_cnt <aq_cnt.html>`_, `aq_ord <aq_ord.html>`_, `
   * ``-o,noq`` --> ``-o,sep=,`` (add ``esc`` as needed)
   * ``-f ... -d s:c1 s,noq:c2 ...`` --> ``-f,div`` with custom separator specs
 
-* [Critical] 1.2.4-3 |<br>|
-  A depreciated option has been removed:
-
-  * ``-evlc`` --> ``-eval``
-
-* [Warn] 1.2.4-1 |<br>|
+* [Warn] 1.2.4-1: |<br>|
   The error messages of most commandline option/parameter specification errors
   have changed.
 
@@ -333,6 +329,14 @@ Cf: `aq_udb <aq_udb.html>`_, `udbd <udbd.html>`_
   command, the resulting module will get truncated if it is greater than 64K
   byte in size (the truncated size can be less than 64K).
 
+* [Bug] 1.2.4-6: |<br>|
+  The server normally writes log/error messages to a log file. If the server
+  cannot open the file (e.g., due to file permission problem), the old
+  behavior was to ignore the error and log to stdout/stderr implicitly.
+  But this caused a problem when the server was being started by a
+  ``ssh`` command - the command will not exit until the server closes
+  stdout/stderr. The new behavior is to print an error message and quit.
+
 * [Critical] 1.2.4-1: |<br>|
   The action specification option - ``-exp``, ``-cnt``, ``-scn``, ``-ord``,
   ``-clr`` and ``-probe`` - must be specified *before* options that depend
@@ -341,7 +345,7 @@ Cf: `aq_udb <aq_udb.html>`_, `udbd <udbd.html>`_
   `aq_udb <aq_udb.html>`_ synopsis.
 
 * [Critical] 1.2.4-1: |<br>|
-  Some depreciated options have been removed:
+  Some depreciated options no longer supported. Use the newer specs:
 
   * ``-spec SpecFile -Action TabName`` --> ``-Action,spec=SpecFile DbName:TabName``
   * ``-db DbName -Action TabName`` --> ``-Action DbName:TabName``

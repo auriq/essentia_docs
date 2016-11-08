@@ -129,7 +129,7 @@ Datastore category setup and management
 7. After the scan is complete, the derived column specifications will be displayed along with metadata about your files. Also, you can now choose to do any of the following:
 
    * **Define a Preprocess Command**
-   * **Select an Archive Pattern for Zip Files**
+   * **Select a Pattern for Internal Files within Archive Files**
    * **Directly Edit Column Specification**
 
 8. Your newly added category will be displayed in the category table for the selected repository. From here you can edit, copy, scan, or delete a category, view a sample of the data or see the list of files that make up your category.
@@ -143,12 +143,12 @@ Datastore category setup and management
 
 .. 3. If your category contains zip files, you canOr click on the options drop down arrow to display category options and define either of the following options:
 
-**Select an Archive Pattern for Zip Files**
+**Select a Pattern for Internal Files within Archive Files**
 
 1. Follow steps 1-6 of creating a category.
 2. Click on the **Advanced Options** drop down and enter a pattern next to **Archive**.
 
-* `Archive <../reference/manuals/category-rules.html#archive>`_ - matching pattern to describe filenames within a compressed file.
+* `Archive <../reference/manuals/category-rules.html#archive>`_ - matching pattern to describe filenames within a compressed or uncompressed archive file.
 
 .. * `Compression <../reference/manuals/category-rules.html#compression>`_ - drop down to select the type of file compression
 

@@ -203,7 +203,10 @@ Selecting **noprobe** will cause Essentia not to attempt to determine your files
 
 Archive
 ---------------
-This is a UNIX-style globular matching pattern to describe what types of files are included within your compressed files. You can use a series of literal characters combined with wildcards to tell Essentia which filenames within your compressed file belong in this category. This allows you to extract certain files from a compressed file archive while ignoring others.
+This is a UNIX-style globular matching pattern to describe what types of files are included within your 
+compressed or uncompressed archive files. You can use a series of literal characters combined with wildcards to tell Essentia which 
+filenames within your compressed or uncompressed file belong in this category. This allows you to extract certain files from 
+a compressed or uncompressed file archive while ignoring others.
 
 **Example Archive Pattern:** ::
     
@@ -242,7 +245,7 @@ This option allows you to apply a command to the data in your category before Es
 
 *Preprocess Command*::
 
-    aq_pp -f,eok,qui - -d ip:ip sep:" " s:rlog sep:" " s:rusr sep:" [" s:time_s sep:"] \"" s,clf:req_line1 sep:" " s,clf:req_line2 sep:" " s,clf:req_line3 sep:"\" " i:res_status sep:" " i:res_size sep:" \"" s,clf:referrer sep:"\" \"" s,clf:user_agent sep:"\"" -eval i:time "DateToTime(time_s, \"d.b.Y.H.M.S.z\")" -c ip rlog rusr time req_line1 req_line2 req_line3 res_status res_size referrer user_agent
+    aq_pp -f,eok,qui,div - -d ip:ip sep:" " s:rlog sep:" " s:rusr sep:" [" s:time_s sep:"] \"" s,clf:req_line1 sep:" " s,clf:req_line2 sep:" " s,clf:req_line3 sep:"\" " i:res_status sep:" " i:res_size sep:" \"" s,clf:referrer sep:"\" \"" s,clf:user_agent sep:"\"" -eval i:time "DateToTime(time_s, \"d.b.Y.H.M.S.z\")" -c ip rlog rusr time req_line1 req_line2 req_line3 res_status res_size referrer user_agent
     
 *Sample Output*::
 
