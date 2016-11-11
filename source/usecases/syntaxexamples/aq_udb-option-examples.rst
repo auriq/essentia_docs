@@ -35,15 +35,14 @@ This data was imported using aq_pp and the example data provided in the aq_pp do
 
 aq_udb is how Essentia interacts with the Udb database. It specializes in exporting data from the database, providing quick counts or otherwise pre-processing the data, and then outputting the results to wherever you may need them. 
 
-The command structure of aq_udb consists of a global specification specifying which database to export the data from, 
-various export specifications to determine how the data is modified and where the output is sent, and an optional output specification describing how to order the data in the output.
+The command structure of aq_udb consists of various export specifications to determine how the data is modified and 
+where the output is sent, and an optional output specification describing how to order the data in the output.
 
 For a full list and description of the available options, see the aq_udb Documentation.
 
 This tutorial will emphasize the most commonly used options for aq_udb and how to use them to provide a simple modification or analysis of the data in the example data in the udb database. These options are:
 
-* **Global Specification:** -db.
-* **Export Specifications:** -exp, -cnt, -exp_usr, -cnt_usr, -lim_usr, -lim_rec, -var, -pp, -filt, -eval, -bvar, -o, -c, -notitle, and -sort.
+* **Export Specifications:** -exp, -cnt, -lim_key, -lim_rec, -var, -pp, -filt, -eval, -bvar, -o, -c, and -sort.
 * **Order Specification:** -ord.
 
 
@@ -55,7 +54,7 @@ Udb can contain many databases each with its own data being stored in it and its
 
 This is accomplished with the -db option.
 
-``aq_udb -db my_database -exp country_table``
+``aq_udb -exp my_database:country_table``
 
 * This command sets the database to my_database and then exports the table country_table. The output is::
 
@@ -102,9 +101,9 @@ You can also produce a simple **count** of the number of records and unique valu
     "pkey",2
     "row",8
 
-There may be times when you dont want just the number of unique values in your table or vector but the **actual values** themselves. This is what ``-exp_user`` is for.
+There may be times when you dont want just the number of unique values in your table or vector but the **actual values** themselves. This is what ``-exp my_database`` is for.
 
-``aq_udb -db my_database -exp_usr``
+``aq_udb -exp my_database``
 
 * This sets database to my_database and exports the unique values in the primary_key column (country in this case). The output is::
     
@@ -112,18 +111,18 @@ There may be times when you dont want just the number of unique values in your t
     "Portugal"
     "Philippines"
 
-If you want just the **number of unique values** in your table or vector, a simple way to get it is with ``-cnt_usr``.
+If you want just the **number of unique values** in your table or vector, a simple way to get it is with ``-cnt my_database``.
 
-``aq_udb -db my_database -cnt_usr``
+``aq_udb -cnt my_database``
 
 * Sets database to my_database and counts the number of unique values in the primary_key column (country in this case). The output is::
     
     "field","count"
     "pkey",2
     
-To **limit the number of unique users** in your output, use the ``-lim_usr`` option.
+To **limit the number of unique users** in your output, use the ``-lim_key`` option.
 
-``aq_udb -exp my_database:country_table -lim_usr 1``
+``aq_udb -exp my_database:country_table -lim_key 1``
 
 * This command exports country_table from my_database and limits the number of unique users output to 1. The output is::
     
@@ -155,7 +154,7 @@ You can have multiple groups and each group can have multiple rules so you can f
 
 With a single variable definition followed by a single ``-pp`` group and two simple ``-eval`` rules you can easily enter meaningful values into the extra column we have in my_database.
 
-``aq_udb -db my_database -exp country_table -var defined_integer_var 0 -pp country_table -eval defined_integer_var 'defined_integer_var + 1' -eval extra_column '"Row : " + ToS(defined_integer_var)' -endpp``
+``aq_udb -exp my_database:country_table -var defined_integer_var 0 -pp country_table -eval defined_integer_var 'defined_integer_var + 1' -eval extra_column '"Row : " + ToS(defined_integer_var)' -endpp``
 
 * This command exports country_table from my_database and initializes the previously defined variable to 0. It then establishes a pp (pre-processing) group for country_table. 
 * For each record in the table, it increases the variable defined_integer_var by 1 and stores that value preceded by 'Row : ' in extra_column as a string. The output is::
@@ -172,7 +171,7 @@ With a single variable definition followed by a single ``-pp`` group and two sim
 
 A pp group can also have its own **local variable** using ``-bvar``. This allows the variable to be defined and modified only within the pp group, enabling a command very similar to the one we just ran but with a slighly different output.
 
-``aq_udb -db my_database -exp country_table -pp country_table -bvar defined_integer_var 0 -eval defined_integer_var 'defined_integer_var + 1' -eval extra_column '"Row : " + ToS(defined_integer_var)' -endpp``
+``aq_udb -exp my_database:country_table -pp country_table -bvar defined_integer_var 0 -eval defined_integer_var 'defined_integer_var + 1' -eval extra_column '"Row : " + ToS(defined_integer_var)' -endpp``
 
 * This exports country_table from my_database and establishes a pp (pre-processing) group for country_table. 
 * For each record in a bucket in the table, it increases the variable defined_integer_var by 1 and stores that value preceded by 'Row : ' in extra_column as a string. The output is::
@@ -189,7 +188,7 @@ A pp group can also have its own **local variable** using ``-bvar``. This allows
 
 As you can see, the variable defined_integer_var was reset to 0 when the pp group got to a record that had a different unique value for the primary key (a different bucket, as we sometimes call them).
 
-``aq_udb -db my_database -exp country_table -if -filt 'PatCmp(last_name, "^H.*$", "ncas,rx")' -eval extra_column '"This record belongs to a user with a last name starting with h"' -else -eval extra_column '"The record does not"' -endif``
+``aq_udb -exp my_database:country_table -if -filt 'PatCmp(last_name, "^H.*$", "ncas,rx")' -eval extra_column '"This record belongs to a user with a last name starting with h"' -else -eval extra_column '"The record does not"' -endif``
 
 * This exports country_table from my_database and then establishes a pp (pre-processing) group for country_table. 
 * For each record, this command uses a globular pattern comparison to check whether the value in the last_name column begins with an 'h'. If it does, the next pp rule is run (the first ``-eval``) and a value of 'This record belongs to a user with a last name starting with h' is assigned to extra_column. 
@@ -209,7 +208,7 @@ As you can see, the variable defined_integer_var was reset to 0 when the pp grou
 
 .. ``aq_udb`` includes a ``-filt`` option identical to the one in ``aq_pp`` to provide an easy way to limit the data sent to your output.
 
-.. ``aq_udb -db my_database -exp country_table -filt 'PatCmp(last_name, "^H.*$", "ncas,rx")'``
+.. ``aq_udb -exp my_database:country_table -filt 'PatCmp(last_name, "^H.*$", "ncas,rx")'``
 
 .. * This command exports country_table from my_database and limits the output to only records that have an 'h' as the first letter in last_name. The output is::
     
@@ -219,7 +218,7 @@ As you can see, the variable defined_integer_var was reset to 0 when the pp grou
 
 Just as in aq_pp, you can save your results to a file or output to standard out.
 
-``aq_udb -db my_database -exp country_table -o -``
+``aq_udb -exp my_database:country_table -o -``
 
 * This exports country_table from my_database and sends the output to standard out. The output is::
     
@@ -235,7 +234,7 @@ Just as in aq_pp, you can save your results to a file or output to standard out.
 
 You can also limit which columns are sent to the output.
 
-``aq_udb -db my_database -exp country_table -c country last_name first_name``
+``aq_udb -exp my_database:country_table -c country last_name first_name``
 
 * This command exports country_table from my_database and outputs to standard out. It then limits the output columns to just country, last_name, and first_name. The output is::
     
@@ -249,12 +248,12 @@ You can also limit which columns are sent to the output.
     "Philippines","Lawrence","Lois"
     "Philippines","Kelley","Jacqueline"
 
-If you want your output without the header line, you can remove it with ``-notitle``.
+If you want your output without the header line, you can remove it with ``-o,notitle -``.
 
-``aq_udb -db my_database -exp country_table -c country last_name first_name -notitle``
+``aq_udb -exp my_database:country_table -o,notitle - -c country last_name first_name``
 
 * This exports country_table from my_database and outputs to standard out. It limits the output columns to just country, last_name, and first_name. 
-* The ``-notitle`` option then tells aq_pp not to include a header line in the output. The output is::
+* The ``notitle`` attribute used with the ``-o`` option then tells aq_pp not to include a header line in the output. The output is::
     
     "Portugal","Hamilton","Evelyn"
     "Portugal","Wheeler","Sarah"
@@ -269,7 +268,7 @@ Many analyses need the results ordered by the values in a single column instead 
 
 You can use the ``-sort`` option to **sort the exported data by an existing column** so that the output contains the results in the correct order. 
 
-``aq_udb -db my_database -exp country_table -sort country``
+``aq_udb -exp my_database:country_table -sort country``
 
 * This command exports country_table from my_database and orders the output rows by their values in the country column. The output is::
     
@@ -285,7 +284,7 @@ You can use the ``-sort`` option to **sort the exported data by an existing colu
 
 The column you sort by can be **any of the existing columns** in the exported table or vector.
 
-``aq_udb -db my_database -exp country_table -sort last_name``
+``aq_udb -exp my_database:country_table -sort last_name``
 
 * This exports country_table from my_database and orders the output rows by their values in the last_name column. The output is::
     
@@ -301,7 +300,7 @@ The column you sort by can be **any of the existing columns** in the exported ta
 
 The ``-sort`` option also includes **sub options** that allow you to change the direction in which values are ordered (ascending is the default) and the number of records included in the output.
 
-``aq_udb -db my_database -exp country_table -sort last_name -dec -top 5``
+``aq_udb -exp my_database:country_table -sort,dec last_name -top 5``
 
 * This command exports country_table from my_database and orders the output rows by their values in the country column in descending order (Z's to A's, reverse alphabetical). 
 * It also limits the number of output records to 5. The output is::
@@ -317,9 +316,9 @@ A final useful feature of aq_pp is its ability to order the records by their val
 
 Thus the data that is being stored is modified and **sorted within the database** using the ``-ord`` option.
     
-``aq_udb -db my_database -ord country_table last_name``       ## then run
+``aq_udb -ord my_database:country_table last_name``       ## then run
 
-``aq_udb -db my_database -exp country_table``
+``aq_udb -exp my_database:country_table``
 
 * The first statement orders country_table from my_database by last_name. This ordering occurs internally in the udb database and does not output anything to standard out. 
 * The second bash statement exports the newly-ordered country_table from my database to standard output. The output of this statement is::

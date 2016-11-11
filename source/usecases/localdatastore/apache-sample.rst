@@ -54,7 +54,7 @@ Primary Lines in this Script
     i:res_size sep:' \"' s,clf:referrer \
     sep:'\" \"' s,clf:user_agent sep:'\"' X | \
     aq_pp -f,qui,eok - -d X X X X X X X X X s:referrer X \
-    -eval i:pagecount \"1\" -ddef -udb_imp apache:vector1"
+    -eval i:pagecount \"1\" -ddef -udb -imp apache:vector1"
 
     ess exec "aq_udb -exp apache:vector1 -sort pagecount -dec -top 25; \
     aq_udb -cnt apache:vector1"

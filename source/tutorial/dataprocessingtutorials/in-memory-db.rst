@@ -103,13 +103,13 @@ order per user.  Than can be done via::
 
 With the data sorted in time order, we can take advantage of our vector that summarizes each user::
 
-  $ ess exec "aq_udb -exp wood:allsales -notitle | \
+  $ ess exec "aq_udb -exp wood:allsales -o,notitle - | \
                    aq_pp -f - -d s:userid X i:articleid f:total X -imp wood:usersales"
 
 What we've done is pipe the output to another UDB import command.  Since the data is grouped by user and in time
 order per user, the 'last article read' will be accurately reflected.  Take a look at the summary with another export::
 
-  $ ess exec "aq_udb -exp wood:usersales -sort total -dec -top 10"
+  $ ess exec "aq_udb -exp wood:usersales -sort,dec total -top 10"
 
 Here we have added additional options to sort the output by decending total money spent,
 and limiting to the top 10 users.
@@ -117,7 +117,7 @@ and limiting to the top 10 users.
 If you wish to delete the contents of a single table/vector or the entire database you can execute::
 
   $ ess exec "aq_udb -clr wood:usersales"
-  $ ess exec "aq_udb -clr_all -db wood"
+  $ ess exec "aq_udb -clr wood"
 
 
 Map/Reduce, Essentia Style
@@ -154,7 +154,7 @@ Charles Dickens.  You will find it under ``tutorials\map-reduce`` in the git rep
    ess udbd restart
    cat pg98.txt | tr -s '[[:punct:][:space:]]' '\n' | \
                   aq_pp -d s:word -eval i:count 1 -imp mapreduce:wordcount
-   aq_udb -exp mapreduce:wordcount -sort count -dec -top 10
+   aq_udb -exp mapreduce:wordcount -sort,dec count -top 10
 
 
 Since this is just a single file, we have elected to use the raw ``aq_pp`` rather than wrapping inside of an

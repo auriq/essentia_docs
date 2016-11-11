@@ -34,11 +34,11 @@ The output can be saved into an R dataframe ::
     
 **read.essentia** requires you to store the essentia query in a bash script. Thus we save the following statement to ``read_browse.sh``::
 
-    ess stream browse '*' '*' "aq_pp -f,+1,eok - -d %cols -notitle" #Rinclude #R#browsedata#R#
+    ess stream browse '*' '*' "aq_pp -f,+1,eok - -d %cols -o,notitle -" #Rinclude #R#browsedata#R#
         
 and the following statement to ``read_purchase.sh``::
 
-    ess stream purchase '*' '*' "aq_pp -f,+1,eok - -d %cols -notitle" #Rinclude #R#purchasedata#R#
+    ess stream purchase '*' '*' "aq_pp -f,+1,eok - -d %cols -o,notitle -" #Rinclude #R#purchasedata#R#
 
 and then simply have R run::
 
@@ -82,7 +82,7 @@ First we must open an R script or the R interactive prompt and type ::
    
 to tell R to use the installed RESS package. Then we run ::
     
-   browsedata <- essQuery("ess stream browse '*' '*'", "aq_pp -f,+1,eok - -d %cols -notitle", "#Rinclude")
+   browsedata <- essQuery("ess stream browse '*' '*'", "aq_pp -f,+1,eok - -d %cols -o,notitle -", "#Rinclude")
 
 to import the browse files into R and save them as a dataframe called browsedata. 
 
@@ -92,7 +92,7 @@ of the data (from the Essentia's Environment step) and export them in csv format
 
 Similarly we run ::
     
-   purchasedata <- essQuery("ess stream purchase '*' '*'", "aq_pp -f,+1,eok - -d %cols -notitle", "#Rinclude")
+   purchasedata <- essQuery("ess stream purchase '*' '*'", "aq_pp -f,+1,eok - -d %cols -o,notitle -", "#Rinclude")
    
 to import the purchase files into R and save them as a dataframe called purchasedata. 
 
@@ -136,8 +136,8 @@ The capture.essentia function requires one argument, ``scriptcall``, and can tak
 
 **capture.essentia** requires you to store the essentia queries in a bash script and then pass that script's name as ``scriptcall`` when you call capture.essentia in R. Thus we save the following statements to ``myqueries.sh``::
 
-    ess stream browse '*' '*' "aq_pp -f,+1,eok - -d %cols -notitle" #Rinclude #R#browsedata#R#
-    ess stream purchase '*' '*' "aq_pp -f,+1,eok - -d %cols -notitle" #Rinclude #R#purchasedata#R#
+    ess stream browse '*' '*' "aq_pp -f,+1,eok - -d %cols -o,notitle -" #Rinclude #R#browsedata#R#
+    ess stream purchase '*' '*' "aq_pp -f,+1,eok - -d %cols -o,notitle -" #Rinclude #R#purchasedata#R#
     ess query "select * from browse:*:*" #-notitle #Rinclude #R#querybrowse#R#
     ess query "select * from purchase:*:*" #-notitle #Rinclude #R#querypurchase#R#
 

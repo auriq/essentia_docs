@@ -18,7 +18,7 @@ For singly-delimited files, ``aq_pp`` defines the column specification using typ
 we make use of the additional option 'sep' which specifies the substring that separates a given column from the one next to it.  The apache log
 for example can be parsed using::
 
-  aq_pp -f,eok apache.log -d ip:ip sep:' ' s:rlog sep:' ' \
+  aq_pp -f,eok,div apache.log -d ip:ip sep:' ' s:rlog sep:' ' \
   s:rusr sep:' [' s:time_s sep:'] "' s,clf:req_line1 sep:' ' s,clf:req_line2 sep:' ' s,clf:req_line3 \
   sep:'" ' i:res_status sep:' ' i:res_size sep:' "' \
   s,clf:referrer sep:'" "' s,clf:user_agent sep:'"' -eval i:time 'DateToTime(time_s, "d.b.Y.H.M.S.z")'
@@ -31,7 +31,7 @@ Additionally, in ``aq_pp`` you can specify the columns to output using the ``-c`
 
 You can limit which columns are output in the final result by using the '-c' option. i.e. run::
 
-  aq_pp -f,eok apache.log -d ip:ip sep:' ' s:rlog sep:' ' \
+  aq_pp -f,eok,div apache.log -d ip:ip sep:' ' s:rlog sep:' ' \
   s:rusr sep:' [' s:time_s sep:'] "' s,clf:req_line1 sep:' ' s,clf:req_line2 sep:' ' s,clf:req_line3 \
   sep:'" ' i:res_status sep:' ' i:res_size sep:' "' \
   s,clf:referrer sep:'" "' s,clf:user_agent sep:'"' -eval i:time 'DateToTime(time_s, "d.b.Y.H.M.S.z")' \

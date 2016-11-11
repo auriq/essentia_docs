@@ -21,7 +21,7 @@ This tutorial will emphasize the most commonly used options for aq_pp and how to
 
 * **Input Specifications:** -f, -d, -cat, -cmb, and -var.
 * **Process Specifications:** -eval, all -map options, -filt, -sub, and -grep.
-* **Output Specifications:** -o, -ovar, and -udb_imp.
+* **Output Specifications:** -o, -ovar, and --udb -imp.
 
 We will end with using a small portion of these options in conditional option groups (if else statements).
 
@@ -271,7 +271,7 @@ Now that you've completed your preprocessing of the data, its time to output you
     
 You can also specify that you want the output to be **saved to a file**, which columns you want output, and whether you want the output to have a header.
  
-``aq_pp -f,+1 exampledata.csv -d f:float_col i:integer_col s:last_name s:first_name s:country -o outputfile.csv -c first_name last_name -notitle``
+``aq_pp -f,+1 exampledata.csv -d f:float_col i:integer_col s:last_name s:first_name s:country -o,notitle outputfile.csv -c first_name last_name``
 
 * This saves first_name and then last_name of exampledata.csv without a header to a file called outputfile.csv. The output the file contains is::
  
@@ -298,7 +298,7 @@ Thus ou can condense your data to just the number of unique values of the specif
 
 Say you have a **database** called my_database that contains a vector called country_grouping which has the column specification ``s,pkey:country s:full_name i,+add:integer_col f,+max:float_col s:extra_column``. Running the following code will **import the data into your vector and apply the attributes listed there**.
  
-``aq_pp -f,+1 exampledata.csv -d f:float_col i:integer_col s:last_name s:first_name s:country -eval s:full_name 'first_name + " " + last_name' -ddef -udb_imp my_database:country_grouping``
+``aq_pp -f,+1 exampledata.csv -d f:float_col i:integer_col s:last_name s:first_name s:country -eval s:full_name 'first_name + " " + last_name' -ddef --udb -imp my_database:country_grouping``
 
 * The output from exporting the vector to standard out (see aq_udb documentation) is::
  

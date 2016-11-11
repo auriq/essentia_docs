@@ -28,7 +28,7 @@ ess summary
 
 # Check Essentia Version Number for Compatibility
 EssVersion=`ess -v 2>&1 | aq_pp -f,eok,sep=':' - -d X s,trm:EssentiaVersion -filt '\$RowNum==1' \
--filt 'EssentiaVersion!="3.0.9.12"' -notitle 2>/dev/null`
+-filt 'EssentiaVersion!="3.0.9.12"' -o,notitle - 2>/dev/null`
 if [ -z "$EssVersion" ] 
 then
         oldmod="-emod rt "
@@ -43,10 +43,10 @@ fi
 # Convert the time column to a date and extract the month ("December"...), day ("01"...), dayoftheweek ("Sun"...), and hour ("00" to "23") into their respective columns. 
 # Import the modified and reduced data into the four vectors in the databases you defined above so that the attributes defined there can be applied.    
         
-ess stream 125accesslogs "2014-11-09" "2014-12-07" "aq_pp $oldmod -f,qui,eok - -d ip:ip sep:' ' X sep:' ' X sep:' [' \
+ess stream 125accesslogs "2014-11-09" "2014-12-07" "aq_pp $oldmod -f,qui,eok,div - -d ip:ip sep:' ' X sep:' ' X sep:' [' \
 s:time_s sep:'] \"' X sep:' ' s,clf:accessedfile sep:' ' X sep:'\" ' i:httpstatus sep:' ' i:pagebytes sep:' \"' X \
 sep:'\" \"' X sep:'\"' X -eval i:time 'DateToTime(time_s, \"d.b.Y.H.M.S.z\")' \
 -filt 'httpstatus == 200 || httpstatus == 304' -eval i:hitcount '1' \
 -if -filt '(PatCmp(accessedfile, \"*.html[?,#]?*\", \"ncas\") || PatCmp(accessedfile, \"*.htm[?,#]?*\", \"ncas\") || PatCmp(accessedfile, \"*.php[?,#]?*\", \"ncas\") || PatCmp(accessedfile, \"*.asp[?,#]?*\", \"ncas\") || PatCmp(accessedfile, \"*/\", \"ncas\") || PatCmp(accessedfile, \"*.php\", \"ncas\"))' -eval i:pagecount '1' -eval s:pageurl 'accessedfile' \
 -else -eval pagecount '0' -endif -eval s:month 'TimeToDate(time,\"%B\")' -eval s:day 'TimeToDate(time,\"%d\")' -eval s:dayoftheweek 'TimeToDate(time,\"%a\")' -eval s:hour 'TimeToDate(time,\"%H\")' \
--ddef -udb_imp logsapache1:vector1 -udb_imp logsapache2:vector2 -udb_imp logsapache3:vector3 -udb_imp logsapache4:vector4" --debug
+-ddef -udb -imp logsapache1:vector1 -udb -imp logsapache2:vector2 -udb -imp logsapache3:vector3 -udb -imp logsapache4:vector4" --debug

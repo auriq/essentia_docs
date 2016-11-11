@@ -13,7 +13,7 @@ We save the following commands to ``my_setup_script.sh``:
 .. literalinclude:: ../../EssentiaPublic/tutorials/woodworking/my_setup_script.sh
    :language: bash
    :linenos:
-   :emphasize-lines: 6,21-25
+   :emphasize-lines: 6,24-28
 
 ..  ess udbd stop
     ess server reset
@@ -32,7 +32,7 @@ We save the following commands to ``my_setup_script.sh``:
     ess stream 125accesslogs $1 ${2} "logcnv -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' i,tim:time sep:'] \"' s,clf:req_line1 sep:' ' s,clf:req_line2 sep:' ' s,clf:req_line3 sep:'\" ' i:res_status sep:' ' i:res_size sep:' \"' s,clf:referrer sep:'\" \"' s,clf:user_agent sep:'\"' X \
     | aq_pp -f,eok - -d ip:ip X X i:time X s:accessedfile X i:httpstatus i:pagebytes X X -filt '$5' -eval i:hitcount '1' \
     -if -filt '(PatCmp(accessedfile, \"$4\", \"ncas\") || PatCmp(accessedfile, \"*.htm[?,#]?*\", \"ncas\") || PatCmp(accessedfile, \"*.php[?,#]?*\", \"ncas\") || PatCmp(accessedfile, \"*.asp[?,#]?*\", \"ncas\") || PatCmp(accessedfile, \"*/\", \"ncas\") || PatCmp(accessedfile, \"*.php\", \"ncas\"))' -eval i:pagecount '1' -eval s:pageurl 'accessedfile' \
-    -else -eval pagecount '0' -endif -eval s:timeseg 'TimeToDate(time,\"${3}\")' -ddef -udb_imp logsapache1:vector1" --debug
+    -else -eval pagecount '0' -endif -eval s:timeseg 'TimeToDate(time,\"${3}\")' -ddef -udb -imp logsapache1:vector1" --debug
     
     # Stream your access logs from the startdate and enddate you specify into the following command. Use logcnv to specify the format of the records in the access log and convert them to .csv format.
     # Then pipe the data into our preprocessor (aq_pp) and specify which columns you want to keep. Filter on httpstatus so that you only include the 'good' http status codes that correspond to actual views.

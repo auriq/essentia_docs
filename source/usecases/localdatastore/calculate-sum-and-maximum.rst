@@ -60,7 +60,7 @@ Primary Lines in this Script
     
    ess summary
     
-   ess stream casino "*" "*" "aq_pp -f,+1,eok - -d s:user X i:bet f:winnings X -udb_imp totalwinnings:myvector" --debug
+   ess stream casino "*" "*" "aq_pp -f,+1,eok - -d s:user X i:bet f:winnings X -udb -imp totalwinnings:myvector" --debug
     
    ess exec "aq_udb -exp totalwinnings:myvector -o totalwinnings.csv" --debug
     

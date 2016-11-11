@@ -41,7 +41,7 @@ Load Redshift
 
 So far we've created our cloud Essentia cluster, connected to the data we want to load, created an SQL Table to store the data in, and connected to our running Redshift cluster. Now we can load the purchase log data into that SQL Table using the ``ess redshift stream`` command::
 
-    ess redshift stream purchase "2014-09-01" "2014-09-03" "aq_pp -f+1,eok - -d S:purchaseDate I:userID I:articleID F:price I:referrerID -notitle" purchase --options TRUNCATECOLUMNS
+    ess redshift stream purchase "2014-09-01" "2014-09-03" "aq_pp -f+1,eok - -d S:purchaseDate I:userID I:articleID F:price I:referrerID -o,notitle -" purchase --options TRUNCATECOLUMNS
 
 Query Redshift
 ***************

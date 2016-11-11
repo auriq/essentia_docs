@@ -366,7 +366,7 @@ For our first example, we are tasked with generating a cleaned version of each f
 and saving it as a comma separated file with bz2 compression::
 
   $ mkdir bz2
-  $ ess stream browse 2014-09-01 2014-09-30 "aq_pp -f,+1,eok - -d %cols -notitle | bzip2 - -c > ./bz2/%file.bz2"
+  $ ess stream browse 2014-09-01 2014-09-30 "aq_pp -f,+1,eok - -d %cols -o,notitle - | bzip2 - -c > ./bz2/%file.bz2"
 
 We can break down the command (everything within the double quotes) as follows:
 
@@ -409,8 +409,7 @@ ways to achieve this, but the most robust is the following:
     -if -filt 't>0' \
       -eval articleID 'articleID+1' \
     -endif \
-    -c purchaseDate userID articleID price refID \
-    -notitle \
+    -o,notitle - -c purchaseDate userID articleID price refID \
     | bzip2 - -c > ./bz2/%file.bz2"
 
 .. note::

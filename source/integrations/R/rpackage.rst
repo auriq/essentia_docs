@@ -223,10 +223,10 @@ or on a series of lines in the file ::
 
 You can also save your files into R variables using ``ess stream category startdate enddate "cat -" #Rinclude`` for .csv files only or ``ess stream category startdate enddate "aq_pp -f,eok - -d %cols" #Rinclude`` for any file with a constant delimiter. This should only be used to explore or analyze a few files so the data doesnt become too large (this feature just streams the files you select into variables in R). 
 
-When saving multiple files from one category into R, you MUST include Essentia's ``-notitle`` flag somewhere on the line. You also have the option of saving all of the files you are streaming as one variable or into separate variables (one for each file). By default, the R integrator loads all of the files used in one
+When saving multiple files from one category into R, you MUST include Essentia's ``-o,notitle -`` flag somewhere on the line. You also have the option of saving all of the files you are streaming as one variable or into separate variables (one for each file). By default, the R integrator loads all of the files used in one
 ``ess stream`` statement into a single R variable. To store each file into its own distinct R variable, run ::
 
-    ess stream category startdate enddate "aq_pp -notitle -f,eok - -d %cols" #Rseparate #Rinclude #filelist
+    ess stream category startdate enddate "aq_pp -f,eok - -d %cols -o,notitle -" #Rseparate #Rinclude #filelist
     
 This will also cause the R integrator to automatically save the filenames of the stored files into a single additional R variable.
 
@@ -238,13 +238,13 @@ This will also cause the R integrator to automatically save the filenames of the
 
 For any more complicated, delimited format you can use ``aq_pp`` to convert the format to csv within the ``ess stream`` commmand. All of the following examples have the correct syntax. The data they're acting on is in Extended Apache Log Format. ::
 
-    ess stream 125accesslogs "2014-12-07" "2014-12-07" "aq_pp -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' s:time_s sep:'] \"' s,clf:req_line1 sep:' ' s,clf:req_line2 sep:' ' s,clf:req_line3 sep:'\" ' i:res_status sep:' ' i:res_size sep:' \"' s,clf:referrer sep:'\" \"' s,clf:user_agent sep:'\"' X | cat -" #Rinclude
+    ess stream 125accesslogs "2014-12-07" "2014-12-07" "aq_pp -f,eok,div - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' s:time_s sep:'] \"' s,clf:req_line1 sep:' ' s,clf:req_line2 sep:' ' s,clf:req_line3 sep:'\" ' i:res_status sep:' ' i:res_size sep:' \"' s,clf:referrer sep:'\" \"' s,clf:user_agent sep:'\"' X | cat -" #Rinclude
     
-    ess stream 125accesslogs "2014-12-07" "2014-12-07" "head -30 | aq_pp -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' s:time_s sep:'] \"' s,clf:req_line1 sep:' ' s,clf:req_line2 sep:' ' s,clf:req_line3 sep:'\" ' i:res_status sep:' ' i:res_size sep:' \"' s,clf:referrer sep:'\" \"' s,clf:user_agent sep:'\"' X | aq_pp -f,qui,eok - -d ip:ip2 s:rlog X X X X X X X X X" #Rinclude
+    ess stream 125accesslogs "2014-12-07" "2014-12-07" "head -30 | aq_pp -f,eok,div - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' s:time_s sep:'] \"' s,clf:req_line1 sep:' ' s,clf:req_line2 sep:' ' s,clf:req_line3 sep:'\" ' i:res_status sep:' ' i:res_size sep:' \"' s,clf:referrer sep:'\" \"' s,clf:user_agent sep:'\"' X | aq_pp -f,qui,eok - -d ip:ip2 s:rlog X X X X X X X X X" #Rinclude
     
-    ess stream 125accesslogs "2014-12-07" "2014-12-07" "head -q | aq_pp -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' s:time_s sep:'] \"' s,clf:req_line1 sep:' ' s,clf:req_line2 sep:' ' s,clf:req_line3 sep:'\" ' i:res_status sep:' ' i:res_size sep:' \"' s,clf:referrer sep:'\" \"' s,clf:user_agent sep:'\"' X | aq_pp -f,qui,eok - -d ip:ip2 s:rlog X X X X X X X X X" #Rinclude
+    ess stream 125accesslogs "2014-12-07" "2014-12-07" "head -q | aq_pp -f,eok,div - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' s:time_s sep:'] \"' s,clf:req_line1 sep:' ' s,clf:req_line2 sep:' ' s,clf:req_line3 sep:'\" ' i:res_status sep:' ' i:res_size sep:' \"' s,clf:referrer sep:'\" \"' s,clf:user_agent sep:'\"' X | aq_pp -f,qui,eok - -d ip:ip2 s:rlog X X X X X X X X X" #Rinclude
     
-    ess stream 125accesslogs "2014-12-07" "2014-12-07" "aq_pp -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' s:time_s sep:'] \"' s,clf:req_line1 sep:' ' s,clf:req_line2 sep:' ' s,clf:req_line3 sep:'\" ' i:res_status sep:' ' i:res_size sep:' \"' s,clf:referrer sep:'\" \"' s,clf:user_agent sep:'\"' X | aq_pp -f,qui,eok - -d ip:ip2 s:rlog X X X X X X X X X" #Rinclude
+    ess stream 125accesslogs "2014-12-07" "2014-12-07" "aq_pp -f,eok,div - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' s:time_s sep:'] \"' s,clf:req_line1 sep:' ' s,clf:req_line2 sep:' ' s,clf:req_line3 sep:'\" ' i:res_status sep:' ' i:res_size sep:' \"' s,clf:referrer sep:'\" \"' s,clf:user_agent sep:'\"' X | aq_pp -f,qui,eok - -d ip:ip2 s:rlog X X X X X X X X X" #Rinclude
 
 **Purchase Data Integration Syntax Examples**
 
@@ -252,18 +252,18 @@ These next examples work on the diy_workshop purchase data available in the samp
     
     ess stream purchase "2014-09-15" "2014-09-15" "aq_pp -f,eok - -d X s:userid X f:price X" #Rinclude
     
-    ess stream purchase "2014-09-16" "2014-09-16" "aq_pp -notitle -f,+1,eok - -d X s:userid X f:price X" #Rinclude
+    ess stream purchase "2014-09-16" "2014-09-16" "aq_pp -f,+1,eok - -d X s:userid X f:price X -o,notitle -" #Rinclude
     
-    ess stream purchase "2014-09-17" "2014-09-17" "aq_pp -notitle -f,+1,eok - -d X s:userid X f:price X" #Rinclude
+    ess stream purchase "2014-09-17" "2014-09-17" "aq_pp -f,+1,eok - -d X s:userid X f:price X -o,notitle -" #Rinclude
     
-    ess stream purchase "2014-09-15" "2014-09-16" "aq_pp -notitle -f,+1,eok - -d X s:userid X f:price X" #Rseparate #Rinclude
+    ess stream purchase "2014-09-15" "2014-09-16" "aq_pp -f,+1,eok - -d X s:userid X f:price X -o,notitle -" #Rseparate #Rinclude
     
-    ess stream purchase 2014-09-01 2014-09-03 "aq_pp -notitle -stat -f,eok - -d %cols" #Rinclude
+    ess stream purchase 2014-09-01 2014-09-03 "aq_pp -stat -f,eok - -d %cols -o,notitle -" #Rinclude
     
     ess exec "echo \"1, 2, 3, 4, 5\"" #-notitle
     
     ess stream purchase "*" "*" \
-    "head -10 | aq_pp -notitle -f,+1,eok - -d %cols" \
+    "head -10 | aq_pp -f,+1,eok - -d %cols -o,notitle -" \
     #Rinclude
     
     ess query "select * from browse:*:*" #-notitle #Rinclude #R#querybrowse#R#
@@ -310,7 +310,7 @@ This should only be used to explore or analyze a few files so the data doesnt be
 When saving multiple files from one category into R, you MUST include Essentia's ``-notitle`` flag somewhere on the line. You also have the option of sending all of the files you are streaming into R as a single returned output or as separate dataframes (one for each file). By default, the R integrator loads all of the files used in one
 ``ess stream`` statement into a single returned output. To store each file into its own distinct R variable, run ::
 
-    essQuery("ess stream category startdate enddate", "aq_pp -notitle -f,eok - -d %cols", "#Rseparate #Rinclude #filelist")
+    essQuery("ess stream category startdate enddate", "aq_pp -f,eok - -d %cols -o,notitle -", "#Rseparate #Rinclude #filelist")
     
 This will also cause the R integrator to automatically save the filenames of the stored files into a single additional R variable.
 
@@ -318,13 +318,13 @@ This will also cause the R integrator to automatically save the filenames of the
 
 For any more complicated, delimited format you can use ``aq_pp`` to convert the format to csv within the stream commmand. All of the following examples have the correct syntax. The data they're acting on is in Extended Apache Log Format. ::
 
-    essQuery("ess stream 125accesslogs \"2014-12-07\" \"2014-12-07\"", "aq_pp -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' s:time_s sep:'] \\\"' s,clf:req_line1 sep:' ' s,clf:req_line2 sep:' ' s,clf:req_line3 sep:'\\\" ' i:res_status sep:' ' i:res_size sep:' \\\"' s,clf:referrer sep:'\\\" \\\"' s,clf:user_agent sep:'\\\"' X | cat -", "#Rinclude")
+    essQuery("ess stream 125accesslogs \"2014-12-07\" \"2014-12-07\"", "aq_pp -f,eok,div - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' s:time_s sep:'] \\\"' s,clf:req_line1 sep:' ' s,clf:req_line2 sep:' ' s,clf:req_line3 sep:'\\\" ' i:res_status sep:' ' i:res_size sep:' \\\"' s,clf:referrer sep:'\\\" \\\"' s,clf:user_agent sep:'\\\"' X | cat -", "#Rinclude")
     
-    essQuery("ess stream 125accesslogs \"2014-12-07\" \"2014-12-07\"", "head -30 | aq_pp -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' s:time_s sep:'] \\\"' s,clf:req_line1 sep:' ' s,clf:req_line2 sep:' ' s,clf:req_line3 sep:'\\\" ' i:res_status sep:' ' i:res_size sep:' \\\"' s,clf:referrer sep:'\\\" \\\"' s,clf:user_agent sep:'\\\"' X | aq_pp -f,qui,eok - -d ip:ip2 s:rlog X X X X X X X X X", "#Rinclude")
+    essQuery("ess stream 125accesslogs \"2014-12-07\" \"2014-12-07\"", "head -30 | aq_pp -f,eok,div - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' s:time_s sep:'] \\\"' s,clf:req_line1 sep:' ' s,clf:req_line2 sep:' ' s,clf:req_line3 sep:'\\\" ' i:res_status sep:' ' i:res_size sep:' \\\"' s,clf:referrer sep:'\\\" \\\"' s,clf:user_agent sep:'\\\"' X | aq_pp -f,qui,eok - -d ip:ip2 s:rlog X X X X X X X X X", "#Rinclude")
     
-    essQuery("ess stream 125accesslogs \"2014-12-07\" \"2014-12-07\"", "head -q | aq_pp -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' s:time_s sep:'] \\\"' s,clf:req_line1 sep:' ' s,clf:req_line2 sep:' ' s,clf:req_line3 sep:'\\\" ' i:res_status sep:' ' i:res_size sep:' \\\"' s,clf:referrer sep:'\\\" \\\"' s,clf:user_agent sep:'\\\"' X | aq_pp -f,qui,eok - -d ip:ip2 s:rlog X X X X X X X X X", "#Rinclude")
+    essQuery("ess stream 125accesslogs \"2014-12-07\" \"2014-12-07\"", "head -q | aq_pp -f,eok,div - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' s:time_s sep:'] \\\"' s,clf:req_line1 sep:' ' s,clf:req_line2 sep:' ' s,clf:req_line3 sep:'\\\" ' i:res_status sep:' ' i:res_size sep:' \\\"' s,clf:referrer sep:'\\\" \\\"' s,clf:user_agent sep:'\\\"' X | aq_pp -f,qui,eok - -d ip:ip2 s:rlog X X X X X X X X X", "#Rinclude")
     
-    essQuery("ess stream 125accesslogs \"2014-12-07\" \"2014-12-07\"", "aq_pp -f,eok - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' s:time_s sep:'] \\\"' s,clf:req_line1 sep:' ' s,clf:req_line2 sep:' ' s,clf:req_line3 sep:'\\\" ' i:res_status sep:' ' i:res_size sep:' \\\"' s,clf:referrer sep:'\\\" \\\"' s,clf:user_agent sep:'\\\"' X | aq_pp -f,qui,eok - -d ip:ip2 s:rlog X X X X X X X X X", "#Rinclude")
+    essQuery("ess stream 125accesslogs \"2014-12-07\" \"2014-12-07\"", "aq_pp -f,eok,div - -d ip:ip sep:' ' s:rlog sep:' ' s:rusr sep:' [' s:time_s sep:'] \\\"' s,clf:req_line1 sep:' ' s,clf:req_line2 sep:' ' s,clf:req_line3 sep:'\\\" ' i:res_status sep:' ' i:res_size sep:' \\\"' s,clf:referrer sep:'\\\" \\\"' s,clf:user_agent sep:'\\\"' X | aq_pp -f,qui,eok - -d ip:ip2 s:rlog X X X X X X X X X", "#Rinclude")
 
 **Purchase Data Integration Syntax Examples**
 
@@ -332,17 +332,17 @@ These next examples work on the diy_workshop purchase data available in the samp
     
     essQuery("ess stream purchase \"2014-09-15\" \"2014-09-15\"", "aq_pp -f,eok - -d X s:userid X f:price X", "#Rinclude")
     
-    essQuery("ess stream purchase \"2014-09-16\" \"2014-09-16\"", "aq_pp -notitle -f,+1,eok - -d X s:userid X f:price X", "#Rinclude")
+    essQuery("ess stream purchase \"2014-09-16\" \"2014-09-16\"", "aq_pp -f,+1,eok - -d X s:userid X f:price X -o,notitle -", "#Rinclude")
     
-    essQuery("ess stream purchase \"2014-09-17\" \"2014-09-17\"", "aq_pp -notitle -f,+1,eok - -d X s:userid X f:price X", "#Rinclude")
+    essQuery("ess stream purchase \"2014-09-17\" \"2014-09-17\"", "aq_pp -f,+1,eok - -d X s:userid X f:price X -o,notitle -", "#Rinclude")
     
-    essQuery("ess stream purchase \"2014-09-15\" \"2014-09-16\"", "aq_pp -notitle -f,+1,eok - -d X s:userid X f:price X", "#Rseparate #Rinclude")
+    essQuery("ess stream purchase \"2014-09-15\" \"2014-09-16\"", "aq_pp -f,+1,eok - -d X s:userid X f:price X -o,notitle -", "#Rseparate #Rinclude")
     
-    essQuery("ess stream purchase 2014-09-01 2014-09-03", "aq_pp -notitle -stat -f,eok - -d %cols", "#Rinclude")
+    essQuery("ess stream purchase 2014-09-01 2014-09-03", "aq_pp -stat -f,eok - -d %cols -o,notitle -", "#Rinclude")
     
     essQuery("ess exec", "echo \\\"1, 2, 3, 4, 5\\\"", "#-notitle")
     
-    essQuery("ess stream purchase \"*\" \"*\"", "head -10 | aq_pp -notitle -f,+1,eok - -d %cols", "#Rinclude")
+    essQuery("ess stream purchase \"*\" \"*\"", "head -10 | aq_pp -f,+1,eok - -d %cols -o,notitle -", "#Rinclude")
     
     querybrowse <- essQuery("ess query", "select * from browse:*:*", "#-notitle #Rinclude")
     

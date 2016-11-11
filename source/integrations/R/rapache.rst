@@ -54,7 +54,7 @@ following commands to ``setupapache.sh``
     | aq_pp -f,eok - -d ip:ip X X i:time X s:accessedfile X i:httpstatus i:pagebytes X X -filt 'httpstatus == 200 || httpstatus == 304' -eval i:hitcount '1' \
     -if -filt '(PatCmp(accessedfile, \"*.html[?,#]?*\", \"ncas\") || PatCmp(accessedfile, \"*.htm[?,#]?*\", \"ncas\") || PatCmp(accessedfile, \"*.php[?,#]?*\", \"ncas\") || PatCmp(accessedfile, \"*.asp[?,#]?*\", \"ncas\") || PatCmp(accessedfile, \"*/\", \"ncas\") || PatCmp(accessedfile, \"*.php\", \"ncas\"))' -eval i:pagecount '1' -eval s:pageurl 'accessedfile' \
     -else -eval pagecount '0' -endif -eval s:month 'TimeToDate(time,\"%B\")' -eval s:day 'TimeToDate(time,\"%d\")' -eval s:dayoftheweek 'TimeToDate(time,\"%a\")' -eval s:hour 'TimeToDate(time,\"%H\")' \
-    -ddef -udb_imp logsapache1:vector1 -udb_imp logsapache2:vector2 -udb_imp logsapache3:vector3 -udb_imp logsapache4:vector4" --debug
+    -ddef -udb -imp logsapache1:vector1 -udb -imp logsapache2:vector2 -udb -imp logsapache3:vector3 -udb -imp logsapache4:vector4" --debug
 
 and then run ``sh setupapache.sh``.
 
@@ -73,9 +73,9 @@ queries in ``queryapache.sh``
     ess exec "aq_udb -exp logsapache3:vector3"
     
     # The next three statements export the day, day of the week, and hour vectors from their respective databases, ordering the output by the number of pages seen (in descending order). R will capture the output of each command into an R dataframe.
-    ess exec "aq_udb -exp logsapache1:vector1 -sort pagecount -dec"
-    ess exec "aq_udb -exp logsapache4:vector4 -sort pagecount -dec"
-    ess exec "aq_udb -exp logsapache2:vector2 -sort pagecount -dec"
+    ess exec "aq_udb -exp logsapache1:vector1 -sort,dec pagecount"
+    ess exec "aq_udb -exp logsapache4:vector4 -sort,dec pagecount"
+    ess exec "aq_udb -exp logsapache2:vector2 -sort.dec pagecount"
 
 Since these are all ``ess exec`` statements and there are no ``#Rignore`` flags in any of the statement lines,
 **capture.essentia** will automatically store their output into R dataframes entitled
@@ -109,9 +109,9 @@ You can simply call **essQuery** on each statement we want to run. Thus the comm
     command1 <- essQuery("aq_udb -exp logsapache3:vector3")
     
     # The next three statements export the day, day of the week, and hour vectors from their respective databases, ordering the output by the number of pages seen (in descending order). We send the output of each command directly into R and then save it into an R dataframe.
-    command2 <- essQuery("ess exec", "aq_udb -exp logsapache1:vector1 -sort pagecount -dec")
-    command3 <- essQuery("ess exec", "aq_udb -exp logsapache4:vector4 -sort pagecount -dec")
-    command4 <- essQuery("ess exec", "aq_udb -exp logsapache2:vector2 -sort pagecount -dec")
+    command2 <- essQuery("ess exec", "aq_udb -exp logsapache1:vector1 -sort,dec pagecount")
+    command3 <- essQuery("ess exec", "aq_udb -exp logsapache4:vector4 -sort,dec pagecount")
+    command4 <- essQuery("ess exec", "aq_udb -exp logsapache2:vector2 -sort,dec pagecount")
     
     # run the R commands written in analyzeapache.R to analyze the data in the dataframes we just created. Turn echo to TRUE to make the output less results-oriented and easier to debug.
     source("analyzeapache.R", echo=FALSE)     

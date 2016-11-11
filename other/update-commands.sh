@@ -13,6 +13,9 @@ then
  c5="sudo cp source/screenshots/*.png /var/www/html/documentation/source/screenshots/"
 
  c6="git push https://bwaxer:dragon911@github.com/auriq/essentia_docs.git $version"
+ 
+ c7="rm -rf source/EssentiaPublic/"
+ c8="cp -R ../EssentiaPublic source/"
 
  if [ "$1" = "echo" ]
  then
@@ -48,9 +51,15 @@ then
   $c1
   $c6
 
+ elif [ "$1" = "EssentiaPublic" ]
+ then
+
+  $c7
+  $c8
+
  else
 
-  echo "Version: $version"; echo "Argument Options are: echo, update, screenshots, pull, push, and sync";
+  echo "Version: $version"; echo "Argument Options are: echo, update, screenshots, pull, push, sync, and EssentiaPublic";
 
  fi
 

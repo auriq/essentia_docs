@@ -53,7 +53,7 @@ So far we've created our cloud Essentia cluster, connected to the data we want t
     sep:'\" \"' X sep:'\"' X -eval i:time 'DateToTime(time_s, \"d.b.Y.H.M.S.z\")' -filt 'httpstatus == 200 || httpstatus == 304' -eval i:hitcount '1' \
     -if -filt '(PatCmp(accessedfile, \"*.html[?,#]?*\", \"ncas\") || PatCmp(accessedfile, \"*.htm[?,#]?*\", \"ncas\") || PatCmp(accessedfile, \"*.php[?,#]?*\", \"ncas\") || PatCmp(accessedfile, \"*.asp[?,#]?*\", \"ncas\") || PatCmp(accessedfile, \"*/\", \"ncas\") || PatCmp(accessedfile, \"*.php\", \"ncas\"))' -eval i:pagecount '1' -eval s:pageurl 'accessedfile' -else -eval pagecount '0' -endif \
     -eval s:month 'TimeToDate(time,\"%B\")' -eval s:day 'TimeToDate(time,\"%d\")' -eval s:dayoftheweek 'TimeToDate(time,\"%a\")' -eval s:hour 'TimeToDate(time,\"%H\")' \
-    -c day hour hitcount pagecount pagebytes ip -notitle" april2014 --options TRUNCATECOLUMNS
+    -c day hour hitcount pagecount pagebytes ip -o,notitle -" april2014 --options TRUNCATECOLUMNS
 
 Query Redshift
 ***************
