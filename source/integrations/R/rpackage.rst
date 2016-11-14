@@ -58,7 +58,7 @@ Apache Example
 
 1. Run ``sh setupapache.sh``  on the command line.
 2. Run ``R`` on the command line.
-3. In the R prompt that appears, run ``source("readudbapache.R", echo=FALSE)``
+3. In the R prompt that appears, run ``source("captureapache.R", echo=FALSE)``
 
 You will see the results of the analysis print to the screen.
 
@@ -252,31 +252,31 @@ These next examples work on the diy_workshop purchase data available in the samp
     
     ess stream purchase "2014-09-15" "2014-09-15" "aq_pp -f,eok - -d X s:userid X f:price X" #Rinclude
     
-    ess stream purchase "2014-09-16" "2014-09-16" "aq_pp -f,+1,eok - -d X s:userid X f:price X -o,notitle -" #Rinclude
+    ess stream purchase "2014-09-16" "2014-09-16" "aq_pp -f,+1,eok - -d X s:userid X f:price X -o,notitle -" #-notitle #Rinclude
     
-    ess stream purchase "2014-09-17" "2014-09-17" "aq_pp -f,+1,eok - -d X s:userid X f:price X -o,notitle -" #Rinclude
+    ess stream purchase "2014-09-17" "2014-09-17" "aq_pp -f,+1,eok - -d X s:userid X f:price X -o,notitle -" #-notitle #Rinclude
     
-    ess stream purchase "2014-09-15" "2014-09-16" "aq_pp -f,+1,eok - -d X s:userid X f:price X -o,notitle -" #Rseparate #Rinclude
+    ess stream purchase "2014-09-15" "2014-09-16" "aq_pp -f,+1,eok - -d X s:userid X f:price X -o,notitle -" #-notitle #Rseparate #Rinclude
     
-    ess stream purchase 2014-09-01 2014-09-03 "aq_pp -stat -f,eok - -d %cols -o,notitle -" #Rinclude
+    ess stream purchase 2014-09-01 2014-09-03 "aq_pp -stat -f,eok - -d %cols -o,notitle -" #-notitle #Rinclude
     
     ess exec "echo \"1, 2, 3, 4, 5\"" #-notitle
     
     ess stream purchase "*" "*" \
     "head -10 | aq_pp -f,+1,eok - -d %cols -o,notitle -" \
-    #Rinclude
+    #-notitle #Rinclude
     
     ess query "select * from browse:*:*" #-notitle #Rinclude #R#querybrowse#R#
     
     ess query "select * from purchase:*:*" #-notitle #Rinclude #R#querypurchase#R#
     
-    ess query "select count(refID) from purchase:2014-09-01:2014-09-15 where articleID>=46 group by price" #Rinclude
+    ess query "select count(refID) from purchase:2014-09-01:2014-09-15 where articleID>=46 group by price" #-notitle #Rinclude
     
-    ess query "select count(distinct userID) from purchase:2014-09-01:2014-09-15 where articleID>=46" #Rinclude
+    ess query "select count(distinct userID) from purchase:2014-09-01:2014-09-15 where articleID>=46" #-notitle #Rinclude
     
-    ess query "select count(refID) from purchase:2014-09-01:2014-09-15 where articleID>=46 group by userID" #Rinclude
+    ess query "select count(refID) from purchase:2014-09-01:2014-09-15 where articleID>=46 group by userID" #-notitle #Rinclude
     
-    ess query "select * from purchase:*:* where articleID <= 20" #Rinclude #R#querystream#R#    
+    ess query "select * from purchase:*:* where articleID <= 20" #-notitle #Rinclude #R#querystream#R#    
     
 Syntax Examples for essQuery
 -----------------------------
@@ -332,26 +332,26 @@ These next examples work on the diy_workshop purchase data available in the samp
     
     essQuery("ess stream purchase \"2014-09-15\" \"2014-09-15\"", "aq_pp -f,eok - -d X s:userid X f:price X", "#Rinclude")
     
-    essQuery("ess stream purchase \"2014-09-16\" \"2014-09-16\"", "aq_pp -f,+1,eok - -d X s:userid X f:price X -o,notitle -", "#Rinclude")
+    essQuery("ess stream purchase \"2014-09-16\" \"2014-09-16\"", "aq_pp -f,+1,eok - -d X s:userid X f:price X -o,notitle -", "#-notitle #Rinclude")
     
-    essQuery("ess stream purchase \"2014-09-17\" \"2014-09-17\"", "aq_pp -f,+1,eok - -d X s:userid X f:price X -o,notitle -", "#Rinclude")
+    essQuery("ess stream purchase \"2014-09-17\" \"2014-09-17\"", "aq_pp -f,+1,eok - -d X s:userid X f:price X -o,notitle -", "#-notitle #Rinclude")
     
-    essQuery("ess stream purchase \"2014-09-15\" \"2014-09-16\"", "aq_pp -f,+1,eok - -d X s:userid X f:price X -o,notitle -", "#Rseparate #Rinclude")
+    essQuery("ess stream purchase \"2014-09-15\" \"2014-09-16\"", "aq_pp -f,+1,eok - -d X s:userid X f:price X -o,notitle -", "#-notitle #Rseparate #Rinclude")
     
-    essQuery("ess stream purchase 2014-09-01 2014-09-03", "aq_pp -stat -f,eok - -d %cols -o,notitle -", "#Rinclude")
+    essQuery("ess stream purchase 2014-09-01 2014-09-03", "aq_pp -stat -f,eok - -d %cols -o,notitle -", "#-notitle #Rinclude")
     
     essQuery("ess exec", "echo \\\"1, 2, 3, 4, 5\\\"", "#-notitle")
     
-    essQuery("ess stream purchase \"*\" \"*\"", "head -10 | aq_pp -f,+1,eok - -d %cols -o,notitle -", "#Rinclude")
+    essQuery("ess stream purchase \"*\" \"*\"", "head -10 | aq_pp -f,+1,eok - -d %cols -o,notitle -", "#-notitle #Rinclude")
     
     querybrowse <- essQuery("ess query", "select * from browse:*:*", "#-notitle #Rinclude")
     
     querypurchase <- essQuery("ess query", "select * from purchase:*:*", "#-notitle #Rinclude")
         
-    pricecounts <- essQuery("ess query","select count(refID) from purchase:2014-09-01:2014-09-15 where articleID>=46 group by price","#Rinclude")
+    pricecounts <- essQuery("ess query","select count(refID) from purchase:2014-09-01:2014-09-15 where articleID>=46 group by price","#-notitle #Rinclude")
     
-    distinctusers <- essQuery("ess query", "select count(distinct userID) from purchase:2014-09-01:2014-09-15 where articleID>=46", "#Rinclude")
+    distinctusers <- essQuery("ess query", "select count(distinct userID) from purchase:2014-09-01:2014-09-15 where articleID>=46", "#-notitle #Rinclude")
     
-    usercounts <- essQuery("ess query", "select count(refID) from purchase:2014-09-01:2014-09-15 where articleID>=46 group by userID", "#Rinclude")
+    usercounts <- essQuery("ess query", "select count(refID) from purchase:2014-09-01:2014-09-15 where articleID>=46 group by userID", "#-notitle #Rinclude")
     
-    querystream <- essQuery("ess query", "select * from purchase:*:* where articleID <= 20", "#Rinclude")
+    querystream <- essQuery("ess query", "select * from purchase:*:* where articleID <= 20", "#-notitle #Rinclude")

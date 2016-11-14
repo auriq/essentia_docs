@@ -141,7 +141,7 @@ each node goes through the list of keys it is responsible for and outputs a new 
 
 Essentia is not dissimilar in how it would approach this problem, except we leverage common UNIX tools rather than write
 JAVA code to handle the task.  Here is a fully worked example, using the text from the book "A Tale of Two Cities" by
-Charles Dickens.  You will find it under ``tutorials\map-reduce`` in the git repository.
+Charles Dickens.  You will find it under ``tutorials/map-reduce`` in the git repository.
 
 
 .. code-block:: sh

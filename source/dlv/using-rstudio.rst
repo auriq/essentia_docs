@@ -14,6 +14,15 @@ If you plan to use our RStudio Integration and you haven't enabled it yet, you n
 2. Right Click on your Instance and then click **Connect**.
 3. Follow the Intructions on the page that appears to connect to your instance via the command line as the **ec2-user** (replace ``root@`` with ``ec2-user@``).
 4. Once you are logged onto your instance in the ec2-user directory, run ``sudo su`` and then ``bash /opt/essentia/install-rstudio.sh`` to install R and RStudio-Server on your instance.
+5. Open **/etc/httpd/conf/httpd.conf** with your favorite editor. For example, run ``nano /etc/httpd/conf/httpd.conf``.
+6. Add the following lines to the bottom of **/etc/httpd/conf/httpd.conf**::
+
+     <IfModule proxy_module>
+       ProxyPass "/rstudio/" "http://localhost:8787/"
+       ProxyPassReverse "/rstudio/" "http://localhost:8787/"
+     </IfModule>
+
+7. Run ``apachectl restart``.
 
 **Accessing RStudio**
 
