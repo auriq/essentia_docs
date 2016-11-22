@@ -7,7 +7,8 @@ Introduction
 
 This tutorial assumes you already have computers accessible to you so you can connect to them and configure them for use with Essentia. If this is not the case:
 
-* For a **Local** or **Docker** installation, ask your system administrator if you could have access to more computers and then follow this tutorial.
+.. * For a **Local** or **Docker** installation, ask your system administrator if you could have access to more computers and then follow this tutorial.
+
 * On the **Azure Cloud**, follow the instructions in :doc:`../../install/azure/index` for each additional computer you want to add to your cluster and use for scaling your analyses.
 
 Instructions
