@@ -12,7 +12,7 @@ Repository setup and management
 
 .. `Video Demo <https://www.youtube.com/watch?v=G5x4dDazFug&width=640&height=480>`_
 
-.. `Video Demo <https://youtu.be/Bsoa7psCFgo>`_
+`Video Demo <https://youtu.be/ZTMmD_cICm0>`_
 
 **Link to AWS S3**
 
@@ -98,7 +98,9 @@ You can click the **Refresh** icon to get the latest list of files on your Repos
 Datastore category setup and management
 ---------------------------------------
 
-.. `Video Demo <https://youtu.be/ed0g7uVzEmA>`_
+`Video Demo 1 <https://youtu.be/GtgMjGkI-bA>`_
+
+`Video Demo 2 <https://youtu.be/KUpEfQ9mBL4>`_
 
 **Create category**
 
@@ -195,7 +197,7 @@ By clicking the icon in the right-most column of the category table, you can acc
 Query setup and management
 -----------------------------
 
-.. `Video Demo <https://youtu.be/jILkSbnPHeg>`_
+`Video Demo <https://youtu.be/UgaUPX07lBY>`_
 
 **Create a Query**
 

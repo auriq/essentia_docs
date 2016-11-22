@@ -5,9 +5,14 @@ How To Scale Up
 ************************
 
 In this tutorial, we concentrate on using Essentia within the AWS cloud service. 
+AWS allows Essentia to handle the creation of and connection to worker nodes automatically, 
+making analyses fully scalable and adaptable.
 This tutorial requires the AWS cloud-based version of Essentia.
 
-To create worker nodes and construct an Essentia cluster using the Local, Docker, or Azure installation of Essentia, go through :doc:`configure-cluster`.
+To connect to existing computers as your worker nodes and manually construct an Essentia cluster, go through :doc:`configure-cluster`.
+
+**Note:** The Local and Docker installations of Essentia are currently limited to 
+one computer and do not currently make use of Essentia's scalability.
 
 ==============================
 Running on AWS
