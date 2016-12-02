@@ -36,8 +36,8 @@ How to Launch Essentia in the Amazon Cloud
      should launch Essentia into the **same VPC** as their Redshift cluster.
 
    * Auto-assign Public IP: **ENABLE**
-   * IAM Role: **In order to utilize Essentia's scalability you must attach an IAM role that authorizes the**
-     **instance to spin up more ec2 instances (worker nodes) to aid in processing.** For more
+   * IAM Role: **In order to utilize Essentia's scalability you must either attach an IAM role or enter AWS access credentials that**
+     **authorize the instance to spin up more ec2 instances (worker nodes) to aid in processing.** For more
      information, refer to our section on :doc:`iam-role`. If you do not need to use this scalability, **None** is OK.
 ..
 ..   | If you plan to use our RStudio Integration, you need to click **Advanced Details**. 
