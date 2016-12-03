@@ -24,7 +24,7 @@ This IAM role provides full access to EC2 and allows worker nodes to obtain thei
                 "Resource": [
                     "*"
                 ]
-            },
+            }
         ]
     }
 

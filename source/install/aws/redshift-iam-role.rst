@@ -10,6 +10,15 @@ This IAM role provides full access to Redshift::
             {
                 "Effect": "Allow",
                 "Action": [
+                    "iam:PassRole"
+                ],
+                "Resource": [
+                    "*"
+                ]
+            },
+            {
+                "Effect": "Allow",
+                "Action": [
                     "redshift:*"
                 ],
                 "Resource": [

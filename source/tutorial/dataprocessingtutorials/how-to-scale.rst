@@ -49,7 +49,7 @@ that is fine.  Worker nodes are not required for any of the training tutorials h
 Launching an Essentia Cluster
 ==============================
 
-If you have setup :doc:`../../install/aws/iam-role`, then all you need to do in order to spin up workers and build your Essentia cluster is run the command::
+If you setup IAM Roles in :doc:`../../install/aws/iam-role`, then all you need to do in order to spin up workers and build your Essentia cluster is run the command::
 
    ess cluster create [--number=NUMBER] [--type=TYPE]
    

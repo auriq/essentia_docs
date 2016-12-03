@@ -10,6 +10,15 @@ This IAM role provides full access to S3 and allows accessing or writing S3 data
             {
                 "Effect": "Allow",
                 "Action": [
+                    "iam:PassRole"
+                ],
+                "Resource": [
+                    "*"
+                ]
+            },
+            {
+                "Effect": "Allow",
+                "Action": [
                     "s3:*"
                 ],
                 "Resource": [

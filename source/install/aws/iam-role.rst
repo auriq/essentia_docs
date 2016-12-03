@@ -6,7 +6,8 @@ In order for Essentia to launch worker nodes or access data on S3, it requires a
 different ways.
 
 * Creating an `IAM Role <http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/iam-roles-for-amazon-ec2.html>`_ and attaching it to the instance during instance creation.
-* Logging into the master node and running ``aws configure`` to save your AWS Access Credentials to a file. 
+* Logging into the master node and running ``aws configure`` to save your AWS Access Credentials to a 
+  file (enables launching worker nodes only, not used for S3 access). 
 * Entering your AWS Access Credentials directly into the Essentia commands when they are needed.
 
 A downside of the last two options is that the user needs to worry about the AWS Access Credentials, maintain their security, and 
@@ -36,7 +37,7 @@ To create an IAM Role, follow these steps:
 #. Name it something appropriate (optional)
 #. Under the Policy Document section, cut and paste any of the following policies:
 
-   * If you are using one of the other two methods for S3 access then you can use :doc:`worker-nodes-iam-role`.
+   * If you are using the Command-Level Access Credentials method for S3 access then you can use :doc:`worker-nodes-iam-role`.
    * If you are using one of the other two methods for creating worker nodes then you can use :doc:`s3-iam-role`.
    * If you are NOT using another method for authentication, use :doc:`worker-nodes-and-s3-iam-role`.
 
@@ -51,20 +52,22 @@ To create an IAM Role, follow these steps:
 
    If you plan to utilize our Redshift Integration, you need to enable Redshift access in your IAM Role. The following policies both do that:
    
-* If you are using one of the other two methods for creating worker nodes and S3 access then you can use :doc:`redshift-iam-role`.
+* If you are using the Command-Level Access Credentials method for creating worker nodes and S3 access then you can use :doc:`redshift-iam-role`.
 * If you are NOT using another method for authentication, use :doc:`worker-nodes-and-s3-and-redshift-iam-role`.
 
 =============
 AWS Configure
 =============
     
-Users can also grant the master the authorization to create other ec2 instances / access S3 by logging 
+Users can also grant the master the authorization to create other ec2 instances by logging 
 into their master node and running the command::
 
   aws configure
 
 The user will then need to enter their AWS Access Credentials, which will then be stored in a file which Essentia will read when
 it needs them.
+
+This method cannot be used to grant S3 access. It is recommended to use IAM Roles instead.
 
 ================================
 Command-Level Access Credentials
@@ -80,9 +83,12 @@ entering new credentials with the desired access level.
 
 Creating Worker Nodes for Scalability::
 
- ess cluster create ... --aws_access_key=**ENTER_AWS_ACCESS_KEY** --aws_secret_access_key=**ENTER_AWS_SECRET_KEY**
+ ess cluster create ... --aws_access_key=**ENTER_ACCESS_KEY** --aws_secret_access_key=**ENTER_SECRET_KEY**
 
 Accessing or Writing S3 Data::
 
- ess select ... --aws_access_key=**ENTER_AWS_ACCESS_KEY** --aws_secret_access_key=**ENTER_AWS_SECRET_KEY**
+ ess select ... --aws_access_key=**ENTER_ACCESS_KEY** --aws_secret_access_key=**ENTER_SECRET_KEY**
 
+**Note:** The Access Credentials that you enter into these commands need to have the correct permissions. 
+I.e. Essentia will not be able to access data in S3 if the user enters Access Credentials into the "ess select" 
+command that only have access to EC2.
