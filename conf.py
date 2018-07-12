@@ -46,7 +46,7 @@ master_doc = 'index'
 # General information about the project.
 #project = u'Essentia'
 project = u''
-copyright = u'2016, AuriQ Systems Inc.'
+copyright = u'2018, AuriQ Systems Inc.'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
