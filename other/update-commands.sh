@@ -1,3 +1,4 @@
+source gitcred.sh
 version=`git branch | grep \* | awk '{printf $2}'`
 
 echo -e "\nRunning $1 for essentia docs version $version\n"
@@ -6,13 +7,13 @@ if [ -n "$version" ]
 then
 
  cd ~/essentia_docs
- c1="git pull https://bwaxer:dragon911@github.com/auriq/essentia_docs.git $version"
+ c1="git pull https://$username:$password@github.com/auriq/essentia_docs.git $version"
  c2="rm -R _build/html/*"
  c3="make html"
  c4="sudo cp -R _build/html/* /var/www/html/documentation/."
  c5="sudo cp source/screenshots/*.png /var/www/html/documentation/source/screenshots/"
 
- c6="git push https://bwaxer:dragon911@github.com/auriq/essentia_docs.git $version"
+ c6="git push https://$username:$password@github.com/auriq/essentia_docs.git $version"
  
  c7="rm -rf source/EssentiaPublic/"
  c8="cp -R ../EssentiaPublic source/"
@@ -51,6 +52,12 @@ then
   $c1
   $c6
 
+ elif [ "$1" = "make" ]
+ then
+
+  $c2
+  $c3
+
  elif [ "$1" = "EssentiaPublic" ]
  then
 
@@ -69,3 +76,5 @@ fi
 ###  sudo mkdir /var/www/html/documentation/3.1.1/
 ###  sudo cp -R _build/html/* /var/www/html/documentation/3.1.1/.
 ### Then run this file again with the new branch using the normal method
+
+### For running lines 1,2,3 you can run "bash other/update-commands.sh pull" then "bash other/update-commands.sh make"
