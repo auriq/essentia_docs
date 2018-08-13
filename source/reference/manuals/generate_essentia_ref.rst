@@ -5,7 +5,7 @@
 ::
 
     usage: ess [-h] [-v]
-               {select,summary,probe,purge,ls,category,file,cat,lsa,cluster,query,server,create,drop,use,stream,exec,udbd,redshift}
+               {select,summary,repository,probe,purge,ls,category,file,cat,lsa,cluster,query,server,create,drop,use,stream,exec,udbd,redshift}
                ...
     
     The Essentia ETL Engine
@@ -15,11 +15,12 @@
       -v, --version         show program's version number and exit
     
     Subcommands:
-      {select,summary,probe,purge,ls,category,file,cat,lsa,cluster,query,server,create,drop,use,stream,exec,udbd,redshift}
+      {select,summary,repository,probe,purge,ls,category,file,cat,lsa,cluster,query,server,create,drop,use,stream,exec,udbd,redshift}
         select              Choose a datastore
         summary             Summarize datastore
+        repository          Summarize repository
         probe               Probe category
-        purge               Delete database
+        purge               Delete datastore
         ls                  File commands
         category            Category commands
         file                File transfer with workers
@@ -73,20 +74,162 @@
 **ess summary**
 --------------------------------
 
++++++++++++++++++++++++++++++++++
+``ess summary pkey``
++++++++++++++++++++++++++++++++++
+
 ::
 
-    usage: ess summary [-h] [--label [LABEL]] [--scan] [--short] [category]
+    usage: ess summary [-h] [--label [LABEL]] [--scan] [--short]
+                       [category]
+                       [{pkey,columnspec,schema,delimiter,compression,preprocess}]
     
     Summarize datastore
     
     positional arguments:
-      category         category
+      category              category
+      {pkey,columnspec,schema,delimiter,compression,preprocess}
+                            category parameter to output
     
     optional arguments:
-      -h, --help       show this help message and exit
-      --label [LABEL]  select a datastore
-      --scan           scan and update stats on datastore
-      --short          return total file count and size only. used with --scan
+      -h, --help            show this help message and exit
+      --label [LABEL]       select a datastore
+      --scan                scan and update stats on datastore
+      --short               return total file count and size only. used with
+                            --scan
+    
++++++++++++++++++++++++++++++++++
+``ess summary columnspec``
++++++++++++++++++++++++++++++++++
+
+::
+
+    usage: ess summary [-h] [--label [LABEL]] [--scan] [--short]
+                       [category]
+                       [{pkey,columnspec,schema,delimiter,compression,preprocess}]
+    
+    Summarize datastore
+    
+    positional arguments:
+      category              category
+      {pkey,columnspec,schema,delimiter,compression,preprocess}
+                            category parameter to output
+    
+    optional arguments:
+      -h, --help            show this help message and exit
+      --label [LABEL]       select a datastore
+      --scan                scan and update stats on datastore
+      --short               return total file count and size only. used with
+                            --scan
+    
++++++++++++++++++++++++++++++++++
+``ess summary schema``
++++++++++++++++++++++++++++++++++
+
+::
+
+    usage: ess summary [-h] [--label [LABEL]] [--scan] [--short]
+                       [category]
+                       [{pkey,columnspec,schema,delimiter,compression,preprocess}]
+    
+    Summarize datastore
+    
+    positional arguments:
+      category              category
+      {pkey,columnspec,schema,delimiter,compression,preprocess}
+                            category parameter to output
+    
+    optional arguments:
+      -h, --help            show this help message and exit
+      --label [LABEL]       select a datastore
+      --scan                scan and update stats on datastore
+      --short               return total file count and size only. used with
+                            --scan
+    
++++++++++++++++++++++++++++++++++
+``ess summary delimiter``
++++++++++++++++++++++++++++++++++
+
+::
+
+    usage: ess summary [-h] [--label [LABEL]] [--scan] [--short]
+                       [category]
+                       [{pkey,columnspec,schema,delimiter,compression,preprocess}]
+    
+    Summarize datastore
+    
+    positional arguments:
+      category              category
+      {pkey,columnspec,schema,delimiter,compression,preprocess}
+                            category parameter to output
+    
+    optional arguments:
+      -h, --help            show this help message and exit
+      --label [LABEL]       select a datastore
+      --scan                scan and update stats on datastore
+      --short               return total file count and size only. used with
+                            --scan
+    
++++++++++++++++++++++++++++++++++
+``ess summary compression``
++++++++++++++++++++++++++++++++++
+
+::
+
+    usage: ess summary [-h] [--label [LABEL]] [--scan] [--short]
+                       [category]
+                       [{pkey,columnspec,schema,delimiter,compression,preprocess}]
+    
+    Summarize datastore
+    
+    positional arguments:
+      category              category
+      {pkey,columnspec,schema,delimiter,compression,preprocess}
+                            category parameter to output
+    
+    optional arguments:
+      -h, --help            show this help message and exit
+      --label [LABEL]       select a datastore
+      --scan                scan and update stats on datastore
+      --short               return total file count and size only. used with
+                            --scan
+    
++++++++++++++++++++++++++++++++++
+``ess summary preprocess``
++++++++++++++++++++++++++++++++++
+
+::
+
+    usage: ess summary [-h] [--label [LABEL]] [--scan] [--short]
+                       [category]
+                       [{pkey,columnspec,schema,delimiter,compression,preprocess}]
+    
+    Summarize datastore
+    
+    positional arguments:
+      category              category
+      {pkey,columnspec,schema,delimiter,compression,preprocess}
+                            category parameter to output
+    
+    optional arguments:
+      -h, --help            show this help message and exit
+      --label [LABEL]       select a datastore
+      --scan                scan and update stats on datastore
+      --short               return total file count and size only. used with
+                            --scan
+    
+--------------------------------
+**ess repository**
+--------------------------------
+
+::
+
+    usage: ess repository [-h]
+    
+    Summarize repository
+    
+    optional arguments:
+      -h, --help  show this help message and exit
     
 --------------------------------
 **ess probe**
@@ -172,6 +315,7 @@
                             [--columnspec COLUMNSPEC] [--preprocess PREPROCESS]
                             [--alls | --allx] [--overwrite] [--label LABEL]
                             [--comment COMMENT] [--noprobe] [--usecache]
+                            [--pkey PKEY]
                             name pattern
     
     positional arguments:
@@ -204,6 +348,7 @@
       --comment COMMENT     Comment for the category
       --noprobe             Skip file probe. Just index.
       --usecache            Use cached file list if possible.
+      --pkey PKEY           pkey column name
     
 +++++++++++++++++++++++++++++++++
 ``ess category change``
@@ -369,6 +514,7 @@
                               [--add]
                               [--credentials CREDENTIALS | --aws_access_key AWS_ACCESS_KEY]
                               [--aws_secret_access_key AWS_SECRET_ACCESS_KEY]
+                              [--error_return_code]
     
     optional arguments:
       -h, --help            show this help message and exit
@@ -382,6 +528,7 @@
                             EC2 access key
       --aws_secret_access_key AWS_SECRET_ACCESS_KEY
                             EC2 secret access key
+      --error_return_code   return error code when some of worker nodes failed
     
 **See Also:** `Advanced Options <essentia-ref.html#advanced-options>`_
     
@@ -392,11 +539,19 @@
 ::
 
     usage: ess cluster terminate [-h] [--all] [-y]
+                                 [--credentials CREDENTIALS | --aws_access_key AWS_ACCESS_KEY]
+                                 [--aws_secret_access_key AWS_SECRET_ACCESS_KEY]
     
     optional arguments:
-      -h, --help  show this help message and exit
-      --all       delete all worker nodes, security group, keys
-      -y          confirm to terminate all
+      -h, --help            show this help message and exit
+      --all                 delete all worker nodes, security group, keys
+      -y                    confirm to terminate all
+      --credentials CREDENTIALS
+                            Credentials file
+      --aws_access_key AWS_ACCESS_KEY
+                            EC2 access key
+      --aws_secret_access_key AWS_SECRET_ACCESS_KEY
+                            EC2 secret access key
     
 **See Also:** `Advanced Options <essentia-ref.html#advanced-options>`_
     
@@ -407,9 +562,17 @@
 ::
 
     usage: ess cluster stop [-h]
+                            [--credentials CREDENTIALS | --aws_access_key AWS_ACCESS_KEY]
+                            [--aws_secret_access_key AWS_SECRET_ACCESS_KEY]
     
     optional arguments:
-      -h, --help  show this help message and exit
+      -h, --help            show this help message and exit
+      --credentials CREDENTIALS
+                            Credentials file
+      --aws_access_key AWS_ACCESS_KEY
+                            EC2 access key
+      --aws_secret_access_key AWS_SECRET_ACCESS_KEY
+                            EC2 secret access key
     
 **See Also:** `Advanced Options <essentia-ref.html#advanced-options>`_
     
@@ -420,9 +583,17 @@
 ::
 
     usage: ess cluster start [-h]
+                             [--credentials CREDENTIALS | --aws_access_key AWS_ACCESS_KEY]
+                             [--aws_secret_access_key AWS_SECRET_ACCESS_KEY]
     
     optional arguments:
-      -h, --help  show this help message and exit
+      -h, --help            show this help message and exit
+      --credentials CREDENTIALS
+                            Credentials file
+      --aws_access_key AWS_ACCESS_KEY
+                            EC2 access key
+      --aws_secret_access_key AWS_SECRET_ACCESS_KEY
+                            EC2 secret access key
     
 **See Also:** `Advanced Options <essentia-ref.html#advanced-options>`_
     
@@ -481,6 +652,21 @@
     
     optional arguments:
       -h, --help  show this help message and exit
+    
+**See Also:** `Advanced Options <essentia-ref.html#advanced-options>`_
+    
++++++++++++++++++++++++++++++++++
+``ess cluster iplist``
++++++++++++++++++++++++++++++++++
+
+::
+
+    usage: ess cluster iplist [-h] [--private | --public]
+    
+    optional arguments:
+      -h, --help  show this help message and exit
+      --private   Private IPs only
+      --public    Public IPs only
     
 **See Also:** `Advanced Options <essentia-ref.html#advanced-options>`_
     
@@ -709,8 +895,8 @@
 ::
 
     usage: ess stream [-h] [--exclude EXCLUDE] [--master] [--debug] [--bulk]
-                      [--threads THREADS] [--archive ARCHIVE] [--s3out S3OUT]
-                      [--label LABEL] [--progress] [--limit LIMIT] [--quitonerror]
+                      [--threads THREADS] [--archive ARCHIVE] [--label LABEL]
+                      [--progress] [--limit LIMIT] [--quitonerror] [--s3out S3OUT]
                       category lower upper [command]
     
     Import data
@@ -729,11 +915,11 @@
       --bulk             bulk mode
       --threads THREADS  Number of threads
       --archive ARCHIVE  glob pattern to id file within archive
-      --s3out S3OUT      send output to an s3 bucket
       --label LABEL      Assign a label to the datastore
       --progress         Show a progress bar
       --limit LIMIT      Limit # of files streamed
       --quitonerror      Stop stream when error occurs
+      --s3out S3OUT      send output to an s3 bucket
     
 **See Also:** :doc:`../tables/index`
     
