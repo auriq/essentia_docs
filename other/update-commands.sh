@@ -51,6 +51,12 @@ then
   $c1
   $c6
 
+ elif [ "$1" = "make" ]
+ then
+
+  $c2
+  $c3
+
  elif [ "$1" = "EssentiaPublic" ]
  then
 
@@ -69,3 +75,5 @@ fi
 ###  sudo mkdir /var/www/html/documentation/3.1.1/
 ###  sudo cp -R _build/html/* /var/www/html/documentation/3.1.1/.
 ### Then run this file again with the new branch using the normal method
+
+### For running lines 1,2,3 you can run "bash other/update-commands.sh pull" then "bash other/update-commands.sh make"
