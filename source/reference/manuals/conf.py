@@ -367,6 +367,8 @@ man_pages = [
     [u'AuriQ Systems Inc.'], 1),
     ('ess-summary', 'ess-summary', u'',
     [u'AuriQ Systems Inc.'], 1),
+    ('ess-repository', 'ess-repository', u'',
+    [u'AuriQ Systems Inc.'], 1),
     ('ess-probe', 'ess-probe', u'',
     [u'AuriQ Systems Inc.'], 1),
     ('ess-purge', 'ess-purge', u'',

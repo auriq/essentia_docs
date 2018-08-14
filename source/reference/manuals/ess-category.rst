@@ -14,6 +14,7 @@
                             [--columnspec COLUMNSPEC] [--preprocess PREPROCESS]
                             [--alls | --allx] [--overwrite] [--label LABEL]
                             [--comment COMMENT] [--noprobe] [--usecache]
+                            [--pkey PKEY]
                             name pattern
     
     positional arguments:
@@ -46,6 +47,7 @@
       --comment COMMENT     Comment for the category
       --noprobe             Skip file probe. Just index.
       --usecache            Use cached file list if possible.
+      --pkey PKEY           pkey column name
     
 +++++++++++++++++++++++++++++++++
 ``ess category change``
