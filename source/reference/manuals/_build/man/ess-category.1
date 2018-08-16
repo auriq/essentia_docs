@@ -1,6 +1,6 @@
 .\" Man page generated from reStructuredText.
 .
-.TH "ESS-CATEGORY" "1" "October 06, 2016" "3.2.0" ""
+.TH "ESS-CATEGORY" "1" "August 14, 2018" "3.2.0" ""
 .SH NAME
 ess-category \- 
 .
@@ -42,6 +42,7 @@ usage: ess category add [\-h] [\-\-exclude [EXCLUDE]] [\-\-dateregex DATEREGEX]
                         [\-\-columnspec COLUMNSPEC] [\-\-preprocess PREPROCESS]
                         [\-\-alls | \-\-allx] [\-\-overwrite] [\-\-label LABEL]
                         [\-\-comment COMMENT] [\-\-noprobe] [\-\-usecache]
+                        [\-\-pkey PKEY]
                         name pattern
 
 positional arguments:
@@ -74,6 +75,7 @@ optional arguments:
   \-\-comment COMMENT     Comment for the category
   \-\-noprobe             Skip file probe. Just index.
   \-\-usecache            Use cached file list if possible.
+  \-\-pkey PKEY           pkey column name
 .ft P
 .fi
 .UNINDENT
