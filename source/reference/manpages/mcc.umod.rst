@@ -364,8 +364,8 @@ A module function is defined like a C function:
   during an Udb export/count/scan operation.
 
   * It is called as each key is processed.
-  * Use it to scan tables associated with the current key, examine and/or modify
-    column values, and so on.
+  * Use it to scan tables associated with the current key,
+    examine and/or modify column values, and so on.
   * It is called with this implicit argument:
 
     * ``ModCntx *mod`` - A module instance handle. Pass this to any support
@@ -596,22 +596,40 @@ argument).
 
   * ``TabName`` must be a table declared via `DECL_COLUMN()`_ or
     `DECL_COLUMN_DYNAMIC()`_.
-  * There is an implicit row iterator. References to any column values
-    within the loop implicitly refer to the row iterator's values.
-  * Usually followed by the loop content - a code block enclosed in "{ ... }".
+  * Usually followed by the loop body - a code block enclosed in "{ ... }".
+  * It sets up and iterates over an internal table specific row iterator
+    variable. The use of `MOD_CDAT()`_ within the loop implicitly refer to the
+    iterator's column values.
+  * Because the row iterator is internal, this construct may not be
+    thread-safe. Use `MOD_TABLE_SCAN_R()`_ instead if appropriate.
   * See `MOD_KEY_FUNC()`_ for an usage example.
+
+
+.. _`MOD_TABLE_SCAN_R()`:
+
+``MOD_TABLE_SCAN(TabName, RowData *row) { ... }``
+  A macro that expands to a ``for`` loop over all rows of the given table.
+  The given ``row`` variable will be used as the row iterator.
+
+  * ``TabName`` must be a table declared via `DECL_COLUMN()`_ or
+    `DECL_COLUMN_DYNAMIC()`_.
+  * Usually followed by the loop body - a code block enclosed in "{ ... }".
+  * Use `MOD_CDAT_R()`_ to access column values within the loop.
+  * See `MOD_CDAT_R()`_ for an usage example.
 
 
 .. _`MOD_TABLE_SET()`:
 
 ``MOD_TABLE_SET(TabName)``
-  A macro that sets the row iterator of the given table to the first
-  row of the table. No return value.
+  A macro that sets the internal table specific row iterator of the given table
+  to the first row of the table. No return value.
 
   * ``TabName`` must be a table declared via `DECL_COLUMN()`_ or
     `DECL_COLUMN_DYNAMIC()`_.
   * This is often used to access a vector where scanning (a ``for`` loop)
     is not necessary.
+  * Because the row iterator is internal, this construct may not be
+    thread-safe. Use `MOD_TABLE_SCAN_R()`_ instead if appropriate.
 
   Example:
 
@@ -635,18 +653,50 @@ argument).
     to vector column ``VecName_2.ColName_1``.
 
 
-.. _`MOD_ROW()`:
+.. _`MOD_TABLE_SET_R()`:
 
-``RowData *MOD_ROW(TabName)``
-  A macro that returns the current row iterator of the given table.
+``MOD_TABLE_SET_R(TabName, RowData *row)``
+  A macro that sets the given ``row`` variable
+  to the first row of the table. No return value.
 
   * ``TabName`` must be a table declared via `DECL_COLUMN()`_ or
     `DECL_COLUMN_DYNAMIC()`_.
-  * It can be used after calling `MOD_TABLE_SCAN()`_ or
-    `MOD_TABLE_SET()`_ on the desired table.
-  * It can also be used in `MOD_ROW_FUNC()`_ and `MOD_MERGE_FUNC()`_
-    to address the row being exported/counted/scanned/merged
-    without calling `MOD_TABLE_SCAN()`_ or `MOD_TABLE_SET()`_.
+  * This is often used to access a vector where scanning (a ``for`` loop)
+    is not necessary.
+
+  Example:
+
+   ::
+
+    DECL_COLUMN(TabName_1.ColName_1, I);
+    DECL_COLUMN(VecName_2.ColName_1, I);
+    MOD_KEY_FUNC()
+    {
+      CDAT_I_T sum;
+      RowData *row;
+      sum = 0;
+      MOD_TABLE_SCAN_R(TabName_1, row) {
+        sum += MOD_CDAT_R(TabName_1.ColName_1, row);
+      }
+      MOD_TABLE_SET_R(VecName_2, row);
+      MOD_CDAT_R(VecName_2.ColName_1, row) = sum;
+      ...
+    }
+
+  * The same `MOD_TABLE_SET()`_ implemented using ``*_R()`` constructs.
+
+
+.. _`MOD_ROW()`:
+
+``RowData *MOD_ROW(TabName)``
+  A macro that returns the internal row iterator of the given table.
+
+  * ``TabName`` must be a table declared via `DECL_COLUMN()`_ or
+    `DECL_COLUMN_DYNAMIC()`_.
+  * It is available after calling `MOD_TABLE_SET()`_ or
+    `MOD_TABLE_SCAN()`_ on the desired table.
+  * It is also available in `MOD_ROW_FUNC()`_ and `MOD_MERGE_FUNC()`_
+    where the iterator is set to the row being exported/counted/scanned/merged.
 
   Example:
 
@@ -666,16 +716,20 @@ argument).
 .. _`MOD_CDAT()`:
 
 ``CDAT_*_T MOD_CDAT(TabName.ColName)``, ``CDAT_*_T $TabName.ColName``
-  Use either form like a program variable to address the value of a column
-  declared via `DECL_COLUMN()`_ or `DECL_COLUMN_DYNAMIC()`_.
-
-  * The variable will have a ``CDAT_*_T`` type (see `column datatypes`_)
-    derived from the ``ColType`` in the declaration.
-  * Applicable after calling `MOD_TABLE_SCAN()`_ or
-    `MOD_TABLE_SET()`_ on the relevant table.
-  * Also applicable in `MOD_ROW_FUNC()`_ and `MOD_MERGE_FUNC()`_
-    to address columns of the row being exported/counted/scanned/merged
-    without calling `MOD_TABLE_SCAN()`_ or `MOD_TABLE_SET()`_.
+  Use either form like a program variable to address the value of a column in
+  the *current* row.
+  
+  * The column must be one that has been declared via `DECL_COLUMN()`_ or
+    `DECL_COLUMN_DYNAMIC()`_.
+    The value will have a ``CDAT_*_T`` type (see `column datatypes`_)
+    derived from ``ColType`` in the declaration.
+  * The *current* row is kept in an internal table specific row iterator
+    variable. It is available after calling `MOD_TABLE_SET()`_
+    or `MOD_TABLE_SCAN()`_ on the relevant table.
+    It is also available in `MOD_ROW_FUNC()`_ and `MOD_MERGE_FUNC()`_
+    where the iterator is set to the row being exported/counted/scanned/merged.
+  * Because the row iterator is internal, this construct may not be
+    thread-safe. Use `MOD_CDAT_R()`_ instead if appropriate.
 
   Example:
 
@@ -697,14 +751,60 @@ argument).
   * Examine and change column values.
 
 
+.. _`MOD_CDAT_R()`:
+
+``CDAT_*_T MOD_CDAT_R(TabName.ColName, RowData *row)``
+  Use this like a program variable to address the value of a column in
+  the given row.
+  
+  * The column must be one that has been declared via `DECL_COLUMN()`_ or
+    `DECL_COLUMN_DYNAMIC()`_.
+    The value will have a ``CDAT_*_T`` type (see `column datatypes`_)
+    derived from ``ColType`` in the declaration.
+  * The ``row`` variable must be one that has been prepared through
+    `MOD_TABLE_SET_R()`_, `MOD_TABLE_SCAN_R()`_ or equivalent.
+  * This is designed for multi-threaded design where the same table is scanned
+    concurrently within the same module instance.
+
+  Example:
+
+   ::
+
+    DECL_COLUMN(Tab.Col, I);
+    static void *ParallelScan(void *ag)
+    {
+      ModCntx *mod = (ModCntx *)ag;
+      RowData *row;
+      CDAT_I_T sum;
+      MOD_TABLE_SCAN_R(Tab, row) {
+        sum += MOD_CDAT_R(Tab.Col, row);
+      }
+      ModLog("%s: sum=%u\n", MOD_NAME, sum);
+    }
+    MOD_KEY_FUNC()
+    {
+      pthread_t tid_1, tid_2;
+      pthread_create(&tid_1, 0, ParallelScan, mod);
+      pthread_create(&tid_2, 0, ParallelScan, mod);
+      pthread_join(tid_1, 0);
+      pthread_join(tid_2, 0);
+      ...
+    }
+
+  * Calculate a column sum in 2 concurrent threads. The sum should be the same
+    from both threads. However, if the ``*_R()`` constructs were
+    not used, the program will either crash or produce the wrong sums.
+
+
 .. _`MOD_IMP_CDAT()`:
 
 ``CDAT_*_T MOD_IMP_CDAT(TabName.ColName)``
-  Use this like a program variable to address the input value of a column
-  declared via `DECL_COLUMN()`_ or `DECL_COLUMN_DYNAMIC()`_.
+  Use this like a program variable to address the input value of a column.
 
-  * The variable will have a ``CDAT_*_T`` type (see `column datatypes`_)
-    derived from the ``ColType`` in the declaration.
+  * The column must be one that has been declared via `DECL_COLUMN()`_ or
+    `DECL_COLUMN_DYNAMIC()`_.
+    The value will have a ``CDAT_*_T`` type (see `column datatypes`_)
+    derived from ``ColType`` in the declaration.
   * Only applicable within `MOD_VALUE_FUNC()`_ and `MOD_MERGE_FUNC()`_.
 
   Example:
@@ -729,8 +829,18 @@ argument).
 .. _`MOD_CDAT_S_NSET()`:
 
 ``void MOD_CDAT_S_NSET(TabName.ColName, const char *b, unsigned int n)``
-  Set the value of a string column represented by ``TabName.ColName`` to a
-  hash string based on string buffer ``b`` and length ``n``.
+  Set the value of the given column in the *current* row to a hash string
+  based on string buffer ``b`` and length ``n``.
+
+  * The column must be one that has been declared via `DECL_COLUMN()`_ or
+    `DECL_COLUMN_DYNAMIC()`_. It must have a string type.
+  * The *current* row is kept in an internal table specific row iterator
+    variable. It is available after calling `MOD_TABLE_SET()`_
+    or `MOD_TABLE_SCAN()`_ on the relevant table.
+    It is also available in `MOD_ROW_FUNC()`_ and `MOD_MERGE_FUNC()`_
+    where the iterator is set to the row being exported/counted/scanned/merged.
+  * Because the row iterator is internal, this construct may not be
+    thread-safe. Use `MOD_CDAT_S_NSET_R()`_ instead if appropriate.
 
   Example:
 
@@ -746,12 +856,27 @@ argument).
   * Alter the value of a string column.
 
 
+.. _`MOD_CDAT_S_NSET_R()`:
+
+``void MOD_CDAT_S_NSET_R(TabName.ColName, const char *b, unsigned int n, RowData *row)``
+  Like `MOD_CDAT_S_NSET()`_, but apply to a custom target row.
+
+
 .. _`MOD_CDAT_S_SET()`:
 
 ``void MOD_CDAT_S_SET(TabName.ColName, CDAT_S_T hs)``
-  Set the value of a string column represented by ``TabName.ColName`` to a
-  copy of hash string ``hs``.
+  Set the value of the given column in the *current* row to a copy of
+  hash string ``hs``.
 
+  * The column must be one that has been declared via `DECL_COLUMN()`_ or
+    `DECL_COLUMN_DYNAMIC()`_. It must have a string type.
+  * The *current* row is kept in an internal table specific row iterator
+    variable. It is available after calling `MOD_TABLE_SET()`_
+    or `MOD_TABLE_SCAN()`_ on the relevant table.
+    It is also available in `MOD_ROW_FUNC()`_ and `MOD_MERGE_FUNC()`_
+    where the iterator is set to the row being exported/counted/scanned/merged.
+  * Because the row iterator is internal, this construct may not be
+    thread-safe. Use `MOD_CDAT_S_NSET_R()`_ instead if appropriate.
   * ``hs`` is an existing hash string (e.g., the value of another string
     column).
 
@@ -770,11 +895,23 @@ argument).
   * Alter the value of a string column.
 
 
+.. _`MOD_CDAT_S_SET_R()`:
+
+``void MOD_CDAT_S_SET_R(TabName.ColName, CDAT_S_T hs, RowData *row)``
+  Like `MOD_CDAT_S_SET()`_, but apply to a custom target row.
+
+
 .. _`MOD_CDAT_S_DEL()`:
 
 ``void MOD_CDAT_S_DEL(TabName.ColName)``
-  Set the value of a string column represented by ``TabName.ColName`` to a
-  generic *blank* hash string.
+  Like `MOD_CDAT_S_SET()`_ with a generic *blank* hash string as the target
+  value.
+
+
+.. _`MOD_CDAT_S_DEL_R()`:
+
+``void MOD_CDAT_S_DEL_R(TabName.ColName, RowData *row)``
+  Like `MOD_CDAT_S_DEL()`_, but apply to a custom target row.
 
 
 .. _`MOD_CDEF()`:

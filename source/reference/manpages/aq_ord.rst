@@ -23,10 +23,11 @@ Synopsis
       [-f[,AtrLst] File [File ...]] [-d ColSpec [ColSpec ...]]
 
   Sort_Spec:
-      -sort[,AtrLst] ColTyp:ColNum | -sort[,AtrLst] ColName [ColName ...]
+      -sort[,AtrLst] ColName [ColName ...]
 
   Output_Spec:
-      [-o[,AtrLst] File] [-c ColName [ColName ...]]
+      [-blk NumRec FilPrefix] [-o[,AtrLst] File] [-c ColName [ColName ...]] |
+      [-blk_only NumRec FilPrefix]
 
 
 Description
@@ -34,60 +35,38 @@ Description
 
 ``aq_ord`` sorts input records according to the value of the sort columns.
 Sort is done in memory, so it is fast.
-However, the entire data set must fit into a single machine's main memory.
-The program offers two sort modes. One is fast and simple but less flexible.
-The other requires more processing overhead but is more versatile.
+The program offers three sort modes:
 
-.. _`Raw sort mode`:
+.. _`All at once sort`:
 
-1) Raw sort mode
+1) All at once sort
 
-   In this mode, raw input rows are stored in memory *as-is*.
-   Column values are not interpreted except for the sort column.
-   Advantages are:
+   In this mode, the sort is done by loading the entire data set into memory.
+   This is the default sort mode.
+   The requirement for this mode is:
 
-   * Simple spec. Only need the sort column index and type.
-   * Fast. Only the sort column's value needs to be interpreted.
-   * Output rows and input rows are identical because rows are stored as-is.
-   * Rows can have varying number of columns as long as the sort column is
-     always at the same position.
+   * There is enough memory to handle the entire data sets (plus overhead).
 
-   Disadvantages are:
+.. _`Block sort`:
 
-   * Only one sort column.
-   * Input cannot be binary (from another aq_* program).
-   * Cannot discard unwanted columns from input.
-   * Cannot select or reposition columns on output.
-   * Cannot output a title row, even if the input has one.
-   * Memory intensive. The entire data set must be buffered, plus an additional
-     sort array.
+2) Block sort
 
-.. _`Parsed sort mode`:
+   Data is sorted in blocks of a given number of records. The blocks are first
+   saved to files, then loaded and merged to produce the final result.
+   The requirements for this mode are:
 
-2) Parsed sort mode
+   * There is enough memory to handle at least a single block (plus overhead).
+   * There is enough disk space to store all the intermediate block results.
+   
+.. _`Merge only`:
 
-   In this mode, a column spec must be defined.
-   Columns are converted before they are stored in memory -
-   numeric and IP address types are stored in binary forms,
-   string type is hashed and the pointer to the hash entry is stored.
-   Advantages are:
+3) Merge only
 
-   * Support composite sort key.
-   * Input can be binary (from another aq_* program). In this format,
-     the input columns need not be converted, so it is more efficient.
-   * Can discard unwanted columns from input.
-   * Can select and reposition columns on output.
-   * Can control output title row.
-   * Potentially more memory efficient when string values are repetitive.
-
-   Disadvantages are:
-
-   * More complex spec. Require all column types and names.
-   * Slower due to the column conversions during input and output.
-   * Output may not resemble the input. For example, an input numeric column
-     of value "" will become "0" on output.
-   * May use more memory than the size of the input if strings are mostly
-     unique and numbers are small (e.g., integer values less than 1000).
+   This will merge the input files/streams into a single output. The inputs
+   must already be sorted in the same order as desired for the output. There
+   is no memory requirement in this mode regardless of the data size,
+   This support can be used to implement parallel sorts on large data sets
+   over multiple machines.
 
 
 Options
@@ -130,7 +109,6 @@ Options
 
 ``-d ColSpec [ColSpec ...]``
   Optionally define the input data columns.
-  Only needed in `Parsed sort mode`_.
   See the `aq_tool input specifications <aq-input.html>`_ manual for details.
   In general, ``ColSpec`` has the form ``Type[,AtrLst]:ColName``.
   Supported ``Types`` are:
@@ -159,37 +137,17 @@ Options
     an internal number.
 
 
-.. _`-sort`:
-
-``-sort[,AtrLst] ColTyp:ColNum``
-  Define the `Raw sort mode`_ sort column.
-  ``ColTyp`` specifies the sort column's data type. See `-d`_ for a list of
-  types,``X`` is not supported.
-  ``ColNum`` specifies the column number (one-based) of the sort column in
-  each row.
-  Optional ``AtrLst`` is a comma separated list containing:
-
-  * ``dec`` - Sort in descending order. Default order is ascending.
-    Descending sort is done by inverting the ascending sort result.
-
-  Example:
-
-   ::
-
-    $ aq_ord ... -sort s:2
-
-  * Sort records according to the string value of the 2nd column in ascending
-    order.
-  * This uses the `Raw sort mode`_, so no column spec is needed.
-
-
 ``-sort[,AtrLst] ColName [ColName ...]``
-  Define the `Parsed sort mode`_ sort columns.
+  Define the sort column(s).
   ``ColNames`` must already be defined under `-d`_.
   Optional ``AtrLst`` is a comma separated list containing:
 
+  * ``ncas`` - Do case insensitive match (default is case sensitive).
+    For ASCII data only.
   * ``dec`` - Sort in descending order. Default order is ascending.
     Descending sort is done by inverting the ascending sort result.
+  * ``mrg`` - Enable the `Merge only`_ mode. The inputs are simply merged
+    according to the sort order, no actual sort is done.
 
   Example:
 
@@ -199,40 +157,68 @@ Options
 
   * Sort records according to the string value of the 2nd column and the
     numeric value of the 1st column in ascending order.
-  * This uses `Parsed sort mode`_, so more than one sort column can be
-    specified.
+
+
+.. _`-blk`:
+
+``-blk NumRec FilPrefix``
+  Enable the `Block sort`_ mode.
+  Data is loaded and sorted in blocks of ``NumRec`` records at a time.
+  The results are saved to ``FilPrefix-BlkNo.bin`` files in aq_tool's internal
+  binary format. ``BlkNo`` is the block number, it starts from 1 and increments
+  for each ``NumRec`` records until the entire input is consumed.
+  When this is done, the ``FilPrefix-BlkNo.bin`` files will be merged to
+  produce the final result.
+
+
+.. _`-blk_only`:
+
+``-blk_only NumRec FilPrefix``
+  Same as the `-blk`_ option except that the ``FilPrefix-BlkNo.bin`` files
+  are not merged afterwards. No final result is produced.
 
 
 .. _`-o`:
 
 ``[-o[,AtrLst] File] [-c ColName [ColName ...]]``
   Output data rows.
+  Can be used with any of the sort modes except for `-blk_only`_
+  Multiple sets of "``-o ... -c ...``" can be specified.
+
   Optional "``-o[,AtrLst] File``" sets the output attributes and file.
   See the `aq_tool output specifications <aq-output.html>`_ manual for details.
 
-  In the `Raw sort mode`_, most output attributes have no effect since
-  the records cannot be altered (only their order).
-  The ``-c`` option is not applicable either.
+  Optional "``-c ColName [ColName ...]``" selects the columns to output.
+  Normally, each selection is a column name.
+  In addition, these special forms are supported:
 
-  In the `Parsed sort mode`_,
-  optional "``-c ColName [ColName ...]``" selects the columns to output.
-  ``ColName`` refers to a column defined under `-d`_.
-  A ``ColName`` can be preceeded with a ``~`` (or ``!``) negation mark.
-  This means that the column is to be excluded.
-  Without ``-c``, all columns are selected by default.
-  If ``-c`` is specified without a previous ``-o``, output to stdout is
-  assumed.
+  * ``*`` - An asterisk adds all columns to the output.
+  * ``ColName[:NewName][+NumPrintFormat]`` - Add ``ColName`` to the output.
+    If ``:NewName`` is given, it will be used as the output label.
+    The ``+NumPrintFormat`` spec is for numeric columns. It overrides the
+    print format of the column (*be careful with this format - a wrong spec
+    can crash the program*).
+  * ``^ColName[:NewName][+NumPrintFormat]`` - Same as the above, but with a
+    leading ``^`` mark. It is used to *modify* the output label and/or format
+    of a previously selected output column called ``ColName``.
+    If ``^ColName[...]`` is the first selection after ``-c``, then ``*`` will be
+    included automatically first.
+  * ``~ColName`` - The leading ``~`` mark is used to *exclude* a previously
+    selected output column called ``ColName``.
+    If ``~ColName`` is the first selection after ``-c``, then ``*`` will be
+    included automatically first.
 
-  Multiple sets of "``-o ... -c ...``" can be specified.
+  If ``-o`` is given without a ``-c``, then ``*`` is assumed.
+  If ``-c`` is given without a prior ``-o``, the selected columns will
+  be output to stdout.
 
   Example:
 
    ::
 
-    $ aq_ord ... -d s:Col1 s:Col2 s:Col3 ... -o,esc,noq - -c Col2 Col1
+    $ aq_ord ... -d s:Col1 s:Col2 s:Col3 ... -o - -c Col2 Col1
 
-  * Output Col2 and Col1 (in that order) to stdout in a format suitable for
-    Amazon Cloud.
+  * Output Col2 and Col1 (in that order) to stdout.
 
 
 Exit Status

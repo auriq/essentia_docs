@@ -169,20 +169,25 @@ Sample Spec
   # "@Var:" starts the Var vector spec.
   # o Var holds a single row of data like a vector.
   # o Only one such definition can be specified.
-  # o The spec is identical to that of a vector except that a name can be be
-  #   assigned - its name is always "var".
-  # o Var columns are NOT key specific. There is one set of Var columns
-  #   per database per Udb server.
-  # o Unlike a regular vector, the "merge" operation is only done during an
-  #   export to combine column values from the servers in a database pool.
+  # o The spec is identical to that of a vector except that a name can not be
+  #   specified - its name is always "var".
+  # o Var columns are NOT key specific. They work like database specific
+  #   global variables in each server instance (i.e., each server in a
+  #   database pool has its own set of Var values).
   # o Var columns are initialized to 0/blank. They can also be reset to
   #   0/blank at any time using "aq_udb -clr var".
-  # o Var columns  can be set using:
+  # o Var columns can be set using:
   #     $ aq_udb -scn var -var VarName VarVal -var VarName VarVal ...
-  #   or
+  #   They can also be imported with:
   #     $ aq_pp -f var_val.csv -imp my_db:var
   # o Var columns can be used in most "aq_udb" operations.
   # o Var columns can be exported using "aq_udb -exp var".
+  # o Since each server in a database pool has its own set of Var values, a
+  #   "merge" operation (based on the "+FIRST", "+LAST", ..., "+NOZERO" setting)
+  #   is done at export to produce a single set of values.
+  # o Even tough an export shows a single set of merged result, individual
+  #   servers in a database pool still maintain their own values. To set every
+  #   server to the exported result, import the result back to the servers.
   #
   @Var:
     s:g_str_1

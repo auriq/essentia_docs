@@ -29,7 +29,7 @@ Synopsis
 Description
 ===========
 
-``aq_cat`` is a multiplexer that concatenate multiple input streams into
+``aq_cat`` is a multiplexer that concatenates multiple input streams into
 a single output stream. The output can then be stored as a single unit or
 piped to another command for further processing. Records from the streams
 can be in delimiter-separated-values (e.g., CSV) format or aq_tool's internal
@@ -152,13 +152,13 @@ Options
 
   Optional "``-c ColName [ColName ...]``" selects the columns to output.
   ``ColName`` refers to a column defined under `-d`_.
-  A ``ColName`` can be preceeded with a ``~`` (or ``!``) negation mark.
+  A ``ColName`` can be preceeded with a ``~`` mark.
   This means that the column is to be excluded.
   If no `-d`_ is given, the desired column numbers or number ranges
   (one-based) can specified instead (e.g "... -c 5-3 1 2 ...").
   Negation does not work on column number spec.
   Without ``-c``, all columns are selected by default.
-  If ``-c`` is specified without a previous ``-o``, output will got to stdout.
+  If ``-c`` is specified without a prior ``-o``, output will got to stdout.
 
   Multiple sets of "``-o ... -c ...``" can be specified.
 
@@ -166,10 +166,9 @@ Options
 
    ::
 
-    $ aq_cat ... -d s:Col1 s:Col2 s:Col3 ... -o,esc,noq - -c Col2 Col1
+    $ aq_cat ... --d s:Col1 s:Col2 s:Col3 ... -o - -c Col2 Col1
 
-  * Output Col2 and Col1 (in that order) to stdout in a format suitable for
-    Amazon Cloud.
+  * Output Col2 and Col1 (in that order) to stdout.
 
    ::
 

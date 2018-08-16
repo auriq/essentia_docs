@@ -39,9 +39,26 @@ Output File Option
 
 ``-o[,AtrLst] File``
 
-The ``-o`` option sets the output attributes and destination file.
-To output to the standard output of the command,
-set ``File`` to ``-`` (a single dash).
+The ``-o`` option sets the output attributes (``AtrLst``) and destination
+(``File``).
+The destination can be a regular file or a stream:
+
+* For a regular file, specify the file's path as ``File``.
+* For a stream to the standard output, specify a ``-`` (a single dash) as
+  ``File``.
+* For a stream to a named pipe, specify ``fifo@PipeName`` as ``File``
+  where ``PipeName`` is the named pipe's path. The program will create the
+  pipe if it does not exist or just use it if it does.
+  If the named pipe is known to exist already, ``PipeName`` alone also works.
+* For a stream obtained from connecting to a listener, specify
+  ``connect@DomainName:Port`` or ``connect@IP4:Port`` or ``connect@[IP6]:Port``
+  as ``File``. ``DomainName``/``IP4``/``IP6`` and ``Port`` are the address and
+  port to connect to.
+* For a stream obtained from accepting a connection, specify
+  ``listen@DomainName:Port`` or ``listen@IP4:Port`` or ``listen@[IP6]:Port`` or
+  ``listen@Port``
+  as ``File``. ``DomainName``/``IP4``/``IP6`` and ``Port`` are the address and
+  port to listen at.
 
 Optional ``AtrLst`` defines the output's data format and handling
 characteristics. It is a list of comma separated attributes containing:
@@ -54,9 +71,9 @@ characteristics. It is a list of comma separated attributes containing:
 
   * ``csv`` - Output in CSV format. This is the default output format.
     Although CSV implies *comma separated*, ``sep=c`` can be used to select
-    a different separator character.
+    a different separator.
   * ``sep=c`` or ``sep=\xHH`` - Output in 'c' (single byte) separated value
-    format. '\\xHH' is a way to specify 'c' via its HEX value ``HH``.
+    format. ``\xHH`` is a way to specify 'c' via its HEX value ``HH``.
   * ``jsn`` - Output each record as an JSON object as in
     ``{ "ColName":Value,...}<newline>``.
   * ``bin`` - Output in aq_tool's internal binary format.
@@ -78,7 +95,7 @@ characteristics. It is a list of comma separated attributes containing:
     preserve the value of a ``F`` type column).
   * ``esc`` - Use a '\\' to escape the field separator, '"' and '\\' characters.
 
-* Miscellaneous output control:
+* Miscellaneous output controls:
 
   * ``app`` - When outputting to a file, append to it instead of overwriting.
   * ``nodelay`` - Output records as soon as possible. Otherwise, up to 16KB

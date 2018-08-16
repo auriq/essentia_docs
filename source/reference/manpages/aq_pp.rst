@@ -26,7 +26,6 @@ Synopsis
 
   Prep_Spec:
       [-seed RandSeed]
-      [-rownum StartNum]
       [-var ColSpec Val]
       [-alias ColName AltName]
       [-renam ColName NewName]
@@ -46,7 +45,8 @@ Synopsis
   Output_Spec:
       [-o[,AtrLst] File] [-c ColName [ColName ...]]
       [-ovar[,AtrLst] File [-c ColName [ColName ...]]]
-      [-imp[,AtrLst] DbName[:TabName] [-mod ModSpec [ModSrc]]
+      [-imp[,AtrLst] DbName[:TabName] [-server AdrSpec [AdrSpec ...]] [-local]
+        [-mod ModSpec [ModSrc]]
 
 
 Description
@@ -247,14 +247,6 @@ Options
   Default seed is 1.
 
 
-.. _`-rownum`:
-
-``-rownum StartNum``
-  Set the starting value for the ``$RowNum`` evaluation builtin variable.
-  ``StartNum`` is the index of the first row.
-  Default starting row index is 1.
-
-
 .. _`-var`:
 
 ``-var ColSpec Val``
@@ -262,10 +254,13 @@ Options
   A variable stores a value that persists between rows over the entire run.
   Recall that normal column values change from row to row.
   ``ColSpec`` is the variable's spec in the form ``Type:ColName`` where Type
-  is the data type and ColName is the variable's name. See the `-d`_ for
-  details.
+  is the data type and ColName is the variable's name, see `-d`_ for details.
   Note that a string ``Val`` must be quoted,
   see `String Constant`_ spec for details.
+
+  A variable can also be used in conjunction with ``-o,fvar VarName`` to
+  specify a dynamic output target (the variable must be a string in this case).
+  See the ``fvar`` description under `-o`_ for details.
 
   Example:
 
@@ -336,7 +331,7 @@ Options
     '+' for concatenation.
   * Certain types can be converted to one another using the builtin functions
     ``ToIP()``, ``ToF()``, ``ToI()`` and ``ToS()``.
-  * Operator precedency is *NOT* supported. Use '(' and ')' to group
+  * Operator precedence is *NOT* supported. Use '(' and ')' to group
     operations as appropriate.
 
   Builtin variables:
@@ -344,13 +339,18 @@ Options
   ``$Random``
     A random number (postive integer).
     Its value changes every time the variable is referenced.
-    The seed of this random sequence
-    can be set using the `-seed`_ option.
+    The seed of this random sequence can be set using the `-seed`_ option.
 
   ``$RowNum``
-    The input row index.
-    First row is 1 by default.
-    Its initial value can be set using the `-rownum`_ option.
+    The input row index (one-based).
+
+  ``$CurSec``
+    The current time in seconds.
+    It is evaluated in realtime when the variable is referenced.
+
+  ``$CurUSec``
+    The current time in microseconds.
+    It is evaluated in realtime when the variable is referenced.
 
   Standard functions:
 
@@ -363,12 +363,6 @@ Options
     $ aq_pp ... -d i:Col1 ... -eval l:Col_evl 'Col1 * 10' ...
 
   * Set new column Col_evl to 10 times the value of Col1.
-
-   ::
-
-    $ aq_pp -rownum 101 ... -d i:Col1 ... -eval i:Seq '$RowNum' ...
-
-  * Set starting row index to 101 and set new column Seq to the row index.
 
    ::
 
@@ -389,14 +383,11 @@ Options
   ``MapFrom`` defines the extraction rule.
   Optional ``AtrLst`` is a comma separated list containing:
 
-  * ``ncas`` - Do case insensitive pattern match (default is case sensitive).
-  * ``rx`` - Do Regular Expression matching.
-  * ``rx_extended`` - Do Regular Expression matching.
-    In addition, enable POSIX Extended Regular Expression syntax.
-  * ``rx_newline`` - Do Regular Expression matching.
-    In addition, apply certain newline matching restrictions.
+  * ``ncas`` - Do case insensitive match (default is case sensitive).
+    For ASCII data only.
+  * One or more `regular expression attributes <aq-emod.html#regex-attributes>`_.
 
-  If any of the Regular Expression related attributes are enabled, then
+  If any of the regular expression related attributes are enabled, then
   ``MapFrom`` must use the `RegEx MapFrom Syntax`_.
   Otherwise, it must use the `RT MapFrom Syntax`_.
 
@@ -594,14 +585,11 @@ Options
   ``MapTo`` is the rendering spec. See `MapTo Syntax`_ for details.
   Optional ``AtrLst`` is a comma separated list containing:
 
-  * ``ncas`` - Do case insensitive pattern match (default is case sensitive).
-  * ``rx`` - Do Regular Expression matching.
-  * ``rx_extended`` - Do Regular Expression matching.
-    In addition, enable POSIX Extended Regular Expression syntax.
-  * ``rx_newline`` - Do Regular Expression matching.
-    In addition, apply certain newline matching restrictions.
+  * ``ncas`` - Do case insensitive match (default is case sensitive).
+    For ASCII data only.
+  * One or more `regular expression attributes <aq-emod.html#regex-attributes>`_.
 
-  If any of the Regular Expression related attributes are enabled, then
+  If any of the regular expression related attributes are enabled, then
   ``MapFrom`` must use the `RegEx MapFrom Syntax`_.
   Otherwise, it must use the `RT MapFrom Syntax`_.
 
@@ -629,6 +617,7 @@ Options
   * Standard `input attributes <aq-input.html#input-file-option>`_ described
     in the `aq_tool input specifications <aq-input.html>`_ manual.
   * ``ncas`` - Do case insensitive match (default is case sensitive).
+    For ASCII data only.
   * ``pat`` - Support '?' and '*' wild cards in the "From" value. Literal '?',
     '*' and '\\' must be escaped by a '\\'. Without this attribute,
     "From" value is assumed constant and no escape is necessary.
@@ -678,6 +667,7 @@ Options
   * Standard `input attributes <aq-input.html#input-file-option>`_ described
     in the `aq_tool input specifications <aq-input.html>`_ manual.
   * ``ncas`` - Do case insensitive match (default is case sensitive).
+    For ASCII data only.
   * ``pat`` - Support '?' and '*' wild cards in the "From" value. Literal '?',
     '*' and '\\' must be escaped by a '\\'. Without this attribute,
     match value is assumed constant and no escape is necessary.
@@ -723,9 +713,16 @@ Options
   * Standard `input attributes <aq-input.html#input-file-option>`_ described
     in the `aq_tool input specifications <aq-input.html>`_ manual.
   * ``ncas`` - Do case insensitive match (default is case sensitive).
+    For ASCII data only.
   * ``req`` - Discard unmatched records.
   * ``all`` - Use all matches. Normally, only the first match is used.
     With this attribute, one row is produced for each match.
+  * ``mrg`` - Use *merge* mode. Records in the current data set and in
+    in the combine files must already be *sorted* according to the combine keys
+    in the same order (default is ascending unless ``dec`` is given).
+    Use this approach if the combine data is too large to fit into memory.
+  * ``dec`` - Same as ``mrg`` except that all the data are sorted in descending
+    order.
 
   ``ColSpecs`` define the `input columns <aq-input.html#column-spec>`_ as
   described in the `aq_tool input specifications <aq-input.html>`_ manual.
@@ -814,56 +811,119 @@ Options
 .. _`-o`:
 
 ``[-o[,AtrLst] File] [-c ColName [ColName ...]]``
-  Output data rows.
+  Output data rows. Multiple sets of "``-o ... -c ...``" can be specified.
+
   Optional "``-o[,AtrLst] File``" sets the output attributes and file.
   See the `aq_tool output specifications <aq-output.html>`_ manual for details.
+  In addition, the following attribute is supported:
+
+  * ``fvar`` - Output to a dynamically defined target. ``File`` is the name of
+    a previously defined string `variable <#var>`_. The actual target
+    file is obtained from the value of the variable.
+    The initial value of the variable sets the initial file. Subsequently,
+    when the value of the variable changes, the old output will be closed
+    and the new one will be opened.
 
   Optional "``-c ColName [ColName ...]``" selects the columns to output.
-  ``ColName`` refers to a previously defined column/variable.
-  A ``ColName`` can be preceeded with a ``~`` (or ``!``) negation mark.
-  This means that the column is to be excluded.
-  Without ``-c``, all columns are selected by default. Variables are not
-  automatically included though.
-  If ``-c`` is specified without a previous ``-o``, output to stdout is
-  assumed.
+  Normally, each selection is the name of a previously defined column/variable.
+  In addition, these special forms are supported:
 
-  In case a title line is desired but certain column names are not
-  appropriate, use `-alias`_ or `-renam`_ before the ``-o`` to remap the
-  name of those columns manually.
-  With `-alias`_, the alternate names must be explicitly selected with ``-c``.
+  * ``*`` - An asterisk adds all columns (except variables) to the output.
+  * ``ColName[:NewName][+NumPrintFormat]`` - Add ``ColName`` to the output.
+    If ``:NewName`` is given, it will be used as the output label.
+    The ``+NumPrintFormat`` spec is for numeric columns. It overrides the
+    print format of the column (*be careful with this format - a wrong spec
+    can crash the program*).
+  * ``^ColName[:NewName][+NumPrintFormat]`` - Same as the above, but with a
+    leading ``^`` mark. It is used to *modify* the output label and/or format
+    of a previously selected output column called ``ColName``.
+    If ``^ColName[...]`` is the first selection after ``-c``, then ``*`` will be
+    included automatically first.
+  * ``~ColName`` - The leading ``~`` mark is used to *exclude* a previously
+    selected output column called ``ColName``.
+    If ``~ColName`` is the first selection after ``-c``, then ``*`` will be
+    included automatically first.
 
-  Multiple sets of "``-o ... -c ...``" can be specified.
+  If ``-o`` is given without a ``-c``, then ``*`` is assumed.
+  If ``-c`` is given without a prior ``-o``, the selected columns will
+  be output to stdout.
 
   Example:
 
    ::
 
-    $ aq_pp ... -d s:Col1 s:Col2 s:Col3 ... -o,esc,noq - -c Col2 Col1
+    $ aq_pp ... -d s:Col1 s:Col2 s:Col3 ... -o - -c Col2 Col1
 
-  * Output Col2 and Col1 (in that order) to stdout in a format suitable for
-    Amazon Cloud.
+  * Output Col2 and Col1 (in that order) to stdout.
+
+   ::
+
+    $ aq_pp ... -d s:Col1 s:Col2 s:Col3 ... -c ^Col1:ColX ~Col3
+
+  * First, select ``*`` (Col1, Col2 and Col3) implicitly.
+    Then change Col1's label to ColX. Then exclude Col3. The final output
+    columns are ColX and Col2.
+
+   ::
+
+    $ aq_pp ... -d s:Col1 s:Col2 s:Col3 ... -var i:Col4 0 -c '*' Col4
+
+  * First, select ``*`` (Col1, Col2 and Col3) explicitly.
+    Then add the variable Col4.
+
+   ::
+
+    $ aq_pp ... -var s:out1 '"first.csv"' ...
+        -if -filt '...' -eval out1 '...' -endif ...  -o,fvar out1 ...
+
+  * Define the output target as the value of variable ``out1``.
+  * Change the variable's value conditionally via a
+    `-if ... -endif <#conditional-processing-groups>`_ group.
+    The conditional group and/or the `-eval`_ statement can be replaced by
+    other means of changing ``out1`` as well.
+  * Sometimes, the initial value of ``out1`` is not known until run time.
+    If so, set its value to ``/dev/null`` in the ``-var`` statement.
 
 
 .. _`-ovar`:
 
 ``-ovar[,AtrLst] File [-c ColName [ColName ...]]``
   Output the *final* values of all variables defined via the `-var`_ option.
-  Only a single data row is output.
+  Multiple sets of "``-ovar ... -c ...``" can be specified.
+  Only a single data row is output from each spec.
+
   "``-ovar[,AtrLst] File``" sets the output attributes and file.
   See the `aq_tool output specifications <aq-output.html>`_ manual for details.
+  In addition, the following attribute is supported:
+
+  * ``fvar`` - Output to a dynamically defined target. ``File`` is the name of
+    a previously defined string `variable <#var>`_. The actual target
+    file is obtained from the value of the variable.
+    The initial value of the variable sets the initial file. Subsequently,
+    when the value of the variable changes, the old output will be closed
+    and the new one will be opened.
 
   Optional "``-c ColName [ColName ...]``" selects the variables to output.
-  ``ColName`` refers to a previously defined variable.
-  A ``ColName`` can be preceeded with a ``~`` (or ``!``) negation mark.
-  This means that the variable is to be excluded.
-  Without ``-c``, all variables are selected by default.
+  Normally, each selection is the name of a previously defined variable.
+  In addition, these special forms are supported:
 
-  In case a title line is desired but certain variable names are not
-  appropriate, use `-alias`_ or `-renam`_ before ``-ovar`` to remap the
-  name of those variables manually.
-  With `-alias`_, the alternate names must be explicitly selected with ``-c``.
+  * ``*`` - An asterisk adds all variables to the output.
+  * ``ColName[:NewName][+NumPrintFormat]`` - Add ``ColName`` to the output.
+    If ``:NewName`` is given, it will be used as the output label.
+    The ``+NumPrintFormat`` spec is for numeric variables. It overrides the
+    print format of the variable (*be careful with this format - a wrong spec
+    can crash the program*).
+  * ``^ColName[:NewName][+NumPrintFormat]`` - Same as the above, but with a
+    leading ``^`` mark. It is used to *modify* the output label and/or format
+    of a previously selected output variable called ``ColName``.
+    If ``^ColName[...]`` is the first selection after ``-c``, then ``*`` will be
+    included automatically first.
+  * ``~ColName`` - The leading ``~`` mark is used to *exclude* a previously
+    selected output variable called ``ColName``.
+    If ``~ColName`` is the first selection after ``-c``, then ``*`` will be
+    included automatically first.
 
-  Multiple sets of "``-ovar ... -c ...``" can be specified.
+  If ``-o`` is given without a ``-c``, then ``*`` is assumed.
 
   Example:
 
@@ -873,12 +933,12 @@ Options
         -eval Sum1 'Sum1 + Col1' -eval Sum2 'Sum2 + (Col2 * Col2)' ...
         -ovar - -c Sum1 Sum2
 
-  * Calculate sums and output their evaluates at the end of processing.
+  * Calculate sums and output their values at the end of processing.
 
 
 .. _`-imp`:
 
-``-imp[,AtrLst] DbName[:TabName] [-mod ModSpec [ModSrc]]``
+``-imp[,AtrLst] DbName[:TabName] [-server AdrSpec [AdrSpec ...]] [-local] [-mod ModSpec [ModSrc]]``
   Output data to Udb (i.e., perform an Udb import).
   ``DbName`` is the database name (see `Target Udb Database`_).
   ``TabName`` is a table/vector name in the database.
@@ -898,17 +958,29 @@ Options
     0 or blank will be used as the missing columns' value.
   * ``nodelay`` - Send records to Udb servers as soon as possible.
     Otherwise, up to 16KB of data may be buffered before an output occurs.
-  * ``seg=N1[-N2]/N`` - Apply sampling by selecting segment N1 or
-    segment N1 to N2 (inclusive) out of N segments of unique keys from the
-    input data to import. Keys are segmented based on their hash values.
-    For example, ``seg=2-4/10`` will divide the keys into 10
-    segments and import segments 2, 3 and 4; segments 1 and 5-10 are discarded.
+  * ``seg=N1[-N2]/N[:V]`` - Only import a subset of the input data by selecting
+    segment N1 or segments N1 to N2 (inclusive) out of N segments of
+    unique keys based on their hash values.
+    For example, ``seg=2-4/10`` will divide the keys into 10 segments and
+    import segments 2, 3 and 4; segments 1 and 5-10 are skipped.
+    Optional ``V`` is a number that can be used to vary the sample selection.
+    It is zero by default.
   * ``nobnk`` - Exclude records with a blank key from the import.
     This only applies with the primary key is made up of a single string column.
   * ``nonew`` - Tell the server not to create any new key during the
     import. In other words, records belonging to keys *not yet* in the DB are
     discarded.
   * ``noold`` - The opposite of ``nonew``.
+
+  Optional "``-server AdrSpec [AdrSpec ...]``" sets the target servers.
+  If given, server spec in the Udb spec file will be ignored.
+  ``AdrSpec`` has the form ``IP_or_Domain[|IP_or_Domain_Alt][:Port]``.
+  See `Target Udb Database`_ for details.
+
+  Optional "``-local``" tells the program to connect to the *local* servers
+  only. Local servers are those in the server spec (from the Udb spec file or
+  ``-server`` option) whose IP matches the the local
+  IP of the machine the program is running on.
 
   Optional "``-mod ModSpec [ModSrc]``" specifies a module to be
   loaded on the *server side*.
@@ -957,6 +1029,8 @@ Applicable exit codes are:
 * 22 - Output write error.
 * 31 - Udb connect error.
 * 32 - Udb communication error.
+* 33 - Udb authentication error.
+* 34 - Udb request invalid.
 
 
 String Constant
@@ -1085,17 +1159,22 @@ RegEx MapFrom Syntax
 Regular expression style ``MapFrom`` can be used in both `-mapf`_ and `-map`_
 options. ``MapFrom`` defines what to match and/or extract from a string
 value of a column.
+Both the POSIX and PCRE (Perl Compatible regular expression) engines are
+supported. Which one to use depends on the mapping option's attributes.
+See `regular expression attributes <aq-emod.html#regex-attributes>`_ for
+the appropriate attributes.
 
 Differences between RegEx mapping and RT mapping:
 
 * RT pattern always matches the entire string, while RegEx pattern matches a
   substring by default. To get the same behavior, add '^' and '$' to the
   beginning and end of a RegEx as in ``^pattern$``.
-* RegEx MapFrom does not have named variables for the extracted data. Instead,
-  extracted data is put into implicit variables ``%%0%%``, ``%%1%%``, and so on.
-  See `-mapc`_ for an usage example.
+* The POSIX RegEx MapFrom does not have named variables for the extracted data.
+  Instead, extracted data is put into implicit variables ``%%0%%``, ``%%1%%``,
+  and so on. See `-mapc`_ for an usage example. The PCRE engine can optionally
+  use named variables.
 * In addition to the standard regular expression escape sequences
-  (``\\``, ``\+``, ``\*``, etc), the following are also recognized:
+  (``\\``, ``\+``, ``\*``, etc), the followings are also recognized:
 
   * ``\"`` - represents a literal double quote character.
   * ``\b`` - represents a literal backspace character.
@@ -1109,8 +1188,8 @@ Differences between RegEx mapping and RT mapping:
   * ``\<newline>`` - represents a line continuation sequence; both the backslash
     and the newline will be removed.
 
-Regular Expression is very powerful but also complex. Please consult the
-GNU RegEx manual for details.
+Regular expression is very powerful but also complex. Please consult the
+POSIX or PCRE2 regular expression manuals for details.
 
 
 MapTo Syntax
@@ -1138,7 +1217,7 @@ a variable spec is:
 
  ::
 
-  %%VarName[:cnv][:start[:length]][,brks]%%
+  %%VarName[:cnv][[:start]:length][,brks]%%
 
 where
 
@@ -1153,10 +1232,10 @@ where
 
   Normally, only use 1 conversion. If both are specified (in any order), URL
   decode is always done before base64 decode.
-* ``:start`` is the starting byte position of the extracted data to substitute.
-  The first byte has position 0. Default is 0.
-* ``:length`` is the number of bytes (from ``start``) to substitute. Default is
-  till the end.
+* ``:length`` (without a start position spec) is the number of bytes from the
+  beginning of the extracted data to substitute. Default is till the end.
+* ``:start:length`` is the starting byte position and subsequent length of the
+  extracted data to substitute. The first byte has position 0.
 * ``,brks`` defines a list of characters at which substitution of the variable's
   value should stop.
 

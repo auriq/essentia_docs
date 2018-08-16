@@ -47,10 +47,27 @@ Input File Option
 
 ``-f[,AtrLst] File [File ...]``
 
-The ``-f`` option sets the input attributes and source files.
-If the data come from the standard input of the command,
-set ``File`` to ``-`` (a single dash).
-If this option is not given, the standard input is assumed.
+The ``-f`` option sets the input attributes (``AtrLst``) and sources
+(``Files``).
+If no ``-f`` is given, data will be obtained from the standard input.
+Each ``File`` is a data source. It can be a regular file or a stream:
+
+* For a regular file, specify the file's path as ``File``.
+* For a stream from the standard input, specify a ``-`` (a single dash) as
+  ``File``.
+* For a stream from a named pipe, specify ``fifo@PipeName`` as ``File``
+  where ``PipeName`` is the named pipe's path. The program will create the
+  pipe if it does not exist or just use it if it does.
+  If the named pipe is known to exist already, ``PipeName`` alone also works.
+* For a stream obtained from connecting to a listener, specify
+  ``connect@DomainName:Port`` or ``connect@IP4:Port`` or ``connect@[IP6]:Port``
+  as ``File``. ``DomainName``/``IP4``/``IP6`` and ``Port`` are the address and
+  port to connect to.
+* For a stream obtained from accepting a connection, specify
+  ``listen@DomainName:Port`` or ``listen@IP4:Port`` or ``listen@[IP6]:Port`` or
+  ``listen@Port``
+  as ``File``. ``DomainName``/``IP4``/``IP6`` and ``Port`` are the address and
+  port to listen at.
 
 Optional ``AtrLst`` defines the input's data format and handling
 characteristics. It is a list of comma separated attributes containing:
@@ -61,12 +78,12 @@ characteristics. It is a list of comma separated attributes containing:
   ``sep`` and ``csv`` that can be used together.
   If no input format attribute is given, ``csv`` is assumed.
 
-  * ``csv`` - Input is in CSV format. This is the default output format.
+  * ``csv`` - Input is in CSV format. This is the default iutput format.
     Although CSV implies *comma separated*, ``sep=c`` can be used to select
-    a different separator character.
+    a different separator.
     This format uses the `generic column specification`_.
   * ``sep=c`` or ``sep=\xHH`` - Input is in 'c' (single byte) separated value
-    format. '\\xHH' is a way to specify 'c' via its HEX value ``HH``.
+    format. ``\xHH`` is a way to specify 'c' via its HEX value ``HH``.
     This format uses the `generic column specification`_.
   * ``fix`` - Input rows have the form
     "``Column1Column2...``"
@@ -178,8 +195,8 @@ input. It is a comma separated list containing:
   Not applicable to ``tab`` and ``bin`` formats.
 
   * Some whitespaces encoded as '\\r', '\\n', '\\t', '\\v' and '\\f'.
-  * '"' and '\\' encoded as '\\"' and '\\\\'.
-  * Non-printable bytes encoded as '\\xHH' where ``HH`` is the hex value of
+  * '"' and '\\' encoded as '\\"' and '\\\\' respectively.
+  * Non-printable bytes encoded as ``\xHH`` where ``HH`` is the hex value of
     the byte.
 
 * ``hex`` - Interpret integers in hexdecimal notation. Default is 10-based.
@@ -258,7 +275,7 @@ input. It is a comma separated list containing:
 
   * Some whitespaces encoded as '\\r', '\\n', '\\t', '\\v' and '\\f'.
   * '"' and '\\' encoded as '\\"' and '\\\\'.
-  * Non-printable bytes encoded as '\\xHH' where ``HH`` is the hex value of
+  * Non-printable bytes encoded as ``\xHH`` where ``HH`` is the hex value of
     the byte.
 
 * ``hex`` - Interpret integers in hexdecimal notation. Default is 10-based.

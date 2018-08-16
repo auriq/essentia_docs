@@ -15,7 +15,7 @@ Synopsis
 ::
 
   udbd [-h|-v] [-q]
-    [-mem LimitEach | -memx LimitTotal]
+    [-mem LimitEach | -memx LimitTotal] [-maxfd]
     start|stop|restart|status|ckmem [PortSpec ...] [RunDir]
 
 
@@ -95,7 +95,7 @@ Options
 
 ``-mem LimitEach``, ``-memx LimitTotal``
   Limit the memory usage of each server to be started by this command to
-  ``LimitEach`` or ``LimitTotal/NumServer`` KiloBytes.
+  ``LimitEach`` or ``LimitTotal / NumServer`` KiloBytes.
   For `start`_ and `restart`_ operations only.
 
   If ``LimitEach`` or ``LimitTotal`` is negative, the actual limit will be
@@ -107,6 +107,13 @@ Options
   **Note**: The command does not take the memory usage of other running
   applications (e.g., previously started Udb servers) on the system into
   account.
+
+
+.. _`maxfd`:
+
+``-maxfd``
+  Set the file descriptor limit of each server to be started to the maximum
+  number allowed (usually the value of ``ulimit -Hn``).
 
 
 .. _`start`:
@@ -176,6 +183,21 @@ Options
   runtime directory parameter. It is only needed when starting Udb in a custom
   location. If given, the `server files`_ will be stored in the given
   ``RunDir``.
+
+
+Environments
+============
+
+Udb makes use of these environments:
+
+* ``UDBD_MEM=KiloBytes`` - The same as the `-mem`_ Udb start/restart parameter.
+  However, `-mem`_ takes precedence over the environment.
+* ``UDBD_MAXFD=y`` - The same as the `maxfd`_ Udb start/restart parameter if
+  it is set to ``y``..
+* ``UDBD_MEM_MARGIN=KiloBytes`` - This tells the server to leave the given
+  amount of free memory on the system during imports. An import will be aborted
+  with an ``out of memory`` error if the system's free memory drops below
+  this limit.
 
 
 Server Files

@@ -30,6 +30,7 @@ builtin evaluation and filtering operators provide. Supported fubnctions are:
 * `General data conversion functions`_
 * `Date/Time conversion functions`_
 * `Character set encoding conversion functions`_
+* `Key hashing functions`_
 * `Speciality functions`_
 * `RTmetrics functions`_
 * `Udb specific functions`_
@@ -43,7 +44,7 @@ or a status code. In general,
   For example, `Min()`_ returns the minimum value among its arguments,
   `ToS()`_ returns the string representation of its argument, etc.
 * For functions that may fail, a numeric status code is returned.
-  The code is usually 0 for a failured operation and non-zero otherwise.
+  The code is usually 0 for a failed operation and non-zero otherwise.
   The code can also be a count that indicates the number of successful
   operations (e.g., `QryDec()`_).
 
@@ -143,6 +144,50 @@ Math functions
     $ aq_command ... -eval Float_Col 'Min(1, Integer_Col, Float_Col)' ...
     $ aq_command ... -eval Integer_Col 'Min(ToI(String_Col), Integer_Col)' ...
 
+.. _`Sqrt()`:
+
+``Sqrt(Val)``
+  Computes the square root of ``Val``.
+
+  * ``Val`` can be a numeric column's name, a numeric constant,
+    or an expression that evaluates to a number.
+
+``Cbrt(Val)``
+  Computes the cube root of ``Val``.
+
+  * ``Val`` can be a numeric column's name, a numeric constant,
+    or an expression that evaluates to a number.
+
+``Log(Val)``
+  Computes the natural logarithm of ``Val``.
+
+  * ``Val`` can be a numeric column's name, a numeric constant,
+    or an expression that evaluates to a number.
+
+``Log10(Val)``
+  Computes the base 10 logarithm of ``Val``.
+
+  * ``Val`` can be a numeric column's name, a numeric constant,
+    or an expression that evaluates to a number.
+
+``Exp(Val)``
+  Computes ``e`` (natural logarithm's base) raised to the power of ``Val``.
+
+  * ``Val`` can be a numeric column's name, a numeric constant,
+    or an expression that evaluates to a number.
+
+``Exp10(Val)``
+  Computes 10 raised to the power of ``Val``.
+
+  * ``Val`` can be a numeric column's name, a numeric constant,
+    or an expression that evaluates to a number.
+
+``Pow(Val, Power)``
+  Computes ``Val`` raised to the power of ``Power``.
+
+  * ``Val`` and ``Power`` can be a numeric column's name, a numeric constant,
+    or an expression that evaluates to a number.
+
 .. _`IsNaN()`:
 
 ``IsNaN(Val)``
@@ -166,12 +211,200 @@ Math functions
 Comparison functions
 ====================
 
+.. _`BegCmp()`:
+
+``BegCmp(Val, BegStr [, BegStr ...])``
+  Compares one or more starting string ``BegStr`` with the head of ``Val``.
+  All the comparisons are case sensitive.
+
+  * Returns 1 if there is a match, 0 otherwise.
+  * ``Val`` can be a string column's name, a `string constant`_,
+    or an expression that evaluates to a string.
+  * Each ``BegStr`` is a `string constant`_ that specifies
+    the starting string to match.
+
+  Example:
+
+   ::
+
+    $ aq_command ... -filt 'BegCmp(String_Col, "* ABC *")' ...
+
+  * Match a literal "``* ABC *``" with the head of the value of ``String_Col``.
+    Note that '*' has no special meaning here.
+
+.. _`EndCmp()`:
+
+``EndCmp(Val, EndStr [, EndStr ...])``
+  Compares one or more ending string ``EndStr`` with the tail of ``Val``.
+  All the comparisons are case sensitive.
+
+  * Returns 1 if there is a match, 0 otherwise.
+  * ``Val`` can be a string column's name, a `string constant`_,
+    or an expression that evaluates to a string.
+  * Each ``EndStr`` is a `string constant`_ that specifies
+    the ending string to match.
+
+  Example:
+
+   ::
+
+    $ aq_command ... -filt 'EndCmp(String_Col, "* ABC *")' ...
+
+  * Match a literal "``* ABC *``" with the tail of the value of ``String_Col``.
+    Note that '*' has no special meaning here.
+
+.. _`SubCmp()`:
+
+``SubCmp(Val, SubStr [, SubStr ...])``
+  Compares one or more substring ``SubStr`` with with any part of ``Val``.
+  All the comparisons are case sensitive.
+
+  * Returns 1 if there is a match, 0 otherwise.
+  * ``Val`` can be a string column's name, a `string constant`_,
+    or an expression that evaluates to a string.
+  * Each ``SubStr`` is a `string constant`_ that specifies
+    the substring to match.
+
+  Example:
+
+   ::
+
+    $ aq_command ... -filt 'SubCmp(String_Col, "* ABC *", "D * E")' ...
+
+  * Match a literal "``* ABC *``" *or* a literal "``D * E``"
+    with any part of the value of ``String_Col``.
+    Note that '*' has no special meaning here.
+
+.. _`SubCmpAll()`:
+
+``SubCmpAll(Val, SubStr [, SubStr ...])``
+  Compares one or more substring ``SubStr`` with any part of ``Val``.
+  All the comparisons are case sensitive.
+
+  * Returns 1 if all the substrings match, 0 otherwise.
+  * ``Val`` can be a string column's name, a `string constant`_,
+    or an expression that evaluates to a string.
+  * Each ``SubStr`` is a `string constant`_ that specifies
+    the substring to match.
+
+  Example:
+
+   ::
+
+    $ aq_command ... -filt 'SubCmpAll(String_Col, "* ABC *", "D * E")' ...
+
+  * Match a literal "``* ABC *``" *and* a literal "``D * E``"
+    within the value of ``String_Col``.
+    Note that '*' has no special meaning here.
+
+.. _`MixedCmp()`:
+
+``MixedCmp(Val, SubStr, Typ [, SubStr, Typ ...])``
+  Compares one or more substring ``SubStr`` with ``Val`` according to the
+  corresponding comparison type ``Typ`` of each ``SubStr``.
+  All the comparisons are case sensitive.
+
+  * Returns 1 if there is a match, 0 otherwise.
+  * ``Val`` can be a string column's name, a `string constant`_,
+    or an expression that evaluates to a string.
+  * Each ``SubStr`` and ``Typ`` pair specifies what and how to match.
+    ``SubStr`` is a `string constant`_ that specifies the substring to match.
+    ``Typ`` is a name with one of these values:
+
+    * ``BEG`` - Match with the head of ``Val``.
+    * ``END`` - Match with the tail of ``Val``.
+    * ``SUB`` - Match with any part of ``Val``.
+
+  Example:
+
+   ::
+
+    $ aq_command ... -filt 'MixedCmp(String_Col, "* ABC *", BEG, "D * E", END)' ...
+
+  * Match a literal "``* ABC *``" with the head of the value of ``String_Col``
+    *or*
+    match a literal "``D * E``" with the tail of the value of ``String_Col``.
+    Note that '*' has no special meaning here.
+
+.. _`MixedCmpAll()`:
+
+``MixedCmpAll(Val, SubStr, Typ [, SubStr, Typ ...])``
+  Compares one or more substring ``SubStr`` with ``Val`` according to the
+  corresponding comparison type ``Typ`` of each ``SubStr``.
+  All the comparisons are case sensitive.
+
+  * Returns 1 if all the substrings match, 0 otherwise.
+  * ``Val`` can be a string column's name, a `string constant`_,
+    or an expression that evaluates to a string.
+  * Each ``SubStr`` and ``Typ`` pair specifies what and how to match.
+    ``SubStr`` is a `string constant`_ that specifies the substring to match.
+    ``Typ`` is a name with one of these values:
+
+    * ``BEG`` - Match with the head of ``Val``.
+    * ``END`` - Match with the tail of ``Val``.
+    * ``SUB`` - Match with any part of ``Val``.
+
+  Example:
+
+   ::
+
+    $ aq_command ... -filt 'MixedCmpAll(String_Col, "* ABC *", BEG, "D * E", END)' ...
+
+  * Match a literal "``* ABC *``" with the head of the value of ``String_Col``
+    *and*
+    match a literal "``D * E``" with the tail of the value of ``String_Col``.
+    Note that '*' has no special meaning here.
+
+.. _`Contain()`:
+
+``Contain(Val, SubStrs)``
+  Compares the substrings in ``SubStrs`` with any part of ``Val``.
+  All the comparisons are case sensitive.
+
+  * Returns 1 if there is a match, 0 otherwise.
+  * ``Val`` can be a string column's name, a `string constant`_,
+    or an expression that evaluates to a string.
+  * ``SubStrs`` is a `string constant`_ that specifies
+    what substrings to match. It is a comma-newline separated list of literal
+    substrings of the form "``SubStr1,[\r]\nSubStr2...``".
+
+  Example:
+
+   ::
+
+    $ aq_command ... -filt 'Contain(String_Col, "* ABC *,\nD * E")' ...
+
+  * Match a literal "``* ABC *`` " *or* a literal "``D * E``" with any part of
+    the value of ``String_Col``.
+
+.. _`ContainAll()`:
+
+``ContainAll(Val, SubStrs)``
+  Compares the substrings in ``SubStrs`` with any part of ``Val``.
+  All the comparisons are case sensitive.
+
+  * Returns 1 if all the substrings match, 0 otherwise.
+  * ``Val`` can be a string column's name, a `string constant`_,
+    or an expression that evaluates to a string.
+  * ``SubStrs`` is a `string constant`_ that specifies
+    what substrings to match. It is a comma-newline separated list of literal
+    substrings of the form "``SubStr1,[\r]\nSubStr2...``".
+
+  Example:
+
+   ::
+
+    $ aq_command ... -filt 'ContainAll(String_Col, "* ABC *,\nD * E")' ...
+
+  * Match a literal "``* ABC *`` " *and* a literal "``D * E``" with any part of
+    the value of ``String_Col``.
+
 .. _`PatCmp()`:
 
 ``PatCmp(Val, Pattern [, AtrLst])``
-  Compares a string with a generic wildcard pattern.
+  Compares a generic wildcard pattern with ``Val``.
 
-  * Returns 1 if they match, 0 otherwise.
+  * Returns 1 if it matches, 0 otherwise.
     ``Pattern`` must match the *entire* ``Val`` to be successful.
   * ``Val`` can be a string column's name, a `string constant`_,
     or an expression that evaluates to a string.
@@ -182,6 +415,7 @@ Comparison functions
   * Optional ``AtrLst`` is a list of ``|`` separated attributes containing:
 
     * ``ncas`` - Perform a case insensitive match (default is case sensitive).
+      For ASCII data only.
 
   Example:
 
@@ -191,11 +425,13 @@ Comparison functions
     $ aq_command ... -filt 'PatCmp(String_Col, "* \"ABC\" *")' ...
     $ aq_command ... -filt 'PatCmp(String_Col, "* \"\\\\ & \\*\" *")' ...
 
-  * The first example matches values containing a basic literal " ``ABC`` ".
-  * The second example matches values containing a literal " ``"ABC"`` ".
-    To specify this as a *double quoted* `string constant`_,
-    the quotes must be escaped,
-    resulting in " ``\"ABC\"`` ".
+  * The first example matches values of ``String_Col`` that contain a literal
+    " ``ABC`` ".
+  * The second example matches values of ``String_Col`` that contain a literal
+    " ``"ABC"`` ".
+    Note the "``\"``" escape sequence used on the literal quotes in the pattern.
+    it is necessary because the ``Pattern`` is given as a
+    *double quoted* `string constant`_.
   * The third example matches values containing a literal " ``"\ & *"`` ".
     This literal contains special pattern characters "``\``" and "``*``"
     that must be escaped, so the desire pattern is " ``"\\ & \*"`` ".
@@ -212,18 +448,16 @@ Comparison functions
 .. _`RxCmp()`:
 
 ``RxCmp(Val, Pattern [, AtrLst])``
-  Compares a string with a GNU RegEx.
+  Compares a string with a regular expression.
 
   * Returns 1 if they match, 0 otherwise.
     ``Pattern`` only needs to match a *subpart* of ``Val`` to be successful.
   * ``Val`` can be a string column's name, a `string constant`_,
     or an expression that evaluates to a string.
-  * ``Pattern`` is a `string constant`_ that specifies the GNU RegEx to match.
-  * Optional ``AtrLst`` is a list of ``|`` separated attributes containing:
-
-    * ``ncas`` - Perform a case insensitive match (default is case sensitive).
-    * ``rx_extended`` - Enable POSIX Extended Regular Expression syntax.
-    * ``rx_newline`` - Apply certain newline matching restrictions.
+  * ``Pattern`` is a `string constant`_ that specifies the regular expression
+    to match.
+  * Optional ``AtrLst`` is a list of ``|`` separated
+    `regular expression attributes <#regex-attributes>`_.
 
   Example:
 
@@ -346,6 +580,7 @@ Data extraction and encode/decode functions
   * Optional ``AtrLst`` is a list of ``|`` separated attributes containing:
 
     * ``ncas`` - Perform a case insensitive match (default is case sensitive).
+      For ASCII data only.
     * ``back`` - Search backwards from the end of ``Val``.
 
   Example:
@@ -374,8 +609,9 @@ Data extraction and encode/decode functions
     ``MapFrom`` only needs to match a *subpart* of ``Val`` to be successful.
   * ``Val`` can be a string column's name, a `string constant`_,
     or an expression that evaluates to a string.
-  * ``MapFrom`` is a `string constant`_ that specifies the GNU RegEx to match.
-    The expression should contain *subexpressions* for substring extractions.
+  * ``MapFrom`` is a `string constant`_ that specifies the regular expression
+    to match. The expression should contain *subexpressions* for substring
+    extractions.
   * The ``Col`` and ``MapTo`` pairs define how to save the results.
     ``Col`` is the column to put the result in. It must be of string type.
     ``MapTo`` is a `string constant`_ that defines how to render the result.
@@ -387,11 +623,8 @@ Data extraction and encode/decode functions
 
     where ``%%subexpression_N%%`` represents the extracted substring of the
     *Nth* subexpression in ``MapFrom``.
-  * Optional ``AtrLst`` is a list of ``|`` separated attributes containing:
-
-    * ``ncas`` - Perform a case insensitive match (default is case sensitive).
-    * ``rx_extended`` - Enable POSIX Extended Regular Expression syntax.
-    * ``rx_newline`` - Apply certain newline matching restrictions.
+  * Optional ``AtrLst`` is a list of ``|`` separated
+    `regular expression attributes <#regex-attributes>`_.
 
   Example:
 
@@ -407,7 +640,8 @@ Data extraction and encode/decode functions
 ``KeyEnc(Col, [, Col ...])``
   Encodes columns of various types into a single string.
 
-  * Returns a string key. The key is binary.
+  * Returns a string key. The key is *binary*, do not try to interpret or
+    modify it.
   * ``Col`` are the columns to encode into the key.
 
   Example:
@@ -495,17 +729,35 @@ Data extraction and encode/decode functions
     ``Col2`` from ``String_Col`` after the first "``?``".
     This assumes ``k1`` may appear more than once in the query.
 
+.. _`UrlEnc()`:
+
+``UrlEnc(Val)``
+  URL-encode a string.
+
+  * Returns the encoded result.
+  * ``Val`` is the string to encoded.
+    It can be a string column's name, a `string constant`_
+    or an expression that evaluates to a string.
+
 .. _`UrlDec()`:
 
 ``UrlDec(Val)``
   Decodes an URL-encoded string.
 
   * Returns the decoded result.
-    ``Val`` is returned if there is no URL-encoded components in it.
-  * ``Val`` is the previously encoded value.
+  * ``Val`` is an URL-encoded string.
     It can be a string column's name, a `string constant`_
     or an expression that evaluates to a string.
 
+.. _`Base64Enc()`:
+
+``Base64Enc(Val)``
+  Base64-encode a string.
+
+  * Returns the encoded result.
+  * ``Val`` is the string to encode.
+    It can be a string column's name, a `string constant`_
+    or an expression that evaluates to a string.
 
 .. _`Base64Dec()`:
 
@@ -515,7 +767,7 @@ Data extraction and encode/decode functions
   * Returns the decoded result.
     There is no integrity check. Portions of ``Val`` that is not base64-encoded
     are simply skipped. As a result, the function may return a blank string.
-  * ``Val`` is the previously encoded value.
+  * ``Val`` is a base64-encoded string.
     It can be a string column's name, a `string constant`_
     or an expression that evaluates to a string.
 
@@ -594,6 +846,17 @@ General data conversion functions
   * ``Val`` can be a string column's name, a `string constant`_,
     or an expression that evaluates to a string.
 
+.. _`MaskStr()`:
+
+``MaskStr(Val)``
+  Irreversibly masks (or obfuscates) a string value.
+  The result should be nearly as unique as the original (the probability of
+  two different values having the same masked value is extremely small).
+
+  * ``Val`` can be a string column's name, a `string constant`_,
+    or an expression that evaluates to a string.
+  * The length of the result may be the same or longer than the original.
+
 .. _`RxReplace()`:
 
 ``RxReplace(Val, RepFrom, Col, RepTo [, AtrLst])``
@@ -604,8 +867,8 @@ General data conversion functions
   * Returns the number of replacements performed or 0 if there is no match.
   * ``Val`` can be a string column's name, a `string constant`_,
     or an expression that evaluates to a string.
-  * ``RepFrom`` is a `string constant`_ that specifies the GNU RegEx to match.
-    Substring(s) matching this expression will be replaced.
+  * ``RepFrom`` is a `string constant`_ that specifies the regular expression
+    to match. Substring(s) matching this expression will be replaced.
     The expression can contain *subexpressions* that can be referenced in
     ``RepTo``.
   * ``Col`` is the column to put the result in. It must be of string type.
@@ -620,10 +883,8 @@ General data conversion functions
     *Nth* subexpression in ``RepFrom``.
   * Optional ``AtrLst`` is a list of ``|`` separated attributes containing:
 
-    * ``ncas`` - Perform a case insensitive match (default is case sensitive).
-    * ``rx_extended`` - Enable POSIX Extended Regular Expression syntax.
-    * ``rx_newline`` - Apply certain newline matching restrictions.
     * ``all`` - Replace all occurrences of ``RepFrom`` in ``Val``.
+    * One or more `regular expression attributes <#regex-attributes>`_.
 
   Example:
 
@@ -633,6 +894,12 @@ General data conversion functions
 
   * Replaces all sequences of one or more blanks with newlines.
 
+.. _`RxRep()`:
+
+``RxRep(Val, RepFrom, RepTo [, AtrLst])``
+  The same as `RxReplace()`_ except that it returns the result string directly
+  (for this reason, it does not have `RxReplace()`_'s ``Col`` argument).
+
 
 Date/Time conversion functions
 ==============================
@@ -640,9 +907,10 @@ Date/Time conversion functions
 .. _`DateToTime()`:
 
 ``DateToTime(DateVal, DateFmt)``, ``GmDateToTime(DateVal, DateFmt)``
-  Both functions return the UNIX time in integral seconds corresponding to
-  ``DateVal``.
 
+  * By default, both functions return the UNIX time in integral seconds
+    corresponding to ``DateVal``. However, if ``%S1``, ..., ``%S9`` is used,
+    the result will be in deci-seconds, ..., nano-seconds.
   * ``DateVal`` can be a string column's name, a `string constant`_,
     or an expression that evaluates to a string.
   * ``DateFmt`` is a `string constant`_ that specifies the format of
@@ -651,15 +919,21 @@ Date/Time conversion functions
     * (a dot) ``.`` - represent a single unwanted character (e.g., a separator).
     * ``%Y`` - 1-4 digit year.
     * ``%y`` - 1-2 digit year.
-    * ``%m`` - month in 1-12.
-    * ``%b`` - abbreviated English month name ("JAN" ... "DEC", case
+    * ``%m`` - Month in 1-12.
+    * ``%b`` - Abbreviated English month name ("JAN" ... "DEC", case
       insensitive).
-    * ``%d`` - day of month in 1-31.
+    * ``%d`` - Day of month in 1-31.
     * ``%H`` or ``%I`` - hour in 0-23 or 1-12.
-    * ``%M`` - minute in 0-59.
-    * ``%S`` - second in 0-59.
+    * ``%M`` - Minute in 0-59.
+    * ``%S`` - Second in 0-59.
+    * ``%S0`` to ``%S9`` - Second in 0-59 plus an optional ``.digits`` fraction
+      (any number of digits is fine).
+      The result will be in sub-seconds - deci-seconds for ``%S1``,
+      centi-seconds for ``%S2``, milli-seconds for ``%S3``, and so on.
+      ``%S0`` is a special case where the fraction is parsed by not used
+      in the result.
     * ``%p`` - AM/PM (case insensitive).
-    * ``%z`` - offset from GMT in the form [+|-]HHMM.
+    * ``%z`` - Offset from GMT in the form [+|-]HHMM.
 
   * If ``DateVal`` contains GMT offset information (``%z`` info),
     the UNIX time will be calculated using this offset.
@@ -673,11 +947,20 @@ Date/Time conversion functions
 
    ::
 
-    $ aq_command ... -eval Integer_Col 'DateToTime(Str2, "%Y.%m.%d.%H.%M.%S.....%z")' ...
+    $ aq_command ... -eval I:Sec 'DateToTime(Str2, "%Y.%m.%d.%H.%M.%S......%z")' ...
 
   * This format is designed for a date string (``Str2``) like
-    "``1969-12-31 16:00:01.123 -0800``". Note the use of extra dots in the
-    format to map out the unwanted "``.123``".
+    "``1969-12-31 16:00:01.1234 -0800``". Note the use of extra dots in the
+    format to map out the unwanted "``.1234``".
+
+   ::
+
+    $ aq_command ... -eval L:MSec 'DateToTime(Str2, "%Y.%m.%d.%H.%M.%S3.%z")' ...
+
+  * This format is designed for a date string (``Str2``) like
+    "``1969-12-31 16:00:01.1234 -0800``". Note the use of ``%S3`` to extract
+    milliseconds. The result is placed in an ``L`` column because ``I`` may
+    overflow.
 
 .. _`TimeToDate()`:
 
@@ -718,6 +1001,9 @@ Run "``iconv --list``" to see the supported encodings.
   Converts a string from one character set encoding to another.
 
   * Returns the converted string if successful.
+    If multiple ``FromCodes`` (see below) are given, the first code that
+    successfully converted the *most amount* of ``Val`` will be used.
+    The function fails if no conversion was successful.
   * ``Val`` can be a string column's name, a `string constant`_,
     or an expression that evaluates to a string.
   * ``FromCodes`` is a `string constant`_ containing a semi-colon separated
@@ -725,32 +1011,74 @@ Run "``iconv --list``" to see the supported encodings.
     e.g., "``utf8;euc-jp;sjis``".
 
     * A conversion is successful when *all* the data from ``Val`` is converted.
-    * An attribute of ``eok`` can be added to any character of the sets -
-      e.g., "``euc-jp;sjis;utf8,eok``".
-      It tells the function to skip over any portion of ``Val`` that cannot be
-      converted.
-      An ``eok`` conversion is successful when *any* data from ``Val`` is
-      converted.
-    * If desired, add a character set of "``.``" (a dot) to the end of the list
-      to tell the function to return ``Val`` as-is when none of the character
-      sets match - e.g., "``utf8;euc-jp;sjis;.``". This conversion is always
-      successful.
+    * To allow partial conversion on ``Val``, add an ``eok`` attribute to the
+      desired character set - e.g., "``euc-jp;sjis,eok;utf8``".
+      This conversion *always succeeds*, even when nothing can be converted.
+    * A character set of "``.``" (a dot) will use ``Val`` as the converted
+      result. This conversion always succeeds. Use this at the end of the list
+      as a fallback if desired - e.g., "``utf8;euc-jp;sjis;.``".
+    * A character set of "``-``" (a dash) will use a blank as the converted
+      result. This conversion always succeeds. Use this at the end of the list
+      as a fallback if desired - e.g., "``utf8;euc-jp;sjis;-``".
 
   * ``ToCode`` is a `string constant`_ containing the character set to convert
     to - e.g., "``utf8``".
-  * The function returns on the first successful conversion in ``FromCodes``.
-    If none of them worked, the function fails.
 
   Example:
 
    ::
 
-    $ aq_command ... -eval String_Col 'IConv(Japanese_Col, "sjis;euc-jp;utf8", "utf8")' ...
+    $ aq_command ... -eval String_Col 'IConv(Japanese_Col, "sjis;euc-jp", "utf8")' ...
     $ aq_command ... -eval String_Col 'IConv(Japanese_Col, "sjis;euc-jp;.", "utf8")' ...
+    $ aq_command ... -eval String_Col 'IConv(Japanese_Col, "sjis;euc-jp;-", "utf8")' ...
+    $ aq_command ... -eval String_Col 'IConv(Japanese_Col, "sjis,eok;euc-jp", "utf8")' ...
 
-  * Converts ``Japanese_Col`` from either SJIS or EUC into UTF8.
-    The first example enforces that the result be UTF8.
-    The second is more relaxed, its result may not be UTF8.
+  * All the commands convert ``Japanese_Col`` from either SJIS or EUC into UTF8.
+  * Command #1 - both the SJIS-UTF8 and EUC-UTF8 conversions must be
+    exact. If neither were successful, the function fails.
+  * Command #2 - similar to #1 except that the input is used as the result if
+    neither conversions were successful.
+  * Command #3 - similar to #1 except that a blank is used as the result if
+    neither conversions were successful.
+  * Command #4 - the SJIS-UTF8 conversion can be partial while the EUC-UTF8
+    conversion must still be exact.
+
+
+Key hashing functions
+=====================
+
+.. _`KeyHash()`:
+
+``KeyHash(Col, [, Col ...])``
+  Hashes the given columns into a 32-bit hash value.
+  This is the hash value used by Udb internally.
+  It is a good quality hash suitable for many uses (other than the 2 cases
+  covered by `ImpHash()`_  and `SegHash()`_).
+
+  * Returns a 32-bit hash value.
+  * ``Col`` are the columns to be hashed.
+
+.. _`ImpHash()`:
+
+``ImpHash(Col, [, Col ...])``
+  Hashes the given columns into a 32-bit hash value.
+  This is the hash value used by `aq_pp <aq_pp.html>`_ to distribute data
+  over Udb workers during an `import <aq_pp.html#imp>`_.
+  Use this to reproduce the Udb data distribution behavior as needed.
+
+  * Returns a 32-bit hash value.
+  * ``Col`` are the columns to be hashed.
+
+.. _`SegHash()`:
+
+``SegHash(Col, [, Col ...])``
+  Hashes the given columns into a 32-bit hash value.
+  This is the hash value used by `aq_pp <aq_pp.html>`_ to select sample data
+  for `import <aq_pp.html#imp>`_ into Udb.
+  Use this to reproduce Udb import's data sampling behavior as needed.
+
+  * Returns a 32-bit hash value.
+  * ``Col`` are the columns to be hashed.
 
 
 Speciality functions
@@ -758,19 +1086,19 @@ Speciality functions
 
 .. _`Set()`:
 
-``Set(Str, Val)``
-  Sets a column of name ``Str`` to value ``Val``. Note that the target
+``Set(NameStr, Val)``
+  Sets a column of name ``NameStr`` to value ``Val``. Note that the target
   column is determined at runtime during each evaluation.
 
   * Returns 1 if successful, 0 if the column cannot be found or if there is
     a datatype mismatch so that the assignment cannot be done.
-    ``Pattern`` must match the *entire* ``Val`` to be successful.
-  * ``Str`` is the column name. It can be a string column's name,
+  * ``NameStr`` is the target column name. It can be a string column's name,
     or an expression that evaluates to a string.
     It can also be a `string constant`_; however, if this is the case,
     the standard ``-eval`` assignment should be used instead.
-  * ``Val`` can be a string column's name, a `string constant`_,
-    or an expression that evaluates to a string.
+  * ``Val`` is the value to assign to the target column. It must have the same
+    type as the target column. It can be a column's name, a constant,
+    or an expression that evaluates to a value.
 
 
 RTmetrics functions
@@ -849,6 +1177,18 @@ files are included with the aq_tool installation package.
         -eval String_Name_Col 'CountryName(String_Code_Col)' ...
         -eval String_Region_Col 'CountryRegion(String_Code_Col)' ...
 
+.. _`AgentToUId()`:
+
+``AgentToUId(Agent [, Ip])``
+  Convert the given user-agent string to a numeric RTmetrics user ID.
+
+  * An user ID of ``2`` indicates a crawler.
+  * ``Agent`` can be a string column's name, a `string constant`_
+    or an expression that evaluates to a string.
+  * ``Ip`` is an optional source IP for more accurate crawler matching.
+    It can be an IP column's name, a literal IP
+    or an expression that evaluates to an IP.
+
 .. _`AgentParse()`:
 
 ``AgentParse(Agent [, Ip])``
@@ -917,6 +1257,18 @@ files are included with the aq_tool installation package.
     $ aq_command ... -eval String_Code_Col 'AgentParse(Str2)' ...
         ... -eval Integer_Col 'IsCrawler(String_Code_Col)' ...
 
+.. _`UNameHash()`:
+
+``UNameHash(NameStr)``
+  Convert the given string (usually an user name) to an RTmetrics hashed name
+  string. |<br>|
+  *Note*: for generic string obfuscation, use `MaskStr()`_ instead.
+
+  * Returns the hashed string. It is an alphanumeric string of length 8.
+    This is a low quality hash, so collision is possible.
+  * ``NameStr`` can be a string column's name, a `string constant`_
+    or an expression that evaluates to a string.
+
 
 Udb specific functions
 ======================
@@ -971,6 +1323,63 @@ For example,
  ::
 
   'a "b" c'" d 'e' f" => a "b" c d 'e' f
+
+
+RegEx Attributes
+================
+
+These attributes are used by the `aq_pp <aq_pp.html>`_ mapping options and
+the regular expression related funstions described above.
+
+* In command line options, the attributes are specified as a ``,`` separated
+  list on the options
+  (e.g., ``-map,pcre,ncas``).
+* In evaluation functions, the attributes are specified as a ``|`` separated
+  list in one the functions' parameters
+  (e.g., ``RxCmp(Col, "[0-9]*", pcre|ncas)``).
+
+There are 2 major sets of attributes, one for the POSIX engine and one for PCRE.
+
+* ``ncas`` - Perform a case insensitive match (default is case sensitive).
+* ``rx`` - Select the POSIX engine. This is the default if no engine is
+  selected explicitly.
+* These are POSIX specific attributes. Selecting any of them implies ``rx``:
+
+  * ``rx_extended`` - Enable POSIX Extended Regular Expression syntax.
+  * ``rx_icase`` - Same as ``rx`` and ``ncas`` together.
+  * ``rx_newline`` - Apply certain newline matching restrictions.
+
+* ``pcre`` - Select the PCRE engine.
+* These are PCRE specific attributes. Selecting any of them implies ``pcre``.
+  For details, see the corresponding ``PCRE2_*`` descriptions in the
+  `PCRE2 manual <http://www.pcre.org/current/doc/html/pcre2api.html>`_.
+
+  * ``allow_empty_class`` (PCRE2_ALLOW_EMPTY_CLASS) - Allow empty classes.
+  * ``alt_bsux`` (PCRE2_ALT_BSUX) - Alternative handling of ``\u``, ``\U``, and ``\x``.
+  * ``alt_circumflex`` (PCRE2_ALT_CIRCUMFLEX) - Alternative handling of ``^`` in multiline mode.
+  * ``alt_verbnames`` (PCRE2_ALT_VERBNAMES) - Process backslashes in verb names.
+  * ``caseless`` (PCRE2_CASELESS) - Same as ``pcre`` and ``ncas`` together.
+  * ``dollar_endonly`` (PCRE2_DOLLAR_ENDONLY) - ``$`` not to match newline at end.
+  * ``dotall`` (PCRE2_DOTALL) - ``.`` matches anything including newline.
+  * ``dupnames`` (PCRE2_DUPNAMES) - Allow duplicate names for subpatterns.
+  * ``extended`` (PCRE2_EXTENDED) - Ignore white space and ``#`` comments.
+  * ``firstline`` (PCRE2_FIRSTLINE) - Force matching to be before newline.
+  * ``match_unset_backref`` (PCRE2_MATCH_UNSET_BACKREF) - Match unset back references.
+  * ``multiline`` (PCRE2_MULTILINE) - ``^`` and ``$`` match newlines within data.
+  * ``never_backslash_c`` (PCRE2_NEVER_BACKSLASH_C) - Lock out the use of ``\C`` in patterns.
+  * ``never_ucp`` (PCRE2_NEVER_UCP) - Lock out PCRE2_UCP.
+  * ``never_utf`` (PCRE2_NEVER_UTF) - Lock out PCRE2_UTF.
+  * ``no_dotstar_anchor`` (PCRE2_NO_DOTSTAR_ANCHOR) - Disable automatic anchoring for ``.*``.
+  * ``no_start_optimize`` (PCRE2_NO_START_OPTIMIZE) - Disable match-time start optimizations.
+  * ``ucp`` (PCRE2_UCP) - Use Unicode properties for ``\d``, ``\w``, etc.
+  * ``ungreedy`` (PCRE2_UNGREEDY) - Invert greediness of quantifiers.
+  * ``utf`` (PCRE2_UTF) - Treat pattern and subjects as UTF strings.
+  * ``anchored`` (PCRE2_ANCHORED) - Match only at the first position.
+  * ``notbol`` (PCRE2_NOTBOL) - Subject string is not the beginning of a line.
+  * ``noteol`` (PCRE2_NOTEOL) - Subject string is not the end of a line.
+  * ``notempty`` (PCRE2_NOTEMPTY) - An empty string is not a valid match.
+  * ``notempty_atstart`` (PCRE2_NOTEMPTY_ATSTART) - An empty string at the start of the subject is not a valid match.
+  * ``no_utf_check`` (PCRE2_NO_UTF_CHECK) - Do not check the subject for UTF validity (only relevant if ``utf`` is also set.
 
 
 See Also

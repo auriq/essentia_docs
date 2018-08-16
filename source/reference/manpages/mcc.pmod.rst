@@ -448,11 +448,13 @@ argument).
 .. _`MOD_CDAT()`:
 
 ``CDAT_*_T MOD_CDAT(ColName)``, ``CDAT_*_T $ColName``
-  Use either form like a program variable to address the value of a column
-  declared via `DECL_COLUMN()`_ or `DECL_COLUMN_DYNAMIC()`_.
+  Use either form like a program variable to address the value of a column in
+  the current row.
 
-  * The variable will have a ``CDAT_*_T`` type (see `column datatypes`_)
-    derived from the ``ColType`` in the declaration.
+  * The column must be one that has been declared via `DECL_COLUMN()`_ or
+    `DECL_COLUMN_DYNAMIC()`_.
+    The value will have a ``CDAT_*_T`` type (see `column datatypes`_)
+    derived from ``ColType`` in the declaration.
 
   Example:
 
@@ -477,8 +479,11 @@ argument).
 .. _`MOD_CDAT_S_NSET()`:
 
 ``void MOD_CDAT_S_NSET(ColName, const char *b, unsigned int n)``
-  Set the value of a string column represented by ``ColName`` to a
-  hash string based on string buffer ``b`` and length ``n``.
+  Set the value of the given column in the current row to a hash string
+  based on string buffer ``b`` and length ``n``.
+
+  * The column must be one that has been declared via `DECL_COLUMN()`_ or
+    `DECL_COLUMN_DYNAMIC()`_. It must have a string type.
 
   Example:
 
@@ -497,9 +502,11 @@ argument).
 .. _`MOD_CDAT_S_SET()`:
 
 ``void MOD_CDAT_S_SET(ColName, CDAT_S_T hs)``
-  Set the value of a string column represented by ``ColName`` to a
-  copy of hash string ``hs``.
+  Set the value of the given column in the current row to a copy of
+  hash string ``hs``.
 
+  * The column must be one that has been declared via `DECL_COLUMN()`_ or
+    `DECL_COLUMN_DYNAMIC()`_. It must have a string type.
   * ``hs`` is an existing hash string (e.g., the value of another string
     column).
 
@@ -521,8 +528,8 @@ argument).
 .. _`MOD_CDAT_S_DEL()`:
 
 ``void MOD_CDAT_S_DEL(ColName)``
-  Set the value of a string column represented by ``ColName`` to a
-  generic *blank* hash string.
+  Like `MOD_CDAT_S_SET()`_ with a generic *blank* hash string as the target
+  value.
 
 
 .. _`MOD_CDEF()`:

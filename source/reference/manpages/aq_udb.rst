@@ -18,12 +18,13 @@ Synopsis
 
   Global_Opt:
       [-verb] [-stat] [-test]
-      [-server AdrSpec [AdrSpec ...]]
-      [-local]
+      [-server AdrSpec [AdrSpec ...]] [-local]
 
   Mnt_Spec:
       -crt[,AtrLst] DbName |
+      -alt[,AtrLst] DbName |
       -clr[,AtrLst] DbName[:TabName] |
+      -inf[,AtrLst] DbName [-o[,AtrLst] File] |
       -probe[,AtrLst] DbName
 
   Order_Spec:
@@ -48,8 +49,8 @@ Synopsis
       [-goto DestSpec]
       [-del_row | -del_key]
       [-mod ModSpec [ModSrc]]
-      [-lim_key Num] [-lim_rec Num]
-      [-sort[,AtrLst] [ColName ...] [-top Num]]
+      [-sort[,AtrLst] ColName ...]
+      [-lim_key Num] [-lim_rec Num] [-key_rec Num] [-top Num]
       [-o[,AtrLst] File] [-c ColName [ColName ...]]
 
 
@@ -126,19 +127,35 @@ Options
 ``-crt[,AtrLst] DbName``
   Create a database explicitly. Normally, a database is created automatically
   during an import (see `aq_pp <aq_pp.html>`_).
+  However, it is a good idea to perform this create operation anyway in case
+  the import is not performed.
   ``DbName`` is the database name (see `Target Database`_).
   Note that it is not an error to create a database that already exists as
   long as the database definition is identical.
-
   Optional ``AtrLst`` is a comma separated list containing:
 
   * ``spec=UdbSpec`` - Set the spec file directly (see `Target Database`_).
 
 
+.. _`-alt`:
+
+``-alt[,AtrLst] DbName``
+  Alter the spec of database ``DbName`` (see `Target Database`_).
+  The database must already exist (e.g., created via `-crt`_).
+  Currently, *only* the Var vector spec can be altered,
+  all other tables and vectors must be the same as before.
+  Optional ``AtrLst`` is a comma separated list containing:
+
+  * ``spec=UdbSpec`` - Set the spec file directly (see `Target Database`_).
+
+  The values of columns that exist in both the old and new specs are preserved.
+  New columns are initialized with 0/blank.
+
+
 .. _`-clr`:
 
 ``-clr[,AtrLst] DbName[:TabName]``
-  Remove/reset the data of a table/vector.
+  Clear an entire DB or remove/reset the data of a table/vector.
   ``DbName`` is the database name (see `Target Database`_).
   ``TabName`` is a table/vector name in the database.
   Specific clear actions are:
@@ -148,7 +165,7 @@ Options
   * For the Var vector (i.e., when ``TabName`` is "var"), its columns are reset
     to 0/blank.
   * If ``TabName`` is not given or if it is a "." (a dot), *everything* will be
-    cleared - all keys, tables, vectors, the "var" vector and the database
+    cleared - all keys, tables, vectors, the Var vector and the database
     definition will all be removed.
 
   Optional ``AtrLst`` is a comma separated list containing:
@@ -156,11 +173,36 @@ Options
   * ``spec=UdbSpec`` - Set the spec file directly (see `Target Database`_).
 
 
+.. _`-inf`:
+
+``-inf[,AtrLst] DbName``
+  Get the primary key counts and table/vector row counts of database ``DbName``
+  (see `Target Database`_). It differs from `-cnt`_ in these ways:
+
+  * All table/vectors row counts are output. The output has this form:
+
+     ::
+
+      "pkey","var","TabName1","TabName2",...,"VecName1","VecName2",...
+      num,num,num,num,...,num,num,...
+
+  * Processing rules (e.g., filters) are not supported.
+  * Much faster - the counts are cached in memory, no database scan needed.
+
+  Optional ``AtrLst`` is a comma separated list containing:
+
+  * ``spec=UdbSpec`` - Set the spec file directly (see `Target Database`_).
+  * ``asis`` - Normally, the results from all the servers are combined to
+    produce a single row of counts. With this attribute, the *individual*
+    servers' counts are output, producing one row of counts per server.
+
+
 .. _`-probe`:
 
 ``-probe[,AtrLst] DbName``
-  Check if the servers associated with ``DbName`` are heathly and that
-  ``DbName`` has been defined on the servers.
+  Check if the servers associated with database ``DbName``
+  (see `Target Database`_) are heathly and that
+  the database has been defined on the servers.
 
   * If all servers responded *successful*, the exit code will be 0.
   * If a connection failed or ``DbName`` is not defined,
@@ -168,7 +210,6 @@ Options
     Usually, an error message will be printed on stderr.
   * Use this with `-verb`_ and/or `-stat`_ to get more info if desired.
 
-  ``DbName`` is the database name (see `Target Database`_).
   Optional ``AtrLst`` is a comma separated list containing:
 
   * ``spec=UdbSpec`` - Set the spec file directly (see `Target Database`_).
@@ -177,26 +218,31 @@ Options
 .. _`-ord`:
 
 ``-ord[,AtrLst] DbName[:TabName] [ColName ...]``
-  Sort records in a table for each key. The default sort order is
-  ascending. The records are sorted internally; not output will be generated.
+  Sort the keys in a DB or sort the records in a table for each key.
+  This will alter the data order in the DB.
+  This operation is done internally, no output will be generated.
+  The default sort order is ascending.
   ``DbName`` is the database name (see `Target Database`_).
-  ``TabName`` is a table name in the database.
-  ``ColName`` sets the desired sort columns.
-  If no ``ColName`` is given, the "TKEY" column is assumed
-  (see `udb.spec <udb.spec.html>`_).
-  If ``TabName`` is not given or if it is a "." (a dot), the behavior depends
-  on whether any ``ColName`` is given:
+  ``TabName`` is the target table to sort.
+  ``ColNames`` are the desired sort columns.
+  If ``TabName`` or ``ColName`` is not given:
 
-  * No ``ColName`` - all tables with a "TKEY" will be sorted.
-  * With ``ColName`` - sort by primary keys. ``ColName`` must belong to the
-    key set. Note that this only sorts the keys on a *per server* basis.
-    If the database is distributed over a server pool, the keys is not sorted
-    across servers.
+  * ``TabName`` given, ``ColName`` not given -
+    ``TabName`` will be sorted by its "TKEY" column
+    (see `udb.spec <udb.spec.html>`_).
+  * ``TabName`` not given or is a "." (a dot), ``ColName`` not given -
+    Every table in ``DbName`` with a "TKEY" will be sorted by its "TKEY".
+  * ``TabName`` not given or is a "." (a dot), ``ColName`` given -
+    Each ``ColName`` must be a primary key column. This will sort the data
+    by their keys on a *per server* basis. If the database is distributed over
+    a server pool, the keys are not sorted across servers.`
 
   Optional ``AtrLst`` is a comma separated list containing:
 
   * ``spec=UdbSpec`` - Set the spec file directly (see `Target Database`_).
-  * ``dec`` - Sort in descending order. Default is ascending.
+  * ``ncas`` - Do case insensitive match (default is case sensitive).
+    For ASCII data only.
+  * ``dec`` - Sort in descending order (default is ascending).
 
 
 .. _`-exp`:
@@ -210,19 +256,39 @@ Options
   Optional ``AtrLst`` is a comma separated list containing:
 
   * ``spec=UdbSpec`` - Set the spec file directly (see `Target Database`_).
+  * ``asis`` - This attributes only affects the result of a Var vector
+    export. Normally, the results from all the servers are combined to
+    produce a single row of Var values. With this attribute, the *individual*
+    servers' values are output, producing one row of values per server.
+  * ``seg=N1[-N2]/N[:V]`` - Only export a subset of the data by selecting
+    segment N1 or segments N1 to N2 (inclusive) out of N segments of
+    unique keys based on their hash values.
+    For example, ``seg=2-4/10`` will divide the keys into 10 segments and
+    export segments 2, 3 and 4; segments 1 and 5-10 are skipped.
+    Optional ``V`` is a number that can be used to vary the sample selection.
+    It is zero by default.
 
 
 .. _`-cnt`:
 
 ``-cnt[,AtrLst] DbName[:TabName]``
-  Count unique primary keys and rows.
-  ``DbName`` is the database name (see `Target Database`_).
-  ``TabName`` is a table/vector name in the database.
-  If ``TabName`` is not given or if it is a "." (a dot), the primary keys
-  will be counted.
+  Count the unique primary keys in database ``DbName`` (see `Target Database`_).
+  If ``TabName`` is given, count the rows in the table/vector as well.
+  Normally, use this option when the counts are processing rules dependent
+  (e.g., filters); otherwise, use `-inf`_ since it is much faster.
   Optional ``AtrLst`` is a comma separated list containing:
 
   * ``spec=UdbSpec`` - Set the spec file directly (see `Target Database`_).
+  * ``asis`` - Normally, the results from all the servers are combined to
+    produce a single set of counts. With this attribute, the *individual*
+    servers' counts are output, producing one set of counts per server.
+  * ``seg=N1[-N2]/N[:V]`` - Only count a subset of the data by selecting
+    segment N1 or segments N1 to N2 (inclusive) out of N segments of
+    unique keys based on their hash values.
+    For example, ``seg=2-4/10`` will divide the keys into 10 segments and
+    count segments 2, 3 and 4; segments 1 and 5-10 are skipped.
+    Optional ``V`` is a number that can be used to vary the sample selection.
+    It is zero by default.
 
 
 .. _`-scn`:
@@ -243,7 +309,7 @@ Options
 .. _`-seed`:
 
 ``-seed RandSeed``
-  Set the seed of random sequence used by the ``$Random``
+  Set the random sequence seed used by the ``$Random``
   `-eval`_ builtin variable.
 
 
@@ -259,7 +325,7 @@ Options
 
   * Var columns can also be altered by `-eval`_ and modules (see `-mod`_).
   * Var column values are persistent until they are cleared by a `-clr`_
-    operation, at which point the columns are reset to 0 or blank.
+    operation, at which point the columns are reset to 0/blank.
 
   Example:
 
@@ -333,7 +399,7 @@ Options
     '+' for concatenation.
   * Certain types can be converted to one another using the builtin functions
     ``ToIP()``, ``ToF()``, ``ToI()`` and ``ToS()``.
-  * Operator precedency is *NOT* supported. Use '(' and ')' to group
+  * Operator precedence is *NOT* supported. Use '(' and ')' to group
     operations as appropriate.
 
   Builtin variables:
@@ -347,6 +413,14 @@ Options
   ``$RowNum``
     Represent the per key per table row index (one-based).
     It is generally used during a table scan to identify the current row number.
+
+  ``$CurSec``
+    The current time in seconds.
+    It is evaluated in realtime when the variable is referenced.
+
+  ``$CurUSec``
+    The current time in microseconds.
+    It is evaluated in realtime when the variable is referenced.
 
   Standard functions:
 
@@ -495,63 +569,13 @@ Options
       behavior.
 
 
-.. _`-mod`:
-
-``-mod ModSpec [ModSrc]``
-  Specify a module to be loaded on the *server side* during an
-  export/count/scan operation. A module contains one or more processing
-  functions which are called as each key is processed according to the
-  `Data Processing Steps`_.
-  Only one such module can be specified.
-
-  ``ModSpec`` has the form ``ModName`` or ``ModName(Arg1, Arg2, ...)``
-  where ``ModName`` is the module name and ``Arg*`` are module dependent
-  arguments. Note that the arguments must be literals -
-  `string constants <#string-constant>`_ (quoted), numbers or IP addresses.
-  ``ModSrc`` is an optional module source file containing:
-
-  * A module script source file that can be used to build the specified
-    module. See the `Udb module script compiler <mcc.umod.html>`_
-    documentation for more information.
-  * A ready-to-use module object file. It *must* have a ``.so`` extension.
-
-  Without ``ModSrc``, the server will look for a preinstalled module matching
-  ``ModName``. Standard modules:
-
-  ``roi("VecName.Count_Col", "TabName.Page_Col", "Page1[,AtrLst]", ...)``
-    Module for ROI counting. ROI spec is given in the module arguments.
-    There are 3 or more arguments:
-
-    * ``VecName.Count_Col`` - Column to save matched count to.
-      It must have type ``I``.
-    * ``TabName.Page_Col`` - Column to get the match value from.
-      It must have type ``S``. Rows in the table must already be in the
-      desired ROI matching order (usually ascending time order).
-    * ``PageN[,AtrLst]`` - One or more pages to match against the
-      ``TabName.Page_Col`` value. Each page is given as a separate
-      module argument.
-      Optional ``AtrLst`` is a comma separated list containing:
-
-      * ``ncas`` - Do case insensitive match.
-      * ``seq`` - Require that the page match occur *immediately* after the
-        previous match (i.e., no unmatch page in between).
-        Applicable on the second page and up only.
-
-    Either exact or wildcard match can be done. Exact match will either match
-    the entire ``TabName.Page_Col`` value or up to (but not including) a
-    '?' or '#' character.
-    Wildcard match is done if ``Page`` contains '*' (matches any number of
-    bytes) and/or '?' (matches any 1 byte).
-    Literal ',', ':', '*', '?' and '\\' in ``Page`` must be '\\' escaped.
-
-
 .. _`-pp`:
 
 ``-pp[,AtrLst] TabName [-bvar ... -eval ... -filt ... -goto ... -del_row ...] -endpp``
   ``-pp`` groups one or more `-bvar`_, `-eval`_, `-filt`_, `-goto`_,
   `-del_row`_ and `-del_key`_ actions together.
   Each group performs pre-processing on a set of key specific data (e.g., a
-  table). It is done *before* the main export/count/scan action.
+  table). It is done *before* the main export/count/scan operation.
   See `Data Processing Steps`_ for details.
 
   ``TabName`` sets the target table/vector for the rules in the ``-pp`` group.
@@ -608,72 +632,102 @@ Options
     2nd ``-filt``.
 
 
+.. _`-mod`:
+
+``-mod ModSpec [ModSrc]``
+  Specify a module to be loaded on the *server side* during an
+  export/count/scan operation. A module contains one or more processing
+  functions which are called as each key is processed according to the
+  `Data Processing Steps`_.
+  Only one such module can be specified.
+
+  ``ModSpec`` has the form ``ModName`` or ``ModName(Arg1, Arg2, ...)``
+  where ``ModName`` is the module name and ``Arg*`` are module dependent
+  arguments. Note that the arguments must be literals -
+  `string constants <#string-constant>`_ (quoted), numbers or IP addresses.
+  ``ModSrc`` is an optional module source file containing:
+
+  * A module script source file that can be used to build the specified
+    module. See the `Udb module script compiler <mcc.umod.html>`_
+    documentation for more information.
+  * A ready-to-use module object file. It *must* have a ``.so`` extension.
+
+  Without ``ModSrc``, the server will look for a preinstalled module matching
+  ``ModName``.
+
+
+.. _`-sort`:
+
+``-sort[,AtrLst] ColName ...``
+  Sort the export result according to the given columns.
+  Note that only the result is sorted, data order in the DB is not altered.
+  Use this with `-top`_ to get the top ranking results if desired.
+  Optional ``AtrLst`` is a comma separated list containing:
+
+  * ``ncas`` - Do case insensitive pattern match (default is case sensitive).
+    For ASCII data only.
+  * ``dec`` - Sort in descending order (default is ascending).
+
+
 .. _`-lim_key`:
 
 ``-lim_key Num``
-  Limit export output to the given Num keys. Default is 0, meaning no limit.
-
-  **Note**: If the data is distributed over multiple servers, the result
-  exported can be less than expected if ``Num`` is close to
-  ``Total_Num_Keys / Num_Servers``.
+  Limit the export *result* to approximately ``Num`` unique keys.
+  This option is intended for data sampling only. The actual result count can
+  be *less* than expected if the data is distributed over multiple servers.
 
 
 .. _`-lim_rec`:
 
 ``-lim_rec Num``
-  Limit export output to the given Num records. Default is 0, meaning no limit.
+  Limit the export *result* to approximately ``Num`` records.
+  This option is intended for data sampling only. The actual result count can
+  be *less* than expected if the data is distributed over multiple servers.
+  Use the `-top`_ option if a precise limit is needed.
 
-  **Note**: If the data is distributed over multiple servers, the result
-  exported can be less than expected if ``Num`` is close to
-  ``Total_Num_Records / Num_Servers``.
+
+.. _`-key_rec`:
+
+``-key_rec Num``
+  Limit the export *result* to ``Num`` records per unique key.
 
 
-.. _`-sort`:
+.. _`-top`:
 
-``-sort[,AtrLst] ColName ... [-top Num]``
-  `-exp`_ export output post processing option.
-  This sets the output sort columns.
-  Note that the sort columns must be in the output columns.
-
-  Optional ``AtrLst`` is a comma separated list containing:
-
-  * ``dec`` - Sort in descending order. Default order is ascending.
-
-  ``-top`` limits the output to the top ``Num`` records in the result.
-
-  **Note**: Sort should *not* be used if the output contains columns
-  other than those from the target table/vector (e.g. other vector columns).
+``-top Num``
+  Limit the export *result* to ``Num`` records.
 
 
 .. _`-o`:
 
 ``-o[,AtrLst] File``
-  Export output option.
-  Set the output attributes and file.
+  Set the output attributes and file for a `-inf`_, `-exp`_ or `-cnt`_
+  operation.
   See the `aq_tool output specifications <aq-output.html>`_ manual for details.
-  If this option is not used with an export, data is written to stdout.
+  If this option is not used with those operations, the result will be
+  written to stdout.
 
   Example:
 
    ::
 
-    $ aq_udb -exp mydb:Test ... -o,esc,noq -
+    $ aq_udb -exp mydb:Test ... -o - -c Col2 Col1
 
-  * Output to stdout in a format suitable for Amazon Cloud.
+  * Output Col2 and Col1 of Test (in that order) to stdout.
 
 
 .. _`-c`:
 
 ``-c ColName [ColName ...]``
-  Select columns to output during an export.
+  Select the columns to output during a `-exp`_ operation.
 
   * For a table/vector export, columns from the target table/vector,
-    columns from other vectors, and/or columns from the Var vector can
+    columns from other vectors and columns from the Var vector can
     be selected.
     Default output includes all target table/vector columns.
 
   * For a primary key export, columns from the primary key,
-    columns from any vectors, and/or columns from the Var vector can
+    columns from any vectors and columns from the Var vector can
     be selected.
     Default output includes the primary key columns only.
 
@@ -682,19 +736,45 @@ Options
     Default output includes all Var vector columns.
 
   To address columns other than those in the target table/vector, use the
-  ``VecName.ColName`` format. For the Var vector, ``VecName`` is optional
-  unless ``ColName`` also exists in the target.
+  ``VecName.ColName`` format. For the Var vector, ``VecName`` (``Var``)
+  is optional unless a column of the same name also exists in the target.
 
-  A ``ColName`` can be preceeded with a ``~`` (or ``!``) negation mark.
-  This means that the column is to be excluded.
+  Shorthands can be used to represent groups of columns from a table/vector:
+
+  * Specify ``*`` or ``+`` for all the columns in the target table/vector.
+    ``*`` *includes* the primary key columns (if any), while ``+``
+    *excludes* them.
+  * Specify ``TabName.*`` or ``VecName.*`` or ``TabName.+`` or ``VecName.+``
+    for all the columns in any applicable table/vector.
+    ``*`` *includes* the primary key columns (if any), while ``+``
+    *excludes* them.
+
+  In addition, these special forms can also supported:
+
+  * ``ColName[:NewName][+NumPrintFormat]`` - Add ``ColName`` to the output.
+    If ``:NewName`` is given, it will be used as the output label.
+    The ``+NumPrintFormat`` spec is for numeric columns. It overrides the
+    print format of the column (*be careful with this format - a wrong spec
+    can crash the program*).
+  * ``^ColName[:NewName][+NumPrintFormat]`` - Same as the above, but with a
+    leading ``^`` mark. It is used to *modify* the output label and/or format
+    of a previously selected output column called ``ColName``.
+    If ``^ColName[...]`` is the first selection after ``-c``, then ``*`` will be
+    included automatically first.
+  * ``~ColName`` - The leading ``~`` mark is used to *exclude* a previously
+    selected output column called ``ColName``. 
+    If ``~ColName`` is the first selection after ``-c``, then ``*`` will be
+    included automatically first.
 
   Example:
 
    ::
 
     $ aq_udb -exp mydb:Test ... -c Test_Col1 ... Test_ColN Var_Col1 ... Var_ColN
+    $ aq_udb -exp mydb:Test ... -c 'Test.*' 'Var.*'
+    $ aq_udb -exp mydb:Test ... -c '*' 'Var.*'
 
-  * Output Var vector columns along with columns from Test.
+  * All examples output Var vector columns along with the columns from Test.
     Even though Test_Col* are normally exported by default, they must be
     listed explicitly in order to include any Var_Col*.
 
@@ -719,6 +799,8 @@ Applicable exit codes are:
 * 22 - Output write error.
 * 31 - Udb connect error.
 * 32 - Udb communication error.
+* 33 - Udb authentication error.
+* 34 - Udb request invalid.
 
 
 String Constant
@@ -764,11 +846,9 @@ definitions. See `udb.spec <udb.spec.html>`_ for details.
 ``aq_udb`` finds the relevant spec file in several ways:
 
 * The spec file path is taken from the ``spec=UdbSpec`` attribute
-  of the `-crt`_, `-ord`_, `-exp`_, `-cnt`_, `-scn`_, `-clr`_ or `-probe`_
-  option.
+  of the main operation option (`-crt`_, `-exp`_, etc.).
 * The spec file path is deduced implicitly from the ``DbName`` parameters
-  of the `-crt`_, `-ord`_, `-exp`_, `-cnt`_, `-scn`_, `-clr`_ or `-probe`_
-  option.
+  of the main operation option (`-crt`_, `-exp`_, etc.).
   This method sets the spec file to "``.conf/DbName.spec``" in the runtime
   directory of ``aq_udb``.
 * If none of the above information is given, the spec file is assumed to be
@@ -822,14 +902,14 @@ Data Processing Steps
 =====================
 
 For each export/count/scan operation,
-data is processed according to the commandline options in this way:
+data is processed according to the command line options in this way:
 
 * Initialize Var columns according the `-var`_ options.
 
 * Scan the primary keys. For each key in the database:
 
   * Execute `-pp`_ groups in the order they are specified on the
-    commandline. For each ``-pp`` group:
+    command line. For each ``-pp`` group:
 
     * Initialize Var columns according the `-bvar`_ rules.
     * Scan the ``-pp`` table. For each row in the table:
