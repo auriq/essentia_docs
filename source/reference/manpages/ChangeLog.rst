@@ -3,17 +3,18 @@
    <br>
 
 ===================
-Change Log - V1.2.4
+Change Log - V2.0.0
 ===================
 
-:Replaces: V1.2.3
-:Revision: V1.2.4-0 2016-03-10
-:Revision: V1.2.4-1 2016-06-28
-:Revision: V1.2.4-2 2016-08-09
-:Revision: V1.2.4-3 2016-09-06
-:Revision: V1.2.4-4 2016-09-29
-:Revision: V1.2.4-5 2016-10-26
-:Revision: V1.2.4-6 2016-11-03
+:Replaces: V1.2.4
+:Revision: V1.2.5-0 2016-12-07
+:Revision: V1.2.5-1 2017-04-13
+:Revision: V1.2.5-2 2017-11-02
+:Revision: V1.2.5-3 2018-12-29
+:Revision: V1.2.5-4 2018-02-12
+:Revision: V2.0.0-0 2018-05-04
+:Revision: V2.0.0-1 2018-06-18
+:Revision: V2.0.0-2 2018-08-01
 
 
 Introduction
@@ -42,178 +43,204 @@ There are 4 kind of changes:
 Summary
 =======
 
-New features:
-
-* ``aq_pp`` can take data from Udb as its input as in
-  ``aq_pp -exp Udb_export_options -- ...`` where the standard ``-f`` option
-  has been replaced by a set of Udb export options.
-* aq_tool can take input in JSON, XML and generic separator delimited formats
-  with ``-f,jsn``, ``-f,xml`` and ``-f,div`` respectively.
-* aq_tool can output in JSON format with ``-o,jsn``.
-* aq_tool can pass column spec from one command to another. For
-  example, in ``aq_command ... -o,aq - -c c3 c9 c1 | aq_command -f,aq - ..``,
-  no column spec is needed in the second command.
-* Output columns specified under ``-c`` can be negated. For example,
-  ``-c ~c5 ~c8`` will *exclude* ``c5`` and ``c8``.
-* Output columns specified under ``-c`` can have a format spec as in
-  ``-d ... i:c1 ... -c c1+0x%x``. For numeric columns only.
-* New regular expression based functions - e.g., ``RxReplace()``
-  is designed to perform generic substring replacement.
-* Udb can accept any primary key data type, not just string.
-* Udb can take a composite primary key (a multi-column key).
-* Udb can be a key-only database with no table/vector.
-* Database definition can be created with ``aq_udb -crt ...`` without importing.
-* Udb data rows and keys can be removed with ``-del_row`` and ``-del_key``
-  during an ``aq_udb`` export/count/scan operation.
-* A single Udb server can manage multiple databases.
-  The old port-based database requirement is no longer necessary.
-
 Incompatible changes:
 
-* ``-f File1 File2 ... -f File3 ...`` --> ``-f File1 File2 File3 ... ...``
-* ``-o File -notitle`` --> ``-o,notitle File``
-* ``-evlc`` --> ``-eval``
-* ``-f,noq`` --> ``-f,sep=,`` (add ``esc`` as needed)
-* ``-o,noq`` --> ``-o,sep=,`` (add ``esc`` as needed)
-* ``-f ... -d s:c1 s,noq:c2 ...`` --> ``-f,div`` with custom separator specs
-* ``-maprx ...`` --> ``-map,rx ...``
-* ``-mapfrx ...`` --> ``-mapf,rx ...``
-* ``-imp ... -seg N1[-N2]/N`` --> ``-imp,seg=N1[-N2]/N ...``
-* ``-imp ... -nobnk`` --> ``-imp,nobnk ...``
-* ``-imp ... -nonew`` --> ``-imp,nonew ...``
-* ``-exp_usr`` --> ``-exp DbName``
-* ``-cnt_usr`` --> ``-cnt DbName``
-* ``-scn_usr`` --> ``-scn DbName``
-* ``-ord_all`` --> ``-ord DbName``
-* ``-clr_all`` --> ``-clr DbName``
-* ``-dec`` --> ``-ord,dec`` or ``-sort,dec``
-* ``+add`` attribute cannot be used on a string column.
-* ``aq_sess``, ``logcnv`` and ``objcnv`` have been removed from the package.
-* Udb related documentation now uses the word "key" in place of "user" or
-  "bucket".
+* ``aq_ord`` no longer supports the *raw sort* mode. This mode was designed to
+  the sort input data by column numbers without a column spec.
+  However, its use cases were very limited, so the support was removed.
+* To exclude a column in the ``-c`` column spec, only ``~ColName`` is accepted
+  now, ``!ColName`` is no longer supported.
+* The ``-rownum`` option of ``aq_pp`` is no longer supported.
+
+New features:
+
+* Support the *Perl Compatible Regular Expressions* (PCRE) engine in addition
+  to the POSIX one. PCRE uses a syntax like POSIX's *extended* regex -
+  i.e., it uses ``()`` without any backslashes for sub-expressions.
+* Enhanced ``DateToTime()`` to handle sub-seconds.
+* A new ``RxRep()`` function that works like ``RxReplace()`` but returns the
+  result directly.
+* More math functions - ``Sqrt()``, ``Cbrt()``, ``Log()``, ``Log10()``,
+  ``Exp()``, ``Exp10()``, ``Pow()``.
+* New substring comparison functions - ``BegCmp()`` ``EndCmp()``, ``SubCmp()``,
+  ``SubCmpAll()``, ``MixedCmp()`` ``MixedCmpAll()``, ``Contain()``,
+  ``ContainAll()``.
+* New string obfuscation function ``MaskStr()``.
+* New built-in evaluation variables ``$CurSec`` and ``$CurUSec`` for the
+  current time.
+* ``aq_pp`` can output to a target defined by a variable using
+  ``-o,fvar VarName``. In other words, the output target can be dynamic.
+* ``aq_pp`` supports a ``-cmb,mrg,...`` *merge* mode for
+  combine data that is too large to fit into memory.
+* ``aq_pp``, ``aq_ord`` and ``aq_cat`` can have multiple outputs with the same
+  destination. This was allowed before but the result was not well defined.
+* ``aq_udb -chk ...`` can be used to do spec file syntax check.
+* ``aq_udb`` can sort output even when a sort column is not in the output.
+* ``aq_udb`` ``-exp``, ``-cnt`` and ``-inf`` can have an ``asis`` attribute
+  to output the individual results from all servers.
+* New ``aq_udb`` ``-alt`` option to alter the definition of the Var vector
+  after a database has been created.
+* New ``aq_udb`` ``-inf`` option to output a database's key count and
+  tables/vectors row counts.
+* New ``aq_udb`` ``-key_rec`` option to limit the number of resulting rows
+  per key.
+* ``aq_udb`` ``-top`` can be used to limit the number of resulting rows
+  without ``-sort``.
+* ``aq_udb`` ``-exp`` and ``-cnt`` support the ``seg=N1[-N2]/N[:V]`` attribute
+  for data sampling (like the same attribute for import).
+* The ``-c`` output column spec of ``aq_pp``, ``aq_ord`` and ``aq_udb`` accepts
+  a ``*`` to represent the default output column set.
+* ``aq_ord`` supports case insensitive sorting with ``-sort,ncas,...``.
+* ``aq_ord`` supports a block sort mode with ``-blk NumRec FilPrefix``.
+  Use this mode when there is not enough memory for the entire data set.
+* ``aq_ord`` supports a merge mode with ``-sort,mrg,...``. This will merge
+  already sorted input files.
+* Output columns specified under ``-c`` can have an output column name override
+  as in ``-d ... i:c1 ... -c c1:c1_out_name+0x%x``. The format spec, if any,
+  must be given after the name override.
+* Most tools now support inputting from and outputting to named pipes and
+  network sockets.
+* Improved JSON parser EOK handling to save more records.
+* Udb supports case insensitive ordering and sorting with ``-ord,ncas,...`` and
+  ``-sort,ncas,...``.
+* Udb handles out-of-descriptor condition gracefully. When this happens,
+  ``aq_pp`` and ``aq_udb`` will show an "out of FD, connection failed" message.
+* Udb server files (e.g., logs) will be created with the same permission as the
+  server's runtime directory. In other words, these files will have a global
+  read/write permission in a default installation.
+* Udb server start/stop script (``udbd``) can handle ``<defunc>`` processes.
+* Udb server supports an import memory allocation margin via environment
+  ``UDBD_MEM_MARGIN``. An import will be aborted when the system's free memory
+  drops below this limit.
+* ``mcc.*`` enhancements.
+* ``aq_cnt`` can output extended statistics (sum, average, standard deviation,
+  minimum and maximum) in ``-kX`` reports.
+  The ``-kX`` output can also be used as the input of a merge operation.
+* ``loginf`` can handle input data in aq_tool's internal binary format either
+  explicitly or automatically.
 
 Changes to be enforced in a future release:
 
-* ``-udb ... -imp ...`` --> ``-imp[,AtrLst] ...`` (``-udb`` not needed)
-* ``-ddef ... -imp ...`` --> ``-imp,ddef ...``
-* ``-map``, ``-mapf`` and ``-mapc`` --> ``RxMap()`` function
-* ``-kenc`` and ``-kdec`` --> ``KeyEnc()`` and ``KeyDec()`` functions
-* ``KDec()`` --> ``KeyDec()``
-* ``QryParmExt()`` --> ``QryDec()``
-* ``-pp ... -end_of_scan DestSpec ...`` --> ``-pp,post=DestSpec ...``
-* ``-lim_usr`` --> ``-lim_key``
-* ``next_bucket`` and ``proc_bucket`` --> ``next_key`` and ``proc_key``
+* ``aq_pp``:
+
+  * ``-udb ... -imp ...`` --> ``-imp[,AtrLst] ...`` (``-udb`` not needed)
+  * ``-ddef ... -imp ...`` --> ``-imp,ddef ...``
+  * ``-map``, ``-mapf`` and ``-mapc`` --> ``RxMap()`` function
+  * ``-kenc`` and ``-kdec`` --> ``KeyEnc()`` and ``KeyDec()`` functions
+  * ``-alias`` will be removed.
+
+* ``aq_udb``:
+
+  * ``-pp ... -end_of_scan DestSpec ...`` --> ``-pp,post=DestSpec ...``
+  * ``-lim_usr`` --> ``-lim_key``
+  * ``next_bucket`` and ``proc_bucket`` --> ``next_key`` and ``proc_key``
+
+* Evaluation functions:
+
+  * ``KDec()`` --> ``KeyDec()``
+  * ``QryParmExt()`` --> ``QryDec()``
 
 
 Common
 ======
 Cf: `aq_cat <aq_cat.html>`_, `aq_cnt <aq_cnt.html>`_, `aq_ord <aq_ord.html>`_, `aq_pp <aq_pp.html>`_, `aq_udb <aq_udb.html>`_, etc.
 
-* [Critical] 1.2.4-1/3: |<br>|
-  Some depreciated options no longer supported. Use the newer specs:
+* [Bug] 1.2.5-2: |<br>|
+  There was a bug in the "-filt" expression parser. It affects aq_pp and Udb
+  when the negation group ``!()`` is used in these ways:
 
-  * ``-o File -notitle`` --> ``-o,notitle File``
-  * ``-evlc`` --> ``-eval``
+  * ``!( anything )`` - e.g., ``!(col==5)``
+  * ``(!( anything ))`` - e.g., ``(!(col==5))``
+  * ``(!( anything )) operator anything`` - e.g., ``(!(col==5))&&1``
+  * ``anything operator (!( anything ))`` - e.g,, ``1&&(!(col==5))``
 
-* [Critical] 1.2.4-1: |<br>|
-  The ``-bz`` option has been replaced by an ``bz=BufSize`` attribute of the
-  ``-f`` option. In fact, each input related option can have its own
-  ``bz`` attribute. This option is rarely needed since the default is usually
-  sufficient.
+  These constructions can be used to circumvent the problem if necessary:
 
-  * ``-bz 100 -f File`` --> ``-f,bz=100 File``
+  * ``!( anything ) operator anything`` - e.g, ``!(col==5)&&1``, ``!(col==5)||0``
+  * ``anything operator !( anything )`` - e.g, ``1&&!(col==5)``, ``0||!(col==5)``
 
-* [Critical] 1.2.4-1: |<br>|
-  Some aspects of the ``-f`` (input source) option have changed. They were
-  changed to accommodate several new features.
+* [Critical] 1.2.5-2: |<br>|
+  To exclude a column in the ``-c`` column spec, only ``~ColName`` is accepted.
+  ``!ColName`` is no longer supported. Having an alternate form (``!``) is not
+  necessary. It is better to reserve the ``!`` mark for another use in the
+  future.
 
-  * Multiple ``-f`` no longer supported. All inputs must be specifed under the
-    same ``-f`` option. That is,
+* [New] 1.2.5-1/3: |<br>|
+  The mapping options of ``aq_pp`` and regular expression related evaluation
+  functions now support the *Perl Compatible Regular Expressions* (PCRE)
+  engine in addition to the POSIX one. POSIX is still the default.
+  PCRE can be selected at runtime in these ways:
 
-    * ``-f File1 File2 ... -f File3 ...`` --> ``-f File1 File2 File3 ... ...``
+  * Add a ``pcre`` to the mapping option's attribute (e.g., ``-map,pcre ...``).
+  * Add a ``pcre`` to the evaluation function's attribute parameter.
+  * Set the default regular expression processing attributes via the new
+    ``-rx DefRgxAtr`` option of ``aq_pp`` and ``aq_udb (e.g., ``-rx pcre``).
 
-  * ``-f`` should be specified *before* any ``-d`` (column spec) options.
-    This is because column spec interpretation may depend on the data format
-    chosen in the ``-f`` attributes.  For example, JSON and XML formats
-    require extended column specs.
+* [New] 1.2.5-1/2/3/4: |<br>|
+  Updated/new evaluation functions:
 
-  * A ``div`` attribute is required to process data in the old ``logcnv``'s
-    format. That is,
+  * ``DateToTime()`` and ``GmDateToTime()`` can output deci-seconds to
+    nano-seconds from decimal seconds with the ``%S1`` to ``%S9`` format spec.
+  * ``RxRep()`` is similar to ``RxReplace()``, except that it returns the
+    result directly.
+  * ``AgentToUId()`` converts an agent string to an RTmetrics user ID.
+  * ``UNameHash()`` converts a string (usually an user name) to an RTmetrics
+    name hash.
+  * ``Sqrt()``, ``Cbrt()``, ``Log()``, ``Log10()``, ``Exp()``, ``Exp10()`` and
+    ``Pow()`` for square root, cube root, natural logarithm, base 10 logarithm,
+    ``e`` (natural logarithm) base power, base 10 power and  abitrary power.
 
-    * ``-f ... -d ... SEP:"sep1" ...`` --> ``-f,div ... -d ... SEP:"sep1" ...``
+* [New] 2.0.0-0: |<br>|
+  Updated/new evaluation functions:
 
-* [Critical] 1.2.4-1: |<br>|
-  The ``noq`` attribute of ``-f``, ``-o`` and individual column spec has been
-  removed because it produces the wrong result on CSV data. Use one of these
-  approaches instead:
+  * ``IConv()`` can choose the best conversion to return. In this way, ``eok``
+    can output a blank. A ``FromCode`` of ``-`` (a dash) can explicitly output
+    a blank as fallback.
+  * ``BegCmp()`` ``EndCmp()``, ``SubCmp()``, ``SubCmpAll()``,
+    ``MixedCmp()`` ``MixedCmpAll()``, ``Contain()`` and ``ContainAll()``
+    for substring comparisons.
+  * ``MaskStr()`` irreversibly obfuscates a string with a high degree of
+    uniqueness.
 
-  * ``-f,noq`` --> ``-f,sep=,`` (add ``esc`` as needed)
-  * ``-o,noq`` --> ``-o,sep=,`` (add ``esc`` as needed)
-  * ``-f ... -d s:c1 s,noq:c2 ...`` --> ``-f,div`` with custom separator specs
+* [New] 2.0.0-0: |<br>|
+  New built-in evaluation variables:
 
-* [Warn] 1.2.4-1: |<br>|
-  The error messages of most commandline option/parameter specification errors
-  have changed.
+  * ``$CurSec`` and ``$CurUSec`` represent the current time in seconds and
+    microseconds respectively.
 
-* [New] 1.2.4-1/2: |<br>|
-  New input option attributes (apply to options like ``-f``, ``-cat``,
-  ``-sub`` and so on):
+* [New] 1.2.5-2: |<br>|
+  ``aq_pp``, ``aq_ord`` and ``aq_cat`` can have multiple outputs with the same
+  destination. For example, ``aq_pp ... -o outfile ... -o outfile ...`` will
+  output each row to ``outfile`` twice, giving
+  ``title,title,row1,row1,...,rowN,rowN,...``. Older versions also allow this
+  kind of specs, but the result was not well defined.
 
-  * ``jsn`` - Input is in JSON format.
-  * ``xml`` - Input is in XML format.
-  * ``aq`` - The input is generated by another aq_tool outputting in ``aq``
-    format. This is a special format that contains an embedded column spec.
-    For this reason, *no* column spec is needed (nor accepted).
-  * ``div`` - Select a format that used to be handled by ``logcnv``.
-  * ``bz=BufSize`` - Replaces the old ``-bz`` option.
-  * ``nox`` - Reject records with more fields than the column spec.
-    For separator delimited format and HTML table format only.
-  * ``eok[=Num[/Rows]]`` - New optional parameter ``Num`` or ``Num/Rows``.
-    ``Num`` sets the number of errors per file to allow.
-    ``Num/Rows`` allows ``Num`` errors every ``Rows`` rows.
-  * ``qui[=Num]`` - New optional parameter ``Num``. It sets the number of
-    error messages to print for each input file before becoming quiet.
+* [New] 1.2.5-2: |<br>|
+  Most tools now support inputting from and outputting to named pipes and
+  network sockets.
 
-* [New] 1.2.4-1: |<br>|
-  New output option attributes (apply to options like ``-o``, ``-ovar``
-  and so on):
+  * Named pipes are used to connect the input/output of processes 
+    running on the same machine. Example usages are
+    ``aq_pp -f fifo@PipeName ...`` and ``aq_pp ... -o fifo@PipeName``
+    where ``PipeName`` is the desired name of the input or output named pipe.
+  * Sockets are used to connect the input/output of processes
+    running on separated machines that are connected via a network.
+    Example usages are
+    ``aq_pp -f socket@IP:Port ...`` and ``aq_pp ... -o socket@IP:Port``
+    where ``IP:Port`` is the IP address and port of the input or output socket.
 
-  * ``aq`` - Output using an internal binary output format.
-  * ``jsn`` - Output each record as an JSON object.
-  * ``nodelay`` - Output each record as soon as possible instead of
-    waiting until the output buffer is full.
+* [New] 1.2.5-4: |<br>|
+  Most tools now support inputting from worker nodes listed under a Udb spec's
+  ``@server`` section. For example, ``aq_cat -f servers@DbName:port ...``.
+  This is an experimental feature, so it is not documented yet.
 
-* [New] 1.2.4-1/5: |<br>|
-  New evaluation functions:
+* [New] 2.0.0-1: |<br>|
+  ``aq_pp`` and ``aq_ord`` support the ``*`` column spec in ``-c`` - each ``*``
+  represents the entire set of relevant default output columns.
 
-  * ``RxCmp()`` works like ``PatCmp()`` with a RegEx attribute.
-  * ``RxMap()`` works like the ``-map,rx`` and ``-mapf,rx`` options.
-  * ``RxReplace()`` is a pattern replacement function.
-  * ``StrIndex()`` finds the position of a substring in another string.
-  * ``QryDec()`` works like the the old ``QryParmExt()`` function
-    but with a revised argument schematics.
-  * ``KeyEnc()`` and ``KeyDec()`` works like the ``-kenc`` and
-    ``-kdec`` options.
-  * ``UrlDec()`` and ``Base64Dec()`` are Web related decoding functions.
-  * ``ToUpper()`` and ``ToLower()`` are simple ASCII test conversion functions.
-  * ``Set()`` sets a column's value. Unlike a standard ``-eval``, the target
-    column here is determined at runtime during each evaluation (it is taken
-    from a string argument).
-
-* [New] 1.2.4-4: |<br>|
-  Output column selection (``-c``) can accept columns *not* to include.
-  For example, ``-c ~c5 ~c8`` will remove ``c5`` and ``c8`` from the default
-  output column set.
-
-* [New] 1.2.4-4: |<br>|
-* Output columns specified under ``-c`` can have a format spec as in
-  ``-d ... i:c1 ... -c c1+0x%x``. For numeric columns only. Everything
-  following the ``+`` (plus sign) is a format string that will be passed to
-  the C library's ``printf`` function. The user must specify the right format;
-  otherwise, the program may crash.
-
-  Note: This is an experimental option. It will not be documented
-  until its design and usability have been confirmed.
+* [New] 2.0.0-2: |<br>|
+  Improved JSON parser EOK handling. More records can be saved if the JSON
+  records are line-based.
 
 
 aq_pp
@@ -222,68 +249,29 @@ Cf: `aq_pp <aq_pp.html>`_
 
 * See also `common`_ changes.
 
-* [Critical] 1.2.4-1: |<br>|
-  The ``-maprx`` and ``-mapfrx`` options are no longer supported. Use the
-  ``rx`` attribute instead:
+* [Bug] 1.2.5-2: |<br>|
+  If a ``-cmb`` or ``-kdec`` action is executed conditionally
+  (i.e., it is inside a ``-if`` block), columns derived from the action
+  are not set if the action is not taken. In most cases, those column would
+  retain the last values when the action was executed.
+  With the bug fix, those columns will be initialized to 0 or blank if the
+  action is not taken.
 
-  * ``-maprx ...`` --> ``-map,rx ...``
-  * ``-mapfrx ...`` --> ``-mapf,rx ...``
+* [New] 1.2.5-2: |<br>|
+  Support setting an output file using the value of a variable using
+  ``-o,fvar VarName``. In this way, the output can be changed dynamically
+  by changing the variable. When the value of the variable changes,
+  the old output (based on the previous value of the variable) will be closed
+  and the new one (based on the new value of the variable) will be opened.
+  This is designed for infrequent switching only. Changing the value of the
+  variable frequently is very inefficient.
 
-  Furthermore, the mapping related options will be depreciated soon.
-  Use the new ``RxMap()`` function instead.
-
-* [Critical] 1.2.4-1: |<br>|
-  Several Udb import related commandline options have changed:
-
-  * ``-spec SpecFile -imp TabName`` --> ``-imp,spec=SpecFile DbName:TabName``
-  * ``-db DbName -imp TabName`` --> ``-imp DbName:TabName``
-  * ``-imp ... -seg N1[-N2]/N`` --> ``-imp,seg=N1[-N2]/N ...``
-  * ``-imp ... -nobnk`` --> ``-imp,nobnk ...``
-  * ``-imp ... -nonew`` --> ``-imp,nonew ...``
-
-* [Warn] 1.2.4-1: |<br>|
-  The ``-udb`` option is depreciated. The extended ``-imp`` option alone
-  is sufficient.
-
-  * ``-udb ... -imp ...`` --> ``-imp[,AtrLst] ...``
-
-* [Warn] 1.2.4-1: |<br>|
-  The ``-ddef`` option is depreciated. Use the new ``ddef`` attribute on
-  ``-imp`` instead:
-
-  * ``-ddef ... -imp ...`` --> ``-imp,ddef ...``
-
-* [New] 1.2.4-1/3: |<br>|
-  The ``-imp`` (Udb import) option can now have attributes, as in
-  ``-imp[,AtrLst]``:
-
-  * ``spec=SpecFile``, ``seg=N1[-N2]/N``, ``nobnk``, ``nonew``, ``ddef`` -
-    They replace the old ``-spec``, ``-seg``, ``-nobnk``, ``-nonew`` and
-    ``-ddef``  options respectively.
-  * ``noold`` - Only import to *new* keys. It is the opposite of ``nonew``.
-  * ``nodelay`` - Sent each record to Udb as soon as possible instead of
-    waiting until the output buffer is full.
-
-* [New] 1.2.4-1: |<br>|
-  ``aq_pp`` can now obtain its main input from an Udb export. To do this,
-  use the new ``-exp Udb_export_options --`` spec instead of a ``-f``.
-  ``Udb_export_options`` represents any of the export related options of
-  `aq_udb <aq_udb.html>`_ (other than the ``-o`` output option). The ``--``
-  indicates the end of the export spec.
-
-* [New] 1.2.4-1: |<br>|
-  Additonal information is now available at the end of an Udb import:
-
-  * Successful - ``aq_pp`` will show the combined server
-    memory usage if ``-stat`` is enabled. Per server usages can be obtained
-    with ``-verb``.
-  * Failure - ``aq_pp`` will show an error message from each failed server.
-
-* [New] 1.2.4-2: |<br>|
-  Added license file checks:
-
-  * ``/opt/essentia/essentia.license``
-  * ``/opt/essentia/essentia.sign``
+* [New] 1.2.5-2: |<br>|
+  Support ``-cmb,mrg,...`` *merge* mode. Records in the main data set and in
+  the combine set must already be *sorted* in the same order.
+  Default order is ascending. Use ``-cmb,mrg,dec`` if all the data are in
+  descending order.
+  This is designed to handle combine data that is too large to fit into memory.
 
 
 aq_ord
@@ -292,13 +280,39 @@ Cf: `aq_ord <aq_ord.html>`_
 
 * See also `common`_ changes.
 
-* [Bug] 1.2.4-2: |<br>|
-  Wrong result when sorting certain string value combinations.
+* [New] 1.2.5-2: |<br>|
+  Support case insensitive sorting with ``-sort,ncas,...``.
 
-* [Critical] 1.2.4-1: |<br>|
-  A depreciated option has been removed:
+* [New] 1.2.5-2: |<br>|
+  ``aq_ord`` supports a block sort mode with ``-blk NumRec FilPrefix`` or
+  ``-blk_only NumRec FilPrefix``. In this mode,``aq_ord`` will load, sort and
+  output ``NumRec`` at a time to ``FilPrefix-BlkNo.bin``. ``BlkNo`` is the
+  output file number, it starts from 1 and increments for each ``NumRec``
+  records until the entire input is consumed. Use this mode when the data set
+  is too large to fit into memory all at once.
 
-  * ``-dec`` --> ``-sort,dec``
+  * ``-blk`` performs the block sort and then loads and merges the results
+    into a single output.
+  * ``-blk_only`` performs the block sort onlt.
+  
+* [New] 1.2.5-2: |<br>|
+  ``aq_ord`` supports a merge mode with ``-sort,mrg,...``. This will merge
+  the inputs into a single sorted output. All the inputs must already
+  be sorted in the same order as desired for the output. This option can be
+  used to merge the output blocks from ``-blk`` and ``-blk_only``.
+
+
+aq_cnt
+======
+Cf: `aq_cnt <aq_cnt.html>`_
+
+* See also `common`_ changes.
+
+* [New] 1.2.5-4: |<br>|
+  Can output extended statistics (sum, average, standard deviation, minimum and
+  maximum) of any associated numerical columns in ``-kX`` reports.
+  The ``-kX`` output can also be used as the input of a merge operation
+  that outputs the combined statistics.
 
 
 aq_udb/udb server
@@ -307,178 +321,76 @@ Cf: `aq_udb <aq_udb.html>`_, `udbd <udbd.html>`_
 
 * See also `common`_ changes.
 
-* [Bug] 1.2.4-1: |<br>|
-  ``udbd`` (script) has a hardcoded limit on the number of Udb servers it
-  would handle. This limit was set too low (32). Extended it yto 70.
-  Note that this is only a soft limit. To manage more servers,
-  run ``udbd`` several times, each time on a different range of ports.
+* [Bug] 1.2.5-1: |<br>|
+  Under certain environment (e.g., ``docker``), the OS may leave zombie
+  (aka, ``<defunc>``) processes behind. ``udbd`` (script) was not designed
+  to handle this condition, So it would detect/report server status
+  (running or not) incorrectly. This problem has been fixed.
 
-* [Bug] 1.2.4-1: |<br>|
-  Any Udb action *immediately* following a broken pipe may produce
-  unpredictable result. An example is:
+* [New] 1.2.5-2: |<br>|
+  Support case insensitive ordering and sorting with ``-ord,ncas,...`` and
+  ``-sort,ncas,...`` of ``aq_udb``.
 
-  ::
+* [New] 1.2.5-2: |<br>|
+  Support output sorting even when a sort column is not in the output.
+  This condition was not allowed before.
 
-    $ aq_udb -exp mydb:mytable | head -1 ; aq_udb -exp mydb:mytable
+* [New] 1.2.5-2: |<br>|
+  Support shorthand column specs in ``-c`` that represent groups of columns in
+  a table/vector - ``-c ... TabName.* ...`` includes all columns from a table
+  of the given name, ``-c ... TabName.+ ...`` includes all columns except for
+  the primary keys in the table, and similarly for vectors.
 
-  The ``head`` command will cause a broken pipe; for this reason, the second
-  export may not produce the correct result.
+* [New] 1.2.5-3: |<br>|
+  Udb handles out-of-descriptor condition gracefully. Previously, this error
+  was silently ignored by the server and the condition could not be detected
+  from the client side. Now, this error is logged in the server log as well as
+  passed back to the client. When this happens,
+  ``aq_pp`` and ``aq_udb`` will show an "out of FD, connection failed" message.
 
-* [Bug] 1.2.4-2: |<br>|
-  When a Udb module source is supplied with the ``aq_udb`` or ``aq_pp``
-  command, the resulting module will get truncated if it is greater than 64K
-  byte in size (the truncated size can be less than 64K).
+* [New] 2.0.0-0: |<br>|
+  Udb server supports an import memory allocation margin via environment
+  ``UDBD_MEM_MARGIN`` (Kb). A default margin of 500000K is applied if the
+  environment is not set. If the system's free memory drops below this limit
+  during an import, ``aq_pp`` will get an``out of memory`` server error.
 
-* [Bug] 1.2.4-6: |<br>|
-  The server normally writes log/error messages to a log file. If the server
-  cannot open the file (e.g., due to file permission problem), the old
-  behavior was to ignore the error and log to stdout/stderr implicitly.
-  But this caused a problem when the server was being started by a
-  ``ssh`` command - the command will not exit until the server closes
-  stdout/stderr. The new behavior is to print an error message and quit.
+* [New] 2.0.0-1: |<br>|
+  ``aq_udb`` supports an ``asis`` attribute for Var export
+  (i.e., ``aq_udb -exp,asis DbName:Var ...``), ``-cnt`` and ``-inf``.
+  This will output the *individual* results from all the servers rather than
+  a single set of combined result from them.
 
-* [Critical] 1.2.4-1: |<br>|
-  The action specification option - ``-exp``, ``-cnt``, ``-scn``, ``-ord``,
-  ``-clr`` and ``-probe`` - must be specified *before* options that depend
-  on it. For example, ``-sort`` is only valid for export,
-  so an ``-exp`` must be given first. If in doubt, follow the
-  `aq_udb <aq_udb.html>`_ synopsis.
+* [New] 2.0.0-2: |<br>|
+  The ``-alt`` option can be used to alter the definition of the Var vector
+  after a database has been created.
 
-* [Critical] 1.2.4-1: |<br>|
-  Some depreciated options no longer supported. Use the newer specs:
+* [New] 2.0.0-2: |<br>|
+  The ``-inf`` option can be used to to output a database's key count and
+  tables/vectors row counts. Filters are not supported, but it is much faster
+  than ``-cnt``.
 
-  * ``-spec SpecFile -Action TabName`` --> ``-Action,spec=SpecFile DbName:TabName``
-  * ``-db DbName -Action TabName`` --> ``-Action DbName:TabName``
-  * ``-exp_usr`` --> ``-exp DbName`` or ``-exp,spec=SpecFile DbName``
-  * ``-cnt_usr`` --> ``-cnt DbName`` or ``-cnt,spec=SpecFile DbName``
-  * ``-scn_usr`` --> ``-scn DbName`` or ``-scn,spec=SpecFile DbName``
-  * ``-ord_all`` --> ``-ord DbName`` or ``-ord,spec=SpecFile DbName``
-  * ``-clr_all`` --> ``-clr DbName`` or ``-clr,spec=SpecFile DbName``
-  * ``-dec`` --> ``-ord,dec`` or ``-sort,dec``
+* [New] 2.0.0-2: |<br>|
+  The ``-key_rec`` option can be used to limit the number of resulting rows
+  per key in an export operation.
 
-* [Critical] 1.2.4-1: |<br>|
-  The ``-probe`` (server check) option now *requires* a parameter:
+* [New] 2.0.0-2: |<br>|
+  The ``-top`` option can be used to limit the number of resulting rows
+  in an export operation without ``-sort``.
 
-  * ``-spec SpecFile -probe`` --> ``-probe,spec=SpecFile DbName``
-
-* [Critical] 1.2.4-2: |<br>|
-  The ``-sort`` (output sorting) option now *requires* a sort column spec.
-
-* [Critical] 1.2.4-5: |<br>|
-  Removed ``+add`` attribute support on string columns.
-
-* [Warn] 1.2.4-1: |<br>|
-  Output column labels in the title line have changed. This only happens when
-  the columns come from more than one source. For example, if table colums are
-  exported along with vector columns and var columns, the labels will appear
-  like this:
-
-  ::
-
-    "col1","col2","vectorX.col1","vectorX.col2","var.col1","var.col2"
-
-  In older versions, the labels would be indistinguishable:
-
-  ::
-
-    "col1","col2","col1","col2","col1","col2"
-
-* [Warn] 1.2.4-3: |<br>|
-  The ``-end_of_scan DestSpec`` option for ``-pp`` is depreciated.
-  Use the new ``post`` attribute on ``-pp`` instead:
-
-  * ``-pp ... -end_of_scan DestSpec ...`` --> ``-pp,post=DestSpec ...``
-
-* [New] 1.2.4-1: |<br>|
-  The ``-probe`` (server check) option will show the combined server
-  memory usage if ``-stat`` is enabled. Per server usages can be obtained
-  with ``-verb``.
-
-* [New] 1.2.4-2: |<br>|
-  Per key row count of a table can be obtained from the new
-  ``RowCount(TabName)`` evaluation function.
-  The count is stored as part of the key specific data, no row scan is involved.
-  For vectors where the row count is always 1, the function returns 1
-  if the row has been initialized, 0 otherwise.
-
-* [New] 1.2.4-2: |<br>|
-  The Udb primary key has been generalized:
-
-  * It can have an arbitrary data type, not just string.
-  * It can be a composite key, one made up of multiple columns of arbitrary
-    data types.
-
-* [New] 1.2.4-2: |<br>|
-  Each Udb server can now handle more than one databases at a time.
-  Databases are identified by their names. Their data are
-  stored independently. But they share a common string hash for efficiency.
-  The database name is obtained from the commandline - e.g., ``mydb`` will
-  be the database name in these commands:
-
-  ::
-
-    $ aq_pp ... -imp mydb:mytable ...
-    $ aq_udb -exp mydb:mytable ...
-
-* [New] 1.2.4-2: |<br>|
-  ``udbd`` will apply a default memory limit of ``(SystemTotal - 500M)`` when
-  starting Udb servers. This can be overriden with the ``-mem`` or ``-memx``
-  option of ``udbd``.
-
-* [New] 1.2.4-3: |<br>|
-  Support explicit DB creation with the new ``-crt`` ``aq_udb`` option.
-
-* [New] 1.2.4-3: |<br>|
-  Support key-only import, no table/vector data needed.
-  This is useful for a DB that has *no* table or vector.
-  Example usage:
-
-  ::
-
-    $ aq_pp ... -imp mydb ...
-    $ aq_udb -exp mydb ...
-
-* [New] 1.2.4-3: |<br>|
-  Delete is now supported during an export/scan/count operation.
-
-  * ``-del_row`` will delete the current row.
-  * ``-del_key`` will delete the current key and its associated data.
-
-
-aq_sess
-=======
-
-* [Critical] 1.2.4-1: |<br>|
-  ``aq_sess`` has been retired.
-
-
-logcnv
-======
-
-* [Critical] 1.2.4-1: |<br>|
-  ``logcnv`` has been retired. Its functionality is now supported by all
-  ``aq_*`` commands. Use the ``div`` input attribute to enable it.
-  For example,
-
-  * ``logcnv -f[,AtrLst] ...`` --> ``aq_pp -f,div[,AtrLst] ...``
+* [New] 2.0.0-2: |<br>|
+  ``aq_udb`` ``-exp`` and ``-cnt`` support the ``seg=N1[-N2]/N[:V]`` attribute
+  for data sampling (like the same attribute for import). The sampling is
+  repeatable since it is done based the keys' hash values.
 
 
 loginf
 ======
+Cf: `loginf <loginf.html>`_
 
-* [Bug] 1.2.4-5: |<br>|
-  Fixed ``loginf`` crash that happens when any record from the log is greater
-  than 64KB long.
+* See also `common`_ changes.
 
-
-objcnv
-======
-
-* [Critical] 1.2.4-1: |<br>|
-  ``objcnv`` has been retired. Its functionality is now supported by all
-  ``aq_*`` commands. Use the ``jsn`` or ``xml`` input attribute to enable it.
-  For example,
-
-  * ``objcnv -jsn -f[,AtrLst] ...`` or ``objcnv -f,jsn[,AtrLst] ...`` -->
-    ``aq_pp -f,jsn[,AtrLst] ...``
+* [New] 1.2.5-4: |<br>|
+  Accept ``bin`` and ``aq`` input attribute to handle data in aq_tool's
+  internal binary format. Can also detect this data format automatically with
+  the ``auto`` input attribute.
 
