@@ -1,4 +1,4 @@
-source gitcred.sh
+source other/gitcred.sh
 version=`git branch | grep \* | awk '{printf $2}'`
 
 echo -e "\nRunning $1 for essentia docs version $version\n"

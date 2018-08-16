@@ -1,6 +1,6 @@
 .\" Man page generated from reStructuredText.
 .
-.TH "ESS" "1" "October 06, 2016" "3.2.0" ""
+.TH "ESS" "1" "August 14, 2018" "3.2.0" ""
 .SH NAME
 ess \- 
 .
@@ -37,7 +37,7 @@ level margin: \\n[rst2man-indent\\n[rst2man-indent-level]]
 .nf
 .ft C
 usage: ess [\-h] [\-v]
-           {select,summary,probe,purge,ls,category,file,cat,lsa,cluster,query,server,create,drop,use,stream,exec,udbd,redshift}
+           {select,summary,repository,probe,purge,ls,category,file,cat,lsa,cluster,query,server,create,drop,use,stream,exec,udbd,redshift}
            ...
 .ft P
 .fi
@@ -60,11 +60,12 @@ optional arguments:
   \-v, \-\-version         show program\(aqs version number and exit
 
 Subcommands:
-  {select,summary,probe,purge,ls,category,file,cat,lsa,cluster,query,server,create,drop,use,stream,exec,udbd,redshift}
+  {select,summary,repository,probe,purge,ls,category,file,cat,lsa,cluster,query,server,create,drop,use,stream,exec,udbd,redshift}
     select              Choose a datastore
     summary             Summarize datastore
+    repository          Summarize repository
     probe               Probe category
-    purge               Delete database
+    purge               Delete datastore
     ls                  File commands
     category            Category commands
     file                File transfer with workers
@@ -90,6 +91,8 @@ Subcommands:
 \fIess\-select(1)\fP
 .IP \(bu 2
 \fIess\-summary(1)\fP
+.IP \(bu 2
+\fIess\-repository(1)\fP
 .IP \(bu 2
 \fIess\-probe(1)\fP
 .IP \(bu 2
@@ -125,6 +128,46 @@ Subcommands:
 .IP \(bu 2
 \fIess\-redshift(1)\fP
 .UNINDENT
+.sp
+\fIess\-category(1)\fP
+.sp
+\fIess\-cat(1)\fP
+.sp
+\fIess\-cluster(1)\fP
+.sp
+\fIess\-create(1)\fP
+.sp
+\fIess\-drop(1)\fP
+.sp
+\fIess\-exec(1)\fP
+.sp
+\fIess\-file(1)\fP
+.sp
+\fIess\-lsa(1)\fP
+.sp
+\fIess\-ls(1)\fP
+.sp
+\fIess\-probe(1)\fP
+.sp
+\fIess\-purge(1)\fP
+.sp
+\fIess\-query(1)\fP
+.sp
+\fIess\-redshift(1)\fP
+.sp
+\fIess\-repository(1)\fP
+.sp
+\fIess\-select(1)\fP
+.sp
+\fIess\-server(1)\fP
+.sp
+\fIess\-stream(1)\fP
+.sp
+\fIess\-summary(1)\fP
+.sp
+\fIess\-udbd(1)\fP
+.sp
+\fIess\-use(1)\fP
 .SH AUTHOR
 AuriQ Systems Inc.
 .SH COPYRIGHT

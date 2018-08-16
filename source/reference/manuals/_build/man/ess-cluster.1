@@ -1,6 +1,6 @@
 .\" Man page generated from reStructuredText.
 .
-.TH "ESS-CLUSTER" "1" "October 06, 2016" "3.2.0" ""
+.TH "ESS-CLUSTER" "1" "August 14, 2018" "3.2.0" ""
 .SH NAME
 ess-cluster \- 
 .
@@ -57,6 +57,7 @@ usage: ess cluster create [\-h] [\-\-number NumberOfWorkers] [\-\-type TYPE]
                           [\-\-add]
                           [\-\-credentials CREDENTIALS | \-\-aws_access_key AWS_ACCESS_KEY]
                           [\-\-aws_secret_access_key AWS_SECRET_ACCESS_KEY]
+                          [\-\-error_return_code]
 
 optional arguments:
   \-h, \-\-help            show this help message and exit
@@ -70,6 +71,7 @@ optional arguments:
                         EC2 access key
   \-\-aws_secret_access_key AWS_SECRET_ACCESS_KEY
                         EC2 secret access key
+  \-\-error_return_code   return error code when some of worker nodes failed
 .ft P
 .fi
 .UNINDENT
@@ -81,11 +83,19 @@ optional arguments:
 .nf
 .ft C
 usage: ess cluster terminate [\-h] [\-\-all] [\-y]
+                             [\-\-credentials CREDENTIALS | \-\-aws_access_key AWS_ACCESS_KEY]
+                             [\-\-aws_secret_access_key AWS_SECRET_ACCESS_KEY]
 
 optional arguments:
-  \-h, \-\-help  show this help message and exit
-  \-\-all       delete all worker nodes, security group, keys
-  \-y          confirm to terminate all
+  \-h, \-\-help            show this help message and exit
+  \-\-all                 delete all worker nodes, security group, keys
+  \-y                    confirm to terminate all
+  \-\-credentials CREDENTIALS
+                        Credentials file
+  \-\-aws_access_key AWS_ACCESS_KEY
+                        EC2 access key
+  \-\-aws_secret_access_key AWS_SECRET_ACCESS_KEY
+                        EC2 secret access key
 .ft P
 .fi
 .UNINDENT
@@ -97,9 +107,17 @@ optional arguments:
 .nf
 .ft C
 usage: ess cluster stop [\-h]
+                        [\-\-credentials CREDENTIALS | \-\-aws_access_key AWS_ACCESS_KEY]
+                        [\-\-aws_secret_access_key AWS_SECRET_ACCESS_KEY]
 
 optional arguments:
-  \-h, \-\-help  show this help message and exit
+  \-h, \-\-help            show this help message and exit
+  \-\-credentials CREDENTIALS
+                        Credentials file
+  \-\-aws_access_key AWS_ACCESS_KEY
+                        EC2 access key
+  \-\-aws_secret_access_key AWS_SECRET_ACCESS_KEY
+                        EC2 secret access key
 .ft P
 .fi
 .UNINDENT
@@ -111,9 +129,17 @@ optional arguments:
 .nf
 .ft C
 usage: ess cluster start [\-h]
+                         [\-\-credentials CREDENTIALS | \-\-aws_access_key AWS_ACCESS_KEY]
+                         [\-\-aws_secret_access_key AWS_SECRET_ACCESS_KEY]
 
 optional arguments:
-  \-h, \-\-help  show this help message and exit
+  \-h, \-\-help            show this help message and exit
+  \-\-credentials CREDENTIALS
+                        Credentials file
+  \-\-aws_access_key AWS_ACCESS_KEY
+                        EC2 access key
+  \-\-aws_secret_access_key AWS_SECRET_ACCESS_KEY
+                        EC2 secret access key
 .ft P
 .fi
 .UNINDENT
@@ -176,6 +202,22 @@ usage: ess cluster reset [\-h]
 
 optional arguments:
   \-h, \-\-help  show this help message and exit
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.SH ESS CLUSTER IPLIST
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+usage: ess cluster iplist [\-h] [\-\-private | \-\-public]
+
+optional arguments:
+  \-h, \-\-help  show this help message and exit
+  \-\-private   Private IPs only
+  \-\-public    Public IPs only
 .ft P
 .fi
 .UNINDENT
