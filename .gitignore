@@ -1,4 +1,8 @@
 .idea
 .DS_Store
 _build/**
-
+.conf
+.tmp_file
+source/EssentiaPublic/output/
+task.log
+gitcred.sh
