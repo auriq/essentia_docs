@@ -52,9 +52,16 @@ Since there are no processing or output specifications given, then the output is
   2,"JORDAN","Colin",25.899999999999999,"D"
   3,"MALONE","Peter",97.200000000000003,"A+"
 
-Alternatively, we could have used the linux command ``cat`` to write the data in our example file ``chemistry.csv`` to standard output and then use ``-f`` to accept that data from standard input.
+Alternatively, we could have used the linux command ``cat`` to write the data in our example file ``chemistry.csv`` to standard output and then use ``-f`` to accept that data from standard input. ``cat chemistry.csv | aq_pp -f,+1 - -d i:id s,up:lastname s:firstname f:chem_mid s:chem_fin``
 
-``cat chemistry.csv | aq_pp -f,+1 - -d i:id s,up:lastname s:firstname f:chem_mid s:chem_fin``
+.. code-block::
+       
+  int num = 0;
+  cat chemistry.csv | grep word
+
+.. code-block:: python
+
+  print("java")
 
 * ``-f`` still specifies the file to operate on; however, the file specified is ``-``. This ``-`` value tells aq_pp to read the data that is coming from standard input (in this case, chemistry.csv).
 
