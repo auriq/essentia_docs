@@ -70,6 +70,8 @@ was accidentally placed in lieu of the midterm percentage, the program will exit
 optional ``eok`` attribute along with ``-f,+1``, the program will simply ignore the input row.
 This feature makes it easy to produce validated output.
 
+For more details about input specification, take a look at aq-input page :doc:`../../reference/manpages/aq-input`
+
 
 Process Specifications
 ----------------------
