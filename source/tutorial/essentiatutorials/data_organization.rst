@@ -27,7 +27,7 @@ Categorization of Data
 'Categories' are what Essentia uses to classify data. We define categories based on file patterns.
 
 
-In this case, a glob pattern of ``*browse*`` would match all of our browsing logs.  It is also helpful to specify a path
+In this case, a glob pattern of ``*browse*`` would match all of our browsing logs.  It is also helpful to specify an **absolute path** to the files.
 to the data as it allows Essentia to skip irrelevant directories. We can tell Essentia to classify
 these files as follows::
 
@@ -91,16 +91,25 @@ and the column specification as explained in the AQ tutorials::
     2014-09-12T00:00:11,5121,36
     2014-09-12T00:00:30,9764,35
 
-Elements of a category can be modified.  For example, we can override the column spec to treat the userID as a string
+Elements of a category can be modified. For example, we can override the column spec to treat the userID as a string
 and articleID as an integer by using::
 
   $ ess category change columnspec browse "S:eventDate S:userID I:articleID"
 
+.. note ::
+  
+  1. Column Specification(Column Spec/ColSpec) specifies how data's columns are interpretted by essentia, and coinsists of column data type, column name, and attributes/options.  For more info, please take a look at :ref:`column spec`. 
+  2. The summary about the category above is a good estimate about the category, since essentia scan's a portion of the entire data to gather infomation for efficiency. It's a good practice to check what the data looks like before and after the category is defined. You can use ccommand line tools to do so.
 
 Organizing the 'purchase' data is handled in a similar manner::
 
   ess category add purchase "$HOME/*tutorials/woodworking/diy_woodworking/*purchase*"
   ess category change columnspec purchase "S:purchaseDate S:userID I:articleID f:price I:refID"
+
+
+.. seealso ::
+  You can apply advanced configuration on category, check out :doc:`/source/reference/manuals/category-rules`
+
 
 In the next tutorial (Data Processing) we show how to apply operations to files within a group en masse.
 
