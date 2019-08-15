@@ -24,7 +24,17 @@ and in order to determine how best to price the items, the site randomized the p
 set of plans over a 1 month period (prices range from 1 to 6 dollars).
 
 There are two sets of log files.  The first have a filename in the form of ``browse_YYYYMMDD.csv.gz`` and contain the
-browsing records of all users who visited the site on a given day.  The files have three columns of data:
+browsing records of all users who visited the site on a given day.  The file looks like this.::
+  
+  eventDate,userID,articleID
+  2014-09-03T00:00:00,573,28
+  2014-09-03T00:00:39,9615,5
+  2014-09-03T00:00:47,240,22
+  2014-09-03T00:00:50,7343,42
+  2014-09-03T00:01:00,8998,16
+
+
+Three columns of data are:
 
 :eventDate:
     timestamp of when the user visited a page.
@@ -36,7 +46,17 @@ browsing records of all users who visited the site on a given day.  The files ha
 The data is not clean.  Unfinished articles that are (accidentally) accessible to users yield an articleID of "TBD"
 (in other words, a string instead of a number).
 
-The second set of logs record all purchases, and have 5 columns of data:
+The second set of logs record all purchases, which is has total of 5 columns of data::
+
+  purchaseDate,userID,articleID,price,refID
+  2014-09-02T00:01:55,103,12,2.18,
+  2014-09-02T00:02:31,6333,48,1.65,
+  2014-09-02T00:05:06,6274,12,2.18,
+  2014-09-02T00:06:52,4650,14,1.87,
+  2014-09-02T00:11:01,1150,14,1.87,
+
+
+5 Columns are: 
 
 :purchaseDate:
     time and date article was purchased
@@ -56,3 +76,7 @@ but will serve to illustrate some of the Data Processing power of Essentia.
 
 To demonstrate the ``aq_pp`` Data Processing command, we will also use a set of smaller files that help illustrate its usage.
 These are found in the ``tutorials/etl-engine`` directory
+
+One additional tip.
+A command ``loginf`` can be useful, to take a quick preview at file that are difficult to open (such as large zip files, etc). 
+It can display estimated column, separators and size of the data, and more. For more details, check out loginf manual page :doc:`/source/reference/manpages/loginf`
