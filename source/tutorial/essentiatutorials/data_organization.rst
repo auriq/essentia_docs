@@ -1,5 +1,5 @@
 *******************
-Data Classification
+Data Categorization
 *******************
 
 One common theme when performing data analysis is simple accounting. i.e. what files contain what data and where?
@@ -12,7 +12,7 @@ one file per day), we can concentrate less on where the data is, and focus on an
 Getting Started
 =================
 
-This tutorial is found under ``tutorials/woodworking/1-datastore.sh`` of the git repository,
+This tutorial is found under ``tutorials/woodworking/`` of the git repository,
 and should be run from that same directory.
 
 In order to utilize the data in the github repository, you need to pull the repository and then select
@@ -103,6 +103,25 @@ Organizing the 'purchase' data is handled in a similar manner::
   ess category change columnspec purchase "S:purchaseDate S:userID I:articleID f:price I:refID"
 
 In the next tutorial (Data Processing) we show how to apply operations to files within a group en masse.
+
+Using Category in S3
+====================
+In practice, sometimes we have to handle data that won't fit in our local machine. In such cases, we can connect s3 as datastore, and define category there.
+We can do this in 2 steps.
+
+1. select correct s3 bucket as datastore.
+-----------------------------------------
+AWS command ``aws s3 ls`` can get you a list of s3 buckets connected to your IAM user. Once you have the bucket name, you can select it as datastore with ``ess select s3://bucket-name``. 
+Feel free to select our public bucket (asi-public) as a datastore, and follow along the rest. 
+
+2. find path and create category.
+---------------------------------
+Once we set up the datastore, we can use ``ess ls`` command to take a look around within the datastore. Think of this command as linux ``ls``, but dedicated to the datastore. With this command, you can find out the path to data files, which is needed to define the category like we did above. 
+
+.. img:: /source/screenshots/ess_tutorial/s3_category.png
+
+Once you have the path, you can use the ``ess category categoryName "path"`` command same way as above to create category.
+
 
 Future sessions
 ===============
