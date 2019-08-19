@@ -99,7 +99,7 @@ and articleID as an integer by using::
 .. note ::
   
   1. Column Specification(Column Spec/ColSpec) specifies how data's columns are interpretted by essentia, and coinsists of column data type, column name, and attributes/options.  For more info, please take a look at :ref:`column spec`. 
-  2. The summary about the category above is a good estimate about the category, since essentia scan's a portion of the entire data to gather infomation for efficiency. It's a good practice to check what the data looks like before and after the category is defined. You can use ccommand line tools to do so.
+  2. The summary about the category above is a good estimate about the category, since essentia scans a portion of the entire data to gather infomation for efficiency. Hence, it's a good practice to check what the data looks like before and after the category is defined. You can use ccommand line tools to do so.
 
 Organizing the 'purchase' data is handled in a similar manner::
 
