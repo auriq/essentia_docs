@@ -37,6 +37,24 @@ Similarly, if you extracted just the date and hour when you set up your category
     
 Failing to do this may lead to ``ess stream`` sending unexpected data to your command and could affect your results.
 
+Dealing with Non-Time Series Dataset
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+**TODO**
+
+Create section for non-choronological data streaming with ess., or link to new page
+
+When dealing with non-chronological dataset or you simply want to stream entire portion of data, you can use wildcard in the ``start`` and ``end`` argument like this.
+
+.. highlight:: bash
+
+   ess stream category "*" "*" command
+
+.. code-block:: bash
+
+   ess stream category "*" "*" command
+
+
 Since we are in **local** mode, each file is processed sequentially.  If we had worker nodes (i.e. the **cloud** version),
 the processing would be done in parallel, with each node responsible for a subset of the files.
 
