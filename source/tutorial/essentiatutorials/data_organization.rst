@@ -107,13 +107,12 @@ Organizing the 'purchase' data is handled in a similar manner::
   ess category change columnspec purchase "S:purchaseDate S:userID I:articleID f:price I:refID"
 
 
-.. seealso ::
-  You can apply advanced configuration on category, check out :doc:`/source/reference/manuals/category-rules`
+You can also apply advanced configuration on categories, check out :doc:`/source/reference/manuals/category-rules`
 
 
 In the next tutorial (Data Processing) we show how to apply operations to files within a group en masse.
 
-Using Category in S3
+Using Categories in S3
 ====================
 In practice, sometimes we have to handle data that won't fit in our local machine. In such cases, we can connect s3 as datastore, and define category there.
 We can do this in 2 steps.
@@ -129,7 +128,7 @@ Once we set up the datastore, we can use ``ess ls`` command to take a look aroun
 
 .. img:: /source/screenshots/ess_tutorial/s3_category.png
 
-Once you have the path, you can use the ``ess category categoryName "path"`` command same way as above to create category.
+Now you can use the ``ess category categoryName "path"`` command same way as above to create category.
 
 
 Future sessions

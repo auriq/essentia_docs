@@ -5,6 +5,15 @@ Data Processing: Part 2
 The goal of this tutorial is to highlight how to perform complex data transformation and validation operations,
 and output the results either to disk or a database. 
 
+TODO
+====
+
+* syntax highlighting
+* table of contents
+* terminology section 
+* prerequisite
+
+
 Essentia Data Processing and the aq_pp command
 ================================================
 
@@ -37,7 +46,10 @@ Input Specifications
 
 First let's create a simple command that **imports** our example file ``chemistry.csv`` and **defines** its columns.
 
-``aq_pp -f,+1 chemistry.csv -d i:id s,up:lastname s:firstname f:chem_mid s:chem_fin``
+.. code-block:: console
+
+        aq_pp -f,+1 chemistry.csv -d i:id s,up:lastname s:firstname f:chem_mid s:chem_fin
+        ls -a
 
 * ``-f`` specifies the file to operate on (chemistry.csv).  It accepts an optional ATTRIBUTE in ``,+1``, which
   means to skip the first line (header in this case)
@@ -54,14 +66,6 @@ Since there are no processing or output specifications given, then the output is
 
 Alternatively, we could have used the linux command ``cat`` to write the data in our example file ``chemistry.csv`` to standard output and then use ``-f`` to accept that data from standard input. ``cat chemistry.csv | aq_pp -f,+1 - -d i:id s,up:lastname s:firstname f:chem_mid s:chem_fin``
 
-.. code-block::
-       
-  int num = 0;
-  cat chemistry.csv | grep word
-
-.. code-block:: python
-
-  print("java")
 
 * ``-f`` still specifies the file to operate on; however, the file specified is ``-``. This ``-`` value tells aq_pp to read the data that is coming from standard input (in this case, chemistry.csv).
 

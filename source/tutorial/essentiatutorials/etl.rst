@@ -4,6 +4,10 @@ Data Processing: Part 1
 
 The goal of this tutorial is to highlight how to perform complex data transformation and validation operations,
 and output the results either to disk or a database. 
+wever, we recommend the use of credential files if possible. To create a credential file, simply save your access and secret access keys in the following format to a csv file with a name of your choice:
+
+User Name,Access Key Id,Secret Access Key
+your_user_name,your_access_key,your_secret_access_key
 
 Getting Started
 ===============
@@ -37,14 +41,10 @@ Similarly, if you extracted just the date and hour when you set up your category
     
 Failing to do this may lead to ``ess stream`` sending unexpected data to your command and could affect your results.
 
-Dealing with Non-Time Series Dataset
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Streaming non-time series dataset
+#################################
 
-**TODO**
-
-Create section for non-choronological data streaming with ess., or link to new page
-
-When dealing with non-chronological dataset or you simply want to stream entire portion of data, you can use wildcard in the ``start`` and ``end`` argument like this.
+When dealing with non-chronological dataset or you simply want to stream entire portion of data regardless of its timestamp, you can use wildcard in the ``start`` and ``end`` argument like this.
 
 .. highlight:: bash
 
@@ -54,8 +54,10 @@ When dealing with non-chronological dataset or you simply want to stream entire 
 
    ess stream category "*" "*" command
 
+| 
+.. this pipe is for extra empty line here between paragrpah.
 
 Since we are in **local** mode, each file is processed sequentially.  If we had worker nodes (i.e. the **cloud** version),
 the processing would be done in parallel, with each node responsible for a subset of the files.
 
-This tutorial continues here: :doc:`../dataprocessingtutorials/etl`. That tutorial involves more complex Data Processing examples and uses our **Data Processing (AQ) commands**.
+In practice, we can pass this stream to *Data Processing (AQ) commands* to perform complex data manipulation and wrangling, which will be covered in next tutorial at :doc:`../dataprocessingtutorials/etl`. 

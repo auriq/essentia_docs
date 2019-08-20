@@ -26,17 +26,11 @@ credentials::
 
   $ ess select s3://bucket_name --aws_access_key=your_access_key --aws_secret_access_key=your_secret_access_key
 
-However, we recommend the use of credential files if possible. To create a credential file, simply save your access and secret access keys in the following format to a csv file with a name of your choice::
+.. note::
+        However in general practice, we recommend you to grant access to s3 by associating IAM user to the ec2 instance for security reason.
+        You can do so either by modifying ``~/.aws/config`` file or by using ``aws config`` command. For more details, refer to official `AWS documentation <https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-role.html>`_.
 
-  User Name,Access Key Id,Secret Access Key
-  your_user_name,your_access_key,your_secret_access_key
-
-.. warning::
-  
-  It's not the safest practice to store the credentials as csv file, in practice it is recommended to instead associate IAM user to the ec2 instance.
-  You can do so either by modifying ``~/.aws/config`` or by ``aws config`` command. For more details, refer to official `AWS documentation <https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-role.html>`_.
-
-More details on authentication is available at :doc:`/source/install/aws/iam-role`
+Also more details on authentication is available at :doc:`/source/install/aws/iam-role`
 
 For an Azure Blob datastore you would enter::
 
