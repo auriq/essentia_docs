@@ -1,3 +1,6 @@
+# To update to a new github branch (version), fetch and checkout the new branch and then follow the steps at the bottom of this script.
+
+# Set your github username and password in the following file
 source other/gitcred.sh
 version=`git branch | grep \* | awk '{printf $2}'`
 
@@ -72,9 +75,9 @@ then
 
 fi
 
-### Or switch to previous branch, run lines 1,2,3 with that branch, and then run:
-###  sudo mkdir /var/www/html/documentation/3.1.1/
-###  sudo cp -R _build/html/* /var/www/html/documentation/3.1.1/.
+### Or switch to previous branch (such as 4.0.0), run lines 1,2,3 with that branch, and then run:
+###  sudo mkdir /var/www/html/documentation/4.0.0/
+###  sudo cp -R _build/html/* /var/www/html/documentation/4.0.0/.
 ### Then run this file again with the new branch using the normal method
 
 ### For running lines 1,2,3 you can run "bash other/update-commands.sh pull" then "bash other/update-commands.sh make"
