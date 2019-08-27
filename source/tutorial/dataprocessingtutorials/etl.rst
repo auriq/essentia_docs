@@ -5,8 +5,14 @@ Data Processing: Part 2
 The goal of this tutorial is to highlight how to perform complex data transformation and validation operations,
 and output the results either to disk or a database. 
 
-TODO
-====
+.. contents::
+   
+   intro
+   haha
+  number2 
+
+TODO ToC??
+==========
 
 * syntax highlighting
 * table of contents
@@ -32,7 +38,7 @@ the ``aq_pp`` program does the heavy lifting for all Data Processing operations.
 
 The command structure of ``aq_pp`` consists of:
 
-* an **input specification** specifying which file(s) to take the data from,
+* an :ref:`**input specification**<>` specifying which file(s) to take the data from,
 * various **processing specifications** to determine how data is processed, 
 * and **output specifications** describing how and where to put the results of your command.
     
@@ -40,6 +46,11 @@ There are also a variety of **global options** that modify the environment and d
 
 The following provides some working examples of ``aq_pp`` commands.  Data and scripts are found under
 ``tutorials/etl-engine`` in the git repository.
+
+We will be covering topics such as
+
+.. contents:: 
+  
 
 Input Specifications
 --------------------
