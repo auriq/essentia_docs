@@ -293,7 +293,7 @@ Options
 
 
 .. _`-eval`:
-
+   
 ``-eval ColSpec|ColName Expr``
   Evaluate ``Expr`` and save the result to a column. The column can be a new
   column, an existing column/variable or null as explained below.
@@ -333,6 +333,8 @@ Options
     ``ToIP()``, ``ToF()``, ``ToI()`` and ``ToS()``.
   * Operator precedence is *NOT* supported. Use '(' and ')' to group
     operations as appropriate.
+
+  .. _`builtin variables`:
 
   Builtin variables:
 
