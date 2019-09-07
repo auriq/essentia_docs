@@ -1,0 +1,122 @@
+
+Running update for essentia docs version wataru
+
+Already up-to-date.
+sphinx-build -b html -d _build/doctrees   . _build/html
+Running Sphinx v1.3.6
+loading pickled environment... done
+building [mo]: targets for 0 po files that are out of date
+building [html]: targets for 145 source files that are out of date
+updating environment: 0 added, 2 changed, 0 removed
+reading sources... [ 50%] source/screenshots/index
+reading sources... [100%] source/tutorial/dataprocessingtutorials/etl
+
+looking for now-outdated files... none found
+pickling environment... done
+checking consistency... done
+preparing documents... done
+writing output... [  0%] findcommands
+writing output... [  1%] index
+writing output... [  2%] sed
+writing output... [  2%] source/EssentiaPublic/casestudies/apache/apache
+writing output... [  3%] source/EssentiaPublic/casestudies/apache/queryapache
+writing output... [  4%] source/EssentiaPublic/casestudies/apache/setupapache
+writing output... [  4%] source/EssentiaPublic/casestudies/aq/aqlog
+writing output... [  5%] source/EssentiaPublic/casestudies/aq/aqlogday
+writing output... [  6%] source/EssentiaPublic/casestudies/aq/aqlogdayoftheweek
+writing output... [  6%] source/EssentiaPublic/casestudies/aq/aqloghour
+writing output... [  7%] source/EssentiaPublic/casestudies/aq/aqlogmonth
+writing output... [  8%] source/EssentiaPublic/casestudies/casino/totalwinnings
+writing output... [  8%] source/EssentiaPublic/casestudies/casino/worstloss
+writing output... [  9%] source/EssentiaPublic/executeorder
+writing output... [ 10%] source/EssentiaPublic/order
+writing output... [ 11%] source/EssentiaPublic/rmtasklogs
+writing output... [ 11%] source/EssentiaPublic/sed
+writing output... [ 12%] source/EssentiaPublic/shellscripts/datastore_s3
+writing output... [ 13%] source/EssentiaPublic/shellscripts/query
+writing output... [ 13%] source/EssentiaPublic/shellscripts/task
+writing output... [ 14%] source/EssentiaPublic/shellscripts/udb
+writing output... [ 15%] source/EssentiaPublic/tutorials/map-reduce/wordcount
+writing output... [ 15%] source/EssentiaPublic/tutorials/woodworking/1-datastore
+writing output... [ 16%] source/EssentiaPublic/tutorials/woodworking/2-etl
+writing output... [ 17%] source/EssentiaPublic/tutorials/woodworking/3-database
+writing output... [ 17%] source/EssentiaPublic/tutorials/woodworking/capture_essentia_query
+writing output... [ 18%] source/EssentiaPublic/tutorials/woodworking/essentia_setup
+writing output... [ 19%] source/EssentiaPublic/tutorials/woodworking/my_setup_script
+writing output... [ 20%] source/EssentiaPublic/tutorials/woodworking/myqueries
+writing output... [ 20%] source/EssentiaPublic/tutorials/woodworking/read_browse
+writing output... [ 21%] source/EssentiaPublic/tutorials/woodworking/read_purchase
+writing output... [ 22%] source/EssentiaPublic/tutorials/woodworking/readquery
+writing output... [ 22%] source/dlv/direct-query-examples
+writing output... [ 23%] source/dlv/dlv
+writing output... [ 24%] source/dlv/index
+writing output... [ 24%] source/dlv/using-rstudio
+writing output... [ 25%] source/install/aws/aws-account
+writing output... [ 26%] source/install/aws/iam-role
+writing output... [ 26%] source/install/aws/index
+writing output... [ 27%] source/install/aws/redshift-iam-role
+writing output... [ 28%] source/install/aws/s3-iam-role
+writing output... [ 28%] source/install/aws/security-group
+writing output... [ 29%] source/install/aws/worker-nodes-and-s3-and-redshift-iam-role
+writing output... [ 30%] source/install/aws/worker-nodes-and-s3-iam-role
+writing output... [ 31%] source/install/aws/worker-nodes-iam-role
+writing output... [ 31%] source/install/azure/index
+writing output... [ 32%] source/install/azure/migration
+writing output... [ 33%] source/install/docker/index
+writing output... [ 33%] source/install/docker/license
+writing output... [ 34%] source/install/index
+writing output... [ 35%] source/install/local/index
+writing output... [ 35%] source/install/local/license
+writing output... [ 36%] source/install/local/newoptions
+writing output... [ 37%] source/integrations/R/index
+writing output... [ 37%] source/integrations/R/rapache
+writing output... [ 38%] source/integrations/R/rpackage
+writing output... [ 39%] source/integrations/R/rtutorial
+writing output... [ 40%] source/integrations/R/rtutorial2
+writing output... [ 40%] source/integrations/R/rtutorial3
+writing output... [ 41%] source/integrations/Redshift/index
+writing output... [ 42%] source/integrations/Redshift/loadredshift_access
+writing output... [ 42%] source/integrations/Redshift/loadredshift_purchase
+writing output... [ 43%] source/integrations/index
+writing output... [ 44%] source/reference/index
+writing output... [ 44%] source/reference/manpages/ChangeLog
+writing output... [ 45%] source/reference/manpages/ChangeLog-1.2.2
+writing output... [ 46%] source/reference/manpages/ChangeLog-1.2.3
+writing output... [ 46%] source/reference/manpages/ChangeLog-1.2.4
+writing output... [ 47%] source/reference/manpages/aq-emod
+writing output... [ 48%] source/reference/manpages/aq-input
+writing output... [ 48%] source/reference/manpages/aq-output
+writing output... [ 49%] source/reference/manpages/aq_cat
+writing output... [ 50%] source/reference/manpages/aq_cnt
+writing output... [ 51%] source/reference/manpages/aq_ord
+writing output... [ 51%] source/reference/manpages/aq_pp
+writing output... [ 52%] source/reference/manpages/aq_sess
+writing output... [ 53%] source/reference/manpages/aq_udb
+writing output... [ 53%] source/reference/manpages/index
+writing output... [ 54%] source/reference/manpages/loginf
+writing output... [ 55%] source/reference/manpages/mcc.pmod
+writing output... [ 55%] source/reference/manpages/mcc.umod
+writing output... [ 56%] source/reference/manpages/objcnv
+writing output... [ 57%] source/reference/manpages/smon
+writing output... [ 57%] source/reference/manpages/tmon
+writing output... [ 58%] source/reference/manpages/udb-size
+writing output... [ 59%] source/reference/manpages/udb.spec
+writing output... [ 60%] source/reference/manpages/udbd
+writing output... [ 60%] source/reference/manuals/category-rules
+writing output... [ 61%] source/reference/manuals/ess
+writing output... [ 62%] source/reference/manuals/ess-cat
+writing output... [ 62%] source/reference/manuals/ess-category
+writing output... [ 63%] source/reference/manuals/ess-cluster
+writing output... [ 64%] source/reference/manuals/ess-create
+writing output... [ 64%] source/reference/manuals/ess-drop
+writing output... [ 65%] source/reference/manuals/ess-exec
+writing output... [ 66%] source/reference/manuals/ess-file
+writing output... [ 66%] source/reference/manuals/ess-ls
+writing output... [ 67%] source/reference/manuals/ess-lsa
+writing output... [ 68%] source/reference/manuals/ess-probe
+writing output... [ 68%] source/reference/manuals/ess-purge
+writing output... [ 69%] source/reference/manuals/ess-query
+writing output... [ 70%] source/reference/manuals/ess-redshift
+writing output... [ 71%] source/reference/manuals/ess-repository
+writing output... [ 71%] source/reference/manuals/ess-select
+writing output... [ 72%] source/reference/manuals/ess-server
