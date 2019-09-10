@@ -1155,6 +1155,8 @@ where
   followed by a wild card, as in ``%%my_var,,;:%%%*``.
 
 
+.. _`MapFromSyntax`:
+
 RegEx MapFrom Syntax
 ====================
 
@@ -1193,6 +1195,7 @@ Differences between RegEx mapping and RT mapping:
 Regular expression is very powerful but also complex. Please consult the
 POSIX or PCRE2 regular expression manuals for details.
 
+.. _MapToSyntax:
 
 MapTo Syntax
 ============
@@ -1260,6 +1263,8 @@ definitions. See `udb.spec <udb.spec.html>`_ for details.
 * If none of the above information is given, the spec file is assumed to be
   "``udb.spec``" in the runtime directory of ``aq_pp``.
 
+
+.. _`ConditionalProcessingGroups`
 
 Conditional Processing Groups
 =============================

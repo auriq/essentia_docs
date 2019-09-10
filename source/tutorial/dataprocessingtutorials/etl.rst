@@ -432,12 +432,21 @@ skipping the header via the ``-f,+1`` flag ::
 
 Another built-in variable is ``$Random`` for random number generation.
 More options for built in variables are available on :ref:`-eval section of aq_pp manual <-eval>`
+
 |
 
 String Manipulation
 ^^^^^^^^^^^^^^^^^^^
 
 With raw string data, it is often necessary to extract information based on a a pattern or regular expression.
+There are 2 types of options that we can use for this purpose, such as ones below.
+
+* :ref:`-map <-map>`
+* :ref:`-mapf <-mapf>` & :ref:`-mapc <-mapc>`
+
+Using ``-map`` option
+"""""""""""""""""""""
+
 Consider the simple case of extracting a 5 digit zip code from data which looks like this ::
 
   91101
@@ -450,10 +459,11 @@ We'll first input the file as a single string column named zip, and use ``-map``
         ... -map[,AttrLst] ColName MapFrom MapTo ...
 
 where 
-- ``[,AttrLst]``: list of attributes to use.
-- ``ColName``: string column name to extract the pattern from.
-- ``MapFrom``: regular expression specifying the pattern to extract.
-- ``MapTo``: specify how the extracted string will be map to the column.
+
+* ``[,AttrLst]``: list of attributes to use.
+* ``ColName``: string column name to extract the pattern from.
+* ``MapFrom``: regular expression specifying the pattern to extract.
+* ``MapTo``: specify how the extracted string will be mapped to the column.
 
 Now let's extract the zip from the data, and map it in a format of ``zip=91101``::
 
@@ -466,10 +476,24 @@ Now let's extract the zip from the data, and map it in a format of ``zip=91101``
 
 
 With ``-map,rx_extended`` option, we're using the attribute of ``rx_extended`` to specify the the type of regex we'd like to use, as well as providing the column name (``zip``) to extract data from.
-The captured value (in this case the first group, or '1', is mapped to a string using ``%%1%%``.  The output string can contain other text.
+The captured value (in this case the first group, or '1', is mapped to a string using ``%%1%%``.  The output string can contain other text. :ref:`Details of the MapTo syntax <MapToSyntax>` is also available.
 
-This example highlights extraction and overwriting a single column.  We can also merge regex matching from multiple
-columns to overwrite or create a new column.  For example, we can take our chemistry students and create nicknames
+
+Using ``-mapf ... -mapc`` options
+"""""""""""""""""""""""""""""""""
+
+The previous example highlights extraction and overwriting a single column.  We can also merge regex matching from multiple columns to overwrite or create a new column, using ``-mapf ... -mapc`` option pair. These options works together in pair, which would look like this::
+
+        ... -mapf[,AtrLst] ColName MapFrom -mapc ColSpec|ColName MapTo ...
+
+Looking at the syntax above, you've probably noticed that some of the arguments are same as ``-map`` option we've seen previously.
+Only difference between these options is that these options map the extracted string on new column (``ColSpec``) or on existing column (``Colname``, but not on the original column where the string was extracted), while ``-map`` option maps the extracted pattern back to the original column. 
+
+Same syntax rules from ``-map`` apply to other arguments, such as ``[,ArtList]``, ``MapFrom`` and ``MapTo``. 
+
+Note that these two options **can be used multiple times in one command**, and **both options have to exist within a command**.
+
+For example, we can take our chemistry students example (data available in the `Combining Datasets`_ section) and create nicknames
 for them based on the first three letters of their first name, and last 3 letters of their last name::
 
   aq_pp -f,+1 chemistry.csv -d i:id s:lastname s:firstname f:chem_mid s:chem_fin \
@@ -480,8 +504,15 @@ for them based on the first three letters of their first name, and last 3 letter
   2,"Jordan","Colin",25.899999999999999,"D","Coldan"
   3,"Malone","Peter",97.200000000000003,"A+","Petone"
 
-Instead of ``-map,rx_extended``, we use multiple ``-mapf,rx_extended`` statements and then ``-mapc`` to map the matches to a new nickname
-column.
+We use multiple ``-mapf,rx_extended`` options to extract stringsg from multiple columns, and then ``-mapc`` to map the matches to a new nickname column. ``%%1%%`` and ``%%2%%`` are placeholders for thextracted data. 
+
+Some useful resources regarding to string manipulations
+
+* :ref:`-mapf/c <-mapf>`
+* :ref:`MapFrom Syntax <MapFromSyntax>`
+* :ref:`MapTo Syntax <MapToSyntax>`
+* :ref:`Regex Attributes used in mapping options <RegexAttributes>`
+* `Regular Expression Tutorial <https://www.regular-expressions.info/tutorial.html>`
 
 
 Variables
@@ -497,7 +528,8 @@ Consider the following where we wish to sum a column::
   6
 
 We defined a 'sum' global variable and for each validated record we added a value to it.  Finally, we use ``-ovar -``
-to output our variables to the stdout (instead of the columns).
+to output our variables to the stdout(instead of the columns).
+Details of ``-ovar`` is available at :ref:`here <-ovar>`
 
 
 Filters and Conditionals
@@ -505,7 +537,23 @@ Filters and Conditionals
 
 Filters and if/else statements are used by ``aq_pp`` to help clean and process raw data.
 
-For example, if we want to select only those Chemistry students who had a midterm score greater than 50%, we can do::
+Following options will be covered in this section.
+* :ref:`-filt <-filt>`
+* :ref:`-grep <-grep>`
+* :ref:`-grep <-grep>`
+* :ref:`-if -else <ConditionalProcessingGroups>`
+
+
+Using Filter Option
+"""""""""""""""""""
+
+``-filt`` is used to define and apply filtering conditions to the data, so we can filter out certain records. Basic syntax looks like this::
+
+        ... -filt FilterSpec ...
+
+where ``FilterSpec`` is **single quoted** logical expression that evaluates to true or false on each record. Logical expression is composed of ``LeftHandSide [<compare> RightHandSide]`` where Left/RightHandSide is column name or constant value(**unquoated**), and compare is comparison operators. 
+
+As an example, from the chemistry table, we will select only those Chemistry students who had a midterm score greater than 50%::
 
   aq_pp -f,+1 chemistry.csv -d i:id s:lastname s:firstname f:chem_mid s:chem_fin \
         -filt 'chem_mid > 50.0'
