@@ -1264,7 +1264,7 @@ definitions. See `udb.spec <udb.spec.html>`_ for details.
   "``udb.spec``" in the runtime directory of ``aq_pp``.
 
 
-.. _`ConditionalProcessingGroups`
+.. _`ConditionalProcessingGroups`:
 
 Conditional Processing Groups
 =============================

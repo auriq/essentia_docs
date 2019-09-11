@@ -491,7 +491,7 @@ Only difference between these options is that these options map the extracted st
 
 Same syntax rules from ``-map`` apply to other arguments, such as ``[,ArtList]``, ``MapFrom`` and ``MapTo``. 
 
-Note that these two options **can be used multiple times in one command**, and **both options have to exist within a command**.
+Note that these two options **can be used multiple times in one command**, and **both options have to exist in one command**.
 
 For example, we can take our chemistry students example (data available in the `Combining Datasets`_ section) and create nicknames
 for them based on the first three letters of their first name, and last 3 letters of their last name::
@@ -538,14 +538,15 @@ Filters and Conditionals
 Filters and if/else statements are used by ``aq_pp`` to help clean and process raw data.
 
 Following options will be covered in this section.
+
 * :ref:`-filt <-filt>`
 * :ref:`-grep <-grep>`
 * :ref:`-grep <-grep>`
 * :ref:`-if -else <ConditionalProcessingGroups>`
 
 
-Using Filter Option
-"""""""""""""""""""
+Using ``-Filter`` Option
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 ``-filt`` is used to define and apply filtering conditions to the data, so we can filter out certain records. Basic syntax looks like this::
 
@@ -553,7 +554,17 @@ Using Filter Option
 
 where ``FilterSpec`` is **single quoted** logical expression that evaluates to true or false on each record. Logical expression is composed of ``LeftHandSide [<compare> RightHandSide]`` where Left/RightHandSide is column name or constant value(**unquoated**), and compare is comparison operators. 
 
-As an example, from the chemistry table, we will select only those Chemistry students who had a midterm score greater than 50%::
+As an example, from the chemistry table, 
+
+.. csv-table:: Chemistry Table
+   :header: "id", "lastname", "firstname", "midterm", "final"
+   :widths: 5, 15, 15, 15, 15
+
+   1, "Dawson", "Leona", 76.5, "B-"
+   3, "Jordan", "Colin", 25.9, "D"
+   4, "Malone", "Peter", 97.2, "A+"
+
+we will select only those Chemistry students who had a midterm score greater than 50%::
 
   aq_pp -f,+1 chemistry.csv -d i:id s:lastname s:firstname f:chem_mid s:chem_fin \
         -filt 'chem_mid > 50.0'
@@ -562,11 +573,35 @@ As an example, from the chemistry table, we will select only those Chemistry stu
   1,"Dawson","Leona",76.5,"B-"
   3,"Malone","Peter",97.200000000000003,"A+"
 
+|
 
 
+Using ``-Grep`` Option
+^^^^^^^^^^^^^^^^^^^^^^
 
-Another useful option is the ``-grep`` flag, which has utility similar to the Unix command of the same name.  Given a
-file containing a 'whitelist' of students, we are asked to select only the matching students from our Chemistry class::
+Another useful option is the ``-grep`` flag, which has utility similar to the Unix command of the same name.  
+
+Little bit about the options' basic syntax, it follows::
+        
+        ... -grep[,AtrLst] ColName File [File ...] [ColSpec ...] ...
+
+where
+
+* ``[,ArtLst]``: input attributes, exactly same as the one from `Input Specification`_
+* ``ColName``:string column's name of the current data
+* ``File``: name of the look up file to match ``ColName`` with.
+* ``ColSpec``:input column spec for the lookup file, exactly same as the one from `Input Specification`_. This default to `s:from`/`from`. 
+
+  
+Now let's take a look at the example. Given a file containing a 'whitelist' of students, we are asked to select only the matching students from our Chemistry class. whitelist.csv looks like this.
+
+.. csv-table:: whitelist.csv
+   :header: "city", "lastname"
+
+   Boston, Jordan
+   Seattle, malone
+
+Therefore in this case, we'd like to compare ``lastname`` column from the chemistry table with ``lastname`` column of the whitelist table to look for match.::
 
   aq_pp -f,+1 chemistry.csv -d i:id s:lastname s:firstname f:chem_mid s:chem_fin \
         -grep lastname whitelist.csv X FROM
@@ -574,12 +609,24 @@ file containing a 'whitelist' of students, we are asked to select only the match
   "id","lastname","firstname","chem_mid","chem_fin"
   2,"Jordan","Colin",25.899999999999999,"D"
 
-The format of the ``grep`` switch allows the whitelist to contain multiple columns.  We select the column to use via
-the 'FROM' designator.  ``grep`` also accepts attributes.  For instance with ``grep,ncas``, we would have matched
-Peter Malone as well in the example above.
+For ``-grep`` option, we didn't provide any attributes but only the chemistry's column name to match and lookup table's filename, followed by ``X FROM``. If you remember from the `input specification section`_, X take a place for a column that we'd like to ignore which in this case is ``city`` column in whitelist table. And ``FROM`` is a default placeholder for a column we'd like to match in lookup table, in this case representing ``lastname`` column of the whitelist table.
+
+Though we didn't provide any attributes this time, we can provide an attribute ``ncas`` to do case insensitive search::
+
+  aq_pp -f,+1 chemistry.csv -d i:id s:lastname s:firstname f:chem_mid s:chem_fin \
+        -grep,ncas lastname whitelist.csv X FROM
+
+  "id","lastname","firstname","chem_mid","chem_fin"
+  2,"Jordan","Colin",25.899999999999999,"D"
+  3,"Malone","Peter",97.200000000000003,"A+"
 
 
-A final yet incredibly useful technique for processing your data is to use conditional statements 'if, else, elif,
+And we'll get Peter Malone's record as well the example above.
+
+
+Using Conditional Statement 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+A final yet incredibly useful technique for processing your data is to use :ref:`conditional statements <ConditionalProcessingGroups>` 'if, else, elif,
 and endif'
 
 Let's extend the previous example by boosting the midterm scores of anyone in the whitelist by a factor of 2, and
