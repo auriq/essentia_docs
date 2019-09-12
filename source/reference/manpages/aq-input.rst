@@ -131,6 +131,8 @@ characteristics. It is a list of comma separated attributes containing:
     records (``r`` suffix) or lines (``l`` suffix) to skip before processing.
     Line is the default.
 
+
+.. _`Error Handling`:
 * Error handling:
 
   By default, all input related errors are fatal - the program will print

@@ -1,6 +1,4 @@
 ********************
-Data Processing: Part 2
-********************
 
 The goal of this tutorial is to highlight how to perform complex data transformation and validation operations,
 and output the results either to disk or a database. 
@@ -541,11 +539,10 @@ Following options will be covered in this section.
 
 * :ref:`-filt <-filt>`
 * :ref:`-grep <-grep>`
-* :ref:`-grep <-grep>`
 * :ref:`-if -else <ConditionalProcessingGroups>`
 
 
-Using ``-Filter`` Option
+Using -Filter Option
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
 ``-filt`` is used to define and apply filtering conditions to the data, so we can filter out certain records. Basic syntax looks like this::
@@ -576,7 +573,7 @@ we will select only those Chemistry students who had a midterm score greater tha
 |
 
 
-Using ``-Grep`` Option
+Using -Grep Option
 ^^^^^^^^^^^^^^^^^^^^^^
 
 Another useful option is the ``-grep`` flag, which has utility similar to the Unix command of the same name.  
@@ -627,9 +624,34 @@ And we'll get Peter Malone's record as well the example above.
 Using Conditional Statement 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 A final yet incredibly useful technique for processing your data is to use :ref:`conditional statements <ConditionalProcessingGroups>` 'if, else, elif,
-and endif'
+and endif.'
 
-Let's extend the previous example by boosting the midterm scores of anyone in the whitelist by a factor of 2, and
+Little bit about the conditional statement's rule from the official documentation. It's easier to understand conditional statements as just like if - else clause of programming, where Rules/Expression to evaluate is given to ``-if`` clause, and options such as :ref:`-map <-map>`, :ref:`-filt <-filt>`,:ref:`-eval <-eval>`. 
+
+Basic form look like this (new lines and indentations are arranged for clearity purpose)::
+
+         -if[not] ExpressionToEvaluate
+           OptionsToRun
+           ...
+         -elif[not] ExpressionToEvaluate
+           OptionsToRun
+           ...
+         -else
+           OptionsToRun
+           ...
+         -endif
+
+where
+
+* ``ExpressionToEvaluate``: conditional expression to be evaluated by true or false
+* ``[not]``: optional negation operator, part of the expression to be evaluated
+* ``RuleToRun``: this is the option you'd like to run under certain condition is met.
+          * E.g. ``-map``, ``-eval``, etc.
+
+More detials of conditional statement is available :ref:`Here <ConditionalProcessingGroups>`.
+
+
+Now let's extend the previous example by boosting the midterm scores of anyone in the whitelist by a factor of 2, and
 leaving the others untouched::
 
   aq_pp -f,+1 chemistry.csv -d i:id s:lastname s:firstname f:chem_mid s:chem_fin \
@@ -640,11 +662,23 @@ leaving the others untouched::
   2,"Jordan","Colin",51.799999999999997,"D"
   3,"Malone","Peter",97.200000000000003,"A+"
 
+Let me break down the conditional statement's part of the command::
+        
+        -if -grep lastname whitelist.csv X FROM
+          -eval chem_mid 'chem_mid*2'
+        -endif
+
+The first line is the ``ExpressionToEvaluate``, which will return true if lastname's value is in the whitelist. 
+Second line is the ``OptionToRun``, where the original chem_mid's vlaue is multiplied by 2.
+Finally, the third line is the ``-endif`` statement, which closes the whole conditional block. All conditional statement must be accompanied by corresponding ``-endif``.
+
+
+
 
 Data Processing at Scale
 =========================
 
-In the first part of this tutorial, we demonstrated how we can use Essentia to select a set of log files and pipe the
+In the :ref:`first part of this tutorial <wc -l>`, we demonstrated how we can use Essentia to select a set of log files and pipe the
 contents to the unix ``wc`` command.  In a similar manner, we can pipe the data to ``aq_pp`` to apply more complex Data Processing operations on a large set of files. 
 
 Cleaning the 'browse' data
@@ -657,29 +691,28 @@ and saving it as a comma separated file with bz2 compression::
   $ mkdir bz2
   $ ess stream browse 2014-09-01 2014-09-30 "aq_pp -f,+1,eok - -d %cols -o,notitle - | bzip2 - -c > ./bz2/%file.bz2"
 
-We can break down the command (everything within the double quotes) as follows:
+The above commands takes the basic forms of ``ess command "aq command | bzip2 command"``.
 
-f,+1,eok -
-    This tells ``aq_pp`` that the first line should be skipped **(+1)**, that errors are OK  **(eok)**
-    and that the input is being piped in via stdin.
-    With ``eok`` set, whenever ``aq_pp`` sees
-    an articleID (which we defined as an integer) with a string value, it will reject it. This takes care of the 'TBD'
-    entries.  Normally ``aq_pp`` would halt upon seeing an error.  This allows users to use ``aq_pp`` as both a data
-    validator and a data cleaner.
+We can break down the command into three major parts
 
-d %cols
-    Tells ``aq_pp`` what the column specification is.  We determined this in the previous tutorial where we setup our
-    datastore and categorized our files.  The ``%cols`` is a substitution string.  Instead of having to enter the
-    columns each time by hand, Essentia will lookup the column spec from your datastore settings and place it here.
-    There are several substitution strings that can be used, and they are listed in the section:
-    :doc:`../../reference/tables/index`
 
-notitle
-    A switch to turn off the header line when generating output
 
-bzip2 - -c > /data/%file.bz2
-    Finally pipe the output of the command to the ``bzip`` utility.  We use the substitution string ``%file`` to
-    generate the same filename as the input, except with a ``bz2`` extension.
+**ess stream browse 2014-09-01 2014-09-30**
+
+This speficies the category name to stream (``browse``) and start date and end date of the stream. Output will be passed to the commands in the quotes.
+
+**aq_pp -f,+1,eok - -d %cols -o,notitle -**
+
+* ``-f,+1,eok``: input spec, specifing to skip the first row ``+1``, and skip the row with invalid data :ref:`eok <Error Handling>` without halting the whole command. This works as data validator and cleaner.
+* ``-d %cols``: column spec, specifing that we're using the entire columns. ``%cols`` is a substitution string (:doc:`../../reference/tables/index`) that represents the column spec for the category(``browse``) which was determined when we created the category in the :ref:`previous tutorial <Categorization of Data>`.
+* ``-o,notitle -``: output spec (:doc:`../../reference/manpages/aq-output`), ``-o`` specifying output destination and behavior. ``notitle`` attribute tells to skip the header line for the output.
+
+
+**bzip2 - -c > ./bz2/%file.bz2**
+
+* ``bzip - -c >``:compress the file to standard output with ``-c``, and ``>`` is used to redirect th output to the file specified below.
+* ``./bz2/%file.bz2``:filename to save the compressed data. ``%file`` is a strign substitute for original file name without its extension. Here we specify the file name to be the original + bz2 extension.
+
 
 
 Cleaning the 'purchase' data

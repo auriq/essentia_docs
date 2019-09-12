@@ -22,6 +22,8 @@ the log files that we classified in the previous tutorial::
 
 On some systems, you may use ``zcat`` instead of ``gunzip``.
 
+.. _`wc -l`:
+
 The Essentia equivalent is::
 
   $ ess stream browse 2014-09-01 2014-09-07 'wc -l'

@@ -20,7 +20,7 @@ your local machine as a datastore::
 
   $ ess select local
 
-
+.. _`Categorization of Data`:
 Categorization of Data
 ======================
 
