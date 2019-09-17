@@ -49,11 +49,11 @@ The data is not clean.  Unfinished articles that are (accidentally) accessible t
 The second set of logs record all purchases, which is has total of 5 columns of data::
 
   purchaseDate,userID,articleID,price,refID
-  2014-09-02T00:01:55,103,12,2.18,
-  2014-09-02T00:02:31,6333,48,1.65,
-  2014-09-02T00:05:06,6274,12,2.18,
-  2014-09-02T00:06:52,4650,14,1.87,
-  2014-09-02T00:11:01,1150,14,1.87,
+  2014-09-01T23:56:32,6085,10,1.73,34
+  2014-09-01T23:58:04,7072,25,1.52,39
+  2014-09-01T23:58:29,5110,35,1.46,33
+  2014-09-01T23:58:32,9922,28,1.43,6
+  2014-09-01T23:58:41,8184,7,2.32,1
 
 
 5 Columns are: 

@@ -684,7 +684,31 @@ contents to the unix ``wc`` command.  In a similar manner, we can pipe the data 
 Cleaning the 'browse' data
 --------------------------
 
-First, lets switch back to the ``tutorials/woodworking`` directory.
+First, lets switch back to the ``tutorials/woodworking`` directory. Taking a look at the ``browse`` data again, 
+
+.. csv-table::
+   :header: "eventDate" "userID", "articleID"
+   
+   2014-09-03T00:00:00,573,28
+   2014-09-03T00:00:39,9615,5
+   2014-09-03T00:00:47,240,22
+   2014-09-03T00:00:50,7343,42
+   2014-09-03T00:01:00,8998,16
+
+
+Three columns of data are:
+
+:eventDate: 
+            timestamp of when the user visited a page.
+:userID: 
+        numerical ID matched to a unique user.
+:articleID: 
+            a unique identifier for each of the articles offered
+
+
+The data is not clean. Unfinished articles that are accidentally accessible to users resulted in the value of articleID of "TBD", which is not a number but a string.
+
+
 For our first example, we are tasked with generating a cleaned version of each file,
 and saving it as a comma separated file with bz2 compression::
 
@@ -718,8 +742,32 @@ This speficies the category name to stream (``browse``) and start date and end d
 Cleaning the 'purchase' data
 ----------------------------
 
-The purchase data needs the articleID corrected for all dates on and after the 15th of September.  There are a few
-ways to achieve this, but the most robust is the following:
+.. csv-table:: Purchase Data
+   :header: "purchaseDate", "userID", "articleID", "price", "refID"
+   
+   2014-09-01T23:56:32,6085,10,1.73,34
+   2014-09-01T23:58:04,7072,25,1.52,39
+   2014-09-01T23:58:29,5110,35,1.46,33
+   2014-09-01T23:58:32,9922,28,1.43,6
+   2014-09-01T23:58:41,8184,7,2.32,1
+
+5 Columns are:
+
+:purchaseDate: 
+               time and date article was purchased
+:userID: 
+         User that purchased article
+:articleID: 
+            ID of the article purchased
+:price: 
+        price user paid for the article
+:refID: 
+        ID of the article seen just prior to the one being purchased.
+
+
+This data also have a problem on ``articleID``, in which all values after September 15th are one lees than actual value.
+In order to correct this, we need to first filter out the records which are dated after September 15th, then increment values of ``articleID`` by one. 
+There are a few ways to achieve this, but the most robust is the following:
 
 .. code-block:: sh
    :linenos:
@@ -739,17 +787,24 @@ ways to achieve this, but the most robust is the following:
   The use of quotations in Unix commands invariably leads to a need to ``escape`` characters in order
   for them to be recognized.
 
-Line 3 creates a new column 't', which is a signed integer, and it is assigned a value equal to the difference between
-the time of the current record and the cutoff time of September 15.  Positive values of 't' indicate that the record
+:Line 1 & 2: 
+    Creates the stream for purchase category, for the date range of 2014-09-01 through 2014-09-30. The stream is then admitted to aq_pp command through stdout, where any records that contains invalid data are skipped (``eok``), and error messages are silenced (``gui``). 
+
+:Line 3: 
+    Under the first ``-eval`` option, it creates a new column 't', which is a signed integer (``is:t``). Then 2 :ref:`DateToTime() <DateToTime()>` buildin function is used to convert the date string ``purchaseDate`` into `Unix Time <https://en.wikipedia.org/wiki/Unix_time>`_ and output integer value.  Finally the difference between the current records' Unix time and Unix time of ""2014-09-15" is assigned to column ``t``. Positive values of 't' indicate that the record
 was collected after the 15th.
 
-Line 4 creates a filter condition, which is triggered for all records on or after the 15th.
+:Line 4: 
+    creates a filter condition, which is triggered for all records on or after the 15th.
 
-Line 5 adjusts the articleID to correct for the website error.
+:Line 5: 
+    adjusts the articleID to correct for the website error.
 
-Line 6 ends the block
+:Line 6:
+    ends the block
 
-Line 7 specifies the output columns.  If not provided, it would also output our new 't' column which we used only for
+:Line 7:
+    specifies the output columns.  If not provided, it would also output our new 't' column which we used only for
 temporary purposes.
 
 We could have just issued 2 Essentia commands, one with dates selected before the 15th and another for dates after.
