@@ -8,12 +8,9 @@ TODO
 ====
 
 * syntax highlighting
-* DONE: table of contents
 * terminology section 
   * colSPec
-  * ??
 
-* DONE: prerequisite
 
 
 .. contents:: Table of Contents
@@ -39,8 +36,8 @@ the ``aq_pp`` program does the heavy lifting for all Data Processing operations.
 The command structure of ``aq_pp`` consists of:
 
 * **input specification** (:doc:`../../reference/manpages/aq-input`) specifying which file(s) to take the data from,
-* various **processing specifications** to determine how data is processed, 
-* and **output specifications** (:doc:`../../reference/manpages/aq-output`) describing how and where to put the results of your command.
+* various **processing specifications** to determine how data is processed, and
+* **output specifications** (:doc:`../../reference/manpages/aq-output`) describing how and where to put the results of your command.
     
 There are also a variety of **global options** that modify the environment and default variables used in ``aq_pp``.
 
@@ -791,24 +788,21 @@ There are a few ways to achieve this, but the most robust is the following:
     Creates the stream for purchase category, for the date range of 2014-09-01 through 2014-09-30. The stream is then admitted to aq_pp command through stdout, where any records that contains invalid data are skipped (``eok``), and error messages are silenced (``gui``). 
 
 :Line 3: 
-    Under the first ``-eval`` option, it creates a new column 't', which is a signed integer (``is:t``). Then 2 :ref:`DateToTime() <DateToTime()>` buildin function is used to convert the date string ``purchaseDate`` into `Unix Time <https://en.wikipedia.org/wiki/Unix_time>`_ and output integer value.  Finally the difference between the current records' Unix time and Unix time of ""2014-09-15" is assigned to column ``t``. Positive values of 't' indicate that the record
-was collected after the 15th.
+    Under the first ``-eval`` option, it creates a new column 't', which is a signed integer (``is:t``). 2 :ref:`DateToTime() <DateToTime()>` buildin function is used to convert the date string ``purchaseDate`` into `Unix Time <https://en.wikipedia.org/wiki/Unix_time>`_ and output integer value.  Finally the difference between the current records' Unix time and Unix time of ""2014-09-15" is assigned to column ``t``. Positive values of 't' indicate that the record was collected after the 15th.
 
 :Line 4: 
     creates a filter condition, which is triggered for all records on or after the 15th.
 
 :Line 5: 
-    adjusts the articleID to correct for the website error.
+    increment the articleID by one to account for the error.
 
 :Line 6:
-    ends the block
+    ends the conditional statement block
 
 :Line 7:
-    specifies the output columns.  If not provided, it would also output our new 't' column which we used only for
-temporary purposes.
+    specifies the output columns.  If not provided, it would also output our new 't' column which we used only for temporary purposes. ``notitle`` attribute is used to skip the output data's header.
 
-We could have just issued 2 Essentia commands, one with dates selected before the 15th and another for dates after.
-In this case it would have been easy, but there are other scenarios where it becomes more problematic.
+We could have just issued 2 Essentia commands, one with dates selected before the 15th and another for dates after. That will requires us to run 2 separete ``aq`` and ``bzip`` commands for each period of the data stream, hence above solution was used.
 
 
 
