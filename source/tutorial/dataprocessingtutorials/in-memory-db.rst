@@ -2,6 +2,7 @@
 In-memory Database
 ******************
 
+
 Overview
 ========
 
@@ -21,12 +22,15 @@ very quickly queried.
 Additionally, the database can be thought of and used as a map/reduce engine. We include an example at the end of
 this tutorial.
 
+.. contents:: Table of Contents
+   :depth: 3
+
 Getting Started
 ===============
 If you are not already in the ``tutorials/woodworking`` directory used in the previous tutorials, switch into it now.
 Our first step is to setup the database to store our data.
 As with many database systems, we need to create a database and define schemas.  We concentrate
-first on the sales data::
+first on the :ref:`sales data <purchase_data>`::
 
   $ ess create database wood
   $ ess create table allsales s,pkey:userid i,tkey:ptime i:articleid f:price i:refid
@@ -80,11 +84,10 @@ We can now populate the 'allsales' table using::
   -endif \
   -imp wood:allsales"
 
-This is basically the same as the Data Processing example in the previous tutorial, with the addition of the
-``-imp wood:allsales`` directive.  As with the Data Processing tutorial, the ``eok`` means to ignore errors (but still report
+This is basically the same as the :ref:`Data Processing example in the previous tutorial <Cleaning_purchase_data>`, with the addition of the
+``-imp wood:allsales`` directive.  As with the Data Processing tutorial, ``ess stream`` command is used to stream the ``purchase`` category data into ``aq_pp``, in which the data will be processed. The ``eok`` means to ignore errors (but still report
 them).  In this case, a message will be triggered for some of the data because it was designed to have corrupted
-fields.  The messages can be used to examine bad records directly, or they can be turned off entirely using the
-``qui`` attribute.
+fields.  Finally, ``-imp wood:allsales`` is used to import the processed data into ``allsales`` table, within ``wood`` database, as defined above.
 
 Querying the database
 =====================
@@ -93,13 +96,15 @@ After executing the following, you will see a text dump of the contents of the '
   $ ess exec "aq_udb -exp wood:allsales"
 
 .. note ::
-    In 'local' mode, users can execute the aq_udb commands directly without using Essentia (``ess exec``). However,
+    In 'local' mode (running in a single computer), users can execute the aq_udb commands directly without using Essentia (``ess exec``). However,
     we recommend using the full command since it can be used immediately if worker nodes are added to the cluster.
 
-You can note that the userids are output in groups, which is how UDB has stored the data.  However, it is not in time
-order per user.  Than can be done via::
+You can note that the records are output in groups of same userids, which is how UDB has stored the data.  However, it is not ordered by time within same user.
+This can be done by::
 
   $ ess exec "aq_udb -ord wood:allsales"
+
+``-ord`` option used here sort the record internally, and does not display any output. You can use ``-exp`` option to display the result.
 
 With the data sorted in time order, we can take advantage of our vector that summarizes each user::
 

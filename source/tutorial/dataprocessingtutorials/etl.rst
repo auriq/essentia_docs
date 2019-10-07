@@ -735,6 +735,7 @@ This speficies the category name to stream (``browse``) and start date and end d
 * ``./bz2/%file.bz2``:filename to save the compressed data. ``%file`` is a strign substitute for original file name without its extension. Here we specify the file name to be the original + bz2 extension.
 
 
+.. _Cleaning_purchase_data:
 
 Cleaning the 'purchase' data
 ----------------------------
