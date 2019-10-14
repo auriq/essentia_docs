@@ -87,7 +87,8 @@ We can now populate the 'allsales' table using::
 This is basically the same as the :ref:`Data Processing example in the previous tutorial <Cleaning_purchase_data>`, with the addition of the
 ``-imp wood:allsales`` directive.  As with the Data Processing tutorial, ``ess stream`` command is used to stream the ``purchase`` category data into ``aq_pp``, in which the data will be processed. The ``eok`` means to ignore errors (but still report
 them).  In this case, a message will be triggered for some of the data because it was designed to have corrupted
-fields.  Finally, ``-imp wood:allsales`` is used to import the processed data into ``allsales`` table, within ``wood`` database, as defined above.
+fields.  
+Finally, ``-imp wood:allsales`` is used to import the processed data into ``allsales`` table, within ``wood`` database, as defined above.(For more details on ``-imp`` option, take a look at :ref:`aq_pp documentation <-imp>`)
 
 Querying the database
 =====================

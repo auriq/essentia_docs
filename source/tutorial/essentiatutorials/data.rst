@@ -46,6 +46,8 @@ Three columns of data are:
 The data is not clean.  Unfinished articles that are (accidentally) accessible to users yield an articleID of "TBD"
 (in other words, a string instead of a number).
 
+.. _purchase_data:
+
 The second set of logs record all purchases, which is has total of 5 columns of data::
 
   purchaseDate,userID,articleID,price,refID
