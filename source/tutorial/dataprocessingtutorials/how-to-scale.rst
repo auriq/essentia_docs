@@ -53,7 +53,8 @@ If you setup IAM Roles in :doc:`../../install/aws/iam-role`, then all you need t
 
    ess cluster create [--number=NUMBER] [--type=TYPE]
    
-If you have NOT setup IAM Roles yet, then you need to run the command::
+Where ``NUMBER`` is numbers of worker nodes, and ``TYPE`` are EC2 instance type. For more info about instance type, refer to `official aws documentation.<https://aws.amazon.com/ec2/instance-types/>`_
+Also if you have NOT setup IAM Roles yet, then you need to run the command::
 
    ess cluster create [--number=NUMBER] [--type=TYPE] --credentials=~/your_credential_file.csv
 
