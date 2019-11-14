@@ -7,9 +7,13 @@ How To Scale Up
 In this tutorial, we concentrate on using Essentia within the AWS cloud service. 
 AWS allows Essentia to handle the creation of and connection to worker nodes automatically, 
 making analyses fully scalable and adaptable.
-This tutorial requires the AWS cloud-based version of Essentia.
+This tutorial goes over geenral intuitions and steps to fire up essentia clusters, and runs command, then terminate the cluster. AWS cloud based version of Essentia is required. 
 
-To connect to existing computers as your worker nodes and manually construct an Essentia cluster, go through :doc:`configure-cluster`.
+Resources are also available for using essentia clusters
+
+* :doc:`configure-cluster` - using existing computers as worker nodes for essentia cluster.
+* :doc:`managing-clusters`- managing clusters, such as reusing / resizing existing cluster.
+* `Essentia-Playground <essentia-playground.auriq.com>`_ - example jupyter notebook for data analysis using Essentia cluster.
 
 **Note:** The Local and Docker installations of Essentia are currently limited to 
 one computer and do not currently make use of Essentia's scalability.
@@ -53,7 +57,9 @@ If you setup IAM Roles in :doc:`../../install/aws/iam-role`, then all you need t
 
    ess cluster create [--number=NUMBER] [--type=TYPE]
    
-Where ``NUMBER`` is numbers of worker nodes, and ``TYPE`` are EC2 instance type. For more info about instance type, refer to `official aws documentation.<https://aws.amazon.com/ec2/instance-types/>`_
+Where 
+* ``NUMBER`` - numbers of worker nodes 
+* ``TYPE`` are EC2 `instance type (official aws doc) <https://aws.amazon.com/ec2/instance-types/>`_. 
 Also if you have NOT setup IAM Roles yet, then you need to run the command::
 
    ess cluster create [--number=NUMBER] [--type=TYPE] --credentials=~/your_credential_file.csv
@@ -83,6 +89,8 @@ and split these files up across all of the worker virtual machines. The virtual 
 You can use ``ess stream`` with our Data Processing command ``aq_pp`` to import the data into our :doc:`in-memory-db` to distribute the data across the memory of all of these worker virtual machines. 
 It is then easy to analyze or output the data using ``ess exec`` with our Data Processing command ``aq_udb``.
 
+More examples of scaling up the processing with clusters are available on `essentia-playground <essentia-playground.auriq.com>`_
+
 Stopping or Terminating an Essentia Cluster
 ============================================
 
@@ -102,8 +110,3 @@ However, if you no longer need your worker virtual machines and will not need to
   
 .. note::
    Once terminated, you will no longer have ANY access to the worker virtual machines. You will have to launch a new cluster to parallelize your operations. 
-
-Managing Your Essentia Clusters
-===============================
-
-Sometimes it's advantageous to reuse clusters or resize your existing clusters to suit your current analysis. You can learn how to do this by going through the tutorial: :doc:`managing-clusters`.
