@@ -19,33 +19,34 @@ as it allows you to fit more of the relevant data into memory and thus increases
 Primary Lines in this Script
 ============================
 
-**Line 7**
+**Line 9**
 
-* Store a vector myvector in the database totalwinnings that keeps track of the maximum value of the bet column and aggregates the values in the winnings column for each unique value of the user column.
+* Store a vector myvector in the database totalwinnings that keeps track of the maximum value of the bet column and aggregates the values in the winnings column for each unique value of the user column.(Refer to :ref:`available attributes <vec_attr>`)
 
-**Line 11**
+**Line 15**
 
 * Tell Essentia to look for data on your local datastore.
 
-**Line 13**
+**Line 17**
 
 * Create a new rule to take any files in your home directory with 'onlinecasino' in their name and put them in the casino category. Also tell Essentia not to look for a date in the filenames.
 
-**Line 17**
+**Line 23**
 
 * Pipe all files in the category casino to the aq_pp command. 
 * In the aq_pp command, tell the preprocessor to take data from stdin, ignoring errors and skipping the first line (the header). 
 * Then define the incoming data's columns, skipping the second and fifth columns (time and country), and import the data to the vector in the totalwinnings database so the attributes 
   listed there can be applied.
+* ``--debug`` option for ``ess stream`` prints out each error message, if any
 
-**Line 19**
+**Line 25**
 
 * Export the modified and aggregated data from the database and save the results to a csv file.
 
 .. literalinclude:: ../../EssentiaPublic/casestudies/casino/totalwinnings.sh
    :language: bash
    :linenos:
-   :emphasize-lines: 7,11,13,17,19
+   :emphasize-lines: 9,15,17,23,25
     
 ..   ess drop database totalwinnings
    ess create database totalwinnings --ports=1
