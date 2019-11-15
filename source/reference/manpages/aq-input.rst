@@ -237,6 +237,8 @@ Example:
   match those from the other command's output columns.
 
 
+.. _col spec arbitrary:
+
 Column Specification for Arbitrary Separators
 =============================================
 

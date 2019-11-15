@@ -7,9 +7,27 @@ matching rules. ``aq_pp`` was designed to help with this process.
 
 In this tutorial, we will use an Apache web log as an example, since they are among the most common type of logs we
 work with.  You will need the file ``apache.log``, which can be found under ``tutorials/etl-engine`` in the git repository.
-Its first line is::
+Also have the following documentations open by your side for reference if you'd like. 
+
+* :doc:`../../reference/manpages/aq-input`
+* :ref:`Column Spec for Arbitrary Separators <col spec arbitrary>`
+
+Its first line of the data is::
 
     54.248.98.72 - - [23/Nov/2014:03:07:23 -0800] "GET / HTTP/1.0" 301 - "-" "Mozilla/5.0 (compatible; monitis - premium monitoring service; http://www.monitis.com)"
+
+
+We'd like to parse data into format below (only subset of the entire columns are displayed here.)
+Note the difference with the original data, especially the separators.
+
+.. csv-table:: weblog parsed
+   :header: "ip", "rlog", "rusr", "time_s", "req_line1", "req_line2", "req_line3", "res_status", "res_size"
+   
+   54.248.98.72, "-", "-", "23/Nov/2014:03:07:23 -0800", "GET", "/", "HTTP/1.0", 301, 0
+   46.23.67.107, "-", "-", "23/Nov/2014:03:07:33 -0800", "GET", "/", "HTTP/1.0", 301, 0
+   85.17.156.99, "-", "-", "23/Nov/2014:03:07:43 -0800", "GET", "/", "HTTP/1.1", 200, 30003
+
+
 
 Parsing Apache Logs
 ===================
@@ -21,13 +39,11 @@ for example can be parsed using::
   aq_pp -f,eok,div apache.log -d ip:ip sep:' ' s:rlog sep:' ' \
   s:rusr sep:' [' s:time_s sep:'] "' s,clf:req_line1 sep:' ' s,clf:req_line2 sep:' ' s,clf:req_line3 \
   sep:'" ' i:res_status sep:' ' i:res_size sep:' "' \
-  s,clf:referrer sep:'" "' s,clf:user_agent sep:'"' -eval i:time 'DateToTime(time_s, "d.b.Y.H.M.S.z")'
+  s,clf:referrer sep:'" "' s,clf:user_agent sep:'"' 
 
 
-As in other AQ tools, evaluation functions can be used to augment the processing.  Here, we use the ``DateToTime(...)`` function on the
-column 'time_s'.  This attribute parses the date and time from this string column into an integer POSIX time, i.e. the number of seconds since January 1st, 1970.
 
-Additionally, in ``aq_pp`` you can specify the columns to output using the ``-c`` option and a list of column names.
+Additionally, in ``aq_pp`` you can specify the columns to output using the :ref:`-c option <-c>` and a list of column names.
 
 You can limit which columns are output in the final result by using the '-c' option. i.e. run::
 

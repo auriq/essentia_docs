@@ -2,7 +2,8 @@
 SQL Query: UDB Databases
 ******************************************
 
-**Overview:**
+Overview
+========
 
 ``udbsql`` is a method of quering the data in any of your UDB databases. 
 It allows you to quickly and efficiently explore data that has been loaded into and distributed in a UDB database, and is written in a user friendly, SQL-like language.
@@ -33,37 +34,51 @@ a from statement telling ``udbsql`` which UDB database and table|vector|variable
 |   ``-l, --list``     list aq_udb command without execution
 | 
 
-**Restrictions:**
+Types of Queries
+================
+There are 2 types of queries, *select* and *count*. Each supports unique set of statements, and has some roles. We'll take a look at basic query format and roles for both types.
+Interactive example for ``udbsql`` is also available on `Essentia-Playground <https://essentia-playground.auriq.com>`_
+
+Select
+------
 
 Query Format::
 
     select [column_name] | [*] from [database_name]:[table_name | vector_name | variable_name] where ... order by ... limit ...
 
-    select count(distinct [column_name] | [*]) from [database_name]:[table_name | vector_name | variable_name] where ...
-
-    select [column_name], count(*) from [database_name]:[table_name | vector_name | variable_name] where ... group by [column_name]
-    
-Rules::
-
-    The first query format above is a "select" query.
-    The second and third query formats above are "count" queries.
-    
-    1. Group By is NOT supported for SELECT queries. 
-    2. Order By is NOT supported for COUNT queries.
-    3. Limit is NOT supported for COUNT queries.
-    4. Order By, Limit, or Group By can only be used when there is no DISTINCT in COUNT queries.
-
-**Examples:**
-
-SELECT::
+Examples::
 
     select * from udb_databasename:tablename
     select count(*) from udb_databasename:tablename
     SELECT ... FROM database:tableA WHERE pkey_A IN (SELECT pkey_B FROM [database:]tableB WHERE ...) ...
+    
+**Rules:**
+Only restriction is that ``GroupBy`` operation is not supported in select type of statement.
 
-Columns::
+Count
+-----
 
-    select col2, col4 from udb_databasename:tablename
+Query Format::
+
+    select count(distinct [column_name] | [*]) from [database_name]:[table_name | vector_name | variable_name] where ...
+
+    select [column_name], count(*) from [database_name]:[table_name | vector_name | variable_name] where ... group by [column_name]
+
+Examples::
+
+    select count(distinct col1), count(distinct col2), count(*) from udb_databasename:tablename
+
+    select count(*) from udb_databasename:tablename group by col1 col2
+
+
+    
+**Rules:**
+``Order By``, ``Group By`` and ``Limit`` are not supported by Count query, unless used with ``DISTINCT`` statement.
+
+
+
+Examples by statement types
+---------------------------
 
 LIMIT::
 
@@ -84,3 +99,4 @@ DISTINCT::
 GROUP BY::
 
     select count(*) from udb_databasename:tablename group by col1 col2
+
