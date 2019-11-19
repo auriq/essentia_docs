@@ -2,15 +2,20 @@
 
 # Simple essentia script to process Apache web logs
 #
-
+# setting essentia's cluster platform to local (master node only)
 ess cluster set local
-ess purge local
 
+# stopping database and deleting the schema if already exist
+ess udbd stop
 ess server reset
+
+# create database, vector and restart udb
 ess create database apache --ports=1
 ess create vector vector1 s,pkey:referrer i,+add:pagecount
 ess udbd restart
 
+# delete local datastore, select again, and create data category
+ess purge local
 ess select local
 ess category add 125accesslogs "$HOME/EssentiaPublic/*accesslog*125-access_log*" 
 

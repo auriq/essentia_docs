@@ -7,7 +7,7 @@ needs some preprocessing before it can be properly used.  Here we will demonstra
 application in the Essentia toolkit that allows us to perform processing and analysis of Apache data in a fluid manner.
 
 The script and the data used in this brief demo can be found on the git repository under ``casestudies/apache``.  The script
-is called ``apache.sh`` and is designed to find out the most popular 'referrers'.
+is called ``apache.sh`` and is designed to find out the most popular `referrers <https://en.wikipedia.org/wiki/HTTP_referer>`_.
 It uses ``aq_pp`` to parse each line from the log and turn it into a CSV record.  Then ``aq_pp`` performs
 additional Data Processing operations and finally feeds the modified data into the UDB database. We use the UDB to sort and count the number of
 records for each referrer.
@@ -15,30 +15,30 @@ records for each referrer.
 Primary Lines in this Script
 ============================
 
-**Line 8** 
+**Line 14** 
 
 * Store a vector in the database apache that aggregates the values in the pagecount column for each unique referrer. 
 * The pagecount column only contains the number '1' so this serves to count the number of times any one referrer was seen in the web logs.
 
-**Line 12**
+**Line 20**
 
 * Create a new rule to take any files in your home directory with 'accesslog' and '125-access_log' in their name and put them in the 125accesslogs category.
 
-**Line 14** 
+**Line 22** 
 
 * Pipe the files in the category 125accesslogs that were created between November 30th and December 7th, 2014 to the aq_pp command. 
 * In the aq_pp command, tell the preprocessor to take data from stdin, ignoring errors and not outputting any error messages. 
 * Then define the incoming data's columns, skipping all of the columns except referrer, and create a column called pagecount that always contains the value 1. 
 * Then import the data to the vector in the apache database so the attributes listed there can be applied.
 
-**Line 21** 
+**Line 29,30** 
 
 * Export the aggregated data from the database, sorting by pagecount and limiting to the 25 most common referrers. Also export the total number of unique referrers.
 
 .. literalinclude:: ../../EssentiaPublic/casestudies/apache/apache.sh
    :language: bash
    :linenos:
-   :emphasize-lines: 8,12,14-19,21-22
+   :emphasize-lines: 14,20,22-27,29,30
 
 ..    ess server reset
     ess create database apache --ports=1
