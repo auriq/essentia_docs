@@ -54,6 +54,8 @@ If the return code is not needed, invoke the function this way:
 
    $ aq_command ... -eval - Func(...) ...
 
+where ``-`` tells command to output the return value stdout.
+
 
 String property functions
 =========================
@@ -281,7 +283,7 @@ Comparison functions
   Compares one or more substring ``SubStr`` with any part of ``Val``.
   All the comparisons are case sensitive.
 
-  * Returns 1 if all the substrings match, 0 otherwise.
+  * Returns 1 **only if all the substrings match**, 0 otherwise.
   * ``Val`` can be a string column's name, a `string constant`_,
     or an expression that evaluates to a string.
   * Each ``SubStr`` is a `string constant`_ that specifies
@@ -333,7 +335,7 @@ Comparison functions
   corresponding comparison type ``Typ`` of each ``SubStr``.
   All the comparisons are case sensitive.
 
-  * Returns 1 if all the substrings match, 0 otherwise.
+  * Returns 1 **only if all the substrings match**, 0 otherwise.
   * ``Val`` can be a string column's name, a `string constant`_,
     or an expression that evaluates to a string.
   * Each ``SubStr`` and ``Typ`` pair specifies what and how to match.
@@ -383,7 +385,7 @@ Comparison functions
   Compares the substrings in ``SubStrs`` with any part of ``Val``.
   All the comparisons are case sensitive.
 
-  * Returns 1 if all the substrings match, 0 otherwise.
+  * Returns 1 **only if all the substrings match**, 0 otherwise.
   * ``Val`` can be a string column's name, a `string constant`_,
     or an expression that evaluates to a string.
   * ``SubStrs`` is a `string constant`_ that specifies
@@ -685,7 +687,7 @@ Data extraction and encode/decode functions
 
 ``QryDec(Val, [, AtrLst], Col, KeyName [, AtrLst] [, Col, KeyName [, AtrLst] ...])``
   Extracts the values of selected query parameters from ``Val``
-  and place the results in columns.
+  and place the results in columns. This is applied on `URL's query string <https://en.wikipedia.org/wiki/Query_string>`_.
 
   * Returns the number of parameters extracted.
   * ``Val`` can be a string column's name, a `string constant`_

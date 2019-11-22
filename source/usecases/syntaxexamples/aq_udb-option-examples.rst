@@ -18,7 +18,7 @@ This tutorial assumes you already imported the following data into udb::
     "Philippines","Lawrence","Lois",0,0,12.300000000000001,"A",
     "Philippines","Kelley","Jacqueline",0,0,57.600000000000001,"F",
 
-This data was imported using aq_pp and the example data provided in the aq_pp documentation. To get this data imported you can run the following commands::
+This data was imported using aq_pp and the example data located ``EssentiaPublic/tutorial/etl-engine`` in `our official github repo <https://github.com/auriq/EssentiaPublic>`_. To get this data imported, clone the repo and move to the directory, then you can run the following commands::
 
     ess create database my_database --ports=1
     ess create vector country_vector "s,pkey:country s,+first:last_name s,+first:first_name i,+add:integer_col f,+max:float_col f,+min:float_2 s:grade s:extra_column"
@@ -52,7 +52,7 @@ This tutorial will emphasize the most commonly used options for aq_udb and how t
 
 Udb can contain many databases each with its own data being stored in it and its own attributes being applied to that data. The first necessary step when exporting data from Udb is to specify **which specific database you want to export the data from**. 
 
-This is accomplished with the -db option.
+This is accomplished with the -exp option.
 
 ``aq_udb -exp my_database:country_table``
 

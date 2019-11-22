@@ -228,7 +228,8 @@ This is where you would use ``-sub``. By simply specifying which file contains t
 
 ``aq_pp -f,+1 exampledata.csv -d f:float_col i:integer_col s:last_name s:first_name s:country -sub last_name lookup.csv TO X FROM X X``
 
-* This checks whether any values in last_name match any of the values in the third column of lookup.csv and, if they do, replaces those values with the value in the first column of lookup.csv. The output is::
+* Under :ref:`-sub option <-sub>`, ``X``: ignore the column, ``FROM``: specifies the column to match, and ``TO``: specify the column to take the substitute value from.
+* This command checks whether any values in last_name match any of the values in the third column of lookup.csv and, if they do, replaces those values with the value in the first column of lookup.csv. The output is::
  
     "float_col","integer_col","last_name","first_name","country"
     99.909999999999997,5350,"A","Lois","Philippines"
