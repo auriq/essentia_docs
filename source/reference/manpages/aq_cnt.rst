@@ -34,7 +34,7 @@ Synopsis
 Description
 ===========
 
-``aq_cnt`` counts and reports unique keys in a data set.
+``aq_cnt`` counts and reports unique keys in a data set. Unique keys in this context means unique values in arbitrary column(s). Users are able to specify column(s) to count the keys on.
 
 * First, it reads data from the input in various formats (e.g., CSV)
   according to the input spec.

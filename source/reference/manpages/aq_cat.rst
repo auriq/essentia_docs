@@ -37,14 +37,14 @@ binary format.
 
 The tool has two modes of actions:
 
-* Without column spec - This is the simplest usage. The iuputs must be
+* Without column spec - This is the simplest usage. The inputs must be
   records of delimiter-separated-values. The output will be in the same
   format. All inputs should be in the same format; otherwise, the output
   will contain mixed format data. Alternative output format
   (e.g., binary mode) is not supported. Output columns can be selected
   by column numbers.
 
-* With column spec - This mode is more versatile. The iuputs can be
+* With column spec - This mode is more versatile. The inputs can be
   in delimiter-separated-values formats, aq_tool's internal binary format
   or a mix. The output can either be in CSV or aq_tool's internal binary
   format. Output columns can be selected by names.

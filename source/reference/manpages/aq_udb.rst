@@ -68,6 +68,8 @@ Data manipulation can be done using builtin options or through a custom
 
 **Note**: Data import to the Udb server is done by `aq_pp <aq_pp.html>`_.
 
+Also take a look at some examples of using this command at :doc:`../../usecases/syntaxexamples/aq_udb-option-examples`.
+
 
 Options
 =======
