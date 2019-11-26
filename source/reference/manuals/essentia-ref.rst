@@ -25,10 +25,10 @@ To learn more about creating and using categories, see :doc:`category-rules`.
     :header: "Command", "Arguments", "Description"
     :widths: 15, 25 ,30
 
-    ess version,,"Print out the current version of Essentia and the AQ tools."
+    ess --version,,"Print out the current version of Essentia and the AQ tools."
     ess select,"| source
     | ``[--region REGION]``
-    | ``[--credentials file]``
+    | ``[--credentials=file]``
     | ``[--aws_access_key publickey]``
     | ``[--account_name AzureAccount]``
     | ``[--aws_secret_access_key secretkey]``
@@ -122,7 +122,7 @@ To learn more about creating and using categories, see :doc:`category-rules`.
     | ``[--label name]`` 
     | ``[--progress]`` 
     | ``[--limit number]``
-    | ``[--quitonerror]``","Stream data in given range to given command (cat being default)"
+    | ``[--quitonerror]``","Stream data in given range to given command (cat being default). * can be used as start/stop to indicate any timestamp."
     ess exec,"| command 
     | ``[--master]`` 
     | ``[--debug]`` 

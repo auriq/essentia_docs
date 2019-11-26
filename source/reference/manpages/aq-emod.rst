@@ -8,6 +8,8 @@ aq-emod
 
 aq_tool eval functions
 
+Interactive examples for ``aq-emod`` are available on `aq-emod - Esssentia-playground <https://essentia-playground.auriq.com/notebooks/aq-emod.ipynb>`_
+
 
 Synopsis
 ========
@@ -59,6 +61,7 @@ where ``-`` tells command to output the return value stdout.
 
 String property functions
 =========================
+
 
 .. _`SHash()`:
 
@@ -1391,4 +1394,5 @@ See Also
 * `aq_pp <aq_pp.html>`_ - Record preprocessor
 * `udbd <udbd.html>`_ - Udb server
 * `aq_udb <aq_udb.html>`_ - Udb server interface
+* `Essentia Playground <https://essentia-playground.auriq.com/notebooks/README.ipynb>`_ - interactive environment to practice using essentia and aq_tools 
 

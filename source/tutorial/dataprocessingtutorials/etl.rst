@@ -4,21 +4,12 @@ The goal of this tutorial is to highlight how to perform complex data transforma
 and output the results either to disk or a database. 
 
 
-TODO 
-====
-
-* syntax highlighting
-* terminology section 
-  * colSPec
-
-
-
 .. contents:: Table of Contents
    :depth: 3
 
 
-Essentia Data Processing and the aq_pp command
-================================================
+Data Processing: Part 2
+========================
 
 This tutorial is a continuation of :doc:`../essentiatutorials/etl`. That tutorial involved a rather trivial Data Processing example involving counting the number of lines in a series of files.  
 

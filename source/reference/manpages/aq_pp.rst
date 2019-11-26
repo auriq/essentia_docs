@@ -8,6 +8,8 @@ aq_pp
 
 Record preprocessor
 
+Interactive examples of using this command and/or its options are available at `aq_pp - Essentia playground <https://essentia-playground.auriq.com/notebooks/README.ipynb>`_
+
 
 Synopsis
 ========
@@ -295,6 +297,8 @@ Options
 .. _`-eval`:
    
 ``-eval ColSpec|ColName Expr``
+  Examples are also available in `aq_pp -eval - Essentia Playground <https://essentia-playground.auriq.com/notebooks/aq_pp%20-eval.ipynb>`_.
+
   Evaluate ``Expr`` and save the result to a column. The column can be a new
   column, an existing column/variable or null as explained below.
 
@@ -334,6 +338,8 @@ Options
   * Operator precedence is *NOT* supported. Use '(' and ')' to group
     operations as appropriate.
 
+
+
   .. _`builtin variables`:
 
   Builtin variables:
@@ -360,6 +366,7 @@ Options
 
   Example:
 
+
    ::
 
     $ aq_pp ... -d i:Col1 ... -eval l:Col_evl 'Col1 * 10' ...
@@ -376,9 +383,13 @@ Options
     Dt will contain the time difference in seconds.
 
 
+
+
 .. _`-mapf`:
 
 ``-mapf[,AtrLst] ColName MapFrom``
+  Examples are also available on aq_pp -map - `Essentia Playground <https://essentia-playground.auriq.com/notebooks/aq_pp%20-map.ipynb>`_.
+
   Extract data from a string column. This option should be used in
   conjunction with `-mapc`_.
   ``ColName`` is a previously defined column/variable to extract data from.
@@ -433,6 +444,8 @@ Options
     (not used in example).
   * ``%%4%%`` - Represent the 1st subpattern match in the second ``-mapf,rx``.
   * ``%%5%%`` - Represent the 2nd subpattern match in the second ``-mapf,rx``.
+
+  * In
 
 
 .. _`-kenc`:
@@ -522,6 +535,8 @@ Options
 .. _`-filt`:
 
 ``-filt FilterSpec``
+  Examples for this option are also available on `aq_pp -filt - Essentia Playground <https://essentia-playground.auriq.com/notebooks/aq_pp%20-filt.ipynb>`_.
+
   Filter (or select) records based on ``FilterSpec``.
   ``FilterSpec`` is a logical expression that evaluates to either true or false
   for each record - if true, the record is selected; otherwise, it is
@@ -706,6 +721,8 @@ Options
 .. _`-cmb`:
 
 ``-cmb[,AtrLst] File [File ...] ColSpec [ColSpec ...]``
+  Examples for this option are available on aq_pp -cmb - `Essentia Playground <https://essentia-playground.auriq.com/notebooks/aq_pp%20-cmb.ipynb>`_.
+
   Combine data from ``Files`` into the current data set by joining rows
   from both data sets. The new data set will contain unique columns from
   both sets. Common columns are automatically used as the join keys
@@ -813,6 +830,8 @@ Options
 .. _`-o`:
 
 ``[-o[,AtrLst] File] [-c ColName [ColName ...]]``
+  Examples for output specs are available on aq-output - `Essentia Playground <https://essentia-playground.auriq.com/notebooks/aq_output.ipynb>`_ .
+
   Output data rows. Multiple sets of "``-o ... -c ...``" can be specified.
 
   Optional "``-o[,AtrLst] File``" sets the output attributes and file.
@@ -941,7 +960,8 @@ Options
 .. _`-imp`:
 
 ``-imp[,AtrLst] DbName[:TabName] [-server AdrSpec [AdrSpec ...]] [-local] [-mod ModSpec [ModSrc]]``
-  Output data to Udb (i.e., perform an Udb import).
+  Output data to Udb (i.e., perform an Udb import). (Examples for udb is available at `aq_udb <https://essentia-playground.auriq.com/notebooks/aq_udb.ipynb>`_).
+
   ``DbName`` is the database name (see `Target Udb Database`_).
   ``TabName`` is a table/vector name in the database.
   If ``TabName`` is not given or if it is a "." (a dot), a primary key-only
@@ -1350,4 +1370,5 @@ See Also
 * `udb.spec <udb.spec.html>`_ - Udb spec file
 * `aq_udb <aq_udb.html>`_ - Udb server interface
 * `mcc.umod <mcc.umod.html>`_ - Udb module script compiler
+* `Essentia Playground <https://essentia-playground.auriq.com/notebooks/README.ipynb>`_ - Interactive practice environment for ess commands and aq_tools
 

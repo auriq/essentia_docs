@@ -8,6 +8,8 @@ aq_cnt
 
 Data row/key count
 
+Interactive examples for this command are available on `aq_cnt - Essentia-playground <https://essentia-playground.auriq.com/notebooks/aq_cnt.ipynb>`_
+
 
 Synopsis
 ========
@@ -292,4 +294,5 @@ See Also
 * `aq-input <aq-input.html>`_ - aq_tool input specifications
 * `aq-output <aq-output.html>`_ - aq_tool output specifications
 * `aq_pp <aq_pp.html>`_ - Record preprocessor
+* `Essentia-playground <https://essentia-playground.auriq.com/notebooks/README.ipynb>`_ - interactive environment to practice using essentia and aq_tools
 

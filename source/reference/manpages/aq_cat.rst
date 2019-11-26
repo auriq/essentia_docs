@@ -8,6 +8,8 @@ aq_cat
 
 Input multiplexer
 
+More examples of this command are available at `aq_cat - essentia-playground <https://essentia-playground.auriq.com/notebooks/aq_cat.ipynb>`_
+
 
 Synopsis
 ========
@@ -204,4 +206,5 @@ See Also
 * `aq-input <aq-input.html>`_ - aq_tool input specifications
 * `aq-output <aq-output.html>`_ - aq_tool output specifications
 * `aq_pp <aq_pp.html>`_ - Record preprocessor
+* `Essentia Playground <https://essentia-playground.auriq.com/notebooks/README.ipynb>`_ - interactive environment to practice using essentia and aq_tools
 
